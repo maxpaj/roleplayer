@@ -5,19 +5,35 @@ export enum Alignment {
 }
 
 export enum Race {
-  Gnome = "Gnome",
+  Dragonborne = "Dragonborne",
+  Duergar = "Duergar",
   Dwarf = "Dwarf",
   Elf = "Elf",
-  HalfElf = "Half elf",
+  Gnome = "Gnome",
+  Githyanki = "Githyanki",
+  Goblin = "Goblin",
+  HalfElf = "Half-Elf",
+  Halfling = "Halfling",
+  HalfOrc = "Half-Orc",
   Human = "Human",
-  Thiefling = "Thiefling",
+  Kobold = "Kobold",
+  Orc = "Orc",
+  Tiefling = "Tiefling",
 }
 
 export enum Clazz {
-  Rogue = "Rogue",
+  Barbarian = "Barbarian",
   Bard = "Bard",
+  Cleric = "Cleric",
+  Druid = "Druid",
+  Fighter = "Fighter",
+  Monk = "Monk",
+  Paladin = "Paladin",
   Ranger = "Ranger",
-  Sorceress = "Sorceress",
+  Rogue = "Rogue",
+  Sorcerer = "Sorcerer",
+  Warlock = "Warlock",
+  Wizard = "Wizard",
 }
 
 export type Spell = {

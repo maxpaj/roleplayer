@@ -1,7 +1,13 @@
 export enum Alignment {
-  Evil = "Evil",
-  Good = "Good",
-  Neutral = "Neutral",
+  NeutralEvil = "NeutralEvil",
+  LawfulEvil = "LawfulEvil",
+  ChaoticEvil = "ChaoticEvil",
+  NeutralNeutral = "NeutralNeutral",
+  EvilNeutral = "EvilNeutral",
+  GoodNeutral = "GoodNeutral",
+  NeutralGood = "NeutralGood",
+  LawfulGood = "LawfulGood",
+  ChaoticGood = "ChaoticGood",
 }
 
 export enum Race {

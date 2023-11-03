@@ -28,6 +28,11 @@ export function hasRolledForInitiative(battle: Battle) {
 
 export function currentRoundCanEnd(campaign: Campaign) {
   const currentBattle = getCurrentBattle(campaign);
+
+  if (!currentBattle.characters.length) {
+    return false;
+  }
+
   const currentRound = getCurrentRound(campaign);
   const events = getRoundEvents(currentRound, campaign.events);
 

@@ -6,7 +6,7 @@ export default function Header() {
   return (
     <header className="text-white flex items-center justify-between p-4 text-sm">
       <div className="flex items-center invert w-12 h-8 mr-2">
-        <Image src={logo} alt="Icon" />
+        <Image src={logo} alt="Icon" priority />
       </div>
 
       <nav className="flex items-center gap-x-4">

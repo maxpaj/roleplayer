@@ -70,11 +70,11 @@ export default function Battle() {
   function addCharacter(isPlayer: boolean) {
     const id = generateId();
 
-    setCampaign((prev) => {
-      return addCharacterToCurrentBattle(
-        ...addRandomCharacterToCampaign(prev, isPlayer, id)
-      );
-    });
+    setCampaign(
+      addCharacterToCurrentBattle(
+        ...addRandomCharacterToCampaign(campaign, isPlayer, id)
+      )
+    );
   }
 
   function renderCharacter(
@@ -151,12 +151,14 @@ export default function Battle() {
                 <button
                   disabled={hasSpentAction || hasFinished}
                   onClick={() =>
-                    characterPerformBattleAction(
-                      campaign,
-                      ActionType.Attack,
-                      CampaignEventType.CharacterPrimaryAction,
-                      character.id
-                    )
+                    setCampaign({
+                      ...characterPerformBattleAction(
+                        campaign,
+                        ActionType.Attack,
+                        CampaignEventType.CharacterPrimaryAction,
+                        character.id
+                      ),
+                    })
                   }
                   className="border disabled:border-slate-500 disabled:bg-slate-700 disabled:text-slate-500 border-white p-3 rounded hover:bg-slate-500"
                 >
@@ -166,12 +168,14 @@ export default function Battle() {
                 <button
                   disabled={hasSpentBonus || hasFinished}
                   onClick={() =>
-                    characterPerformBattleAction(
-                      campaign,
-                      ActionType.Attack,
-                      CampaignEventType.CharacterBonusAction,
-                      character.id
-                    )
+                    setCampaign({
+                      ...characterPerformBattleAction(
+                        campaign,
+                        ActionType.Attack,
+                        CampaignEventType.CharacterBonusAction,
+                        character.id
+                      ),
+                    })
                   }
                   className="border disabled:border-slate-500 disabled:bg-slate-700 disabled:text-slate-500 border-white p-3 rounded hover:bg-slate-500"
                 >
@@ -181,12 +185,14 @@ export default function Battle() {
                 <button
                   disabled={hasFinished}
                   onClick={() =>
-                    characterPerformBattleAction(
-                      campaign,
-                      ActionType.None,
-                      CampaignEventType.CharacterEndRound,
-                      character.id
-                    )
+                    setCampaign({
+                      ...characterPerformBattleAction(
+                        campaign,
+                        ActionType.None,
+                        CampaignEventType.CharacterEndRound,
+                        character.id
+                      ),
+                    })
                   }
                   className="border disabled:border-slate-500 disabled:bg-slate-700 disabled:text-slate-500 border-white p-3 rounded hover:bg-slate-500"
                 >
@@ -215,7 +221,7 @@ export default function Battle() {
     const eventIcon = IconMap[event.eventType];
 
     return (
-      <div key={event.id} className="border border-slate-500 p-2">
+      <div key={event.id} className="flex border border-slate-500 p-2">
         <Image
           className="invert"
           width={EventIconSize}
@@ -223,9 +229,7 @@ export default function Battle() {
           alt={eventIcon.alt}
           src={eventIcon.icon}
         />
-
         {event.actionType}
-        {event.characterId}
       </div>
     );
   }

@@ -7,7 +7,8 @@ import {
 } from "../campaign/campaign";
 import { Character } from "../character/character";
 import { getCharacterInitiative } from "../character/character-stats";
-import { Effect, ElementType } from "../effects";
+import { Effect } from "../effects";
+import { roll } from "../dice";
 
 export type Round = {
   id: Id;
@@ -89,7 +90,7 @@ export function getCurrentBattleNextRound(campaign: Campaign): Campaign {
     events: [
       ...campaign.events,
       {
-        id: generateId(),
+        id: generateId("event"),
         eventType: CampaignEventType.BattleNewRound,
         actionType: ActionType.None,
         characterId: "system",
@@ -109,16 +110,6 @@ export function performCharacterAttack(
 ): Campaign {
   const currentBattle = getCurrentBattle(campaign);
   const currentRound = getCurrentRound(campaign);
-
-  campaign.events.push({
-    id: generateId(),
-    characterId: attacker.id,
-    actionType: ActionType.Attack,
-    eventType: CampaignEventType.CharacterPrimaryAction,
-    battleId: currentBattle.id,
-    roundId: currentRound.id,
-  });
-
   const hit = defender.getDefense(campaign.events) > attackHitRoll;
 
   const events = hit
@@ -126,12 +117,11 @@ export function performCharacterAttack(
         const defenderDamage = getCharacterEffectDamageTaken(
           campaign,
           defender,
-          a.elementType,
-          a.amount
+          a
         );
 
         return {
-          id: generateId(),
+          id: generateId("event"),
           characterId: defender.id,
           actionType: ActionType.Attack,
           eventType: CampaignEventType.CharacterHealthLoss,
@@ -142,7 +132,7 @@ export function performCharacterAttack(
       })
     : [
         {
-          id: generateId(),
+          id: generateId("event"),
           characterId: defender.id,
           actionType: ActionType.Attack,
           eventType: CampaignEventType.CharacterDodge,
@@ -151,9 +141,17 @@ export function performCharacterAttack(
         },
       ];
 
-  campaign.events.push(...events);
-
-  return campaign;
+  return publishCampaignEvent(
+    publishCampaignEvent(campaign, {
+      id: generateId("event"),
+      characterId: attacker.id,
+      actionType: ActionType.Attack,
+      eventType: CampaignEventType.CharacterPrimaryAction,
+      battleId: currentBattle.id,
+      roundId: currentRound.id,
+    }),
+    ...events
+  );
 }
 
 export function getItem(campaign: Campaign, itemId: Id) {
@@ -240,26 +238,36 @@ export function characterPerformBattleAction(
   const currentBattle = getCurrentBattle(campaign);
   const currentRound = getCurrentRound(campaign);
 
-  campaign.events.push({
-    id: generateId(),
+  return publishCampaignEvent(campaign, {
+    id: generateId("event"),
     actionType,
     eventType,
     characterId: characterId,
     roundId: currentRound?.id,
     battleId: currentBattle?.id,
   });
-
-  return campaign;
 }
 
 function getCharacterEffectDamageTaken(
   campaign: Campaign,
   defender: Character,
-  damageType: ElementType,
-  amount: number
+  attackEffect: Effect
 ) {
+  const amount = attackEffect.amountStatic + roll(attackEffect.amountVariable);
+
   return (
-    amount * defender.getResistanceMultiplier(campaign.events, damageType) -
-    defender.getResistanceAbsolute(campaign.events, damageType)
+    amount *
+      defender.getResistanceMultiplier(campaign.events, attackEffect.element) -
+    defender.getResistanceAbsolute(campaign.events, attackEffect.element)
   );
+}
+
+function publishCampaignEvent(campaign: Campaign, ...events: CampaignEvent[]) {
+  events.forEach(logEvent);
+  campaign.events.push(...events);
+  return campaign;
+}
+
+function logEvent(e: CampaignEvent) {
+  console.table(e);
 }

@@ -1,5 +1,5 @@
 export type Id = string;
 
-export function generateId() {
-  return Date.now().toString();
+export function generateId(entityType: string) {
+  return `${entityType}-${Date.now().toString()}`;
 }

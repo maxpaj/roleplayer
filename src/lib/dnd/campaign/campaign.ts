@@ -42,13 +42,15 @@ export type Campaign = {
 
 export type CampaignEvent = {
   id: Id;
+  eventType: CampaignEventType;
+  actionType: ActionType;
+
   roundId?: Id;
   battleId?: Id;
   weaponId?: Id;
   spellId?: Id;
   characterId?: Id;
-  eventType: CampaignEventType;
-  actionType: ActionType;
+  targetId?: Id;
 };
 
 export function getCharacter(campaign: Campaign, characterId: Id) {

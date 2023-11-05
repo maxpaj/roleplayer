@@ -1,5 +1,8 @@
-import { Id } from "@/lib/dnd/id";
+import { Id, generateId } from "@/lib/dnd/id";
 import { Alignment, Character, Clazz, Race } from "./character";
+import { ElementType, Target } from "../effects";
+import { D2, D6 } from "../dice";
+import { ItemSlot, ItemType } from "../items";
 
 function randomEnum<T extends object>(anEnum: T): T[keyof T] {
   const enumValues = Object.keys(anEnum) as T[keyof T][];
@@ -45,14 +48,57 @@ export function randomCharacter(id: Id): Character {
     maximumHealth: randomDigit(0, 10),
     temporaryHealth: 0,
     xp: 0,
-    getAttacks() {
+    getInventory() {
       return [];
+    },
+    getEquipment() {
+      return [
+        {
+          id: generateId("item"),
+          name: "Short Sword",
+          type: ItemType.Equipment,
+          itemSlot: ItemSlot.MainHand,
+          interactions: [
+            {
+              name: "Slash attack",
+              rangeDistanceMeters: 1,
+              targets: [Target.Hostile, Target.Friendly],
+              effects: [
+                {
+                  amountVariable: D6,
+                  amountStatic: 2,
+                  element: ElementType.Slashing,
+                },
+              ],
+            },
+          ],
+        },
+      ];
+    },
+    getBaseAttacks() {
+      return [
+        {
+          name: "Unarmed attack",
+          rangeDistanceMeters: 1,
+          targets: [Target.Hostile, Target.Friendly],
+          effects: [
+            {
+              amountStatic: 2,
+              amountVariable: D2,
+              element: ElementType.Bludgeoning,
+            },
+          ],
+        },
+      ];
     },
     getDefense(events) {
       return 10;
     },
     getResistanceMultiplier(element) {
       return 1;
+    },
+    getResistanceAbsolute(element) {
+      return 0;
     },
     getSpells() {
       return [];

@@ -1,3 +1,5 @@
+import { Dice } from "./dice";
+
 export enum ElementType {
   Slashing = "Slashing",
   Piercing = "Piercing",
@@ -14,7 +16,15 @@ export enum ElementType {
   Psychic = "Psychic",
 }
 
+export enum Target {
+  Self = "Self",
+  Friendly = "Friendly",
+  Hostile = "Hostile",
+  Environment = "Environment",
+}
+
 export type Effect = {
-  amount: number;
-  elementType: ElementType;
+  amountVariable: Dice;
+  amountStatic: number;
+  element: ElementType;
 };

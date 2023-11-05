@@ -1,17 +1,23 @@
-import { Effect } from "./effects";
+import { Interaction } from "./character/character";
 import { Id } from "./id";
 
 export enum ItemType {
-  Weapon = "Weapon",
+  Equipment = "Equipment",
   Potion = "Potion",
 }
 
-export abstract class Item {
-  id!: Id;
-  name!: string;
-  type!: ItemType;
-
-  abstract consume(): Effect[];
-  abstract attack(): Effect[];
-  abstract throw(): Effect[];
+export enum ItemSlot {
+  MainHand = "MainHand",
+  OffHand = "OffHand",
+  Head = "Head",
+  Feet = "Feet",
+  Chest = "Chest",
 }
+
+export type Item = {
+  id: Id;
+  name: string;
+  type: ItemType;
+  itemSlot: ItemSlot;
+  interactions: Interaction[];
+};

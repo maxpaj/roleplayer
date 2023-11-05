@@ -1,5 +1,6 @@
 import { CampaignEvent } from "../campaign/campaign";
-import { Effect, ElementType } from "../effects";
+import { Effect, ElementType, Target } from "../effects";
+import { Item } from "../items";
 
 export enum Alignment {
   NeutralEvil = "NeutralEvil",
@@ -62,11 +63,11 @@ export type CharacterClass = {
   clazz: Clazz;
 };
 
-export type PhysicalAttack = {
+export type Interaction = {
   name: string;
-  range: number;
-  element: Element;
-  getEffects(): Effect[];
+  effects: Effect[];
+  rangeDistanceMeters: number;
+  targets: Target[];
 };
 
 export type Status = {};
@@ -87,8 +88,9 @@ export type Character = {
   race: Race;
   alignment: Alignment;
   xp: number;
-
-  getAttacks(events: CampaignEvent[]): PhysicalAttack[];
+  getInventory(): Item[];
+  getEquipment(): Item[];
+  getBaseAttacks(events: CampaignEvent[]): Interaction[];
   getSpells(events: CampaignEvent[]): Spell[];
   getDefense(events: CampaignEvent[]): number;
   getResistanceMultiplier(

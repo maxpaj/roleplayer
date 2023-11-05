@@ -1,3 +1,6 @@
+import { CampaignEvent } from "../campaign/campaign";
+import { Effect, ElementType } from "../effects";
+
 export enum Alignment {
   NeutralEvil = "NeutralEvil",
   LawfulEvil = "LawfulEvil",
@@ -18,9 +21,9 @@ export enum Race {
   Gnome = "Gnome",
   Githyanki = "Githyanki",
   Goblin = "Goblin",
-  HalfElf = "Half-Elf",
+  HalfElf = "HalfElf",
   Halfling = "Halfling",
-  HalfOrc = "Half-Orc",
+  HalfOrc = "HalfOrc",
   Human = "Human",
   Kobold = "Kobold",
   Orc = "Orc",
@@ -52,13 +55,18 @@ export type SpellSlot = {
   used: boolean;
 };
 
-export type Attack = {};
-
 export type Cantrip = {};
 
 export type CharacterClass = {
   level: number;
   clazz: Clazz;
+};
+
+export type PhysicalAttack = {
+  name: string;
+  range: number;
+  element: Element;
+  getEffects(): Effect[];
 };
 
 export type Status = {};
@@ -80,17 +88,27 @@ export type Character = {
   alignment: Alignment;
   xp: number;
 
+  getAttacks(events: CampaignEvent[]): PhysicalAttack[];
+  getSpells(events: CampaignEvent[]): Spell[];
+  getDefense(events: CampaignEvent[]): number;
+  getResistanceMultiplier(
+    events: CampaignEvent[],
+    damageType: ElementType
+  ): number;
+  getResistanceAbsolute(
+    events: CampaignEvent[],
+    damageType: ElementType
+  ): number;
+
   spellSlots: SpellSlot[];
-  attacks: Attack[];
   cantrips: Cantrip[];
-  spells: Spell[];
 
   maximumHealth: number;
   currentHealth: number;
   temporaryHealth: number;
 
   baseSpeed: number;
-  baseArmor: number;
+  baseArmorClass: number;
   baseStrength: number;
   baseDexterity: number;
   baseConstitution: number;

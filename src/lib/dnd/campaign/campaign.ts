@@ -2,14 +2,17 @@ import { Battle } from "../battle/battle";
 import { Character } from "../character/character";
 import { randomCharacter } from "../character/random-char";
 import { Id } from "../id";
+import { Item } from "../items";
 
 export enum CampaignEventType {
-  CharacterStart = "character-start",
-  CharacterPrimaryAction = "character-primary-action",
-  CharacterBonusAction = "character-secondary-action",
-  CharacterMovement = "character-movement",
-  CharacterEndRound = "character-end",
-  BattleNewRound = "battle-new-round",
+  CharacterStart = "CharacterStart",
+  CharacterPrimaryAction = "CharacterPrimaryAction",
+  CharacterSecondaryAction = "CharacterSecondaryAction",
+  CharacterMovement = "CharacterMovement",
+  CharacterEndRound = "CharacterEndRound",
+  CharacterHealthLoss = "CharacterDefense",
+  BattleNewRound = "BattleNewRound",
+  CharacterDodge = "CharacterDodge",
 }
 
 export enum ActionType {
@@ -31,6 +34,7 @@ export type CharacterAction = {
 };
 
 export type Campaign = {
+  items: Item[];
   characters: Character[];
   battles: Battle[];
   events: CampaignEvent[];
@@ -38,9 +42,11 @@ export type Campaign = {
 
 export type CampaignEvent = {
   id: Id;
-  characterId: Id;
-  roundId: Id;
-  battleId: Id;
+  roundId?: Id;
+  battleId?: Id;
+  weaponId?: Id;
+  spellId?: Id;
+  characterId?: Id;
   eventType: CampaignEventType;
   actionType: ActionType;
 };

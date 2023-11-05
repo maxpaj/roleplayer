@@ -22,9 +22,7 @@ export function randomCharacter(id: Id): Character {
     imageUrl: "/character.png",
     party: "",
     background: "",
-    attacks: [],
     cantrips: [],
-    spells: [],
     spellSlots: [],
     statuses: [],
     alignment: randomEnum(Alignment),
@@ -35,7 +33,7 @@ export function randomCharacter(id: Id): Character {
         level: 1,
       },
     ],
-    baseArmor: randomDigit(0, 10),
+    baseArmorClass: randomDigit(0, 10),
     baseCharisma: randomDigit(0, 10),
     baseConstitution: randomDigit(0, 10),
     baseDexterity: randomDigit(0, 10),
@@ -47,5 +45,17 @@ export function randomCharacter(id: Id): Character {
     maximumHealth: randomDigit(0, 10),
     temporaryHealth: 0,
     xp: 0,
+    getAttacks() {
+      return [];
+    },
+    getDefense(events) {
+      return 10;
+    },
+    getResistanceMultiplier(element) {
+      return 1;
+    },
+    getSpells() {
+      return [];
+    },
   };
 }

@@ -6,6 +6,8 @@ import {
   CampaignEventType,
 } from "../campaign/campaign";
 import { Character } from "../character/character";
+import { getCharacterInitiative } from "../character/character-stats";
+import { Effect, ElementType } from "../effects";
 
 export type Round = {
   id: Id;
@@ -38,7 +40,9 @@ export function currentRoundCanEnd(campaign: Campaign) {
 
   return currentBattle.characters.every((c) =>
     events.some(
-      (e) => e.eventType === "character-end" && e.characterId === c.characterId
+      (e) =>
+        e.eventType === CampaignEventType.CharacterEndRound &&
+        e.characterId === c.characterId
     )
   );
 }
@@ -96,6 +100,72 @@ export function getCurrentBattleNextRound(campaign: Campaign): Campaign {
   };
 }
 
+export function performCharacterAttack(
+  campaign: Campaign,
+  attacker: Character,
+  attackHitRoll: number,
+  attackEffects: Effect[],
+  defender: Character
+): Campaign {
+  const currentBattle = getCurrentBattle(campaign);
+  const currentRound = getCurrentRound(campaign);
+
+  campaign.events.push({
+    id: generateId(),
+    characterId: attacker.id,
+    actionType: ActionType.Attack,
+    eventType: CampaignEventType.CharacterPrimaryAction,
+    battleId: currentBattle.id,
+    roundId: currentRound.id,
+  });
+
+  const hit = defender.getDefense(campaign.events) > attackHitRoll;
+
+  const events = hit
+    ? attackEffects.map((a) => {
+        const defenderDamage = getCharacterEffectDamageTaken(
+          campaign,
+          defender,
+          a.elementType,
+          a.amount
+        );
+
+        return {
+          id: generateId(),
+          characterId: defender.id,
+          actionType: ActionType.Attack,
+          eventType: CampaignEventType.CharacterHealthLoss,
+          amount: defenderDamage,
+          battleId: currentBattle.id,
+          roundId: currentRound.id,
+        };
+      })
+    : [
+        {
+          id: generateId(),
+          characterId: defender.id,
+          actionType: ActionType.Attack,
+          eventType: CampaignEventType.CharacterDodge,
+          battleId: currentBattle.id,
+          roundId: currentRound.id,
+        },
+      ];
+
+  campaign.events.push(...events);
+
+  return campaign;
+}
+
+export function getItem(campaign: Campaign, itemId: Id) {
+  const item = campaign.items.find((i) => i.id === itemId);
+
+  if (!item) {
+    throw new Error("No such item");
+  }
+
+  return item;
+}
+
 export function addCharacterToCurrentBattle(
   campaign: Campaign,
   character: Character
@@ -107,7 +177,10 @@ export function addCharacterToCurrentBattle(
 
   currentBattle.characters = [
     ...currentBattle.characters,
-    { characterId: character.id, initiative: 0 },
+    {
+      characterId: character.id,
+      initiative: getCharacterInitiative(character),
+    },
   ];
 
   return {
@@ -172,9 +245,21 @@ export function characterPerformBattleAction(
     actionType,
     eventType,
     characterId: characterId,
-    roundId: currentRound.id,
-    battleId: currentBattle.id,
+    roundId: currentRound?.id,
+    battleId: currentBattle?.id,
   });
 
   return campaign;
+}
+
+function getCharacterEffectDamageTaken(
+  campaign: Campaign,
+  defender: Character,
+  damageType: ElementType,
+  amount: number
+) {
+  return (
+    amount * defender.getResistanceMultiplier(campaign.events, damageType) -
+    defender.getResistanceAbsolute(campaign.events, damageType)
+  );
 }

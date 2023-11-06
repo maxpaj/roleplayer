@@ -1,6 +1,14 @@
 import { CampaignEvent } from "../campaign/campaign";
-import { Effect, ElementType, Target } from "../effects";
+import { Effect, ElementType } from "../effects";
 import { Item } from "../items";
+
+export enum TargetType {
+  Self = "Self",
+  Character = "Character",
+  Friendly = "Friendly",
+  Hostile = "Hostile",
+  Environment = "Environment",
+}
 
 export enum Alignment {
   NeutralEvil = "NeutralEvil",
@@ -63,11 +71,20 @@ export type CharacterClass = {
   clazz: Clazz;
 };
 
+export enum InteractionType {
+  Drink = "Drink",
+  Throw = "Throw",
+  Attack = "Attack",
+  Push = "Push",
+  Open = "Open",
+}
+
 export type Interaction = {
   name: string;
+  type: InteractionType;
   effects: Effect[];
+  eligibleTargets: TargetType[];
   rangeDistanceMeters: number;
-  targets: Target[];
 };
 
 export type Status = {};

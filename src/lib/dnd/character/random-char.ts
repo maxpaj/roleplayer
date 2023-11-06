@@ -1,6 +1,13 @@
 import { Id, generateId } from "@/lib/dnd/id";
-import { Alignment, Character, Clazz, Race } from "./character";
-import { ElementType, Target } from "../effects";
+import {
+  Alignment,
+  Character,
+  Clazz,
+  InteractionType,
+  Race,
+  TargetType,
+} from "./character";
+import { ElementType } from "../effects";
 import { D2, D6 } from "../dice";
 import { ItemSlot, ItemType } from "../items";
 
@@ -60,9 +67,10 @@ export function randomCharacter(id: Id): Character {
           itemSlot: ItemSlot.MainHand,
           interactions: [
             {
+              type: InteractionType.Attack,
               name: "Slash attack",
               rangeDistanceMeters: 1,
-              targets: [Target.Hostile, Target.Friendly],
+              eligibleTargets: [TargetType.Character, TargetType.Environment],
               effects: [
                 {
                   amountVariable: D6,
@@ -80,7 +88,8 @@ export function randomCharacter(id: Id): Character {
         {
           name: "Unarmed attack",
           rangeDistanceMeters: 1,
-          targets: [Target.Hostile, Target.Friendly],
+          eligibleTargets: [TargetType.Hostile, TargetType.Friendly],
+          type: InteractionType.Attack,
           effects: [
             {
               amountStatic: 2,

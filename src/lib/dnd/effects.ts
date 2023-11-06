@@ -16,13 +16,6 @@ export enum ElementType {
   Psychic = "Psychic",
 }
 
-export enum Target {
-  Self = "Self",
-  Friendly = "Friendly",
-  Hostile = "Hostile",
-  Environment = "Environment",
-}
-
 export type Effect = {
   amountVariable: Dice;
   amountStatic: number;

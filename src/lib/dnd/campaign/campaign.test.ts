@@ -1,13 +1,11 @@
-import { Campaign, addRandomCharacterToCampaign } from "./campaign";
+import { Campaign } from "./campaign";
 
-describe("adding a new character should add another to the campaign", () => {
-  const campaign: Campaign = {
-    battles: [],
-    characters: [],
-    events: [],
-  };
-
-  const [added] = addRandomCharacterToCampaign(campaign, false, "123");
-
-  expect(added.characters.length).toBe(1);
+describe("campaign", () => {
+  describe("addRandomCharacterToCampaign", () => {
+    it("adding a new character should add another to the campaign", () => {
+      const campaign: Campaign = new Campaign([], [], [], []);
+      campaign.addRandomCharacterToCampaign("123", false);
+      expect(campaign.characters.length).toBe(1);
+    });
+  });
 });

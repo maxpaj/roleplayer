@@ -1,23 +1,14 @@
 import { Id, generateId } from "@/lib/dnd/id";
 import {
   ActionType,
-  Campaign,
   CampaignEvent,
   CampaignEventType,
 } from "../campaign/campaign";
 import { Character } from "../character/character";
 import { getCharacterInitiative } from "../character/character-stats";
-import { Effect } from "../effects";
-import { roll } from "../dice";
 
 export type Round = {
   id: Id;
-};
-
-export type Battle = {
-  id: Id;
-  characters: BattleCharacter[];
-  rounds: Round[];
 };
 
 export type BattleCharacter = {
@@ -25,249 +16,74 @@ export type BattleCharacter = {
   initiative: number;
 };
 
-export function hasRolledForInitiative(battle: Battle) {
-  return battle.characters.every((c) => c.initiative != 0);
-}
+export class Battle {
+  id: Id;
+  characters: BattleCharacter[];
+  rounds: Round[];
 
-export function currentRoundCanEnd(campaign: Campaign) {
-  const currentBattle = getCurrentBattle(campaign);
-
-  if (!currentBattle.characters.length) {
-    return false;
+  constructor(characters: BattleCharacter[] = [], rounds: Round[] = []) {
+    this.id = generateId("battle");
+    this.characters = characters;
+    this.rounds = rounds;
   }
 
-  const currentRound = getCurrentRound(campaign);
-  const events = getRoundEvents(currentRound, campaign.events);
-
-  return currentBattle.characters.every((c) =>
-    events.some(
-      (e) =>
-        e.eventType === CampaignEventType.CharacterEndRound &&
-        e.characterId === c.characterId
-    )
-  );
-}
-
-export function getRoundEvents(round: Round, events: CampaignEvent[]) {
-  return events.filter((e) => e.roundId === round.id);
-}
-
-export function getCharacterRoundEvents(
-  campaign: Campaign,
-  round: Round,
-  characterId: Id
-) {
-  const roundEvents = getRoundEvents(round, campaign.events);
-  return roundEvents.filter((re) => re.characterId === characterId);
-}
-
-export function characterHasRoundEvent(
-  campaign: Campaign,
-  round: Round,
-  characterId: Id,
-  eventType: CampaignEventType
-) {
-  const roundCharacterEvents = getCharacterRoundEvents(
-    campaign,
-    round,
-    characterId
-  );
-
-  return roundCharacterEvents.some(
-    (c) => c.characterId === characterId && c.eventType === eventType
-  );
-}
-
-export function getCurrentBattleNextRound(campaign: Campaign): Campaign {
-  const battle = getCurrentBattle(campaign);
-  const nextRoundId = `round-${battle.rounds.length + 1}`;
-
-  battle.rounds = [...battle.rounds, { id: nextRoundId }];
-
-  return {
-    ...campaign,
-    battles: [...campaign.battles],
-    events: [
-      ...campaign.events,
-      {
-        id: generateId("event"),
-        eventType: CampaignEventType.BattleNewRound,
-        actionType: ActionType.None,
-        characterId: "system",
-        roundId: nextRoundId,
-        battleId: battle.id,
-      },
-    ],
-  };
-}
-
-export function performCharacterAttack(
-  campaign: Campaign,
-  attacker: Character,
-  attackHitRoll: number,
-  attackEffects: Effect[],
-  defender: Character
-): Campaign {
-  const currentBattle = getCurrentBattle(campaign);
-  const currentRound = getCurrentRound(campaign);
-  const hit = defender.getDefense(campaign.events) > attackHitRoll;
-
-  const events = hit
-    ? attackEffects.map((a) => {
-        const defenderDamage = getCharacterEffectDamageTaken(
-          campaign,
-          defender,
-          a
-        );
-
-        return {
-          id: generateId("event"),
-          characterId: defender.id,
-          actionType: ActionType.Attack,
-          eventType: CampaignEventType.CharacterHealthLoss,
-          amount: defenderDamage,
-          battleId: currentBattle.id,
-          roundId: currentRound.id,
-        };
-      })
-    : [
-        {
-          id: generateId("event"),
-          characterId: defender.id,
-          actionType: ActionType.Attack,
-          eventType: CampaignEventType.CharacterDodge,
-          battleId: currentBattle.id,
-          roundId: currentRound.id,
-        },
-      ];
-
-  return publishCampaignEvent(
-    publishCampaignEvent(campaign, {
-      id: generateId("event"),
-      characterId: attacker.id,
-      actionType: ActionType.Attack,
-      eventType: CampaignEventType.CharacterPrimaryAction,
-      battleId: currentBattle.id,
-      roundId: currentRound.id,
-    }),
-    ...events
-  );
-}
-
-export function getItem(campaign: Campaign, itemId: Id) {
-  const item = campaign.items.find((i) => i.id === itemId);
-
-  if (!item) {
-    throw new Error("No such item");
+  hasRolledForInitiative() {
+    return this.characters.every((c) => c.initiative != 0);
   }
 
-  return item;
-}
-
-export function addCharacterToCurrentBattle(
-  campaign: Campaign,
-  character: Character
-) {
-  const currentBattle = campaign.battles[campaign.battles.length - 1];
-  if (!currentBattle) {
-    throw new Error("No battle in campaign");
+  currentRoundCanEnd(events: CampaignEvent[]) {
+    return this.characters.every((c) =>
+      events.some(
+        (e) =>
+          e.eventType === CampaignEventType.CharacterEndRound &&
+          e.characterId === c.characterId
+      )
+    );
   }
 
-  currentBattle.characters = [
-    ...currentBattle.characters,
-    {
+  nextRound() {
+    const next = { id: `round-${this.rounds.length + 1}` };
+    this.rounds.push(next);
+    return next;
+  }
+
+  addCharacterToCurrentBattle(character: Character) {
+    const added = {
       characterId: character.id,
       initiative: getCharacterInitiative(character),
-    },
-  ];
+    };
+    this.characters.push(added);
+    return added;
+  }
 
-  return {
-    ...campaign,
-    battles: [...campaign.battles, currentBattle],
-  };
-}
+  currentCharacterTurn(currentRoundEvents: CampaignEvent[]) {
+    const charactersNotActedCurrentRound = this.characters.filter(
+      (battleChar) => {
+        const hasActed = currentRoundEvents.some(
+          (e) =>
+            e.characterId === battleChar.characterId &&
+            e.eventType === CampaignEventType.CharacterEndRound
+        );
 
-export function currentCharacterTurn(campaign: Campaign) {
-  const battle = getCurrentBattle(campaign);
-  const round = getCurrentRound(campaign);
+        return !hasActed;
+      }
+    );
 
-  const charactersNotActedCurrentRound = battle.characters.filter(
-    (battleChar) => {
-      const currentRoundEvents = getCharacterRoundEvents(
-        campaign,
-        round,
-        battleChar.characterId
-      );
+    const sorted = charactersNotActedCurrentRound.sort(
+      (a, b) => b.initiative - a.initiative
+    );
 
-      const hasActed = currentRoundEvents.some(
-        (e) =>
-          e.characterId === battleChar.characterId &&
-          e.eventType === CampaignEventType.CharacterEndRound
-      );
+    return sorted[0];
+  }
 
-      return !hasActed;
-    }
-  );
-
-  const sorted = charactersNotActedCurrentRound.sort(
-    (a, b) => b.initiative - a.initiative
-  );
-
-  return sorted[0];
-}
-
-export function getBattleEvents(campaign: Campaign, battle: Battle) {
-  return campaign.events.filter((e) => e.battleId === battle.id);
-}
-
-export function getCurrentBattle(campaign: Campaign) {
-  return campaign.battles[campaign.battles.length - 1];
-}
-
-export function getCurrentRound(campaign: Campaign) {
-  const battle = getCurrentBattle(campaign);
-  return battle.rounds[battle.rounds.length - 1];
-}
-
-export function characterPerformBattleAction(
-  campaign: Campaign,
-  actionType: ActionType,
-  eventType: CampaignEventType,
-  characterId: string
-) {
-  const currentBattle = getCurrentBattle(campaign);
-  const currentRound = getCurrentRound(campaign);
-
-  return publishCampaignEvent(campaign, {
-    id: generateId("event"),
-    actionType,
-    eventType,
-    characterId: characterId,
-    roundId: currentRound?.id,
-    battleId: currentBattle?.id,
-  });
-}
-
-function getCharacterEffectDamageTaken(
-  campaign: Campaign,
-  defender: Character,
-  attackEffect: Effect
-) {
-  const amount = attackEffect.amountStatic + roll(attackEffect.amountVariable);
-
-  return (
-    amount *
-      defender.getResistanceMultiplier(campaign.events, attackEffect.element) -
-    defender.getResistanceAbsolute(campaign.events, attackEffect.element)
-  );
-}
-
-function publishCampaignEvent(campaign: Campaign, ...events: CampaignEvent[]) {
-  events.forEach(logEvent);
-  campaign.events.push(...events);
-  return campaign;
-}
-
-function logEvent(e: CampaignEvent) {
-  console.table(e);
+  publishNewRoundEvent(nextRoundId: string) {
+    return {
+      id: generateId("event"),
+      eventType: CampaignEventType.BattleNewRound,
+      actionType: ActionType.None,
+      characterId: "system",
+      roundId: nextRoundId,
+      battleId: this.id,
+    };
+  }
 }

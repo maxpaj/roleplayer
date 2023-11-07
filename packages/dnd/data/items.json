@@ -1,0 +1,68 @@
+[
+  {
+    "id": "item-1",
+    "name": "Short Sword",
+    "type": "ItemType.Equipment",
+    "itemSlot": "ItemSlot.MainHand",
+    "interactions": [
+      {
+        "type": "InteractionType.Attack",
+        "name": "Slash attack",
+        "rangeDistanceMeters": 1,
+        "eligibleTargets": ["TargetType.Character", "TargetType.Environment"],
+        "effects": [
+          {
+            "amountVariable": 6,
+            "amountStatic": 2,
+            "element": "ElementType.Slashing"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "item-2",
+    "name": "Minor Healing Potion",
+    "type": "ItemType.Potion",
+    "itemSlot": "ItemSlot.None",
+    "interactions": [
+      {
+        "type": "InteractionType.Heal",
+        "name": "Drink",
+        "rangeDistanceMeters": 0,
+        "eligibleTargets": ["TargetType.Character"],
+        "effects": [
+          {
+            "type": "EffectType.HealthGain",
+            "amountVariable": 4,
+            "amountStatic": 2
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "item-3",
+    "name": "Speed Potion",
+    "type": "ItemType.Potion",
+    "itemSlot": "ItemSlot.None",
+    "interactions": [
+      {
+        "type": "InteractionType.Drink",
+        "name": "Drink",
+        "rangeDistanceMeters": 0,
+        "eligibleTargets": ["TargetType.Character"],
+        "effects": [
+          {
+            "type": "EffectType.StatusGain",
+            "status": "status-1"
+          },
+          {
+            "type": "EffectType.StatusGain",
+            "status": "status-2"
+          }
+        ]
+      }
+    ]
+  }
+]

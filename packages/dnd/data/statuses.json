@@ -1,0 +1,7 @@
+[
+  {
+    "id": "status-1",
+    "effectApplies": ["StatusApply.Always"],
+    "duration": "Duration.LongRest"
+  }
+]

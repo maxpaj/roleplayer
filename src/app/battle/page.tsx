@@ -2,111 +2,191 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import {
-  Battle,
-  BattleCharacter,
-  Round,
-  addCharacterToCurrentBattle,
-  characterHasRoundEvent,
-  currentRoundCanEnd,
-  getBattleEvents,
-  getCurrentBattleNextRound,
-  getCurrentBattle,
-  getCurrentRound as getCurrentBattleRound,
-} from "@/lib/dnd/battle/battle";
+import { Id, generateId } from "@/lib/dnd/id";
+import { Battle, BattleCharacter, Round } from "@/lib/dnd/battle/battle";
 import {
   ActionType,
   Campaign,
   CampaignEvent,
   CampaignEventType,
-  addRandomCharacterToCampaign,
-  getCharacter,
 } from "@/lib/dnd/campaign/campaign";
-import {
-  characterPerformBattleAction,
-  currentCharacterTurn,
-} from "@/lib/dnd/battle/battle";
+import { D20, roll } from "@/lib/dnd/dice";
 
-import moveIcon from "@/assets/icons/lorc/boot-prints.svg";
 import defaultIcon from "@/assets/logo.svg";
-
+import attackIcon from "@/assets/icons/lorc/thrown-knife.svg";
+import moveIcon from "@/assets/icons/lorc/boot-prints.svg";
 import newRoundIcon from "@/assets/icons/lorc/time-trap.svg";
 import primaryActionIcon from "@/assets/icons/skoll/rank-1.svg";
 import secondaryActionIcon from "@/assets/icons/skoll/rank-2.svg";
-import { Id, generateId } from "@/lib/dnd/id";
+import dodgeEvent from "@/assets/icons/felbrigg/dodge.svg";
+import characterLostHealthEventIcon from "@/assets/icons/zeromancer/heart-minus.svg";
+import { ItemSlot, ItemType } from "@/lib/dnd/items";
 
-const IconMap: {
+const ActionIconMap: {
+  [key in ActionType]: { alt: string; icon: any };
+} = {
+  [ActionType.Attack]: {
+    alt: "Attack",
+    icon: attackIcon,
+  },
+  [ActionType.Sprint]: {
+    alt: "Sprint",
+    icon: defaultIcon,
+  },
+  [ActionType.Jump]: {
+    alt: "Jump",
+    icon: defaultIcon,
+  },
+  [ActionType.Cantrip]: {
+    alt: "Cantrip",
+    icon: defaultIcon,
+  },
+  [ActionType.Spell]: {
+    alt: "Spell",
+    icon: defaultIcon,
+  },
+  [ActionType.Item]: {
+    alt: "Item",
+    icon: defaultIcon,
+  },
+  [ActionType.Equipment]: {
+    alt: "Equipment",
+    icon: defaultIcon,
+  },
+  [ActionType.None]: {
+    alt: "None",
+    icon: defaultIcon,
+  },
+};
+
+const EventIconMap: {
   [key in CampaignEventType]: { alt: string; icon: any };
 } = {
-  "character-start": { icon: defaultIcon, alt: "Character start" },
-  "character-end": { icon: defaultIcon, alt: "Character end" },
-  "character-movement": { icon: moveIcon, alt: "Movement" },
-  "character-primary-action": {
-    icon: primaryActionIcon,
+  [CampaignEventType.CharacterStartRound]: {
+    alt: "Character start round",
+    icon: defaultIcon,
+  },
+  [CampaignEventType.CharacterEndRound]: {
+    alt: "Character end round",
+    icon: defaultIcon,
+  },
+  [CampaignEventType.CharacterMovement]: {
+    alt: "Character movement",
+    icon: moveIcon,
+  },
+  [CampaignEventType.CharacterPrimaryAction]: {
     alt: "Primary action",
+    icon: primaryActionIcon,
   },
-  "character-secondary-action": {
-    icon: secondaryActionIcon,
+  [CampaignEventType.CharacterSecondaryAction]: {
     alt: "Secondary action",
+    icon: secondaryActionIcon,
   },
-  "battle-new-round": { icon: newRoundIcon, alt: "New round" },
+  [CampaignEventType.BattleNewRound]: {
+    alt: "New round",
+    icon: newRoundIcon,
+  },
+  [CampaignEventType.CharacterHealthLoss]: {
+    alt: "Character lost health",
+    icon: characterLostHealthEventIcon,
+  },
+  [CampaignEventType.CharacterDodge]: {
+    alt: "Dodge",
+    icon: dodgeEvent,
+  },
+  [CampaignEventType.CharacterSpawned]: {
+    alt: "CharacterSpawned",
+    icon: defaultIcon,
+  },
 };
 
 const EventIconSize = 32;
 
-export default function Battle() {
-  const [campaign, setCampaign] = useState<Campaign>({
-    characters: [],
-    events: [],
-    battles: [
-      {
-        id: generateId(),
-        characters: [],
-        rounds: [{ id: "round-1" }],
-      },
-    ],
-  });
+export default function BattlePage() {
+  const [campaign, setCampaign] = useState<Campaign>(
+    new Campaign(
+      [
+        {
+          id: generateId("item"),
+          interactions: [],
+          itemSlot: ItemSlot.MainHand,
+          name: "Short sword",
+          type: ItemType.Equipment,
+        },
+      ],
+      [],
+      [new Battle([], [{ id: generateId("round") }])],
+      []
+    )
+  );
+  const [count, setCount] = useState(0);
 
   function addCharacter(isPlayer: boolean) {
-    const id = generateId();
-
-    setCampaign(
-      addCharacterToCurrentBattle(
-        ...addRandomCharacterToCampaign(campaign, isPlayer, id)
-      )
+    const char = campaign.addRandomCharacterToCampaign(
+      "Character name",
+      isPlayer
     );
+    const battle = campaign.getCurrentBattle();
+    battle.addCharacterToCurrentBattle(char);
+    setCampaign(campaign);
+
+    console.log(campaign);
+  }
+
+  function characterAttack(attackerId: Id, defenderIds: Id[]) {
+    const attacker = campaign.getCharacter(attackerId);
+    const attacks = attacker.getBaseAttacks(campaign.events);
+
+    if (!attacks.length) {
+      throw new Error("Has no attacks");
+    }
+
+    const defenders = defenderIds.map((defenderId) =>
+      campaign.getCharacter(defenderId)
+    );
+
+    const attack = attacks[0];
+
+    defenders.forEach((defender) => {
+      return campaign.performCharacterAttack(
+        attacker,
+        roll(D20),
+        attack.effects,
+        defender
+      );
+    });
+
+    setCampaign(campaign);
   }
 
   function renderCharacter(
-    battleChar: BattleCharacter,
+    battleCharacter: BattleCharacter,
     currentRound: Round,
-    characterToAct: BattleCharacter
+    characterToAct: BattleCharacter,
+    battle: Battle
   ) {
-    const { characterId } = battleChar;
-    const character = getCharacter(campaign, characterId);
-    const hasSpentAction = characterHasRoundEvent(
-      campaign,
+    const { characterId } = battleCharacter;
+    const character = campaign.getCharacter(characterId);
+    const hasSpentAction = campaign.characterHasRoundEvent(
       currentRound,
       characterId,
       CampaignEventType.CharacterPrimaryAction
     );
 
-    const hasSpentBonus = characterHasRoundEvent(
-      campaign,
+    const hasSpentBonus = campaign.characterHasRoundEvent(
       currentRound,
       characterId,
-      CampaignEventType.CharacterBonusAction
+      CampaignEventType.CharacterSecondaryAction
     );
 
-    const hasFinished = characterHasRoundEvent(
-      campaign,
+    const hasFinished = campaign.characterHasRoundEvent(
       currentRound,
       characterId,
       CampaignEventType.CharacterEndRound
     );
 
     const currentCharacterAction =
-      battleChar.characterId ===
+      battleCharacter.characterId ===
       (characterToAct ? characterToAct.characterId : undefined);
 
     const currentActionClass = currentCharacterAction
@@ -120,7 +200,7 @@ export default function Battle() {
           currentActionClass || ""
         }`}
       >
-        <div>
+        <div className="w-full">
           <div
             className="absolute w-full h-full z-0"
             style={{
@@ -139,7 +219,7 @@ export default function Battle() {
                 {character.temporaryHealth} temporary +{" "}
                 {character.currentHealth}/{character.maximumHealth} hp
               </div>
-              <div>{battleChar.initiative} initiative</div>
+              <div>{battleCharacter.initiative} initiative</div>
               <div>
                 Level {character.characterClasses[0].level}{" "}
                 {character.characterClasses[0].clazz}
@@ -148,50 +228,35 @@ export default function Battle() {
 
             {currentCharacterAction && (
               <div className="flex gap-x-2">
-                <button
+                <select
                   disabled={hasSpentAction || hasFinished}
-                  onClick={() =>
-                    setCampaign({
-                      ...characterPerformBattleAction(
-                        campaign,
-                        ActionType.Attack,
-                        CampaignEventType.CharacterPrimaryAction,
-                        character.id
-                      ),
-                    })
+                  className="border bg-transparent"
+                  onChange={(e) =>
+                    characterAttack(battleCharacter.characterId, [
+                      e.target.value,
+                    ])
                   }
-                  className="border disabled:border-slate-500 disabled:bg-slate-700 disabled:text-slate-500 border-white p-3 rounded hover:bg-slate-500"
+                  placeholder="Attack"
                 >
-                  Action
-                </button>
-
-                <button
-                  disabled={hasSpentBonus || hasFinished}
-                  onClick={() =>
-                    setCampaign({
-                      ...characterPerformBattleAction(
-                        campaign,
-                        ActionType.Attack,
-                        CampaignEventType.CharacterBonusAction,
-                        character.id
-                      ),
-                    })
-                  }
-                  className="border disabled:border-slate-500 disabled:bg-slate-700 disabled:text-slate-500 border-white p-3 rounded hover:bg-slate-500"
-                >
-                  Bonus action
-                </button>
+                  <option>Select target</option>
+                  {battle.characters
+                    .filter((c) => c.characterId != character.id)
+                    .map((c) => (
+                      <option key={c.characterId}>{c.characterId}</option>
+                    ))}
+                </select>
 
                 <button
                   disabled={hasFinished}
                   onClick={() =>
-                    setCampaign({
-                      ...characterPerformBattleAction(
-                        campaign,
+                    setCampaign(() => {
+                      campaign.characterPerformBattleAction(
                         ActionType.None,
                         CampaignEventType.CharacterEndRound,
                         character.id
-                      ),
+                      );
+
+                      return campaign;
                     })
                   }
                   className="border disabled:border-slate-500 disabled:bg-slate-700 disabled:text-slate-500 border-white p-3 rounded hover:bg-slate-500"
@@ -207,18 +272,24 @@ export default function Battle() {
   }
 
   function renderBattleEvents() {
-    const battle = getCurrentBattle(campaign);
-    const battleEvents = getBattleEvents(campaign, battle);
+    const battle = campaign.getCurrentBattle();
+    const battleEvents = campaign.getBattleEvents(battle);
 
     return (
-      <div className="w-full gap-2 mb-4">
-        {battleEvents.map(renderBattleEvent)}
+      <div className="w-full gap-2 mb-4 flex flex-col">
+        {battleEvents.filter(isVisibleEvent).map(renderBattleEvent)}
       </div>
     );
   }
 
+  function isVisibleEvent(event: CampaignEvent) {
+    const excludedActions = [ActionType.None];
+    return !excludedActions.includes(event.actionType);
+  }
+
   function renderBattleEvent(event: CampaignEvent) {
-    const eventIcon = IconMap[event.eventType];
+    const eventIcon = EventIconMap[event.eventType];
+    const actionIcon = ActionIconMap[event.actionType];
 
     return (
       <div key={event.id} className="flex border border-slate-500 p-2">
@@ -226,18 +297,31 @@ export default function Battle() {
           className="invert"
           width={EventIconSize}
           height={EventIconSize}
+          alt={actionIcon.alt}
+          src={actionIcon.icon}
+        />
+
+        <Image
+          className="invert"
+          width={EventIconSize / 2}
+          height={EventIconSize / 2}
           alt={eventIcon.alt}
           src={eventIcon.icon}
         />
-        {event.actionType}
       </div>
     );
   }
 
-  const currentCharacter = currentCharacterTurn(campaign);
-  const canEndTurn = currentRoundCanEnd(campaign);
-  const currentRound = getCurrentBattleRound(campaign);
-  const battle = getCurrentBattle(campaign);
+  const battle = campaign.getCurrentBattle();
+  const events = campaign.getBattleEvents(battle);
+  const currentCharacter = battle.currentCharacterTurn(events);
+  const canEndTurn = battle.currentRoundCanEnd(events);
+  const currentRound = campaign.getCurrentRound();
+
+  function nextRound() {
+    battle.nextRound();
+    setCampaign(campaign);
+  }
 
   return (
     <div className="w-full">
@@ -260,31 +344,36 @@ export default function Battle() {
       </div>
 
       <h1 className="text-xl mb-4">Round {battle.rounds.length}</h1>
-      <div className="w-full flex gap-2">
+      <div className="w-full flex gap-4">
         <div className="w-3/4">
           <div className="flex flex-col w-full gap-y-4 mb-4">
             {battle.characters
               .sort((a, b) => b.initiative - a.initiative)
               .map((battleChar) =>
-                renderCharacter(battleChar, currentRound, currentCharacter)
+                renderCharacter(
+                  battleChar,
+                  currentRound,
+                  currentCharacter,
+                  battle
+                )
               )}
           </div>
 
           <button
             className="border disabled:border-slate-500 disabled:bg-slate-700 disabled:text-slate-500 border-white p-3 rounded hover:bg-slate-500"
             disabled={!canEndTurn}
-            onClick={() =>
-              setCampaign((old) => {
-                const newRound = getCurrentBattleNextRound(old);
-                return newRound;
-              })
-            }
+            onClick={() => {
+              nextRound();
+            }}
           >
             Next round
           </button>
         </div>
 
-        <div className="w-1/4">{renderBattleEvents()}</div>
+        <div className="w-1/4">
+          <h1>Events ({campaign.events.length})</h1>
+          {renderBattleEvents()}
+        </div>
       </div>
     </div>
   );

@@ -1,21 +1,21 @@
 import {
   ActionType,
-  Clazz,
+  ClazzType,
 } from "../../../../packages/dnd/core/character/character";
 
-import defaultIcon from "@/assets/logo.svg";
-import attackIcon from "@/assets/icons/lorc/thrown-knife.svg";
-import moveIcon from "@/assets/icons/lorc/boot-prints.svg";
-import newRoundIcon from "@/assets/icons/lorc/time-trap.svg";
-import primaryActionIcon from "@/assets/icons/skoll/rank-1.svg";
-import secondaryActionIcon from "@/assets/icons/skoll/rank-2.svg";
-import dodgeEvent from "@/assets/icons/felbrigg/dodge.svg";
-import characterLostHealthEventIcon from "@/assets/icons/zeromancer/heart-minus.svg";
-import characterGainHealthEventIcon from "@/assets/icons/zeromancer/heart-plus.svg";
+import defaultIcon from "../assets/logo.svg";
+import attackIcon from "../assets/icons/lorc/thrown-knife.svg";
+import moveIcon from "../assets/icons/lorc/boot-prints.svg";
+import newRoundIcon from "../assets/icons/lorc/time-trap.svg";
+import primaryActionIcon from "../assets/icons/skoll/rank-1.svg";
+import secondaryActionIcon from "../assets/icons/skoll/rank-2.svg";
+import dodgeEvent from "../assets/icons/felbrigg/dodge.svg";
+import characterLostHealthEventIcon from "../assets/icons/zeromancer/heart-minus.svg";
+import characterGainHealthEventIcon from "../assets/icons/zeromancer/heart-plus.svg";
 import { CampaignEventType } from "../../../../packages/dnd/core/campaign/campaign";
 
 type ClassColors = {
-  [key in Clazz]: string;
+  [key in ClazzType]: string;
 };
 
 export const colors: ClassColors = {
@@ -34,7 +34,7 @@ export const colors: ClassColors = {
 };
 
 type ClassIcons = {
-  [key in Clazz]: string;
+  [key in ClazzType]: string;
 };
 
 export const icons: ClassIcons = {

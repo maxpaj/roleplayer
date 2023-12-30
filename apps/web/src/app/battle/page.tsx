@@ -6,7 +6,7 @@ import { Id, generateId } from "../../../../../packages/dnd/core/id";
 import {
   Battle,
   BattleCharacter,
-  Round,
+  Round, 
 } from "../../../../../packages/dnd/core/battle/battle";
 import {
   Campaign,
@@ -72,7 +72,7 @@ export default function BattlePage() {
       return campaign.performCharacterAttack(
         attacker,
         roll(D20),
-        attack.effects,
+        attack.appliesEffects,
         defender
       );
     });
@@ -143,7 +143,7 @@ export default function BattlePage() {
               <div>{battleCharacter.initiative} initiative</div>
               <div>
                 Level {character.characterClasses[0].level}{" "}
-                {character.characterClasses[0].clazz}
+                {character.characterClasses[0].clazz.name}
               </div>
             </div>
 
@@ -226,6 +226,8 @@ export default function BattlePage() {
           alt={eventIcon.alt}
           src={eventIcon.icon}
         />
+
+        {event.eventType}, {event.actionType}, {event.targetId}
       </div>
     );
   }

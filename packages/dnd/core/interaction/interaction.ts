@@ -1,5 +1,4 @@
 import { Effect } from "./effect";
-import { Status } from "./status";
 
 export enum TargetType {
   Self = "Self",
@@ -21,10 +20,9 @@ export enum InteractionType {
  * Represents an interaction.
  */
 export type Interaction = {
-  name: string;
   type: InteractionType;
-  effects: Effect[];
-  appliesStatuses: Status[];
+  name: string;
+  appliesEffects: Effect[];
   eligibleTargets: TargetType[];
   rangeDistanceMeters: number;
 };

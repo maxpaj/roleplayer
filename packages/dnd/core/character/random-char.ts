@@ -1,5 +1,5 @@
 import { Id, generateId } from "../id";
-import { Alignment, Character, Clazz, Race } from "./character";
+import { Alignment, Clazz, Race, Character } from "./character";
 import { EffectType, ElementType } from "../interaction/effect";
 import { D2, D6 } from "../dice/dice";
 import { ItemSlot, ItemType } from "../item/item";
@@ -16,8 +16,19 @@ function randomDigit(min: number, max: number) {
   return min + Math.floor(Math.random() * variable);
 }
 
-export function randomCharacter(id: Id): Character {
+function randomClass(): Clazz {
   return {
+    levelProgression: [],
+    name: "Random class",
+  };
+}
+
+function randomRace(): Race {
+  return { name: "Random race" };
+}
+
+export function randomCharacter(id: Id): Character {
+  return new Character({
     id,
     name: "Name",
     playerName: "",
@@ -30,10 +41,10 @@ export function randomCharacter(id: Id): Character {
     spellSlots: [],
     statuses: [],
     alignment: randomEnum(Alignment),
-    race: randomEnum(Race),
+    race: randomRace(),
     characterClasses: [
       {
-        clazz: randomEnum(Clazz),
+        clazz: randomClass(),
         level: 1,
       },
     ],
@@ -56,19 +67,19 @@ export function randomCharacter(id: Id): Character {
         id: generateId("item"),
         name: "Short Sword",
         type: ItemType.Equipment,
-        slot: ItemSlot.MainHand,
-        interactions: [
+        slots: [ItemSlot.MainHand, ItemSlot.OffHand],
+        actions: [
           {
             type: InteractionType.Attack,
             name: "Slash attack",
             rangeDistanceMeters: 1,
             eligibleTargets: [TargetType.Character, TargetType.Environment],
-            effects: [
+            appliesEffects: [
               {
                 amountVariable: D6,
                 amountStatic: 2,
-                effectType: EffectType.HealthLoss,
-                effectElement: ElementType.Slashing,
+                type: EffectType.HealthLoss,
+                element: ElementType.Slashing,
               },
             ],
           },
@@ -81,22 +92,22 @@ export function randomCharacter(id: Id): Character {
         rangeDistanceMeters: 1,
         eligibleTargets: [TargetType.Hostile, TargetType.Friendly],
         type: InteractionType.Attack,
-        effects: [
+        appliesEffects: [
           {
             amountStatic: 2,
             amountVariable: D2,
-            effectType: EffectType.HealthLoss,
-            effectElement: ElementType.Bludgeoning,
+            type: EffectType.HealthLoss,
+            element: ElementType.Bludgeoning,
           },
         ],
       },
     ],
     spells: [],
-    resistanceMultiplier(damageType: ElementType) {
+    getResistanceMultiplier(damageType: ElementType) {
       return 1;
     },
-    resistanceAbsolute(damageType: ElementType) {
+    getResistanceAbsolute(damageType: ElementType) {
       return 0;
     },
-  };
+  });
 }

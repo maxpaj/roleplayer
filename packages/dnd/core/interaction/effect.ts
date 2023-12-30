@@ -1,5 +1,4 @@
 import { Dice } from "../dice/dice";
-import { Status } from "./status";
 
 export enum ElementType {
   Slashing = "Slashing",
@@ -18,15 +17,15 @@ export enum ElementType {
 }
 
 export type Effect = {
-  effectElement: ElementType;
-  effectType: EffectType;
+  type: EffectType;
+  element: ElementType;
   amountVariable?: Dice;
   amountStatic?: number;
 };
 
 export enum EffectType {
-  HealthGain = "HealthGain",
-  HealthLoss = "HealthLoss",
   StatusGain = "StatusGain",
   StatusLoss = "StatusLoss",
+  HealthLoss = "HealthLoss",
+  HealthGain = "HealthGain",
 }

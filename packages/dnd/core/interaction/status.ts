@@ -1,4 +1,6 @@
-export enum StatusApply {
+import { Effect } from "./effect";
+
+export enum StatusApplicationTrigger {
   Always = "Always",
   RoundStart = "RoundStart",
   RoundEnd = "RoundEnd",
@@ -6,13 +8,11 @@ export enum StatusApply {
 
 export type Status = {
   name: string;
-  effects: {
-    appliesAt: StatusApply;
-    effect: [];
-  }[];
-  durationType: StatusDurationType;
-  duration: number;
   type: StatusType;
+  appliesEffectAt: StatusApplicationTrigger;
+  appliesEffect: Effect;
+  durationType: StatusDurationType;
+  durationAmount: number;
 };
 
 export enum StatusType {

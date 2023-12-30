@@ -1,19 +1,14 @@
-import { CampaignEvent } from "../campaign/campaign";
-import { D6 } from "../dice/dice";
-import { EffectType, ElementType } from "../interaction/effect";
-import { Id, generateId } from "../id";
+import { Effect, ElementType } from "../interaction/effect";
+import { Id } from "../id";
+import { Interaction } from "../interaction/interaction";
+import { Item } from "../item/item";
 import {
-  Interaction,
-  InteractionType,
-  TargetType,
-} from "../interaction/interaction";
-import { Item, ItemSlot, ItemType } from "../item/item";
+  CampaignEvent,
+  Campaign,
+  CampaignEventType,
+  Position,
+} from "../campaign/campaign";
 import { Status } from "../interaction/status";
-
-export type CharacterAction = {
-  characterId: string;
-  action: Action;
-};
 
 export enum ActionType {
   Attack = "attack",
@@ -25,8 +20,6 @@ export enum ActionType {
   Equipment = "equipment",
   None = "none",
 }
-
-export type Action = {};
 
 export enum Alignment {
   NeutralEvil = "NeutralEvil",
@@ -40,41 +33,25 @@ export enum Alignment {
   ChaoticGood = "ChaoticGood",
 }
 
-export enum Race {
-  Dragonborne = "Dragonborne",
-  Duergar = "Duergar",
-  Dwarf = "Dwarf",
-  Elf = "Elf",
-  Gnome = "Gnome",
-  Githyanki = "Githyanki",
-  Goblin = "Goblin",
-  HalfElf = "HalfElf",
-  Halfling = "Halfling",
-  HalfOrc = "HalfOrc",
-  Human = "Human",
-  Kobold = "Kobold",
-  Orc = "Orc",
-  Tiefling = "Tiefling",
-}
+export type ClassLevelProgression = {
+  unlockedAtLevel: 0;
+  interaction: Interaction;
+};
 
-export enum Clazz {
-  Barbarian = "Barbarian",
-  Bard = "Bard",
-  Cleric = "Cleric",
-  Druid = "Druid",
-  Fighter = "Fighter",
-  Monk = "Monk",
-  Paladin = "Paladin",
-  Ranger = "Ranger",
-  Rogue = "Rogue",
-  Sorcerer = "Sorcerer",
-  Warlock = "Warlock",
-  Wizard = "Wizard",
-}
+export type Race = {
+  name: string;
+};
+
+export type Clazz = {
+  name: string;
+  levelProgression: ClassLevelProgression[];
+};
 
 export type Spell = {
+  id: Id;
   name: string;
   level: number;
+  action: Interaction;
 };
 
 export type SpellSlot = {
@@ -89,131 +66,220 @@ export type CharacterClass = {
   clazz: Clazz;
 };
 
-export type Character = {
-  id: Id;
-  party: Id;
-  isPlayerControlled: boolean;
+export class Character {
+  public id!: Id;
+  public party!: Id;
+  public isPlayerControlled!: boolean;
+  public exists!: boolean;
 
-  name: string;
-  playerName: string;
-  imageUrl: string;
+  public name!: string;
+  public playerName!: string;
+  public imageUrl!: string;
 
-  background: string;
-  faction: string;
-  race: Race;
-  alignment: Alignment;
-  xp: number;
-  maximumHealth: number;
-  currentHealth: number;
-  temporaryHealth: number;
+  public background!: string;
+  public faction!: string;
+  public race!: Race;
+  public alignment!: Alignment;
+  public xp!: number;
+  public maximumHealth!: number;
+  public currentHealth!: number;
+  public temporaryHealth!: number;
 
-  baseSpeed: number;
-  baseArmorClass: number;
-  baseStrength: number;
-  baseDexterity: number;
-  baseConstitution: number;
-  baseIntelligence: number;
-  baseWisdom: number;
-  baseCharisma: number;
-  defense: number;
+  public baseSpeed!: number;
+  public baseArmorClass!: number;
+  public baseStrength!: number;
+  public baseDexterity!: number;
+  public baseConstitution!: number;
+  public baseIntelligence!: number;
+  public baseWisdom!: number;
+  public baseCharisma!: number;
+  public defense!: number;
 
-  spellSlots: SpellSlot[];
-  cantrips: Cantrip[];
-  characterClasses: CharacterClass[];
-  statuses: Status[];
-  inventory: Item[];
-  equipment: Item[];
-  baseAttacks: Interaction[];
-  spells: Spell[];
+  public spellSlots!: SpellSlot[];
+  public cantrips!: Cantrip[];
+  public characterClasses!: CharacterClass[];
+  public statuses!: Status[];
+  public inventory!: Item[];
+  public equipment!: Item[];
+  public baseAttacks!: Interaction[];
+  public spells!: Spell[];
+  public position!: Position;
+  public movementSpeed!: number;
+  public moveSpeedRemaining!: number;
 
-  resistanceMultiplier(damageType: ElementType): number;
-  resistanceAbsolute(damageType: ElementType): number;
-};
+  public constructor(init?: Partial<Character>) {
+    this.cantrips = [];
+    this.statuses = [];
+    this.inventory = [];
+    this.equipment = [];
+    this.baseAttacks = [];
+    this.spellSlots = [];
+    this.spells = [];
 
-function getCharacterFromEvents(
-  characterEvents: CampaignEvent[],
-  characterId: string
-): Character {
-  return {
-    id: characterId,
-    name: "Name",
-    playerName: "",
-    isPlayerControlled: true,
-    imageUrl: "/character.png",
+    Object.assign(this, init);
+  }
 
-    faction: "",
-    party: "",
-    background: "",
-    cantrips: [],
-    spellSlots: [],
-    statuses: [],
-    alignment: Alignment.ChaoticEvil,
-    race: Race.Dragonborne,
-    characterClasses: [
-      {
-        clazz: Clazz.Barbarian,
-        level: 1,
-      },
-    ],
-    baseArmorClass: 10,
-    baseCharisma: 10,
-    baseConstitution: 10,
-    baseDexterity: 10,
-    baseIntelligence: 10,
-    baseSpeed: 30,
-    baseStrength: 10,
-    baseWisdom: 10,
-    currentHealth: 10,
-    maximumHealth: 10,
-    temporaryHealth: 0,
-    xp: 0,
-    defense: 10,
-    inventory: [],
-    equipment: getEquipmentFromEvents(characterEvents),
-    baseAttacks: getBaseAttacksFromEvents(characterEvents),
-    spells: getSpellsFromEvents(characterEvents),
-    resistanceMultiplier(damageType: ElementType) {
-      return 1;
-    },
-    resistanceAbsolute(damageType: ElementType) {
-      return 0;
-    },
-  };
-}
+  getResistanceMultiplier(damageType: ElementType) {
+    return 1;
+  }
 
-function getBaseAttacksFromEvents(
-  characterEvents: CampaignEvent[]
-): Interaction[] {
-  return [];
-}
+  getResistanceAbsolute(damageType: ElementType) {
+    return 0;
+  }
 
-function getSpellsFromEvents(characterEvents: CampaignEvent[]): Spell[] {
-  return [];
-}
+  /**
+   * Get all available actions for the characters, based on equipment, class, spells, etc.
+   * @returns A list of available actions
+   */
+  getAvailableActions(): Interaction[] {
+    return [
+      ...this.equipment.reduce((ac, eq) => {
+        return [...ac, ...eq.actions];
+      }, [] as Interaction[]),
+      ...this.spells.map((s) => s.action),
+    ];
+  }
 
-function getEquipmentFromEvents(characterEvents: CampaignEvent[]): Item[] {
-  return [
-    {
-      id: generateId("item"),
-      name: "Short Sword",
-      type: ItemType.Equipment,
-      slot: ItemSlot.MainHand,
-      interactions: [
-        {
-          type: InteractionType.Attack,
-          name: "Slash attack",
-          rangeDistanceMeters: 1,
-          eligibleTargets: [TargetType.Character, TargetType.Environment],
-          effects: [
-            {
-              amountVariable: D6,
-              amountStatic: 2,
-              effectType: EffectType.HealthGain,
-              effectElement: ElementType.Radiant,
-            },
-          ],
-        },
-      ],
-    },
-  ];
+  applyEffects(effects: Effect) {}
+
+  applyEvent(event: CampaignEvent, campaign: Campaign) {
+    switch (event.eventType) {
+      case CampaignEventType.NewRound:
+        this.moveSpeedRemaining = this.movementSpeed;
+        break;
+      case CampaignEventType.CharacterPrimaryAction:
+      case CampaignEventType.CharacterSecondaryAction:
+        switch (event.actionType) {
+          case ActionType.Spell:
+            const spell = campaign.spells.find((s) => s.id === event.spellId);
+            if (!spell) {
+              throw new Error(`Spell ${event.spellId} not found`);
+            }
+
+            const spellSlot = this.spellSlots.find(
+              (s) => s.level === spell.level && !s.used
+            );
+            if (!spellSlot) {
+              throw new Error(
+                `Character spell slot at level ${spell.level} not found`
+              );
+            }
+
+            spellSlot.used = true;
+            break;
+          case ActionType.Attack:
+
+          default:
+            console.warn("Unknown primary action type");
+            break;
+        }
+        break;
+
+      case CampaignEventType.CharacterSpawned:
+        this.exists = true;
+        break;
+
+      case CampaignEventType.CharacterDespawn:
+        this.exists = false;
+        break;
+
+      case CampaignEventType.CharacterMoveSpeedChange:
+        if (event.amount === undefined || event.amount < 0) {
+          throw new Error(
+            "Cannot set movespeed to non-positive number for CharacterMoveSpeedChange"
+          );
+        }
+
+        this.movementSpeed = event.amount;
+        break;
+
+      case CampaignEventType.CharacterPositionChange:
+        if (event.targetPosition === undefined) {
+          throw new Error(
+            "Target position not defined for CharacterPositionChange"
+          );
+        }
+
+        this.position = event.targetPosition;
+        break;
+
+      case CampaignEventType.CharacterHealthChangeRelative:
+        if (event.amount === undefined) {
+          throw new Error(
+            "Amount is not defined for CharacterHealthChangeRelative"
+          );
+        }
+
+        this.currentHealth += event.amount;
+        break;
+
+      case CampaignEventType.CharacterHealthChangeAbsolute:
+        if (event.amount === undefined) {
+          throw new Error(
+            "Amount is not defined for CharacterHealthChangeAbsolute"
+          );
+        }
+
+        this.currentHealth = event.amount;
+        break;
+
+      case CampaignEventType.CharacterPermanentHealthChange:
+        if (event.amount === undefined) {
+          throw new Error(
+            "Amount is not defined for CharacterPermanentHealthChange"
+          );
+        }
+
+        this.maximumHealth = event.amount || -1;
+        break;
+
+      case CampaignEventType.CharacterGainSpell:
+        const spell = campaign.spells.find((s) => s.id === event.spellId);
+        if (!spell) {
+          throw new Error(
+            `Could not find spell with id ${event.spellId} for CharacterGainSpell`
+          );
+        }
+
+        this.spells.push(spell);
+        break;
+
+      case CampaignEventType.CharacterGainItem:
+        const item = campaign.items.find((eq) => eq.id === event.itemId);
+        if (!item) {
+          throw new Error(
+            `Could not find item with id ${event.itemId} for CharacterGainItem`
+          );
+        }
+
+        this.inventory.push(item);
+        break;
+
+      case CampaignEventType.CharacterMovement:
+        if (event.targetPosition === undefined) {
+          throw new Error("Target position not defined for CharacterMovement");
+        }
+
+        const distanceX = this.position.x + event.targetPosition.x;
+        const distanceY = this.position.y + event.targetPosition.y;
+        const distance = Math.sqrt(
+          Math.pow(distanceX, 2) + Math.pow(distanceY, 2)
+        );
+
+        if (distance > this.moveSpeedRemaining) {
+          throw new Error(
+            "Movement exceeds remaining speed for CharacterMovement"
+          );
+        }
+
+        this.moveSpeedRemaining -= distance;
+        this.position.x = event.targetPosition.x;
+        this.position.y = event.targetPosition.y;
+        break;
+
+      default:
+        console.warn(`Unhandled event ${event.id}, type ${event.eventType}`);
+        break;
+    }
+  }
 }

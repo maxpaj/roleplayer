@@ -7,6 +7,7 @@ export enum ItemType {
 }
 
 export enum ItemSlot {
+  Inventory = "Inventory",
   MainHand = "MainHand",
   OffHand = "OffHand",
   Head = "Head",
@@ -18,6 +19,6 @@ export type Item = {
   id: Id;
   name: string;
   type: ItemType;
-  slot: ItemSlot;
-  interactions: Interaction[];
+  slots: ItemSlot[];
+  actions: Interaction[];
 };

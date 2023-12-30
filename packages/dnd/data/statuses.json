@@ -1,7 +1,16 @@
 [
   {
     "id": "status-1",
-    "effectApplies": ["StatusApply.Always"],
-    "duration": "Duration.LongRest"
+    "name": "Evil Curse",
+    "type": "StatusType.Curse",
+    "appliesEffectAt": "StatusApplicationTrigger.Always",
+    "appliesEffects": {
+      "element": "ElementType.Psychic",
+      "type": "EffectType",
+      "amountVariable": 2,
+      "amountStatic": 2
+    },
+    "durationType": "Duration.NumberOfRounds",
+    "durationRoundsAmount": 10
   }
 ]

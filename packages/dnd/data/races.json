@@ -1,0 +1,44 @@
+[
+    {
+        "name": "Dragonborne"
+    },
+    {
+        "name": "Duergar"
+    },
+    {
+        "name": "Dwarf"
+    },
+    {
+        "name": "Elf"
+    },
+    {
+        "name": "Gnome"
+    },
+    {
+        "name": "Githyanki"
+    },
+    {
+        "name": "Goblin"
+    },
+    {
+        "name": "HalfElf"
+    },
+    {
+        "name": "Halfling"
+    },
+    {
+        "name": "HalfOrc"
+    },
+    {
+        "name": "Human"
+    },
+    {
+        "name": "Kobold"
+    },
+    {
+        "name": "Orc"
+    },
+    {
+        "name": "Tiefling"
+    }
+]

@@ -1,0 +1,44 @@
+[
+    {
+        "name": "Sprint"
+    },
+    {
+        "name": "Jump"
+    },
+    {
+        "name": "Spell (cantrip/spell)"
+    },
+    {
+        "name": "Attack (main-hand)"
+    },
+    {
+        "name": "Attack (off-hand)"
+    },
+    {
+        "name": "Throw"
+    },
+    {
+        "name": "Use Item"
+    },
+    {
+        "name": "Equip"
+    },
+    {
+        "name": "Dip Weapon"
+    },
+    {
+        "name": "Shove"
+    },
+    {
+        "name": "Hide"
+    },
+    {
+        "name": "Improvise Weapon"
+    },
+    {
+        "name": "Help"
+    },
+    {
+        "name": "Disengage"
+    }
+]

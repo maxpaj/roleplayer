@@ -1,17 +1,44 @@
 [
   {
-    "id": "item-1",
+    "id": "short-sword-0",
     "name": "Short Sword",
     "type": "ItemType.Equipment",
-    "itemSlot": "ItemSlot.MainHand",
-    "interactions": [
+    "slot": "ItemSlot.MainHand",
+    "properties": [
+      "Properties.TwoHanded",
+      "Properties.Versatile",
+      "Properties.Light",
+      "Properties.Throwable"
+    ],
+    "actions": [
       {
         "type": "InteractionType.Attack",
         "name": "Slash attack",
         "rangeDistanceMeters": 1,
-        "eligibleTargets": ["TargetType.Character", "TargetType.Environment"],
-        "effects": [
+        "eligibleTargets": [
+          "TargetType.Character",
+          "TargetType.Environment"
+        ],
+        "appliesEffects": [
           {
+            "type": "EffectType.HealthLoss",
+            "amountVariable": 6,
+            "amountStatic": 2,
+            "element": "ElementType.Slashing"
+          }
+        ]
+      },
+      {
+        "type": "InteractionType.Attack",
+        "name": "Slash attack",
+        "rangeDistanceMeters": 1,
+        "eligibleTargets": [
+          "TargetType.Character",
+          "TargetType.Environment"
+        ],
+        "appliesEffects": [
+          {
+            "type": "EffectType.HealthLoss",
             "amountVariable": 6,
             "amountStatic": 2,
             "element": "ElementType.Slashing"
@@ -21,38 +48,45 @@
     ]
   },
   {
-    "id": "item-2",
+    "id": "minor-healing-potion",
     "name": "Minor Healing Potion",
     "type": "ItemType.Potion",
-    "itemSlot": "ItemSlot.None",
-    "interactions": [
+    "slot": "ItemSlot.None",
+    "properties": [],
+    "actions": [
       {
         "type": "InteractionType.Heal",
         "name": "Drink",
         "rangeDistanceMeters": 0,
-        "eligibleTargets": ["TargetType.Character"],
-        "effects": [
+        "eligibleTargets": [
+          "TargetType.Self"
+        ],
+        "appliesEffects": [
           {
             "type": "EffectType.HealthGain",
             "amountVariable": 4,
-            "amountStatic": 2
+            "amountStatic": 2,
+            "element": "ElementType.Slashing"
           }
         ]
       }
     ]
   },
   {
-    "id": "item-3",
+    "id": "speed-potion",
     "name": "Speed Potion",
     "type": "ItemType.Potion",
-    "itemSlot": "ItemSlot.None",
-    "interactions": [
+    "slot": "ItemSlot.None",
+    "properties": [],
+    "actions": [
       {
         "type": "InteractionType.Drink",
         "name": "Drink",
         "rangeDistanceMeters": 0,
-        "eligibleTargets": ["TargetType.Character"],
-        "effects": [
+        "eligibleTargets": [
+          "TargetType.Character"
+        ],
+        "appliesEffects": [
           {
             "type": "EffectType.StatusGain",
             "status": "status-1"
@@ -60,6 +94,226 @@
           {
             "type": "EffectType.StatusGain",
             "status": "status-2"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "wooden-shield-0",
+    "name": "Shield",
+    "type": "ItemType.Equipment",
+    "slot": "ItemSlot.OffHand",
+    "properties": [
+      "Properties.TwoHanded",
+      "Properties.Versatile",
+      "Properties.Light",
+      "Properties.Throwable"
+    ],
+    "actions": [
+      {
+        "type": "InteractionType.Attack",
+        "name": "Slash attack",
+        "rangeDistanceMeters": 1,
+        "eligibleTargets": [
+          "TargetType.Character",
+          "TargetType.Environment"
+        ],
+        "appliesEffects": [
+          {
+            "type": "EffectType.HealthLoss",
+            "amountVariable": 6,
+            "amountStatic": 2,
+            "element": "ElementType.Slashing"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "chain-mail-0",
+    "name": "Chest Armor",
+    "type": "ItemType.Equipment",
+    "slot": "ItemSlot.Chest",
+    "properties": [
+      "Properties.HeavyArmor"
+    ],
+    "passiveEffects": [
+      {
+        "type": "EffectType."
+      }
+    ],
+    "actions": [
+      {
+        "type": "InteractionType.Attack",
+        "name": "Shield Bash",
+        "rangeDistanceMeters": 1,
+        "eligibleTargets": [
+          "TargetType.Character",
+          "TargetType.Environment"
+        ],
+        "appliesEffects": [
+          {
+            "type": "EffectType.HealthLoss",
+            "receiver": "TargetType.Character",
+            "amountVariable": 2,
+            "amountStatic": 2,
+            "element": "ElementType.Bludgeoning"
+          },
+          {
+            "type": "EffectType.StatusGain",
+            "receiver": "TargetType.Character",
+            "amountVariable": 0,
+            "amountStatic": 2,
+            "element": "ElementType.Physical"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "battle-axe-0",
+    "name": "Battle Axe",
+    "type": "ItemType.Equipment",
+    "eligibleSlot": [
+      "ItemSlot.MainHand",
+      "ItemSlot.OffHand"
+    ],
+    "properties": [
+      "Properties.Versatile"
+    ],
+    "actions": [
+      {
+        "type": "InteractionType.OneHandedAttack",
+        "name": "Slash attack",
+        "spendsResources": [
+          "Action.Primary"
+        ],
+        "rangeDistanceMeters": 1.5,
+        "eligibleTargets": [
+          "TargetType.Character",
+          "TargetType.Environment"
+        ],
+        "appliesEffects": [
+          {
+            "type": "EffectType.HealthLoss",
+            "amountVariable": 8,
+            "amountStatic": 0,
+            "element": "ElementType.Slashing"
+          }
+        ]
+      },
+      {
+        "type": "InteractionType.TwoHandedAttack",
+        "name": "Slash attack",
+        "rangeDistanceMeters": 1.5,
+        "spendsResources": [
+          "Action.Primary"
+        ],
+        "eligibleTargets": [
+          "TargetType.Character",
+          "TargetType.Environment"
+        ],
+        "appliesEffects": [
+          {
+            "type": "EffectType.HealthLoss",
+            "amountVariable": 10,
+            "amountStatic": 0,
+            "element": "ElementType.Slashing"
+          }
+        ]
+      },
+      {
+        "type": "InteractionType.TwoHandedAttack",
+        "name": "Cleave",
+        "rangeDistanceMeters": 1.5,
+        "spendsResources": [
+          "Action.Primary"
+        ],
+        "eligibleTargets": [
+          "TargetType.Character",
+          "TargetType.Environment"
+        ],
+        "appliesEffects": [
+          {
+            "type": "EffectType.HealthLoss",
+            "amountVariable": 10,
+            "amountStatic": 0,
+            "element": "ElementType.Slashing"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "battle-axe-1",
+    "name": "Battle Axe +1",
+    "type": "ItemType.Equipment",
+    "eligibleSlot": [
+      "ItemSlot.MainHand",
+      "ItemSlot.OffHand"
+    ],
+    "properties": [
+      "Properties.Versatile"
+    ],
+    "actions": [
+      {
+        "type": "InteractionType.OneHandedAttack",
+        "name": "Slash attack",
+        "spendsResources": [
+          "Action.Primary"
+        ],
+        "rangeDistanceMeters": 1.5,
+        "eligibleTargets": [
+          "TargetType.Character",
+          "TargetType.Environment"
+        ],
+        "appliesEffects": [
+          {
+            "type": "EffectType.HealthLoss",
+            "amountVariable": 8,
+            "amountStatic": 1,
+            "element": "ElementType.Slashing"
+          }
+        ]
+      },
+      {
+        "type": "InteractionType.TwoHandedAttack",
+        "name": "Slash attack",
+        "rangeDistanceMeters": 1.5,
+        "spendsResources": [
+          "Action.Primary"
+        ],
+        "eligibleTargets": [
+          "TargetType.Character",
+          "TargetType.Environment"
+        ],
+        "appliesEffects": [
+          {
+            "type": "EffectType.HealthLoss",
+            "amountVariable": 10,
+            "amountStatic": 1,
+            "element": "ElementType.Slashing"
+          }
+        ]
+      },
+      {
+        "type": "InteractionType.TwoHandedAttack",
+        "name": "Cleave",
+        "rangeDistanceMeters": 1.5,
+        "spendsResources": [
+          "Action.Primary"
+        ],
+        "eligibleTargets": [
+          "TargetType.Character",
+          "TargetType.Environment"
+        ],
+        "appliesEffects": [
+          {
+            "type": "EffectType.HealthLoss",
+            "amountVariable": 10,
+            "amountStatic": 0,
+            "element": "ElementType.Slashing"
           }
         ]
       }

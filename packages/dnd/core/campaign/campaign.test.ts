@@ -1,6 +1,6 @@
 import { Campaign } from "./campaign";
 
-describe("campaign", () => {
+describe("Campaign", () => {
   describe("addRandomCharacterToCampaign", () => {
     it("adding a new character should add another to the campaign", () => {
       const campaign: Campaign = new Campaign([], [], [], []);

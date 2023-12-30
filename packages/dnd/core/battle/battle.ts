@@ -1,5 +1,9 @@
 import { Id, generateId } from "../id";
-import { CampaignEvent, CampaignEventType } from "../campaign/campaign";
+import {
+  Campaign,
+  CampaignEvent,
+  CampaignEventType,
+} from "../campaign/campaign";
 import { ActionType, Character } from "../character/character";
 import { getCharacterInitiative } from "../character/character-stats";
 
@@ -7,17 +11,23 @@ export type Round = {
   id: Id;
 };
 
-export type BattleCharacter = {
-  characterId: Id;
-  initiative: number;
-};
+export class BattleCharacter {
+  public characterId!: Id;
+  public initiative!: number;
+
+  public constructor(init?: Partial<BattleCharacter>) {
+    Object.assign(this, init);
+  }
+
+  applyEvent(event: CampaignEvent, campaign: Campaign) {}
+}
 
 export class Battle {
-  id: Id;
-  characters: BattleCharacter[];
-  rounds: Round[];
+  public id: Id;
+  public characters: BattleCharacter[];
+  public rounds: Round[];
 
-  constructor(characters: BattleCharacter[] = [], rounds: Round[] = []) {
+  public constructor(characters: BattleCharacter[] = [], rounds: Round[] = []) {
     this.id = generateId("battle");
     this.characters = characters;
     this.rounds = rounds;
@@ -37,17 +47,11 @@ export class Battle {
     );
   }
 
-  nextRound() {
-    const next = { id: `round-${this.rounds.length + 1}` };
-    this.rounds.push(next);
-    return next;
-  }
-
   addCharacterToCurrentBattle(character: Character) {
-    const added = {
+    const added = new BattleCharacter({
       characterId: character.id,
       initiative: getCharacterInitiative(character),
-    };
+    });
     this.characters.push(added);
     return added;
   }
@@ -75,7 +79,7 @@ export class Battle {
   publishNewRoundEvent(nextRoundId: string) {
     return {
       id: generateId("event"),
-      eventType: CampaignEventType.BattleNewRound,
+      eventType: CampaignEventType.NewRound,
       actionType: ActionType.None,
       characterId: "system",
       roundId: nextRoundId,

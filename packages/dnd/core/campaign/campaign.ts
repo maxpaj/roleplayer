@@ -1,5 +1,6 @@
 import { Battle, Round } from "../battle/battle";
-import { ActionType, Character } from "../character/character";
+import { ActionType, Spell } from "../character/character";
+import { Character } from "../character/character";
 import { randomCharacter } from "../character/random-char";
 import { roll } from "../dice/dice";
 import { Effect } from "../interaction/effect";
@@ -7,30 +8,45 @@ import { Id, generateId } from "../id";
 import { Item } from "../item/item";
 
 export enum CampaignEventType {
-  BattleNewRound = "BattleNewRound",
+  Unknown = "Unknown",
+  NewRound = "NewRound",
   CharacterStartRound = "CharacterStart",
   CharacterPrimaryAction = "CharacterPrimaryAction",
   CharacterSecondaryAction = "CharacterSecondaryAction",
   CharacterMovement = "CharacterMovement",
   CharacterEndRound = "CharacterEndRound",
-  CharacterHealthLoss = "CharacterDefense",
   CharacterDodge = "CharacterDodge",
   CharacterSpawned = "CharacterSpawned",
-  CharacterGainAbility = "CharacterGainAbility",
-  CharacterHealthGain = "CharacterHealthGain",
+  CharacterGainSpell = "CharacterGainSpell",
+  CharacterPermanentHealthChange = "CharacterPermanentHealthChange",
+  CharacterGainItem = "CharacterGainItem",
+  CharacterDespawn = "CharacterDespawn",
+  CharacterHealthChangeAbsolute = "CharacterHealthChangeAbsolute",
+  CharacterHealthChangeRelative = "CharacterHealthChangeRelative",
+  CharacterPositionChange = "CharacterPositionChange",
+  CharacterMoveSpeedChange = "CharacterMoveSpeedChange",
 }
+
+export type Position = {
+  x: number;
+  y: number;
+  z: number;
+};
 
 export type CampaignEvent = {
   id: Id;
   eventType: CampaignEventType;
-  actionType: ActionType;
+
+  actionType?: ActionType;
+  amount?: number;
+  targetPosition?: Position;
 
   roundId?: Id;
   battleId?: Id;
-  weaponId?: Id;
   spellId?: Id;
   characterId?: Id;
   targetId?: Id;
+  itemId?: Id;
 };
 
 export class Campaign {
@@ -38,33 +54,49 @@ export class Campaign {
   characters: Character[];
   battles: Battle[];
   events: CampaignEvent[];
+  spells: Spell[];
+  rounds: Round[];
 
   constructor(
     items: Item[] = [],
     characters: Character[] = [],
     battles: Battle[] = [],
-    events: CampaignEvent[] = []
+    events: CampaignEvent[] = [],
+    spells: Spell[] = [],
+    rounds: Round[] = []
   ) {
     this.items = items;
     this.characters = characters;
     this.battles = battles;
     this.events = events;
+    this.spells = spells;
+    this.rounds = rounds;
   }
 
-  private getCharactersEvents(): { [index: Id]: CampaignEvent[] } {
-    return this.events.reduce((sum, curr) => {
-      sum[curr.id] = sum[curr.id] || [];
-      sum[curr.id].push(curr);
-      return sum;
-    }, {} as { [index: Id]: CampaignEvent[] });
+  nextRound() {
+    const next = { id: `round-${this.rounds.length + 1}` };
+    this.rounds.push(next);
+    return next;
   }
 
   getCharacter(characterId: Id) {
     const character = this.characters.find((c) => c.id === characterId);
-
     if (!character) {
       throw new Error(`Could not find character with id ${characterId}`);
     }
+
+    return character;
+  }
+
+  getCharacterFromEvents(characterId: Id) {
+    const characterEvents = this.events.filter(
+      (c) => c.characterId === characterId
+    );
+
+    const character = new Character();
+    characterEvents.forEach((event) => {
+      return character.applyEvent(event, this);
+    }, character);
 
     return character;
   }
@@ -77,12 +109,16 @@ export class Campaign {
     return this.events.filter((e) => e.battleId === battle.id);
   }
 
-  getCurrentBattle() {
+  getCurrentBattle(): Battle | undefined {
     return this.battles[this.battles.length - 1];
   }
 
   getCurrentRound() {
     const battle = this.getCurrentBattle();
+    if (!battle) {
+      return;
+    }
+
     return battle.rounds[battle.rounds.length - 1];
   }
 
@@ -101,8 +137,8 @@ export class Campaign {
       (attackEffect.amountStatic || 0) + roll(attackEffect.amountVariable);
 
     return (
-      amount * defender.resistanceMultiplier(attackEffect.effectElement) -
-      defender.resistanceAbsolute(attackEffect.effectElement)
+      amount * defender.getResistanceMultiplier(attackEffect.element) -
+      defender.getResistanceAbsolute(attackEffect.element)
     );
   }
 
@@ -132,8 +168,8 @@ export class Campaign {
   ) {
     const currentBattle = this.getCurrentBattle();
     const currentRound = this.getCurrentRound();
-    const hit = defender.defense > attackHitRoll;
 
+    const hit = defender.defense < attackHitRoll;
     const events = hit
       ? attackEffects.map((a) => {
           const defenderDamage = this.getCharacterEffectDamageTaken(
@@ -145,10 +181,10 @@ export class Campaign {
             id: generateId("event"),
             characterId: defender.id,
             actionType: ActionType.Attack,
-            eventType: CampaignEventType.CharacterHealthLoss,
-            amount: defenderDamage,
-            battleId: currentBattle.id,
-            roundId: currentRound.id,
+            eventType: CampaignEventType.CharacterHealthChangeRelative,
+            amount: -1 * defenderDamage,
+            battleId: currentBattle?.id,
+            roundId: currentRound?.id,
           };
         })
       : [
@@ -157,8 +193,8 @@ export class Campaign {
             characterId: defender.id,
             actionType: ActionType.Attack,
             eventType: CampaignEventType.CharacterDodge,
-            battleId: currentBattle.id,
-            roundId: currentRound.id,
+            battleId: currentBattle?.id,
+            roundId: currentRound?.id,
           },
         ];
 
@@ -167,15 +203,14 @@ export class Campaign {
       characterId: attacker.id,
       actionType: ActionType.Attack,
       eventType: CampaignEventType.CharacterPrimaryAction,
-      battleId: currentBattle.id,
-      roundId: currentRound.id,
+      battleId: currentBattle?.id,
+      roundId: currentRound?.id,
     });
 
     this.publishCampaignEvent(...events);
   }
 
   publishCampaignEvent(...events: CampaignEvent[]) {
-    events.forEach((e) => console.table(e));
     this.events.push(...events);
     return events;
   }

@@ -2,10 +2,10 @@ import { Battle, Round } from "../battle/battle";
 import { ActionType, Spell } from "../character/character";
 import { Character } from "../character/character";
 import { randomCharacter } from "../character/random-char";
-import { roll } from "../dice/dice";
 import { Effect } from "../interaction/effect";
 import { Id, generateId } from "../id";
 import { Item } from "../item/item";
+import { Status } from "../interaction/status";
 
 export enum CampaignEventType {
   Unknown = "Unknown",
@@ -17,14 +17,15 @@ export enum CampaignEventType {
   CharacterEndRound = "CharacterEndRound",
   CharacterDodge = "CharacterDodge",
   CharacterSpawned = "CharacterSpawned",
-  CharacterGainSpell = "CharacterGainSpell",
+  CharacterSpellGain = "CharacterGainSpell",
   CharacterPermanentHealthChange = "CharacterPermanentHealthChange",
-  CharacterGainItem = "CharacterGainItem",
+  CharacterItemGain = "CharacterGainItem",
   CharacterDespawn = "CharacterDespawn",
   CharacterHealthChangeAbsolute = "CharacterHealthChangeAbsolute",
   CharacterHealthChangeRelative = "CharacterHealthChangeRelative",
   CharacterPositionChange = "CharacterPositionChange",
   CharacterMoveSpeedChange = "CharacterMoveSpeedChange",
+  CharacterStatusGain = "CharacterStatusGain",
 }
 
 export type Position = {
@@ -43,6 +44,7 @@ export type CampaignEvent = {
 
   roundId?: Id;
   battleId?: Id;
+  statusId?: Id;
   spellId?: Id;
   characterId?: Id;
   targetId?: Id;
@@ -56,6 +58,7 @@ export class Campaign {
   events: CampaignEvent[];
   spells: Spell[];
   rounds: Round[];
+  statuses: Status[];
 
   constructor(
     items: Item[] = [],
@@ -63,7 +66,8 @@ export class Campaign {
     battles: Battle[] = [],
     events: CampaignEvent[] = [],
     spells: Spell[] = [],
-    rounds: Round[] = []
+    rounds: Round[] = [],
+    statuses: Status[] = []
   ) {
     this.items = items;
     this.characters = characters;
@@ -71,6 +75,7 @@ export class Campaign {
     this.events = events;
     this.spells = spells;
     this.rounds = rounds;
+    this.statuses = statuses;
   }
 
   nextRound() {
@@ -132,16 +137,6 @@ export class Campaign {
     return item;
   }
 
-  getCharacterEffectDamageTaken(defender: Character, attackEffect: Effect) {
-    const amount =
-      (attackEffect.amountStatic || 0) + roll(attackEffect.amountVariable);
-
-    return (
-      amount * defender.getResistanceMultiplier(attackEffect.element) -
-      defender.getResistanceAbsolute(attackEffect.element)
-    );
-  }
-
   characterPerformBattleAction(
     actionType: ActionType,
     eventType: CampaignEventType,
@@ -168,24 +163,34 @@ export class Campaign {
   ) {
     const currentBattle = this.getCurrentBattle();
     const currentRound = this.getCurrentRound();
+    const defenderWasHit = defender.defense < attackHitRoll;
 
-    const hit = defender.defense < attackHitRoll;
-    const events = hit
-      ? attackEffects.map((a) => {
-          const defenderDamage = this.getCharacterEffectDamageTaken(
-            defender,
-            a
-          );
+    const attackEvents = defenderWasHit
+      ? attackEffects.flatMap((a) => {
+          const status = this.statuses.find((s) => s.id === a.appliesStatusId);
+          const defenderDamage = defender.getEffectDamageTaken(a);
+          const defenderStatus = defender.getEffectAppliedStatuses(status);
 
-          return {
-            id: generateId("event"),
-            characterId: defender.id,
-            actionType: ActionType.Attack,
-            eventType: CampaignEventType.CharacterHealthChangeRelative,
-            amount: -1 * defenderDamage,
-            battleId: currentBattle?.id,
-            roundId: currentRound?.id,
-          };
+          return [
+            defenderStatus && {
+              id: generateId("event"),
+              characterId: defender.id,
+              actionType: ActionType.Attack,
+              eventType: CampaignEventType.CharacterStatusGain,
+              battleId: currentBattle?.id,
+              roundId: currentRound?.id,
+              statusId: defenderStatus.id,
+            },
+            defenderDamage && {
+              id: generateId("event"),
+              characterId: defender.id,
+              actionType: ActionType.Attack,
+              eventType: CampaignEventType.CharacterHealthChangeRelative,
+              amount: -1 * defenderDamage,
+              battleId: currentBattle?.id,
+              roundId: currentRound?.id,
+            },
+          ];
         })
       : [
           {
@@ -207,7 +212,11 @@ export class Campaign {
       roundId: currentRound?.id,
     });
 
-    this.publishCampaignEvent(...events);
+    const filtered = attackEvents.filter(
+      (e) => e !== undefined
+    ) as CampaignEvent[];
+
+    this.publishCampaignEvent(...filtered);
   }
 
   publishCampaignEvent(...events: CampaignEvent[]) {

@@ -9,6 +9,7 @@ import {
   Position,
 } from "../campaign/campaign";
 import { Status } from "../interaction/status";
+import { roll } from "../dice/dice";
 
 export enum ActionType {
   Attack = "attack",
@@ -140,6 +141,27 @@ export class Character {
     ];
   }
 
+  getEffectAppliedStatuses(status: Status | undefined) {
+    return status;
+  }
+
+  getEffectDamageTaken(effect: Effect) {
+    if (
+      effect.amountStatic === undefined &&
+      effect.amountVariable === undefined
+    ) {
+      return undefined;
+    }
+
+    const amount =
+      (effect.amountStatic || 0) + roll(effect.amountVariable || 0);
+
+    return (
+      amount * this.getResistanceMultiplier(effect.element) -
+      this.getResistanceAbsolute(effect.element)
+    );
+  }
+
   applyEffects(effects: Effect) {}
 
   applyEvent(event: CampaignEvent, campaign: Campaign) {
@@ -233,7 +255,7 @@ export class Character {
         this.maximumHealth = event.amount || -1;
         break;
 
-      case CampaignEventType.CharacterGainSpell:
+      case CampaignEventType.CharacterSpellGain:
         const spell = campaign.spells.find((s) => s.id === event.spellId);
         if (!spell) {
           throw new Error(
@@ -244,7 +266,18 @@ export class Character {
         this.spells.push(spell);
         break;
 
-      case CampaignEventType.CharacterGainItem:
+      case CampaignEventType.CharacterStatusGain:
+        const status = campaign.statuses.find((s) => s.id === event.statusId);
+        if (!status) {
+          throw new Error(
+            `Could not find status with id ${event.spellId} for CharacterGainSpell`
+          );
+        }
+
+        this.statuses.push(status);
+        break;
+
+      case CampaignEventType.CharacterItemGain:
         const item = campaign.items.find((eq) => eq.id === event.itemId);
         if (!item) {
           throw new Error(

@@ -7,6 +7,6 @@ export const D20: Dice = 20;
 
 export type Dice = number;
 
-export function roll(dice: Dice = D20) {
+export function roll(dice: Dice) {
   return Math.ceil(Math.random() * dice);
 }

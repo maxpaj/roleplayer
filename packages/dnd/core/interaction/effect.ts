@@ -1,4 +1,5 @@
 import { Dice } from "../dice/dice";
+import { Id } from "../id";
 
 export enum ElementType {
   Slashing = "Slashing",
@@ -21,6 +22,7 @@ export type Effect = {
   element: ElementType;
   amountVariable?: Dice;
   amountStatic?: number;
+  appliesStatusId?: Id;
 };
 
 export enum EffectType {

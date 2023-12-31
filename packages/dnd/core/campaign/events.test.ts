@@ -207,7 +207,7 @@ describe("campaign-events", () => {
         },
         {
           actionType: ActionType.None,
-          eventType: CampaignEventType.CharacterGainItem,
+          eventType: CampaignEventType.CharacterItemGain,
           id: generateId("event"),
           characterId: characterId,
           itemId: itemId,

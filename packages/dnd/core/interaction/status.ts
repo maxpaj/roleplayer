@@ -1,3 +1,4 @@
+import { Id } from "../id";
 import { Effect } from "./effect";
 
 export enum StatusApplicationTrigger {
@@ -7,12 +8,15 @@ export enum StatusApplicationTrigger {
 }
 
 export type Status = {
+  id: Id;
   name: string;
   type: StatusType;
-  appliesEffectAt: StatusApplicationTrigger;
-  appliesEffect: Effect;
+  appliesEffects: {
+    effect: Effect;
+    appliesAt: StatusApplicationTrigger;
+  }[];
   durationType: StatusDurationType;
-  durationAmount: number;
+  durationRounds?: number;
 };
 
 export enum StatusType {

@@ -12,14 +12,15 @@ import { Status } from "../interaction/status";
 import { roll } from "../dice/dice";
 
 export enum ActionType {
-  Attack = "attack",
-  Sprint = "sprint",
-  Jump = "jump",
-  Cantrip = "cantrip",
-  Spell = "spell",
-  Item = "item",
-  Equipment = "equipment",
-  None = "none",
+  Attack = "Attack",
+  Dodge = "Dodge",
+  Sprint = "Sprint",
+  Jump = "Jump",
+  Cantrip = "Cantrip",
+  Spell = "Spell",
+  Item = "Item",
+  Equipment = "Equipment",
+  None = "None",
 }
 
 export enum Alignment {
@@ -35,8 +36,8 @@ export enum Alignment {
 }
 
 export type ClassLevelProgression = {
-  unlockedAtLevel: 0;
-  interaction: Interaction;
+  unlockedAtLevel: number;
+  ability: Interaction | Spell;
 };
 
 export type Race = {
@@ -98,11 +99,11 @@ export class Character {
 
   public spellSlots!: SpellSlot[];
   public cantrips!: Cantrip[];
-  public characterClasses!: CharacterClass[];
+  public classes!: CharacterClass[];
   public statuses!: Status[];
   public inventory!: Item[];
   public equipment!: Item[];
-  public baseAttacks!: Interaction[];
+  public baseActions!: Interaction[];
   public spells!: Spell[];
   public position!: Position;
   public movementSpeed!: number;
@@ -113,11 +114,15 @@ export class Character {
     this.statuses = [];
     this.inventory = [];
     this.equipment = [];
-    this.baseAttacks = [];
+    this.baseActions = [];
     this.spellSlots = [];
     this.spells = [];
 
     Object.assign(this, init);
+  }
+
+  getDamageRoll(effect: Effect) {
+    return (effect.amountStatic || 0) + roll(effect.amountVariable || 0);
   }
 
   getResistanceMultiplier(damageType: ElementType) {
@@ -134,10 +139,10 @@ export class Character {
    */
   getAvailableActions(): Interaction[] {
     return [
-      ...this.equipment.reduce((ac, eq) => {
-        return [...ac, ...eq.actions];
-      }, [] as Interaction[]),
+      ...this.baseActions,
+      ...this.equipment.flatMap((eq) => eq.actions),
       ...this.spells.map((s) => s.action),
+      ...this.inventory.flatMap((i) => i.actions),
     ];
   }
 
@@ -145,19 +150,9 @@ export class Character {
     return status;
   }
 
-  getEffectDamageTaken(effect: Effect) {
-    if (
-      effect.amountStatic === undefined &&
-      effect.amountVariable === undefined
-    ) {
-      return undefined;
-    }
-
-    const amount =
-      (effect.amountStatic || 0) + roll(effect.amountVariable || 0);
-
+  getEffectDamageTaken(effect: Effect, damageAmount: number) {
     return (
-      amount * this.getResistanceMultiplier(effect.element) -
+      damageAmount * this.getResistanceMultiplier(effect.element) -
       this.getResistanceAbsolute(effect.element)
     );
   }

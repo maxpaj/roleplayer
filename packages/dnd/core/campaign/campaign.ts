@@ -10,22 +10,29 @@ import { Status } from "../interaction/status";
 export enum CampaignEventType {
   Unknown = "Unknown",
   NewRound = "NewRound",
-  CharacterStartRound = "CharacterStart",
+  CharacterSpawned = "CharacterSpawned",
+  CharacterDespawn = "CharacterDespawn",
+  CharacterStartRound = "CharacterStartRound",
   CharacterPrimaryAction = "CharacterPrimaryAction",
   CharacterSecondaryAction = "CharacterSecondaryAction",
   CharacterMovement = "CharacterMovement",
   CharacterEndRound = "CharacterEndRound",
-  CharacterDodge = "CharacterDodge",
-  CharacterSpawned = "CharacterSpawned",
-  CharacterSpellGain = "CharacterGainSpell",
-  CharacterPermanentHealthChange = "CharacterPermanentHealthChange",
-  CharacterItemGain = "CharacterGainItem",
-  CharacterDespawn = "CharacterDespawn",
+
+  CharacterSpellGain = "CharacterSpellGain",
+  CharacterItemGain = "CharacterItemGain",
   CharacterHealthChangeAbsolute = "CharacterHealthChangeAbsolute",
   CharacterHealthChangeRelative = "CharacterHealthChangeRelative",
+  CharacterPermanentHealthChange = "CharacterPermanentHealthChange",
   CharacterPositionChange = "CharacterPositionChange",
   CharacterMoveSpeedChange = "CharacterMoveSpeedChange",
   CharacterStatusGain = "CharacterStatusGain",
+  CharacterAttackAttackerHit = "CharacterAttackAttackerHit",
+  CharacterAttackAttackerMiss = "CharacterAttackAttackerMiss",
+  CharacterAttackDefenderHit = "CharacterAttackDefenderHit",
+  CharacterAttackDefenderDodge = "CharacterAttackDefenderDodge",
+  CharacterAttackDefenderParry = "CharacterAttackDefenderParry",
+  CharacterHealthGain = "CharacterHealthGain",
+  CharacterHealthLoss = "CharacterHealthLoss",
 }
 
 export type Position = {
@@ -37,8 +44,8 @@ export type Position = {
 export type CampaignEvent = {
   id: Id;
   eventType: CampaignEventType;
+  actionType: ActionType;
 
-  actionType?: ActionType;
   amount?: number;
   targetPosition?: Position;
 
@@ -114,17 +121,20 @@ export class Campaign {
     return this.events.filter((e) => e.battleId === battle.id);
   }
 
+  getCurrentBattleEvents() {
+    const battle = this.getCurrentBattle();
+    if (battle === undefined) {
+      return [];
+    }
+    return this.getBattleEvents(battle);
+  }
+
   getCurrentBattle(): Battle | undefined {
     return this.battles[this.battles.length - 1];
   }
 
-  getCurrentRound() {
-    const battle = this.getCurrentBattle();
-    if (!battle) {
-      return;
-    }
-
-    return battle.rounds[battle.rounds.length - 1];
+  getCurrentRound(): Round | undefined {
+    return this.rounds[this.rounds.length - 1];
   }
 
   getItem(itemId: Id) {
@@ -137,90 +147,100 @@ export class Campaign {
     return item;
   }
 
-  characterPerformBattleAction(
-    actionType: ActionType,
-    eventType: CampaignEventType,
-    characterId: string
-  ) {
-    const currentBattle = this.getCurrentBattle();
-    const currentRound = this.getCurrentRound();
-
-    return this.publishCampaignEvent({
-      id: generateId("event"),
-      actionType,
-      eventType,
-      characterId: characterId,
-      roundId: currentRound?.id,
-      battleId: currentBattle?.id,
-    });
-  }
-
   performCharacterAttack(
     attacker: Character,
     attackHitRoll: number,
     attackEffects: Effect[],
     defender: Character
   ) {
-    const currentBattle = this.getCurrentBattle();
-    const currentRound = this.getCurrentRound();
     const defenderWasHit = defender.defense < attackHitRoll;
+    const hitDodgeEvent = defenderWasHit
+      ? {
+          id: generateId("event"),
+          characterId: defender.id,
+          actionType: ActionType.Attack,
+          eventType: CampaignEventType.CharacterAttackDefenderHit,
+        }
+      : {
+          id: generateId("event"),
+          characterId: defender.id,
+          actionType: ActionType.Dodge,
+          eventType: CampaignEventType.CharacterAttackDefenderDodge,
+        };
 
-    const attackEvents = defenderWasHit
-      ? attackEffects.flatMap((a) => {
-          const status = this.statuses.find((s) => s.id === a.appliesStatusId);
-          const defenderDamage = defender.getEffectDamageTaken(a);
-          const defenderStatus = defender.getEffectAppliedStatuses(status);
+    const damageTakenEvents = defenderWasHit
+      ? attackEffects.flatMap((attack) => {
+          const attackerDamageRoll = attacker.getDamageRoll(attack);
+          const defenderDamageTaken = defender.getEffectDamageTaken(
+            attack,
+            attackerDamageRoll
+          );
 
           return [
-            defenderStatus && {
-              id: generateId("event"),
-              characterId: defender.id,
-              actionType: ActionType.Attack,
-              eventType: CampaignEventType.CharacterStatusGain,
-              battleId: currentBattle?.id,
-              roundId: currentRound?.id,
-              statusId: defenderStatus.id,
-            },
-            defenderDamage && {
+            {
               id: generateId("event"),
               characterId: defender.id,
               actionType: ActionType.Attack,
               eventType: CampaignEventType.CharacterHealthChangeRelative,
-              amount: -1 * defenderDamage,
-              battleId: currentBattle?.id,
-              roundId: currentRound?.id,
+              amount: -1 * defenderDamageTaken,
             },
           ];
         })
-      : [
-          {
-            id: generateId("event"),
-            characterId: defender.id,
-            actionType: ActionType.Attack,
-            eventType: CampaignEventType.CharacterDodge,
-            battleId: currentBattle?.id,
-            roundId: currentRound?.id,
-          },
-        ];
+      : [];
 
-    this.publishCampaignEvent({
+    const statusChangeEvents = defenderWasHit
+      ? attackEffects
+          .filter((attack) => {
+            const status = this.statuses.find(
+              (s) => s.id === attack.appliesStatusId
+            );
+            return status !== undefined;
+          })
+          .flatMap((attack) => {
+            const defenderStatus = defender.getEffectAppliedStatuses(
+              this.statuses.find((s) => s.id === attack.appliesStatusId)
+            );
+
+            return {
+              id: generateId("event"),
+              characterId: defender.id,
+              actionType: ActionType.Attack,
+              eventType: CampaignEventType.CharacterStatusGain,
+              statusId: defenderStatus!.id,
+            };
+          })
+      : [];
+
+    const attackerPrimaryAction = {
       id: generateId("event"),
       characterId: attacker.id,
       actionType: ActionType.Attack,
       eventType: CampaignEventType.CharacterPrimaryAction,
-      battleId: currentBattle?.id,
-      roundId: currentRound?.id,
-    });
+    };
 
-    const filtered = attackEvents.filter(
-      (e) => e !== undefined
-    ) as CampaignEvent[];
-
-    this.publishCampaignEvent(...filtered);
+    return this.publishCampaignEvent(
+      ...[
+        attackerPrimaryAction,
+        hitDodgeEvent,
+        ...damageTakenEvents,
+        ...statusChangeEvents,
+      ]
+    );
   }
 
   publishCampaignEvent(...events: CampaignEvent[]) {
-    this.events.push(...events);
+    const currentBattle = this.getCurrentBattle();
+    const currentRound = this.getCurrentRound();
+
+    this.events.push(
+      ...events.map((e) => {
+        return {
+          ...e,
+          roundId: currentRound?.id,
+          battleId: currentBattle?.id,
+        };
+      })
+    );
     return events;
   }
 
@@ -229,6 +249,15 @@ export class Campaign {
   getCharacterRoundEvents(round: Round, characterId: Id) {
     const roundEvents = this.getRoundEvents(round);
     return roundEvents.filter((re) => re.characterId === characterId);
+  }
+
+  endCharacterTurn(character: Character) {
+    this.publishCampaignEvent({
+      eventType: CampaignEventType.CharacterEndRound,
+      id: generateId("event"),
+      actionType: ActionType.None,
+      characterId: character.id,
+    });
   }
 
   characterHasRoundEvent(

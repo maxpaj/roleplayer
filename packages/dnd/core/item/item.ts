@@ -15,10 +15,20 @@ export enum ItemSlot {
   Chest = "Chest",
 }
 
+export enum Rarity {
+  Common = "Common",
+  Uncommon = "Uncommon",
+  Rare = "Rare",
+  VeryRare = "VeryRare",
+  Legendary = "Legendary",
+  Artifact = "Artifact",
+}
+
 export type Item = {
   id: Id;
   name: string;
   type: ItemType;
+  rarity: Rarity;
   slots: ItemSlot[];
   actions: Interaction[];
 };

@@ -8,19 +8,10 @@ export enum TargetType {
   Environment = "Environment",
 }
 
-export enum InteractionType {
-  Drink = "Drink",
-  Throw = "Throw",
-  Attack = "Attack",
-  Push = "Push",
-  Open = "Open",
-}
-
 /**
  * Represents an interaction.
  */
 export type Interaction = {
-  type: InteractionType;
   name: string;
   appliesEffects: Effect[];
   eligibleTargets: TargetType[];

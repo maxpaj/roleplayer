@@ -2,8 +2,8 @@ import { Id, generateId } from "../id";
 import { Alignment, Clazz, Race, Character } from "./character";
 import { EffectType, ElementType } from "../interaction/effect";
 import { D2, D6 } from "../dice/dice";
-import { ItemSlot, ItemType } from "../item/item";
-import { InteractionType, TargetType } from "../interaction/interaction";
+import { ItemSlot, ItemType, Rarity } from "../item/item";
+import { TargetType } from "../interaction/interaction";
 
 function randomEnum<T extends object>(anEnum: T): T[keyof T] {
   const enumValues = Object.keys(anEnum) as T[keyof T][];
@@ -42,7 +42,7 @@ export function randomCharacter(id: Id): Character {
     statuses: [],
     alignment: randomEnum(Alignment),
     race: randomRace(),
-    characterClasses: [
+    classes: [
       {
         clazz: randomClass(),
         level: 1,
@@ -65,12 +65,12 @@ export function randomCharacter(id: Id): Character {
     equipment: [
       {
         id: generateId("item"),
+        rarity: Rarity.Common,
         name: "Short Sword",
         type: ItemType.Equipment,
         slots: [ItemSlot.MainHand, ItemSlot.OffHand],
         actions: [
           {
-            type: InteractionType.Attack,
             name: "Slash attack",
             rangeDistanceMeters: 1,
             eligibleTargets: [TargetType.Character, TargetType.Environment],
@@ -86,12 +86,11 @@ export function randomCharacter(id: Id): Character {
         ],
       },
     ],
-    baseAttacks: [
+    baseActions: [
       {
         name: "Unarmed attack",
         rangeDistanceMeters: 1,
         eligibleTargets: [TargetType.Hostile, TargetType.Friendly],
-        type: InteractionType.Attack,
         appliesEffects: [
           {
             amountStatic: 2,

@@ -1,9 +1,9 @@
 import { Campaign, CampaignEventType } from "../campaign/campaign";
-import { Character } from "../character/character";
+import { ActionType, Character } from "../character/character";
 import { generateId } from "../id";
-import { Item, ItemSlot, ItemType } from "../item/item";
+import { Item, ItemSlot, ItemType, Rarity } from "../item/item";
 import { EffectType, ElementType } from "./effect";
-import { InteractionType, TargetType } from "./interaction";
+import { TargetType } from "./interaction";
 import {
   Status,
   StatusApplicationTrigger,
@@ -12,87 +12,93 @@ import {
 } from "./status";
 
 describe("interactions", () => {
-  it("should apply effects from being hit", () => {
-    const char = new Character();
-    char.id = generateId("char");
+  const frozenStatus: Status = {
+    id: generateId("status"),
+    name: "Chill",
+    durationRounds: 2,
+    durationType: StatusDurationType.NumberOfRounds,
+    type: StatusType.Magic,
+    appliesEffects: [
+      {
+        effect: {
+          element: ElementType.Cold,
+          type: EffectType.HealthLoss,
+          amountStatic: 2,
+          amountVariable: 0,
+        },
+        appliesAt: StatusApplicationTrigger.RoundStart,
+      },
+    ],
+  };
 
-    const frozenStatus: Status = {
-      id: generateId("status"),
-      name: "Chill",
-      durationRounds: 2,
-      durationType: StatusDurationType.NumberOfRounds,
-      type: StatusType.Magic,
-      appliesEffects: [
-        {
-          effect: {
-            element: ElementType.Cold,
+  const frostSword: Item = {
+    id: generateId("item"),
+    rarity: Rarity.Rare,
+    actions: [
+      {
+        appliesEffects: [
+          {
+            element: ElementType.Slashing,
             type: EffectType.HealthLoss,
             amountStatic: 2,
             amountVariable: 0,
           },
-          appliesAt: StatusApplicationTrigger.RoundStart,
-        },
-      ],
-    };
+          {
+            element: ElementType.Cold,
+            type: EffectType.StatusGain,
+            appliesStatusId: frozenStatus.id,
+          },
+        ],
+        eligibleTargets: [TargetType.Hostile],
+        name: "Slash",
+        rangeDistanceMeters: 5,
+      },
+    ],
+    name: "Sword of Frost",
+    slots: [ItemSlot.MainHand],
+    type: ItemType.Equipment,
+  };
 
-    const sword: Item = {
-      id: generateId("item"),
-      actions: [
-        {
-          appliesEffects: [
-            {
-              element: ElementType.Slashing,
-              type: EffectType.HealthLoss,
-              amountStatic: 2,
-              amountVariable: 0,
-            },
-            {
-              element: ElementType.Cold,
-              type: EffectType.StatusGain,
-              appliesStatusId: frozenStatus.id,
-            },
-          ],
-          eligibleTargets: [TargetType.Hostile],
-          name: "Slash",
-          rangeDistanceMeters: 5,
-          type: InteractionType.Attack,
-        },
-      ],
-      name: "Sword of Frost",
-      slots: [ItemSlot.MainHand],
-      type: ItemType.Equipment,
-    };
-    char.equipment.push(sword);
+  it("should apply effects from being hit", () => {
+    const attacker = new Character();
+    attacker.id = generateId("char");
+    attacker.equipment.push(frostSword);
 
-    const actions = char.getAvailableActions();
+    const actions = attacker.getAvailableActions();
     const action = actions.find((a) => a.name === "Slash");
     if (!action) {
       throw new Error("Could not find attack");
     }
 
-    const otherCharId = generateId("char");
-    const otherChar = new Character();
-    otherChar.id = otherCharId;
-    otherChar.defense = 4;
+    const defenderId = generateId("char");
+    const defender = new Character();
+    defender.id = defenderId;
+    defender.defense = 4;
 
     const campaign = new Campaign([], [], [], [], [], [], []);
     campaign.statuses = [frozenStatus];
-    campaign.characters = [char, otherChar];
+    campaign.characters = [attacker, defender];
     campaign.events = [
       {
         id: generateId("event"),
+        actionType: ActionType.None,
         eventType: CampaignEventType.CharacterHealthChangeAbsolute,
         amount: 10,
-        characterId: otherCharId,
+        characterId: defenderId,
       },
     ];
 
-    campaign.performCharacterAttack(char, 15, action.appliesEffects, otherChar);
-    const otherCharacterFromEvents =
-      campaign.getCharacterFromEvents(otherCharId);
-    expect(otherCharacterFromEvents.currentHealth).toBe(8);
+    campaign.performCharacterAttack(
+      attacker,
+      15,
+      action.appliesEffects,
+      defender
+    );
+
+    const defenderFromEvents = campaign.getCharacterFromEvents(defenderId);
+    expect(defenderFromEvents.currentHealth).toBe(8);
     expect(
-      otherCharacterFromEvents.statuses.find((s) => s.name === "Chill")
+      defenderFromEvents.statuses.find((s) => s.name === "Chill")
     ).toBeDefined();
   });
 });

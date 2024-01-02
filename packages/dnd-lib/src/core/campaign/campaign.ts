@@ -101,12 +101,12 @@ export class Campaign {
 
   getCharacterFromEvents(characterId: Id) {
     const characterEvents = this.events.filter(
-      (c) => c.characterId === characterId
+      (c) => c.characterId === characterId || c.characterId === "system"
     );
 
     const character = new Character();
     characterEvents.forEach((event) => {
-      return character.applyEvent(event, this);
+      character.applyEvent(event, this);
     }, character);
 
     return character;

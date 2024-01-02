@@ -11,6 +11,11 @@ import { Status } from "../interaction/status";
 import { roll } from "../dice/dice";
 import { Id } from "../../id";
 
+export enum ActionResourceType {
+  Primary = "Primary",
+  Secondary = "Secondary",
+}
+
 export enum ActionType {
   Attack = "Attack",
   Dodge = "Dodge",
@@ -78,14 +83,13 @@ export class Character {
   public playerName!: string;
   public imageUrl!: string;
 
-  public background!: string;
-  public faction!: string;
-  public race!: Race;
-  public alignment!: Alignment;
   public xp!: number;
+  public race!: Race;
+  public gold!: number;
+  public faction!: string;
+  public background!: string;
+  public alignment!: Alignment;
   public maximumHealth!: number;
-  public currentHealth!: number;
-  public temporaryHealth!: number;
 
   public baseSpeed!: number;
   public baseArmorClass!: number;
@@ -107,7 +111,12 @@ export class Character {
   public spells!: Spell[];
   public position!: Position;
   public movementSpeed!: number;
-  public moveSpeedRemaining!: number;
+
+  // Temporary resources
+  public currentHealth!: number;
+  public temporaryHealth!: number;
+  public movementRemaining!: number;
+  public actionResourcesRemaining: ActionResourceType[];
 
   public constructor(init?: Partial<Character>) {
     this.cantrips = [];
@@ -117,6 +126,7 @@ export class Character {
     this.baseActions = [];
     this.spellSlots = [];
     this.spells = [];
+    this.actionResourcesRemaining = [];
 
     Object.assign(this, init);
   }
@@ -163,21 +173,26 @@ export class Character {
   applyEvent(event: CampaignEvent, campaign: Campaign) {
     switch (event.eventType) {
       case CampaignEventType.NewRound:
-        this.moveSpeedRemaining = this.movementSpeed;
+        this.movementRemaining = this.movementSpeed;
+        console.log(this.movementRemaining, this.movementSpeed);
+        this.actionResourcesRemaining = [
+          ActionResourceType.Primary,
+          ActionResourceType.Secondary,
+        ];
         break;
       case CampaignEventType.CharacterPrimaryAction:
       case CampaignEventType.CharacterSecondaryAction:
         switch (event.actionType) {
           case ActionType.Spell:
             const spell = campaign.spells.find((s) => s.id === event.spellId);
-            if (!spell) {
+            if (spell === undefined) {
               throw new Error(`Spell ${event.spellId} not found`);
             }
 
             const spellSlot = this.spellSlots.find(
               (s) => s.level === spell.level && !s.used
             );
-            if (!spellSlot) {
+            if (spellSlot === undefined) {
               throw new Error(
                 `Character spell slot at level ${spell.level} not found`
               );
@@ -188,7 +203,7 @@ export class Character {
           case ActionType.Attack:
 
           default:
-            console.warn("Unknown primary action type");
+            console.warn("Unknown action type");
             break;
         }
         break;
@@ -277,7 +292,7 @@ export class Character {
 
       case CampaignEventType.CharacterSpellGain:
         const spell = campaign.spells.find((s) => s.id === event.spellId);
-        if (!spell) {
+        if (spell === undefined) {
           throw new Error(
             `Could not find spell with id ${event.spellId} for CharacterGainSpell`
           );
@@ -288,7 +303,7 @@ export class Character {
 
       case CampaignEventType.CharacterStatusGain:
         const status = campaign.statuses.find((s) => s.id === event.statusId);
-        if (!status) {
+        if (status === undefined) {
           throw new Error(
             `Could not find status with id ${event.spellId} for CharacterGainSpell`
           );
@@ -299,7 +314,7 @@ export class Character {
 
       case CampaignEventType.CharacterItemGain:
         const item = campaign.items.find((eq) => eq.id === event.itemId);
-        if (!item) {
+        if (item === undefined) {
           throw new Error(
             `Could not find item with id ${event.itemId} for CharacterGainItem`
           );
@@ -319,13 +334,15 @@ export class Character {
           Math.pow(distanceX, 2) + Math.pow(distanceY, 2)
         );
 
-        if (distance > this.moveSpeedRemaining) {
+        console.log(distance, this.movementRemaining);
+
+        if (distance > this.movementRemaining) {
           throw new Error(
             "Movement exceeds remaining speed for CharacterMovement"
           );
         }
 
-        this.moveSpeedRemaining -= distance;
+        this.movementRemaining -= distance;
         this.position.x = event.targetPosition.x;
         this.position.y = event.targetPosition.y;
         break;

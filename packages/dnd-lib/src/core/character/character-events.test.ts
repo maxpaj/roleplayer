@@ -1,4 +1,3 @@
-import assert from "assert";
 import { ActionType, Character } from "./character";
 import { ItemSlot, ItemType, Rarity } from "../item/item";
 import { Campaign, CampaignEventType } from "../campaign/campaign";
@@ -117,6 +116,12 @@ describe("getCharacterFromEvents", () => {
       },
       {
         actionType: ActionType.None,
+        eventType: CampaignEventType.NewRound,
+        id: generateId("event"),
+        characterId: "system",
+      },
+      {
+        actionType: ActionType.None,
         eventType: CampaignEventType.CharacterMovement,
         targetPosition: {
           x: 10,
@@ -128,12 +133,7 @@ describe("getCharacterFromEvents", () => {
       },
     ];
 
-    try {
-      campaign.getCharacterFromEvents(characterId);
-      assert.fail();
-    } catch (e) {
-      // Success
-    }
+    expect(() => campaign.getCharacterFromEvents(characterId)).toThrow();
   });
 
   it("should apply temporary health change events", () => {
@@ -252,10 +252,6 @@ describe("getCharacterFromEvents", () => {
       },
     ];
 
-    try {
-      campaign.getCharacterFromEvents(characterId);
-    } catch (e) {
-      // Success
-    }
+    expect(campaign.getCharacterFromEvents(characterId)).toBeDefined();
   });
 });

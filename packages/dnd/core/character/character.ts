@@ -151,9 +151,10 @@ export class Character {
   }
 
   getEffectDamageTaken(effect: Effect, damageAmount: number) {
-    return (
+    return Math.max(
       damageAmount * this.getResistanceMultiplier(effect.element) -
-      this.getResistanceAbsolute(effect.element)
+        this.getResistanceAbsolute(effect.element),
+      0
     );
   }
 
@@ -220,7 +221,31 @@ export class Character {
         this.position = event.targetPosition;
         break;
 
-      case CampaignEventType.CharacterHealthChangeRelative:
+      case CampaignEventType.CharacterHealthChange:
+        if (event.amount === undefined || event.amount < 0) {
+          throw new Error("Amount is not defined for CharacterHealthGain");
+        }
+
+        this.currentHealth = event.amount;
+        break;
+
+      case CampaignEventType.CharacterHealthGain:
+        if (event.amount === undefined || event.amount < 0) {
+          throw new Error("Amount is not defined for CharacterHealthGain");
+        }
+
+        this.currentHealth += event.amount;
+        break;
+
+      case CampaignEventType.CharacterHealthLoss:
+        if (event.amount === undefined || event.amount < 0) {
+          throw new Error("Amount is not defined for CharacterHealthLoss");
+        }
+
+        this.currentHealth -= event.amount;
+        break;
+
+      case CampaignEventType.CharacterHealthChange:
         if (event.amount === undefined) {
           throw new Error(
             "Amount is not defined for CharacterHealthChangeRelative"
@@ -230,7 +255,7 @@ export class Character {
         this.currentHealth += event.amount;
         break;
 
-      case CampaignEventType.CharacterHealthChangeAbsolute:
+      case CampaignEventType.CharacterHealthChange:
         if (event.amount === undefined) {
           throw new Error(
             "Amount is not defined for CharacterHealthChangeAbsolute"

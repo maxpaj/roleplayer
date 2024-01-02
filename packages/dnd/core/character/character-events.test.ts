@@ -159,15 +159,15 @@ describe("getCharacterFromEvents", () => {
       },
       {
         actionType: ActionType.None,
-        eventType: CampaignEventType.CharacterHealthChangeAbsolute,
+        eventType: CampaignEventType.CharacterHealthChange,
         amount: 12,
         id: generateId("event"),
         characterId: characterId,
       },
       {
         actionType: ActionType.None,
-        eventType: CampaignEventType.CharacterHealthChangeRelative,
-        amount: -4,
+        eventType: CampaignEventType.CharacterHealthLoss,
+        amount: 4,
         id: generateId("event"),
         characterId: characterId,
       },

@@ -82,7 +82,7 @@ describe("interactions", () => {
       {
         id: generateId("event"),
         actionType: ActionType.None,
-        eventType: CampaignEventType.CharacterHealthChangeAbsolute,
+        eventType: CampaignEventType.CharacterHealthChange,
         amount: 10,
         characterId: defenderId,
       },

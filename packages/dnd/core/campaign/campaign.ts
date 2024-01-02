@@ -17,11 +17,8 @@ export enum CampaignEventType {
   CharacterSecondaryAction = "CharacterSecondaryAction",
   CharacterMovement = "CharacterMovement",
   CharacterEndRound = "CharacterEndRound",
-
   CharacterSpellGain = "CharacterSpellGain",
   CharacterItemGain = "CharacterItemGain",
-  CharacterHealthChangeAbsolute = "CharacterHealthChangeAbsolute",
-  CharacterHealthChangeRelative = "CharacterHealthChangeRelative",
   CharacterPermanentHealthChange = "CharacterPermanentHealthChange",
   CharacterPositionChange = "CharacterPositionChange",
   CharacterMoveSpeedChange = "CharacterMoveSpeedChange",
@@ -33,6 +30,7 @@ export enum CampaignEventType {
   CharacterAttackDefenderParry = "CharacterAttackDefenderParry",
   CharacterHealthGain = "CharacterHealthGain",
   CharacterHealthLoss = "CharacterHealthLoss",
+  CharacterHealthChange = "CharacterHealthChange",
 }
 
 export type Position = {
@@ -181,8 +179,8 @@ export class Campaign {
               id: generateId("event"),
               characterId: defender.id,
               actionType: ActionType.Attack,
-              eventType: CampaignEventType.CharacterHealthChangeRelative,
-              amount: -1 * defenderDamageTaken,
+              eventType: CampaignEventType.CharacterHealthLoss,
+              amount: defenderDamageTaken,
             },
           ];
         })

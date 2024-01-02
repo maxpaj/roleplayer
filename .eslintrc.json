@@ -1,7 +1,0 @@
-{
-  "ignorePatterns": ["apps/**", "packages/**"],
-  "parser": "@typescript-eslint/parser",
-  "parserOptions": {
-    "project": true
-  }
-}

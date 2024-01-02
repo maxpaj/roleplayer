@@ -1,5 +1,3 @@
-import { Campaign } from "@repo/dnd";
-
 import defaultIcon from "../assets/logo.svg";
 import attackIcon from "../assets/icons/lorc/thrown-knife.svg";
 import moveIcon from "../assets/icons/lorc/boot-prints.svg";
@@ -9,6 +7,8 @@ import secondaryActionIcon from "../assets/icons/skoll/rank-2.svg";
 import dodgeEvent from "../assets/icons/felbrigg/dodge.svg";
 import characterLostHealthEventIcon from "../assets/icons/zeromancer/heart-minus.svg";
 import characterGainHealthEventIcon from "../assets/icons/zeromancer/heart-plus.svg";
+import { ActionType } from "@repo/dnd-lib/character";
+import { CampaignEventType } from "@repo/dnd-lib/campaign";
 
 type ClassColors = {
   [key: string]: string;

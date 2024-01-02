@@ -1,7 +1,5 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {
+module.exports = {
   images: {},
   transpilePackages: ["@repo/dnd"],
 };
-
-module.exports = nextConfig;

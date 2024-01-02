@@ -1,16 +1,22 @@
 {
-  "name": "@repo/dnd",
+  "name": "@repo/dnd-lib",
   "version": "1.0.0",
   "private": true,
   "exports": {
-    "./foo": "./src/core/campaign/campaign",
-    "./*": "./src/core/**/*"
+    "./battle": "./src/core/battle/battle.ts",
+    "./campaign": "./src/core/campaign/campaign.ts",
+    "./character": "./src/core/character/character.ts",
+    "./dice": "./src/core/dice/dice.ts",
+    "./id": "./src/id.ts",
+    "./interaction": "./src/core/interaction/interaction.ts",
+    "./item": "./src/core/item/item.ts"
   },
   "scripts": {
     "test": "jest --watch",
     "lint": "eslint . --max-warnings 0"
   },
   "devDependencies": {
+    "@repo/eslint-config": "*",
     "@repo/typescript-config": "*",
     "@types/jest": "^29.5.11",
     "@types/node": "^20.10.4",

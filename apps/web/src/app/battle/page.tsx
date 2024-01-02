@@ -2,18 +2,15 @@
 
 import { useCallback, useState } from "react";
 import Image from "next/image";
-import { Id, generateId } from "@repo/dnd/core/id";
-import { Battle, BattleCharacter, Round } from "@repo/dnd/core/battle/battle";
-import {
-  Campaign,
-  CampaignEvent,
-  CampaignEventType,
-} from "@repo/dnd/core/campaign/campaign";
-import { D20, roll } from "@repo/dnd/core/dice/dice";
-import { ItemSlot, ItemType, Rarity } from "@repo/dnd/core/item/item";
-import { ActionType } from "@repo/dnd/core/character/character";
+import { Battle, BattleCharacter, Round } from "@repo/dnd-lib/battle";
+import { CampaignEvent, CampaignEventType } from "@repo/dnd-lib/campaign";
+import { D20, roll } from "@repo/dnd-lib/dice";
+import { ItemSlot, ItemType, Rarity } from "@repo/dnd-lib/item";
+import { ActionType } from "@repo/dnd-lib/character";
 import { ActionIconMap, EventIconMap } from "../dnd-theme";
-import { Interaction } from "@repo/dnd/core/interaction/interaction";
+import { Interaction } from "@repo/dnd-lib/interaction";
+import { Campaign } from "@repo/dnd-lib/campaign";
+import { generateId } from "@repo/dnd-lib/id";
 
 const EventIconSize = 32;
 

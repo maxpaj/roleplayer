@@ -14,7 +14,7 @@
         ],
         "module": "NodeNext",
         "moduleDetection": "force",
-        "moduleResolution": "Bundler", // "NodeNext",
+        "moduleResolution": "NodeNext",
         "noUncheckedIndexedAccess": true,
         "resolveJsonModule": true,
         "skipLibCheck": true,

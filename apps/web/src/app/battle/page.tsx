@@ -14,9 +14,10 @@ import {
   CampaignEventType,
 } from "../../../../../packages/dnd/core/campaign/campaign";
 import { D20, roll } from "../../../../../packages/dnd/core/dice/dice";
-import { ItemSlot, ItemType } from "../../../../../packages/dnd/core/item/item";
+import { ItemSlot, ItemType, Rarity } from "../../../../../packages/dnd/core/item/item";
 import { ActionType } from "../../../../../packages/dnd/core/character/character";
 import { ActionIconMap, EventIconMap } from "../dnd-theme";
+import { Interaction } from "../../../../../packages/dnd/core/interaction/interaction";
 
 const EventIconSize = 32;
 
@@ -26,18 +27,25 @@ export default function BattlePage() {
       [
         {
           id: generateId("item"),
-          interactions: [],
-          slot: ItemSlot.MainHand,
+          actions: [],
+          slots: [ItemSlot.MainHand],
           name: "Short sword",
           type: ItemType.Equipment,
+          rarity: Rarity.Common
         },
       ],
       [],
-      [new Battle([], [{ id: generateId("round") }])],
-      []
+      [new Battle([])],
+      [],
+      [],
+      [{
+        id: generateId("round")
+      }],
+      [],
     )
   );
   const [, updateState] = useState({});
+  const [selectedAction, setSelectedAction ] = useState<Interaction | undefined>(undefined);
   const forceUpdate = useCallback(() => updateState({}), []);
 
   function addCharacter(isPlayer: boolean) {
@@ -46,7 +54,7 @@ export default function BattlePage() {
       isPlayer
     );
     const battle = campaign.getCurrentBattle();
-    battle.addCharacterToCurrentBattle(char);
+    battle?.addCharacterToCurrentBattle(char);
     setCampaign(campaign);
   }
 
@@ -55,10 +63,10 @@ export default function BattlePage() {
     forceUpdate();
   }
 
-  function characterAttack(attackerId: Id, defenderIds: Id[]) {
+  function characterAttack(attackerId: Id, defenderIds: Id[], action: Interaction) {
     const attacker = campaign.getCharacter(attackerId);
 
-    if (!attacker.baseAttacks.length) {
+    if (!attacker.baseActions.length) {
       throw new Error("Has no attacks");
     }
 
@@ -66,13 +74,16 @@ export default function BattlePage() {
       campaign.getCharacter(defenderId)
     );
 
-    const attack = attacker.baseAttacks[0];
+    const attack = attacker.getAvailableActions().find(a => a.id === action.id);
+    if (!attack) {
+      throw new Error("Cannot find attack")
+    }
 
     defenders.forEach((defender) => {
       return campaign.performCharacterAttack(
         attacker,
         roll(D20),
-        attack.appliesEffects,
+        attack,
         defender
       );
     });
@@ -135,27 +146,44 @@ export default function BattlePage() {
           <div className="flex justify-between w-full relative p-4">
             <div>
               <div>{character.name}</div>
-              <div>{character.race}</div>
+              <div>{character.race.name}</div>
               <div>
                 {character.temporaryHealth} temporary +{" "}
                 {character.currentHealth}/{character.maximumHealth} hp
               </div>
               <div>{battleCharacter.initiative} initiative</div>
               <div>
-                Level {character.characterClasses[0].level}{" "}
-                {character.characterClasses[0].clazz.name}
+                Level {character.classes[0].level}{" "}
+                {character.classes[0].clazz.name}
               </div>
             </div>
 
             {currentCharacterAction && (
               <div className="flex gap-x-2">
+
+              <select
+                  disabled={hasSpentAction || hasFinished}
+                  className="border bg-transparent"
+                  onChange={(e) => {
+                    const a = character.getAvailableActions().find(a => a.name === e.target.value);
+                    setSelectedAction(a);
+                  }                  }
+                  placeholder="Attack"
+                >
+                  <option>Select action</option>
+                  {character.getAvailableActions()
+                    .map((c) => (
+                      <option key={c.name}>{c.name}</option>
+                    ))}
+                </select>
+
                 <select
                   disabled={hasSpentAction || hasFinished}
                   className="border bg-transparent"
                   onChange={(e) =>
                     characterAttack(battleCharacter.characterId, [
                       e.target.value,
-                    ])
+                    ], selectedAction!)
                   }
                   placeholder="Attack"
                 >
@@ -170,10 +198,8 @@ export default function BattlePage() {
                 <button
                   disabled={hasFinished}
                   onClick={() => {
-                    campaign.characterPerformBattleAction(
-                      ActionType.None,
-                      CampaignEventType.CharacterEndRound,
-                      character.id
+                    campaign.endCharacterTurn(
+                      character
                     );
                     setCampaign(campaign);
                   }}
@@ -190,8 +216,7 @@ export default function BattlePage() {
   }
 
   function renderBattleEvents() {
-    const battle = campaign.getCurrentBattle();
-    const battleEvents = campaign.getBattleEvents(battle);
+    const battleEvents = campaign.getCurrentBattleEvents();
 
     return (
       <div className="w-full gap-2 mb-4 flex flex-col">
@@ -227,21 +252,28 @@ export default function BattlePage() {
           src={eventIcon.icon}
         />
 
-        {event.eventType}, {event.actionType}, {event.targetId}
+        {event.eventType}, {event.actionType}, {event.targetId}, {event.interactionId}
       </div>
     );
   }
 
   const battle = campaign.getCurrentBattle();
-  const battleEvents = campaign.getBattleEvents(battle);
+  if (battle === undefined) {
+    return <>No active battle</>
+  }
+
   const currentRound = campaign.getCurrentRound();
-  const currentCharacter = battle.currentCharacterTurn(
-    battleEvents.filter((e) => e.roundId === currentRound.id)
-  );
-  const canEndTurn = battle.currentRoundCanEnd(battleEvents);
+  if (currentRound === undefined) {
+    return <>No active round</>
+  }
+
+  const battleEvents = campaign.getCurrentBattleEvents();
+  const roundEvents = battleEvents.filter((e) => e.roundId === currentRound.id);
+  const currentCharacter = battle.currentCharacterTurn(roundEvents);
+  const canEndTurn = campaign.allCharactersHaveActed(battleEvents);
 
   function nextRound() {
-    battle.nextRound();
+    campaign.nextRound();
     setCampaign(campaign);
   }
 
@@ -265,7 +297,7 @@ export default function BattlePage() {
         </div>
       </div>
 
-      <h1 className="text-xl mb-4">Round {battle.rounds.length}</h1>
+      <h1 className="text-xl mb-4">Round {campaign.rounds.length}</h1>
       <div className="w-full flex gap-4">
         <div className="w-3/4">
           <div className="flex flex-col w-full gap-y-4 mb-4">

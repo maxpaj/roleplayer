@@ -1,8 +1,8 @@
 import { Character } from "../../../../../../packages/dnd/core/character/character";
 
 async function getData(id: string) {
-  const character = {};
-  return character as Character;
+  const character: Character = new Character();
+  return character;
 }
 
 export default async function CharacterPage({

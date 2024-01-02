@@ -11,6 +11,7 @@ export default function Header() {
 
       <nav className="flex items-center gap-x-4">
         <Link href="/">Home</Link>
+        <Link href="/characters">Characters</Link>
         <Link href="/battle">Battle</Link>
       </nav>
     </header>

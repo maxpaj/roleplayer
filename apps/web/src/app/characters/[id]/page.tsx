@@ -1,4 +1,4 @@
-import { Character } from "../../../../../../packages/dnd/core/character/character";
+import { Character } from "@repo/dnd/core/character/character";
 
 async function getData(id: string) {
   const character: Character = new Character();

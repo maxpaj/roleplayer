@@ -1,7 +1,4 @@
-import {
-  ActionType,
-  Clazz,
-} from "../../../../packages/dnd/core/character/character";
+import { Campaign } from "@repo/dnd";
 
 import defaultIcon from "../assets/logo.svg";
 import attackIcon from "../assets/icons/lorc/thrown-knife.svg";
@@ -12,25 +9,24 @@ import secondaryActionIcon from "../assets/icons/skoll/rank-2.svg";
 import dodgeEvent from "../assets/icons/felbrigg/dodge.svg";
 import characterLostHealthEventIcon from "../assets/icons/zeromancer/heart-minus.svg";
 import characterGainHealthEventIcon from "../assets/icons/zeromancer/heart-plus.svg";
-import { CampaignEventType } from "../../../../packages/dnd/core/campaign/campaign";
 
 type ClassColors = {
   [key: string]: string;
 };
 
 export const colors: ClassColors = {
-  "Barbarian": "#e7623e",
-  "Bard": "#ab6dac",
-  "Cleric": "#91a1b2",
-  "Druid": "#7a853b",
-  "Fighter": "#7f513e",
-  "Monk": "#51a5c5",
-  "Paladin": "#b59e54",
-  "Ranger": "#507f62",
-  "Rogue": "#555752",
-  "Sorcerer": "#992e2e",
-  "Warlock": "#7b469b",
-  "Wizard": "#2a50a1",
+  Barbarian: "#e7623e",
+  Bard: "#ab6dac",
+  Cleric: "#91a1b2",
+  Druid: "#7a853b",
+  Fighter: "#7f513e",
+  Monk: "#51a5c5",
+  Paladin: "#b59e54",
+  Ranger: "#507f62",
+  Rogue: "#555752",
+  Sorcerer: "#992e2e",
+  Warlock: "#7b469b",
+  Wizard: "#2a50a1",
 };
 
 type ClassIcons = {
@@ -38,18 +34,18 @@ type ClassIcons = {
 };
 
 export const icons: ClassIcons = {
-  "Barbarian": "assets/dnd/Class Icon - Barbarian.svg",
-  "Bard": "assets/dnd/Class Icon - Bard.svg",
-  "Cleric": "assets/dnd/Class Icon - Cleric.svg",
-  "Druid": "assets/dnd/Class Icon - Druid.svg",
-  "Fighter": "assets/dnd/Class Icon - Fighter.svg",
-  "Monk": "assets/dnd/Class Icon - Monk.svg",
-  "Paladin": "assets/dnd/Class Icon - Paladin.svg",
-  "Ranger": "assets/dnd/Class Icon - Ranger.svg",
-  "Rogue": "assets/dnd/Class Icon - Rogue.svg",
-  "Sorcerer": "assets/dnd/Class Icon - Sorcerer.svg",
-  "Warlock": "assets/dnd/Class Icon - Warlock.svg",
-  "Wizard": "assets/dnd/Class Icon - Wizard.svg",
+  Barbarian: "assets/dnd/Class Icon - Barbarian.svg",
+  Bard: "assets/dnd/Class Icon - Bard.svg",
+  Cleric: "assets/dnd/Class Icon - Cleric.svg",
+  Druid: "assets/dnd/Class Icon - Druid.svg",
+  Fighter: "assets/dnd/Class Icon - Fighter.svg",
+  Monk: "assets/dnd/Class Icon - Monk.svg",
+  Paladin: "assets/dnd/Class Icon - Paladin.svg",
+  Ranger: "assets/dnd/Class Icon - Ranger.svg",
+  Rogue: "assets/dnd/Class Icon - Rogue.svg",
+  Sorcerer: "assets/dnd/Class Icon - Sorcerer.svg",
+  Warlock: "assets/dnd/Class Icon - Warlock.svg",
+  Wizard: "assets/dnd/Class Icon - Wizard.svg",
 };
 
 export const ActionIconMap: {
@@ -89,8 +85,8 @@ export const ActionIconMap: {
   },
   [ActionType.Dodge]: {
     alt: "Dodge",
-    icon: defaultIcon
-  }
+    icon: defaultIcon,
+  },
 };
 
 export const EventIconMap: {
@@ -134,51 +130,51 @@ export const EventIconMap: {
   },
   [CampaignEventType.Unknown]: {
     alt: "",
-    icon: defaultIcon
+    icon: defaultIcon,
   },
   [CampaignEventType.CharacterDespawn]: {
     alt: "",
-    icon: defaultIcon
+    icon: defaultIcon,
   },
   [CampaignEventType.CharacterItemGain]: {
     alt: "",
-    icon: defaultIcon
+    icon: defaultIcon,
   },
   [CampaignEventType.CharacterHealthChange]: {
     alt: "",
-    icon: defaultIcon
+    icon: defaultIcon,
   },
   [CampaignEventType.CharacterPermanentHealthChange]: {
     alt: "",
-    icon: defaultIcon
+    icon: defaultIcon,
   },
   [CampaignEventType.CharacterPositionChange]: {
     alt: "",
-    icon: defaultIcon
+    icon: defaultIcon,
   },
   [CampaignEventType.CharacterMoveSpeedChange]: {
     alt: "",
-    icon: defaultIcon
+    icon: defaultIcon,
   },
   [CampaignEventType.CharacterStatusGain]: {
     alt: "",
-    icon: defaultIcon
+    icon: defaultIcon,
   },
   [CampaignEventType.CharacterAttackAttackerHit]: {
     alt: "",
-    icon: defaultIcon
+    icon: defaultIcon,
   },
   [CampaignEventType.CharacterAttackAttackerMiss]: {
     alt: "",
-    icon: defaultIcon
+    icon: defaultIcon,
   },
   [CampaignEventType.CharacterAttackDefenderHit]: {
     alt: "",
-    icon: defaultIcon
+    icon: defaultIcon,
   },
   [CampaignEventType.CharacterAttackDefenderParry]: {
     alt: "",
-    icon: defaultIcon
+    icon: defaultIcon,
   },
   [CampaignEventType.CharacterHealthGain]: {
     alt: "",

@@ -1,5 +1,4 @@
 import { Effect, ElementType } from "../interaction/effect";
-import { Id } from "../id";
 import { Interaction } from "../interaction/interaction";
 import { Item } from "../item/item";
 import {
@@ -10,6 +9,7 @@ import {
 } from "../campaign/campaign";
 import { Status } from "../interaction/status";
 import { roll } from "../dice/dice";
+import { Id } from "../../id";
 
 export enum ActionType {
   Attack = "Attack",

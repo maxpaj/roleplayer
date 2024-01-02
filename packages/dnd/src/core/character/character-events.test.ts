@@ -1,8 +1,8 @@
 import assert from "assert";
 import { ActionType, Character } from "./character";
-import { generateId } from "../id";
 import { ItemSlot, ItemType, Rarity } from "../item/item";
 import { Campaign, CampaignEventType } from "../campaign/campaign";
+import { generateId } from "../../id";
 
 describe("getCharacterFromEvents", () => {
   it("should apply permanent health change events", () => {

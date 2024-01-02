@@ -1,6 +1,6 @@
 import { Campaign, CampaignEventType } from "../campaign/campaign";
 import { ActionType, Character } from "../character/character";
-import { generateId } from "../id";
+import { generateId } from "../../id";
 import { Item, ItemSlot, ItemType, Rarity } from "../item/item";
 import { EffectType, ElementType } from "./effect";
 import { TargetType } from "./interaction";

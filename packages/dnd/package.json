@@ -1,13 +1,17 @@
 {
-  "name": "dnd-lib",
+  "name": "@repo/dnd",
   "version": "1.0.0",
-  "description": "",
-  "scripts": {
-    "test": "jest --watch"
+  "private": true,
+  "exports": {
+    "./foo": "./src/core/campaign/campaign",
+    "./*": "./src/core/**/*"
   },
-  "author": "",
-  "type": "module",
+  "scripts": {
+    "test": "jest --watch",
+    "lint": "eslint . --max-warnings 0"
+  },
   "devDependencies": {
+    "@repo/typescript-config": "*",
     "@types/jest": "^29.5.11",
     "@types/node": "^20.10.4",
     "jest": "^29.7.0",

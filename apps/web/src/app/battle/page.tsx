@@ -2,22 +2,18 @@
 
 import { useCallback, useState } from "react";
 import Image from "next/image";
-import { Id, generateId } from "../../../../../packages/dnd/core/id";
-import {
-  Battle,
-  BattleCharacter,
-  Round, 
-} from "../../../../../packages/dnd/core/battle/battle";
+import { Id, generateId } from "@repo/dnd/core/id";
+import { Battle, BattleCharacter, Round } from "@repo/dnd/core/battle/battle";
 import {
   Campaign,
   CampaignEvent,
   CampaignEventType,
-} from "../../../../../packages/dnd/core/campaign/campaign";
-import { D20, roll } from "../../../../../packages/dnd/core/dice/dice";
-import { ItemSlot, ItemType, Rarity } from "../../../../../packages/dnd/core/item/item";
-import { ActionType } from "../../../../../packages/dnd/core/character/character";
+} from "@repo/dnd/core/campaign/campaign";
+import { D20, roll } from "@repo/dnd/core/dice/dice";
+import { ItemSlot, ItemType, Rarity } from "@repo/dnd/core/item/item";
+import { ActionType } from "@repo/dnd/core/character/character";
 import { ActionIconMap, EventIconMap } from "../dnd-theme";
-import { Interaction } from "../../../../../packages/dnd/core/interaction/interaction";
+import { Interaction } from "@repo/dnd/core/interaction/interaction";
 
 const EventIconSize = 32;
 
@@ -31,21 +27,25 @@ export default function BattlePage() {
           slots: [ItemSlot.MainHand],
           name: "Short sword",
           type: ItemType.Equipment,
-          rarity: Rarity.Common
+          rarity: Rarity.Common,
         },
       ],
       [],
       [new Battle([])],
       [],
       [],
-      [{
-        id: generateId("round")
-      }],
-      [],
+      [
+        {
+          id: generateId("round"),
+        },
+      ],
+      []
     )
   );
   const [, updateState] = useState({});
-  const [selectedAction, setSelectedAction ] = useState<Interaction | undefined>(undefined);
+  const [selectedAction, setSelectedAction] = useState<Interaction | undefined>(
+    undefined
+  );
   const forceUpdate = useCallback(() => updateState({}), []);
 
   function addCharacter(isPlayer: boolean) {
@@ -63,7 +63,11 @@ export default function BattlePage() {
     forceUpdate();
   }
 
-  function characterAttack(attackerId: Id, defenderIds: Id[], action: Interaction) {
+  function characterAttack(
+    attackerId: Id,
+    defenderIds: Id[],
+    action: Interaction
+  ) {
     const attacker = campaign.getCharacter(attackerId);
 
     if (!attacker.baseActions.length) {
@@ -74,9 +78,11 @@ export default function BattlePage() {
       campaign.getCharacter(defenderId)
     );
 
-    const attack = attacker.getAvailableActions().find(a => a.id === action.id);
+    const attack = attacker
+      .getAvailableActions()
+      .find((a) => a.id === action.id);
     if (!attack) {
-      throw new Error("Cannot find attack")
+      throw new Error("Cannot find attack");
     }
 
     defenders.forEach((defender) => {
@@ -160,30 +166,32 @@ export default function BattlePage() {
 
             {currentCharacterAction && (
               <div className="flex gap-x-2">
-
-              <select
+                <select
                   disabled={hasSpentAction || hasFinished}
                   className="border bg-transparent"
                   onChange={(e) => {
-                    const a = character.getAvailableActions().find(a => a.name === e.target.value);
+                    const a = character
+                      .getAvailableActions()
+                      .find((a) => a.name === e.target.value);
                     setSelectedAction(a);
-                  }                  }
+                  }}
                   placeholder="Attack"
                 >
                   <option>Select action</option>
-                  {character.getAvailableActions()
-                    .map((c) => (
-                      <option key={c.name}>{c.name}</option>
-                    ))}
+                  {character.getAvailableActions().map((c) => (
+                    <option key={c.name}>{c.name}</option>
+                  ))}
                 </select>
 
                 <select
                   disabled={hasSpentAction || hasFinished}
                   className="border bg-transparent"
                   onChange={(e) =>
-                    characterAttack(battleCharacter.characterId, [
-                      e.target.value,
-                    ], selectedAction!)
+                    characterAttack(
+                      battleCharacter.characterId,
+                      [e.target.value],
+                      selectedAction!
+                    )
                   }
                   placeholder="Attack"
                 >
@@ -198,9 +206,7 @@ export default function BattlePage() {
                 <button
                   disabled={hasFinished}
                   onClick={() => {
-                    campaign.endCharacterTurn(
-                      character
-                    );
+                    campaign.endCharacterTurn(character);
                     setCampaign(campaign);
                   }}
                   className="border disabled:border-slate-500 disabled:bg-slate-700 disabled:text-slate-500 border-white p-3 rounded hover:bg-slate-500"
@@ -243,7 +249,6 @@ export default function BattlePage() {
           alt={actionIcon.alt}
           src={actionIcon.icon}
         />
-
         <Image
           className="invert"
           width={EventIconSize / 2}
@@ -251,20 +256,20 @@ export default function BattlePage() {
           alt={eventIcon.alt}
           src={eventIcon.icon}
         />
-
-        {event.eventType}, {event.actionType}, {event.targetId}, {event.interactionId}
+        {event.eventType}, {event.actionType}, {event.targetId},{" "}
+        {event.interactionId}
       </div>
     );
   }
 
   const battle = campaign.getCurrentBattle();
   if (battle === undefined) {
-    return <>No active battle</>
+    return <>No active battle</>;
   }
 
   const currentRound = campaign.getCurrentRound();
   if (currentRound === undefined) {
-    return <>No active round</>
+    return <>No active round</>;
   }
 
   const battleEvents = campaign.getCurrentBattleEvents();

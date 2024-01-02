@@ -1,4 +1,4 @@
-import { Id } from "../id";
+import { Id } from "../../id";
 import { Interaction } from "../interaction/interaction";
 
 export enum ItemType {

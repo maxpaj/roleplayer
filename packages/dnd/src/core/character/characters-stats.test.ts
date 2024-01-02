@@ -1,4 +1,4 @@
-import { generateId } from "../id";
+import { generateId } from "../../id";
 import { TargetType } from "../interaction/interaction";
 import { Item, ItemSlot, ItemType, Rarity } from "../item/item";
 import { Character, Spell } from "./character";

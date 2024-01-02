@@ -1,4 +1,4 @@
-import { Id, generateId } from "../id";
+import { Id, generateId } from "../../id";
 import { Alignment, Clazz, Race, Character } from "./character";
 import { EffectType, ElementType } from "../interaction/effect";
 import { D2, D6 } from "../dice/dice";
@@ -8,7 +8,11 @@ import { TargetType } from "../interaction/interaction";
 function randomEnum<T extends object>(anEnum: T): T[keyof T] {
   const enumValues = Object.keys(anEnum) as T[keyof T][];
   const randomIndex = Math.floor((Math.random() * enumValues.length) / 2);
-  return enumValues[randomIndex];
+  const randomEnum = enumValues[randomIndex];
+  if (!randomEnum) {
+    throw new Error("Could not get random enum");
+  }
+  return randomEnum;
 }
 
 function randomDigit(min: number, max: number) {

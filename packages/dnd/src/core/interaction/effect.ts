@@ -1,5 +1,5 @@
 import { Dice } from "../dice/dice";
-import { Id } from "../id";
+import { Id } from "../../id";
 
 export enum ElementType {
   Slashing = "Slashing",

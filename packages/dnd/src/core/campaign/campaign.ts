@@ -2,8 +2,7 @@ import { Battle, Round } from "../battle/battle";
 import { ActionType, Spell } from "../character/character";
 import { Character } from "../character/character";
 import { randomCharacter } from "../character/random-char";
-import { Effect } from "../interaction/effect";
-import { Id, generateId } from "../id";
+import { Id, generateId } from "../../id";
 import { Item } from "../item/item";
 import { Status } from "../interaction/status";
 import { Interaction } from "../interaction/interaction";
@@ -122,12 +121,17 @@ export class Campaign {
   }
 
   allCharactersHaveActed(events: CampaignEvent[]) {
+    const round = this.rounds[this.rounds.length - 1];
+    if (!round) {
+      throw new Error("Could not get current round");
+    }
+
     return this.characters.every((c) =>
       events.some(
         (e) =>
           e.eventType === CampaignEventType.CharacterEndRound &&
           e.characterId === c.id &&
-          e.roundId === this.rounds[this.rounds.length - 1].id
+          e.roundId === round.id
       )
     );
   }

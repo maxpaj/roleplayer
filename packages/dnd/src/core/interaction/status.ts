@@ -1,4 +1,4 @@
-import { Id } from "../id";
+import { Id } from "../../id";
 import { Effect } from "./effect";
 
 export enum StatusApplicationTrigger {

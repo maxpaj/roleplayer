@@ -10,6 +10,7 @@ describe("Character interactions", () => {
       rarity: Rarity.Common,
       actions: [
         {
+          id: generateId("action"),
           appliesEffects: [],
           eligibleTargets: [TargetType.Hostile],
           name: "Slash",
@@ -26,6 +27,7 @@ describe("Character interactions", () => {
       name: "Healing Word",
       level: 1,
       action: {
+        id: generateId("action"),
         appliesEffects: [],
         eligibleTargets: [TargetType.Friendly],
         name: "Healing Word",
@@ -38,6 +40,7 @@ describe("Character interactions", () => {
     char.spells = [spell];
     char.baseActions = [
       {
+        id: generateId("action"),
         appliesEffects: [],
         eligibleTargets: [TargetType.Hostile],
         name: "Firebolt",

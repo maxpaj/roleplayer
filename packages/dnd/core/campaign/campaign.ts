@@ -6,6 +6,7 @@ import { Effect } from "../interaction/effect";
 import { Id, generateId } from "../id";
 import { Item } from "../item/item";
 import { Status } from "../interaction/status";
+import { Interaction } from "../interaction/interaction";
 
 export enum CampaignEventType {
   Unknown = "Unknown",
@@ -46,6 +47,7 @@ export type CampaignEvent = {
 
   amount?: number;
   targetPosition?: Position;
+  interactionId?: Id;
 
   roundId?: Id;
   battleId?: Id;
@@ -119,6 +121,17 @@ export class Campaign {
     return this.events.filter((e) => e.battleId === battle.id);
   }
 
+  allCharactersHaveActed(events: CampaignEvent[]) {
+    return this.characters.every((c) =>
+      events.some(
+        (e) =>
+          e.eventType === CampaignEventType.CharacterEndRound &&
+          e.characterId === c.id &&
+          e.roundId === this.rounds[this.rounds.length - 1].id
+      )
+    );
+  }
+
   getCurrentBattleEvents() {
     const battle = this.getCurrentBattle();
     if (battle === undefined) {
@@ -148,7 +161,7 @@ export class Campaign {
   performCharacterAttack(
     attacker: Character,
     attackHitRoll: number,
-    attackEffects: Effect[],
+    interaction: Interaction,
     defender: Character
   ) {
     const defenderWasHit = defender.defense < attackHitRoll;
@@ -156,18 +169,20 @@ export class Campaign {
       ? {
           id: generateId("event"),
           characterId: defender.id,
+          interactionId: interaction.id,
           actionType: ActionType.Attack,
           eventType: CampaignEventType.CharacterAttackDefenderHit,
         }
       : {
           id: generateId("event"),
           characterId: defender.id,
+          interactionId: interaction.id,
           actionType: ActionType.Dodge,
           eventType: CampaignEventType.CharacterAttackDefenderDodge,
         };
 
     const damageTakenEvents = defenderWasHit
-      ? attackEffects.flatMap((attack) => {
+      ? interaction.appliesEffects.flatMap((attack) => {
           const attackerDamageRoll = attacker.getDamageRoll(attack);
           const defenderDamageTaken = defender.getEffectDamageTaken(
             attack,
@@ -179,6 +194,7 @@ export class Campaign {
               id: generateId("event"),
               characterId: defender.id,
               actionType: ActionType.Attack,
+              interactionId: interaction.id,
               eventType: CampaignEventType.CharacterHealthLoss,
               amount: defenderDamageTaken,
             },
@@ -187,7 +203,7 @@ export class Campaign {
       : [];
 
     const statusChangeEvents = defenderWasHit
-      ? attackEffects
+      ? interaction.appliesEffects
           .filter((attack) => {
             const status = this.statuses.find(
               (s) => s.id === attack.appliesStatusId
@@ -202,6 +218,7 @@ export class Campaign {
             return {
               id: generateId("event"),
               characterId: defender.id,
+              interactionId: interaction.id,
               actionType: ActionType.Attack,
               eventType: CampaignEventType.CharacterStatusGain,
               statusId: defenderStatus!.id,
@@ -213,6 +230,7 @@ export class Campaign {
       id: generateId("event"),
       characterId: attacker.id,
       actionType: ActionType.Attack,
+      interactionId: interaction.id,
       eventType: CampaignEventType.CharacterPrimaryAction,
     };
 

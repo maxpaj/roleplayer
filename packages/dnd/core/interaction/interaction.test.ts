@@ -36,6 +36,7 @@ describe("interactions", () => {
     rarity: Rarity.Rare,
     actions: [
       {
+        id: generateId("action"),
         appliesEffects: [
           {
             element: ElementType.Slashing,
@@ -88,12 +89,7 @@ describe("interactions", () => {
       },
     ];
 
-    campaign.performCharacterAttack(
-      attacker,
-      15,
-      action.appliesEffects,
-      defender
-    );
+    campaign.performCharacterAttack(attacker, 15, action, defender);
 
     const defenderFromEvents = campaign.getCharacterFromEvents(defenderId);
     expect(defenderFromEvents.currentHealth).toBe(8);

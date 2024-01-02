@@ -1,3 +1,4 @@
+import { Id } from "../id";
 import { Effect } from "./effect";
 
 export enum TargetType {
@@ -12,6 +13,7 @@ export enum TargetType {
  * Represents an interaction.
  */
 export type Interaction = {
+  id: Id;
   name: string;
   appliesEffects: Effect[];
   eligibleTargets: TargetType[];

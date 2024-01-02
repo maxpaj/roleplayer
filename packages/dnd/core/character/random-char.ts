@@ -71,6 +71,7 @@ export function randomCharacter(id: Id): Character {
         slots: [ItemSlot.MainHand, ItemSlot.OffHand],
         actions: [
           {
+            id: generateId("action"),
             name: "Slash attack",
             rangeDistanceMeters: 1,
             eligibleTargets: [TargetType.Character, TargetType.Environment],
@@ -88,6 +89,7 @@ export function randomCharacter(id: Id): Character {
     ],
     baseActions: [
       {
+        id: generateId("action"),
         name: "Unarmed attack",
         rangeDistanceMeters: 1,
         eligibleTargets: [TargetType.Hostile, TargetType.Friendly],

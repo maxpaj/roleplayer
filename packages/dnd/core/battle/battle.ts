@@ -25,26 +25,14 @@ export class BattleCharacter {
 export class Battle {
   public id: Id;
   public characters: BattleCharacter[];
-  public rounds: Round[];
 
-  public constructor(characters: BattleCharacter[] = [], rounds: Round[] = []) {
+  public constructor(characters: BattleCharacter[] = []) {
     this.id = generateId("battle");
     this.characters = characters;
-    this.rounds = rounds;
   }
 
   hasRolledForInitiative() {
     return this.characters.every((c) => c.initiative != 0);
-  }
-
-  currentRoundCanEnd(events: CampaignEvent[]) {
-    return this.characters.every((c) =>
-      events.some(
-        (e) =>
-          e.eventType === CampaignEventType.CharacterEndRound &&
-          e.characterId === c.characterId
-      )
-    );
   }
 
   addCharacterToCurrentBattle(character: Character) {
@@ -56,10 +44,10 @@ export class Battle {
     return added;
   }
 
-  currentCharacterTurn(currentRoundEvents: CampaignEvent[]) {
+  currentCharacterTurn(events: CampaignEvent[]) {
     const charactersNotActedCurrentRound = this.characters.filter(
       (battleChar) => {
-        const hasActed = currentRoundEvents.some(
+        const hasActed = events.some(
           (e) =>
             e.characterId === battleChar.characterId &&
             e.eventType === CampaignEventType.CharacterEndRound

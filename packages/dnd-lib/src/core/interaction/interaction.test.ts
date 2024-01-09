@@ -76,7 +76,7 @@ describe("interactions", () => {
     defender.id = defenderId;
     defender.defense = 4;
 
-    const campaign = new Campaign([], [], [], [], [], [], []);
+    const campaign = new Campaign();
     campaign.statuses = [frozenStatus];
     campaign.characters = [attacker, defender];
     campaign.rounds = [{ id: generateId("round") }];

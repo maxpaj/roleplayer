@@ -14,7 +14,8 @@
     "@repo/dnd-ui": "*",
     "next": "^14.0.4",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.23.6",

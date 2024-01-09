@@ -1,4 +1,4 @@
-import { Character } from "@repo/dnd/core/character/character";
+import { Character } from "@repo/dnd-lib/character";
 
 export const Characters: Character[] = [
   new Character({ name: "A" }),

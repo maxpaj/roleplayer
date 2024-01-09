@@ -24,10 +24,15 @@ export class BattleCharacter {
 
 export class Battle {
   public id: Id;
+  public name: string;
   public characters: BattleCharacter[];
 
-  public constructor(characters: BattleCharacter[] = []) {
+  public constructor(
+    name: string = "New battle",
+    characters: BattleCharacter[] = []
+  ) {
     this.id = generateId("battle");
+    this.name = name;
     this.characters = characters;
   }
 

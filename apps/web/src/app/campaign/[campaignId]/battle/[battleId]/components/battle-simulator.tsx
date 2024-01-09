@@ -3,20 +3,20 @@
 import { useCallback, useState } from "react";
 import Image from "next/image";
 import { Battle, BattleCharacter, Round } from "@repo/dnd-lib/battle";
-import { CampaignEvent, CampaignEventType } from "@repo/dnd-lib/campaign";
+import { CampaignEvent } from "@repo/dnd-lib/campaign";
 import { D20, roll } from "@repo/dnd-lib/dice";
 import { ItemSlot, ItemType, Rarity } from "@repo/dnd-lib/item";
-import { ActionType } from "@repo/dnd-lib/character";
-import { ActionIconMap, EventIconMap } from "../dnd-theme";
 import { Interaction } from "@repo/dnd-lib/interaction";
 import { Campaign } from "@repo/dnd-lib/campaign";
-import { generateId } from "@repo/dnd-lib/id";
+import { Id, generateId } from "@repo/dnd-lib/id";
 
 const EventIconSize = 32;
 
-export default function BattlePage() {
+export default function BattleSimulator({}) {
   const [campaign, setCampaignReact] = useState<Campaign>(
     new Campaign(
+      generateId("campaign"),
+      "Campaign",
       [
         {
           id: generateId("item"),
@@ -95,29 +95,29 @@ export default function BattlePage() {
   }
 
   function renderCharacter(
+    battle: Battle,
     battleCharacter: BattleCharacter,
     currentRound: Round,
-    characterToAct: BattleCharacter,
-    battle: Battle
+    characterToAct?: BattleCharacter
   ) {
     const { characterId } = battleCharacter;
-    const character = campaign.getCharacter(characterId);
+    const character = campaign.getCharacterFromEvents(characterId);
     const hasSpentAction = campaign.characterHasRoundEvent(
       currentRound,
       characterId,
-      CampaignEventType.CharacterPrimaryAction
+      "CharacterPrimaryAction"
     );
 
     const hasSpentBonus = campaign.characterHasRoundEvent(
       currentRound,
       characterId,
-      CampaignEventType.CharacterSecondaryAction
+      "CharacterSecondaryAction"
     );
 
     const hasFinished = campaign.characterHasRoundEvent(
       currentRound,
       characterId,
-      CampaignEventType.CharacterEndRound
+      "CharacterEndRound"
     );
 
     const currentCharacterAction =
@@ -127,6 +127,10 @@ export default function BattlePage() {
     const currentActionClass = currentCharacterAction
       ? "shadow-[0_0px_40px_0px_rgba(0,0,0,0.3)] shadow-red-600"
       : "";
+
+    if (!character) {
+      throw new Error("Character not found");
+    }
 
     return (
       <div
@@ -151,13 +155,13 @@ export default function BattlePage() {
               <div>{character.name}</div>
               <div>{character.race.name}</div>
               <div>
-                {character.temporaryHealth} temporary +{" "}
-                {character.currentHealth}/{character.maximumHealth} hp
+                {character.currentHealth}/{character.maximumHealth} hp (+
+                {character.temporaryHealth} temporary)
               </div>
               <div>{battleCharacter.initiative} initiative</div>
               <div>
-                Level {character.classes[0].level}{" "}
-                {character.classes[0].clazz.name}
+                Level {character.classes[0]?.level}{" "}
+                {character.classes[0]?.clazz.name}
               </div>
             </div>
 
@@ -172,7 +176,6 @@ export default function BattlePage() {
                       .find((a) => a.name === e.target.value);
                     setSelectedAction(a);
                   }}
-                  placeholder="Attack"
                 >
                   <option>Select action</option>
                   {character.getAvailableActions().map((c) => (
@@ -190,7 +193,6 @@ export default function BattlePage() {
                       selectedAction!
                     )
                   }
-                  placeholder="Attack"
                 >
                   <option>Select target</option>
                   {battle.characters
@@ -229,13 +231,12 @@ export default function BattlePage() {
   }
 
   function isVisibleEvent(event: CampaignEvent) {
-    const excludedActions = [ActionType.None];
-    return !excludedActions.includes(event.actionType);
+    const excludedActions = ["NewRound"];
+    return !excludedActions.includes(event.type);
   }
 
   function renderBattleEvent(event: CampaignEvent) {
-    const eventIcon = EventIconMap[event.eventType];
-    const actionIcon = ActionIconMap[event.actionType];
+    const eventIcon = EventIconMap[event.type];
 
     return (
       <div key={event.id} className="flex border border-slate-500 p-2">
@@ -243,18 +244,10 @@ export default function BattlePage() {
           className="invert"
           width={EventIconSize}
           height={EventIconSize}
-          alt={actionIcon.alt}
-          src={actionIcon.icon}
-        />
-        <Image
-          className="invert"
-          width={EventIconSize / 2}
-          height={EventIconSize / 2}
           alt={eventIcon.alt}
           src={eventIcon.icon}
         />
-        {event.eventType}, {event.actionType}, {event.targetId},{" "}
-        {event.interactionId}
+        {JSON.stringify(event)}
       </div>
     );
   }
@@ -272,6 +265,7 @@ export default function BattlePage() {
   const battleEvents = campaign.getCurrentBattleEvents();
   const roundEvents = battleEvents.filter((e) => e.roundId === currentRound.id);
   const currentCharacter = battle.currentCharacterTurn(roundEvents);
+
   const canEndTurn = campaign.allCharactersHaveActed(battleEvents);
 
   function nextRound() {
@@ -307,10 +301,10 @@ export default function BattlePage() {
               .sort((a, b) => b.initiative - a.initiative)
               .map((battleChar) =>
                 renderCharacter(
+                  battle,
                   battleChar,
                   currentRound,
-                  currentCharacter,
-                  battle
+                  currentCharacter
                 )
               )}
           </div>

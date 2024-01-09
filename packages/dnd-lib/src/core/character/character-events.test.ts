@@ -241,7 +241,7 @@ describe("getCharacterFromEvents", () => {
 
   it("should handle unhandled events gracefully", () => {
     const characterId = generateId("char");
-    const campaign = new Campaign();
+    const campaign = new Campaign(generateId("campaign"), "New campaign");
     campaign.characters = [];
     campaign.events = [
       {

@@ -7,7 +7,6 @@ import secondaryActionIcon from "../assets/icons/skoll/rank-2.svg";
 import dodgeEvent from "../assets/icons/felbrigg/dodge.svg";
 import characterLostHealthEventIcon from "../assets/icons/zeromancer/heart-minus.svg";
 import characterGainHealthEventIcon from "../assets/icons/zeromancer/heart-plus.svg";
-import { ActionType } from "@repo/dnd-lib/character";
 import { CampaignEventType } from "@repo/dnd-lib/campaign";
 
 type ClassColors = {
@@ -90,98 +89,102 @@ export const ActionIconMap: {
 };
 
 export const EventIconMap: {
-  [key in CampaignEventType]: { alt: string; icon: any };
+  [key in CampaignEventType["type"]]: { alt: string; icon: any };
 } = {
-  [CampaignEventType.CharacterStartRound]: {
+  CharacterStartRound: {
     alt: "Character start round",
     icon: defaultIcon,
   },
-  [CampaignEventType.CharacterEndRound]: {
+  CharacterEndRound: {
     alt: "Character end round",
     icon: defaultIcon,
   },
-  [CampaignEventType.CharacterMovement]: {
+  CharacterMovement: {
     alt: "Character movement",
     icon: moveIcon,
   },
-  [CampaignEventType.CharacterPrimaryAction]: {
+  CharacterPrimaryAction: {
     alt: "Primary action",
     icon: primaryActionIcon,
   },
-  [CampaignEventType.CharacterSecondaryAction]: {
+  CharacterSecondaryAction: {
     alt: "Secondary action",
     icon: secondaryActionIcon,
   },
-  [CampaignEventType.NewRound]: {
+  NewRound: {
     alt: "New round",
     icon: newRoundIcon,
   },
-  [CampaignEventType.CharacterSpellGain]: {
+  CharacterSpellGain: {
     alt: "Character gained health",
     icon: characterGainHealthEventIcon,
   },
-  [CampaignEventType.CharacterAttackDefenderDodge]: {
+  CharacterAttackDefenderDodge: {
     alt: "Dodge",
     icon: dodgeEvent,
   },
-  [CampaignEventType.CharacterSpawned]: {
+  CharacterSpawned: {
     alt: "CharacterSpawned",
     icon: defaultIcon,
   },
-  [CampaignEventType.Unknown]: {
+  Unknown: {
     alt: "",
     icon: defaultIcon,
   },
-  [CampaignEventType.CharacterDespawn]: {
+  CharacterDespawn: {
     alt: "",
     icon: defaultIcon,
   },
-  [CampaignEventType.CharacterItemGain]: {
+  CharacterItemGain: {
     alt: "",
     icon: defaultIcon,
   },
-  [CampaignEventType.CharacterHealthChange]: {
+  CharacterHealthChange: {
     alt: "",
     icon: defaultIcon,
   },
-  [CampaignEventType.CharacterPermanentHealthChange]: {
+  CharacterPermanentHealthChange: {
     alt: "",
     icon: defaultIcon,
   },
-  [CampaignEventType.CharacterPositionChange]: {
+  CharacterPositionChange: {
     alt: "",
     icon: defaultIcon,
   },
-  [CampaignEventType.CharacterMoveSpeedChange]: {
+  CharacterMoveSpeedChange: {
     alt: "",
     icon: defaultIcon,
   },
-  [CampaignEventType.CharacterStatusGain]: {
+  CharacterStatusGain: {
     alt: "",
     icon: defaultIcon,
   },
-  [CampaignEventType.CharacterAttackAttackerHit]: {
+  CharacterAttackAttackerHit: {
     alt: "",
     icon: defaultIcon,
   },
-  [CampaignEventType.CharacterAttackAttackerMiss]: {
+  CharacterAttackAttackerMiss: {
     alt: "",
     icon: defaultIcon,
   },
-  [CampaignEventType.CharacterAttackDefenderHit]: {
+  CharacterAttackDefenderHit: {
     alt: "",
     icon: defaultIcon,
   },
-  [CampaignEventType.CharacterAttackDefenderParry]: {
+  CharacterAttackDefenderParry: {
     alt: "",
     icon: defaultIcon,
   },
-  [CampaignEventType.CharacterHealthGain]: {
+  CharacterHealthGain: {
     alt: "",
     icon: characterGainHealthEventIcon,
   },
-  [CampaignEventType.CharacterHealthLoss]: {
+  CharacterHealthLoss: {
     alt: "Character lost health",
     icon: characterLostHealthEventIcon,
+  },
+  CharacterClassGain: {
+    alt: "",
+    icon: undefined,
   },
 };

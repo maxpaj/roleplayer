@@ -73,6 +73,8 @@ export function isCharacterEvent(
 }
 
 export class Campaign {
+  id: Id;
+  name: string;
   items: Item[];
   characters: Character[];
   battles: Battle[];
@@ -82,6 +84,8 @@ export class Campaign {
   statuses: Status[];
 
   constructor(
+    id: Id = generateId("campaign"),
+    name: string = "New campaign",
     items: Item[] = [],
     characters: Character[] = [],
     battles: Battle[] = [],
@@ -91,6 +95,8 @@ export class Campaign {
     rounds: Round[] = [],
     statuses: Status[] = []
   ) {
+    this.id = id;
+    this.name = name;
     this.items = items;
     this.characters = characters;
     this.battles = battles;

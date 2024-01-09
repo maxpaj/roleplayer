@@ -1,5 +1,5 @@
 import { Campaign, CampaignEventType } from "../campaign/campaign";
-import { ActionType, Character } from "../character/character";
+import { Character } from "../character/character";
 import { generateId } from "../../id";
 import { Item, ItemSlot, ItemType, Rarity } from "../item/item";
 import { EffectType, ElementType } from "./effect";
@@ -79,13 +79,14 @@ describe("interactions", () => {
     const campaign = new Campaign([], [], [], [], [], [], []);
     campaign.statuses = [frozenStatus];
     campaign.characters = [attacker, defender];
+    campaign.rounds = [{ id: generateId("round") }];
     campaign.events = [
       {
         id: generateId("event"),
-        actionType: ActionType.None,
-        eventType: CampaignEventType.CharacterHealthChange,
+        type: "CharacterHealthChange",
         amount: 10,
         characterId: defenderId,
+        roundId: generateId("round"),
       },
     ];
 

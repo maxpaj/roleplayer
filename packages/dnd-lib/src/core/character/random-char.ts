@@ -22,6 +22,7 @@ function randomDigit(min: number, max: number) {
 
 function randomClass(): Clazz {
   return {
+    id: generateId("class"),
     levelProgression: [],
     name: "Random class",
   };

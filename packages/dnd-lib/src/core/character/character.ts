@@ -2,9 +2,8 @@ import { Effect, ElementType } from "../interaction/effect";
 import { Interaction } from "../interaction/interaction";
 import { Item } from "../item/item";
 import {
-  CampaignEvent,
   Campaign,
-  CampaignEventType,
+  CampaignEventWithRound,
   Position,
 } from "../campaign/campaign";
 import { Status } from "../interaction/status";
@@ -14,18 +13,6 @@ import { Id } from "../../id";
 export enum ActionResourceType {
   Primary = "Primary",
   Secondary = "Secondary",
-}
-
-export enum ActionType {
-  Attack = "Attack",
-  Dodge = "Dodge",
-  Sprint = "Sprint",
-  Jump = "Jump",
-  Cantrip = "Cantrip",
-  Spell = "Spell",
-  Item = "Item",
-  Equipment = "Equipment",
-  None = "None",
 }
 
 export enum Alignment {
@@ -50,6 +37,7 @@ export type Race = {
 };
 
 export type Clazz = {
+  id: Id;
   name: string;
   levelProgression: ClassLevelProgression[];
 };
@@ -168,55 +156,34 @@ export class Character {
     );
   }
 
+  getCharacterHitModifierWithInteraction(interaction: Interaction) {
+    return 0;
+  }
+
   applyEffects(effects: Effect) {}
 
-  applyEvent(event: CampaignEvent, campaign: Campaign) {
-    switch (event.eventType) {
-      case CampaignEventType.NewRound:
+  applyEvent(event: CampaignEventWithRound, campaign: Campaign) {
+    switch (event.type) {
+      case "NewRound":
         this.movementRemaining = this.movementSpeed;
-        console.log(this.movementRemaining, this.movementSpeed);
         this.actionResourcesRemaining = [
           ActionResourceType.Primary,
           ActionResourceType.Secondary,
         ];
         break;
-      case CampaignEventType.CharacterPrimaryAction:
-      case CampaignEventType.CharacterSecondaryAction:
-        switch (event.actionType) {
-          case ActionType.Spell:
-            const spell = campaign.spells.find((s) => s.id === event.spellId);
-            if (spell === undefined) {
-              throw new Error(`Spell ${event.spellId} not found`);
-            }
-
-            const spellSlot = this.spellSlots.find(
-              (s) => s.level === spell.level && !s.used
-            );
-            if (spellSlot === undefined) {
-              throw new Error(
-                `Character spell slot at level ${spell.level} not found`
-              );
-            }
-
-            spellSlot.used = true;
-            break;
-          case ActionType.Attack:
-
-          default:
-            console.warn("Unknown action type");
-            break;
-        }
+      case "CharacterPrimaryAction":
+      case "CharacterSecondaryAction":
         break;
 
-      case CampaignEventType.CharacterSpawned:
+      case "CharacterSpawned":
         this.exists = true;
         break;
 
-      case CampaignEventType.CharacterDespawn:
+      case "CharacterDespawn":
         this.exists = false;
         break;
 
-      case CampaignEventType.CharacterMoveSpeedChange:
+      case "CharacterMoveSpeedChange":
         if (event.amount === undefined || event.amount < 0) {
           throw new Error(
             "Cannot set movespeed to non-positive number for CharacterMoveSpeedChange"
@@ -226,7 +193,7 @@ export class Character {
         this.movementSpeed = event.amount;
         break;
 
-      case CampaignEventType.CharacterPositionChange:
+      case "CharacterPositionChange":
         if (event.targetPosition === undefined) {
           throw new Error(
             "Target position not defined for CharacterPositionChange"
@@ -236,7 +203,7 @@ export class Character {
         this.position = event.targetPosition;
         break;
 
-      case CampaignEventType.CharacterHealthChange:
+      case "CharacterHealthChange":
         if (event.amount === undefined || event.amount < 0) {
           throw new Error("Amount is not defined for CharacterHealthGain");
         }
@@ -244,7 +211,7 @@ export class Character {
         this.currentHealth = event.amount;
         break;
 
-      case CampaignEventType.CharacterHealthGain:
+      case "CharacterHealthGain":
         if (event.amount === undefined || event.amount < 0) {
           throw new Error("Amount is not defined for CharacterHealthGain");
         }
@@ -252,7 +219,7 @@ export class Character {
         this.currentHealth += event.amount;
         break;
 
-      case CampaignEventType.CharacterHealthLoss:
+      case "CharacterHealthLoss":
         if (event.amount === undefined || event.amount < 0) {
           throw new Error("Amount is not defined for CharacterHealthLoss");
         }
@@ -260,7 +227,7 @@ export class Character {
         this.currentHealth -= event.amount;
         break;
 
-      case CampaignEventType.CharacterHealthChange:
+      case "CharacterHealthChange":
         if (event.amount === undefined) {
           throw new Error(
             "Amount is not defined for CharacterHealthChangeRelative"
@@ -270,7 +237,7 @@ export class Character {
         this.currentHealth += event.amount;
         break;
 
-      case CampaignEventType.CharacterHealthChange:
+      case "CharacterHealthChange":
         if (event.amount === undefined) {
           throw new Error(
             "Amount is not defined for CharacterHealthChangeAbsolute"
@@ -280,7 +247,7 @@ export class Character {
         this.currentHealth = event.amount;
         break;
 
-      case CampaignEventType.CharacterPermanentHealthChange:
+      case "CharacterPermanentHealthChange":
         if (event.amount === undefined) {
           throw new Error(
             "Amount is not defined for CharacterPermanentHealthChange"
@@ -290,7 +257,7 @@ export class Character {
         this.maximumHealth = event.amount || -1;
         break;
 
-      case CampaignEventType.CharacterSpellGain:
+      case "CharacterSpellGain":
         const spell = campaign.spells.find((s) => s.id === event.spellId);
         if (spell === undefined) {
           throw new Error(
@@ -301,18 +268,18 @@ export class Character {
         this.spells.push(spell);
         break;
 
-      case CampaignEventType.CharacterStatusGain:
+      case "CharacterStatusGain":
         const status = campaign.statuses.find((s) => s.id === event.statusId);
         if (status === undefined) {
           throw new Error(
-            `Could not find status with id ${event.spellId} for CharacterGainSpell`
+            `Could not find status with id ${event.statusId} for CharacterGainSpell`
           );
         }
 
         this.statuses.push(status);
         break;
 
-      case CampaignEventType.CharacterItemGain:
+      case "CharacterItemGain":
         const item = campaign.items.find((eq) => eq.id === event.itemId);
         if (item === undefined) {
           throw new Error(
@@ -323,7 +290,7 @@ export class Character {
         this.inventory.push(item);
         break;
 
-      case CampaignEventType.CharacterMovement:
+      case "CharacterMovement":
         if (event.targetPosition === undefined) {
           throw new Error("Target position not defined for CharacterMovement");
         }
@@ -333,8 +300,6 @@ export class Character {
         const distance = Math.sqrt(
           Math.pow(distanceX, 2) + Math.pow(distanceY, 2)
         );
-
-        console.log(distance, this.movementRemaining);
 
         if (distance > this.movementRemaining) {
           throw new Error(
@@ -348,7 +313,7 @@ export class Character {
         break;
 
       default:
-        console.warn(`Unhandled event ${event.id}, type ${event.eventType}`);
+        console.warn(`Unhandled event ${event.id}, type ${event.type}`);
         break;
     }
   }

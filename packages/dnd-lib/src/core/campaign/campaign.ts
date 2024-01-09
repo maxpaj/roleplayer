@@ -1,37 +1,64 @@
-import { Battle, Round } from "../battle/battle";
-import { ActionType, Spell } from "../character/character";
-import { Character } from "../character/character";
-import { randomCharacter } from "../character/random-char";
 import { Id, generateId } from "../../id";
-import { Item } from "../item/item";
-import { Status } from "../interaction/status";
+import { Battle, Round } from "../battle/battle";
+import { Character, Spell } from "../character/character";
+import { randomCharacter } from "../character/random-char";
 import { Interaction } from "../interaction/interaction";
+import { Status } from "../interaction/status";
+import { Item } from "../item/item";
 
-export enum CampaignEventType {
-  Unknown = "Unknown",
-  NewRound = "NewRound",
-  CharacterSpawned = "CharacterSpawned",
-  CharacterDespawn = "CharacterDespawn",
-  CharacterStartRound = "CharacterStartRound",
-  CharacterPrimaryAction = "CharacterPrimaryAction",
-  CharacterSecondaryAction = "CharacterSecondaryAction",
-  CharacterMovement = "CharacterMovement",
-  CharacterEndRound = "CharacterEndRound",
-  CharacterSpellGain = "CharacterSpellGain",
-  CharacterItemGain = "CharacterItemGain",
-  CharacterPermanentHealthChange = "CharacterPermanentHealthChange",
-  CharacterPositionChange = "CharacterPositionChange",
-  CharacterMoveSpeedChange = "CharacterMoveSpeedChange",
-  CharacterStatusGain = "CharacterStatusGain",
-  CharacterAttackAttackerHit = "CharacterAttackAttackerHit",
-  CharacterAttackAttackerMiss = "CharacterAttackAttackerMiss",
-  CharacterAttackDefenderHit = "CharacterAttackDefenderHit",
-  CharacterAttackDefenderDodge = "CharacterAttackDefenderDodge",
-  CharacterAttackDefenderParry = "CharacterAttackDefenderParry",
-  CharacterHealthGain = "CharacterHealthGain",
-  CharacterHealthLoss = "CharacterHealthLoss",
-  CharacterHealthChange = "CharacterHealthChange",
-}
+export type CampaignEventType =
+  | { type: "Unknown" }
+  | { type: "NewRound" }
+  | { type: "CharacterSpawned"; characterId: Id }
+  | { type: "CharacterDespawn"; characterId: Id }
+  | { type: "CharacterStartRound"; characterId: Id }
+  | { type: "CharacterPrimaryAction"; characterId: Id; interactionId: Id }
+  | { type: "CharacterSecondaryAction"; characterId: Id }
+  | { type: "CharacterMovement"; characterId: Id; targetPosition: Position }
+  | { type: "CharacterEndRound"; characterId: Id }
+  | { type: "CharacterSpellGain"; characterId: Id; spellId: Id }
+  | { type: "CharacterItemGain"; characterId: Id; itemId: Id }
+  | { type: "CharacterPermanentHealthChange"; characterId: Id; amount: number }
+  | {
+      type: "CharacterPositionChange";
+      characterId: Id;
+      targetPosition: Position;
+    }
+  | { type: "CharacterMoveSpeedChange"; characterId: Id; amount: number }
+  | {
+      type: "CharacterStatusGain";
+      characterId: Id;
+      interactionId: Id;
+      statusId: Id;
+    }
+  | { type: "CharacterAttackAttackerHit"; characterId: Id }
+  | { type: "CharacterAttackAttackerMiss"; characterId: Id }
+  | { type: "CharacterAttackDefenderHit"; characterId: Id; interactionId: Id }
+  | { type: "CharacterAttackDefenderDodge"; characterId: Id; interactionId: Id }
+  | { type: "CharacterAttackDefenderParry"; characterId: Id }
+  | {
+      type: "CharacterHealthGain";
+      characterId: Id;
+      interactionId: Id;
+      amount: number;
+    }
+  | {
+      type: "CharacterHealthLoss";
+      characterId: Id;
+      interactionId: Id;
+      amount: number;
+    }
+  | { type: "CharacterHealthChange"; characterId: Id; amount: number }
+  | { type: "CharacterClassGain"; characterId: Id; classId: Id };
+
+export type CampaignEvent = CampaignEventType & {
+  id: Id;
+};
+
+export type CampaignEventWithRound = CampaignEvent & {
+  roundId: Id;
+  battleId?: Id;
+};
 
 export type Position = {
   x: number;
@@ -39,29 +66,17 @@ export type Position = {
   z: number;
 };
 
-export type CampaignEvent = {
-  id: Id;
-  eventType: CampaignEventType;
-  actionType: ActionType;
-
-  amount?: number;
-  targetPosition?: Position;
-  interactionId?: Id;
-
-  roundId?: Id;
-  battleId?: Id;
-  statusId?: Id;
-  spellId?: Id;
-  characterId?: Id;
-  targetId?: Id;
-  itemId?: Id;
-};
+export function isCharacterEvent(
+  event: CampaignEvent
+): event is Extract<CampaignEvent, { characterId: Id }> {
+  return (event as any).characterId !== undefined;
+}
 
 export class Campaign {
   items: Item[];
   characters: Character[];
   battles: Battle[];
-  events: CampaignEvent[];
+  events: CampaignEventWithRound[];
   spells: Spell[];
   rounds: Round[];
   statuses: Status[];
@@ -70,7 +85,8 @@ export class Campaign {
     items: Item[] = [],
     characters: Character[] = [],
     battles: Battle[] = [],
-    events: CampaignEvent[] = [],
+    events: CampaignEventWithRound[] = [],
+
     spells: Spell[] = [],
     rounds: Round[] = [],
     statuses: Status[] = []
@@ -100,9 +116,12 @@ export class Campaign {
   }
 
   getCharacterFromEvents(characterId: Id) {
-    const characterEvents = this.events.filter(
-      (c) => c.characterId === characterId || c.characterId === "system"
-    );
+    const characterEvents = this.events.filter((event) => {
+      return (
+        (isCharacterEvent(event) && event.characterId === characterId) ||
+        event.type === "NewRound"
+      );
+    });
 
     const character = new Character();
     characterEvents.forEach((event) => {
@@ -120,7 +139,7 @@ export class Campaign {
     return this.events.filter((e) => e.battleId === battle.id);
   }
 
-  allCharactersHaveActed(events: CampaignEvent[]) {
+  allCharactersHaveActed(events: CampaignEventWithRound[]) {
     const round = this.rounds[this.rounds.length - 1];
     if (!round) {
       throw new Error("Could not get current round");
@@ -129,7 +148,7 @@ export class Campaign {
     return this.characters.every((c) =>
       events.some(
         (e) =>
-          e.eventType === CampaignEventType.CharacterEndRound &&
+          e.type === "CharacterEndRound" &&
           e.characterId === c.id &&
           e.roundId === round.id
       )
@@ -148,8 +167,13 @@ export class Campaign {
     return this.battles[this.battles.length - 1];
   }
 
-  getCurrentRound(): Round | undefined {
-    return this.rounds[this.rounds.length - 1];
+  getCurrentRound(): Round {
+    const round = this.rounds[this.rounds.length - 1];
+    if (!round) {
+      throw new Error("No current round");
+    }
+
+    return round;
   }
 
   getItem(itemId: Id) {
@@ -164,28 +188,29 @@ export class Campaign {
 
   performCharacterAttack(
     attacker: Character,
-    attackHitRoll: number,
+    diceAttackHitRoll: number,
     interaction: Interaction,
     defender: Character
   ) {
-    const defenderWasHit = defender.defense < attackHitRoll;
-    const hitDodgeEvent = defenderWasHit
+    const characterHitModifier =
+      attacker.getCharacterHitModifierWithInteraction(interaction);
+    const defenderWasHit =
+      defender.defense < diceAttackHitRoll + characterHitModifier;
+    const hitDodgeEvent: CampaignEvent = defenderWasHit
       ? {
           id: generateId("event"),
           characterId: defender.id,
           interactionId: interaction.id,
-          actionType: ActionType.Attack,
-          eventType: CampaignEventType.CharacterAttackDefenderHit,
+          type: "CharacterAttackDefenderHit",
         }
       : {
           id: generateId("event"),
           characterId: defender.id,
           interactionId: interaction.id,
-          actionType: ActionType.Dodge,
-          eventType: CampaignEventType.CharacterAttackDefenderDodge,
+          type: "CharacterAttackDefenderDodge",
         };
 
-    const damageTakenEvents = defenderWasHit
+    const damageTakenEvents: CampaignEvent[] = defenderWasHit
       ? interaction.appliesEffects.flatMap((attack) => {
           const attackerDamageRoll = attacker.getDamageRoll(attack);
           const defenderDamageTaken = defender.getEffectDamageTaken(
@@ -197,11 +222,10 @@ export class Campaign {
             {
               id: generateId("event"),
               characterId: defender.id,
-              actionType: ActionType.Attack,
               interactionId: interaction.id,
-              eventType: CampaignEventType.CharacterHealthLoss,
+              type: "CharacterHealthLoss",
               amount: defenderDamageTaken,
-            },
+            } satisfies CampaignEvent,
           ];
         })
       : [];
@@ -223,20 +247,18 @@ export class Campaign {
               id: generateId("event"),
               characterId: defender.id,
               interactionId: interaction.id,
-              actionType: ActionType.Attack,
-              eventType: CampaignEventType.CharacterStatusGain,
+              type: "CharacterStatusGain",
               statusId: defenderStatus!.id,
-            };
+            } satisfies CampaignEvent;
           })
       : [];
 
     const attackerPrimaryAction = {
       id: generateId("event"),
       characterId: attacker.id,
-      actionType: ActionType.Attack,
       interactionId: interaction.id,
-      eventType: CampaignEventType.CharacterPrimaryAction,
-    };
+      type: "CharacterPrimaryAction",
+    } satisfies CampaignEvent;
 
     return this.publishCampaignEvent(
       ...[
@@ -251,16 +273,15 @@ export class Campaign {
   publishCampaignEvent(...events: CampaignEvent[]) {
     const currentBattle = this.getCurrentBattle();
     const currentRound = this.getCurrentRound();
+    const eventsWithRoundAndBattle = events.map((e) => {
+      return {
+        ...e,
+        battleId: currentBattle?.id,
+        roundId: currentRound.id,
+      };
+    });
 
-    this.events.push(
-      ...events.map((e) => {
-        return {
-          ...e,
-          roundId: currentRound?.id,
-          battleId: currentBattle?.id,
-        };
-      })
-    );
+    this.events.push(...eventsWithRoundAndBattle);
     return events;
   }
 
@@ -268,14 +289,15 @@ export class Campaign {
 
   getCharacterRoundEvents(round: Round, characterId: Id) {
     const roundEvents = this.getRoundEvents(round);
-    return roundEvents.filter((re) => re.characterId === characterId);
+    return roundEvents.filter(
+      (re) => isCharacterEvent(re) && re.characterId === characterId
+    );
   }
 
   endCharacterTurn(character: Character) {
     this.publishCampaignEvent({
-      eventType: CampaignEventType.CharacterEndRound,
+      type: "CharacterEndRound",
       id: generateId("event"),
-      actionType: ActionType.None,
       characterId: character.id,
     });
   }
@@ -283,7 +305,7 @@ export class Campaign {
   characterHasRoundEvent(
     round: Round,
     characterId: Id,
-    eventType: CampaignEventType
+    type: CampaignEventType["type"]
   ) {
     const roundCharacterEvents = this.getCharacterRoundEvents(
       round,
@@ -291,7 +313,10 @@ export class Campaign {
     );
 
     return roundCharacterEvents.some(
-      (c) => c.characterId === characterId && c.eventType === eventType
+      (event) =>
+        isCharacterEvent(event) &&
+        event.characterId === characterId &&
+        event.type === type
     );
   }
 
@@ -304,12 +329,23 @@ export class Campaign {
     random.name = name;
 
     this.characters.push(random);
-    this.events.push({
-      id: generateId("event"),
-      characterId: random.id,
-      actionType: ActionType.None,
-      eventType: CampaignEventType.CharacterSpawned,
-    });
+
+    this.publishCampaignEvent(
+      {
+        id: generateId("event"),
+        characterId: random.id,
+        type: "CharacterSpawned",
+      },
+      ...random.classes.map(
+        ({ clazz }) =>
+          ({
+            id: generateId("event"),
+            characterId: random.id,
+            type: "CharacterClassGain",
+            classId: clazz.name,
+          }) satisfies CampaignEvent
+      )
+    );
 
     return random;
   }

@@ -1,7 +1,7 @@
-import { ActionType, Character } from "./character";
+import { Character } from "./character";
 import { ItemSlot, ItemType, Rarity } from "../item/item";
-import { Campaign, CampaignEventType } from "../campaign/campaign";
 import { generateId } from "../../id";
+import { Campaign } from "../campaign/campaign";
 
 describe("getCharacterFromEvents", () => {
   it("should apply permanent health change events", () => {
@@ -14,17 +14,17 @@ describe("getCharacterFromEvents", () => {
     campaign.characters = [character];
     campaign.events = [
       {
-        actionType: ActionType.None,
-        eventType: CampaignEventType.CharacterSpawned,
+        type: "CharacterSpawned",
         id: generateId("event"),
         characterId: characterId,
+        roundId: generateId("round"),
       },
       {
-        actionType: ActionType.None,
-        eventType: CampaignEventType.CharacterPermanentHealthChange,
+        type: "CharacterPermanentHealthChange",
         amount: 12,
         id: generateId("event"),
         characterId: characterId,
+        roundId: generateId("round"),
       },
     ];
 
@@ -41,21 +41,20 @@ describe("getCharacterFromEvents", () => {
     campaign.characters = [character];
     campaign.events = [
       {
-        actionType: ActionType.None,
-        eventType: CampaignEventType.CharacterSpawned,
+        type: "CharacterSpawned",
         id: generateId("event"),
         characterId: characterId,
+        roundId: generateId("round"),
       },
       {
-        actionType: ActionType.None,
-        eventType: CampaignEventType.CharacterMoveSpeedChange,
+        type: "CharacterMoveSpeedChange",
         id: generateId("event"),
         amount: 35,
         characterId: characterId,
+        roundId: generateId("round"),
       },
       {
-        actionType: ActionType.None,
-        eventType: CampaignEventType.CharacterPositionChange,
+        type: "CharacterPositionChange",
         id: generateId("event"),
         targetPosition: {
           x: 10,
@@ -63,10 +62,10 @@ describe("getCharacterFromEvents", () => {
           z: 0,
         },
         characterId: characterId,
+        roundId: generateId("round"),
       },
       {
-        actionType: ActionType.None,
-        eventType: CampaignEventType.CharacterMovement,
+        type: "CharacterMovement",
         targetPosition: {
           x: 10,
           y: 20,
@@ -74,6 +73,7 @@ describe("getCharacterFromEvents", () => {
         },
         id: generateId("event"),
         characterId: characterId,
+        roundId: generateId("round"),
       },
     ];
 
@@ -82,7 +82,7 @@ describe("getCharacterFromEvents", () => {
     expect(characterFromEvents.position.y).toBe(20);
   });
 
-  it("should reject movement event when movement exceeds movement speed", () => {
+  it("should reject movement event when movement exceeds remaining movement", () => {
     const characterId = generateId("char");
     const character = new Character();
     character.id = characterId;
@@ -91,21 +91,20 @@ describe("getCharacterFromEvents", () => {
     campaign.characters = [character];
     campaign.events = [
       {
-        actionType: ActionType.None,
-        eventType: CampaignEventType.CharacterSpawned,
+        type: "CharacterSpawned",
         id: generateId("event"),
         characterId: characterId,
+        roundId: generateId("round"),
       },
       {
-        actionType: ActionType.None,
-        eventType: CampaignEventType.CharacterMoveSpeedChange,
+        type: "CharacterMoveSpeedChange",
         id: generateId("event"),
         amount: 35,
         characterId: characterId,
+        roundId: generateId("round"),
       },
       {
-        actionType: ActionType.None,
-        eventType: CampaignEventType.CharacterPositionChange,
+        type: "CharacterPositionChange",
         id: generateId("event"),
         targetPosition: {
           x: 10,
@@ -113,16 +112,15 @@ describe("getCharacterFromEvents", () => {
           z: 0,
         },
         characterId: characterId,
+        roundId: generateId("round"),
       },
       {
-        actionType: ActionType.None,
-        eventType: CampaignEventType.NewRound,
+        type: "NewRound",
         id: generateId("event"),
-        characterId: "system",
+        roundId: generateId("round"),
       },
       {
-        actionType: ActionType.None,
-        eventType: CampaignEventType.CharacterMovement,
+        type: "CharacterMovement",
         targetPosition: {
           x: 10,
           y: 50,
@@ -130,6 +128,7 @@ describe("getCharacterFromEvents", () => {
         },
         id: generateId("event"),
         characterId: characterId,
+        roundId: generateId("round"),
       },
     ];
 
@@ -145,31 +144,32 @@ describe("getCharacterFromEvents", () => {
     campaign.characters = [character];
     campaign.events = [
       {
-        actionType: ActionType.None,
-        eventType: CampaignEventType.CharacterSpawned,
+        type: "CharacterSpawned",
         id: generateId("event"),
         characterId: characterId,
+        roundId: generateId("round"),
       },
       {
-        actionType: ActionType.None,
-        eventType: CampaignEventType.CharacterPermanentHealthChange,
+        type: "CharacterPermanentHealthChange",
         amount: 12,
         id: generateId("event"),
         characterId: characterId,
+        roundId: generateId("round"),
       },
       {
-        actionType: ActionType.None,
-        eventType: CampaignEventType.CharacterHealthChange,
+        type: "CharacterHealthChange",
         amount: 12,
         id: generateId("event"),
         characterId: characterId,
+        roundId: generateId("round"),
       },
       {
-        actionType: ActionType.None,
-        eventType: CampaignEventType.CharacterHealthLoss,
+        type: "CharacterHealthLoss",
         amount: 4,
         id: generateId("event"),
         characterId: characterId,
+        roundId: generateId("round"),
+        interactionId: generateId("interaction"),
       },
     ];
 
@@ -200,17 +200,17 @@ describe("getCharacterFromEvents", () => {
 
     campaign.events = [
       {
-        actionType: ActionType.None,
-        eventType: CampaignEventType.CharacterSpawned,
+        type: "CharacterSpawned",
         id: generateId("event"),
         characterId: characterId,
+        roundId: generateId("round"),
       },
       {
-        actionType: ActionType.None,
-        eventType: CampaignEventType.CharacterItemGain,
+        type: "CharacterItemGain",
         id: generateId("event"),
         characterId: characterId,
         itemId: itemId,
+        roundId: generateId("round"),
       },
     ];
 
@@ -224,11 +224,11 @@ describe("getCharacterFromEvents", () => {
     campaign.characters = [];
     campaign.events = [
       {
-        actionType: ActionType.None,
-        eventType: CampaignEventType.CharacterPermanentHealthChange,
+        type: "CharacterPermanentHealthChange",
         amount: 12,
         id: generateId("event"),
         characterId: characterId,
+        roundId: generateId("round"),
       },
     ];
 
@@ -245,10 +245,9 @@ describe("getCharacterFromEvents", () => {
     campaign.characters = [];
     campaign.events = [
       {
-        actionType: ActionType.None,
-        eventType: CampaignEventType.Unknown,
+        type: "Unknown",
         id: generateId("event"),
-        characterId: characterId,
+        roundId: generateId("round"),
       },
     ];
 

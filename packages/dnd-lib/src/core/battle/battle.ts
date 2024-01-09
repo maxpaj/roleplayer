@@ -1,10 +1,10 @@
-import { Id, generateId } from "../id";
+import { Id, generateId } from "../../id";
 import {
   Campaign,
   CampaignEvent,
-  CampaignEventType,
+  isCharacterEvent,
 } from "../campaign/campaign";
-import { ActionType, Character } from "../character/character";
+import { Character } from "../character/character";
 import { getCharacterInitiative } from "../character/character-stats";
 
 export type Round = {
@@ -49,8 +49,9 @@ export class Battle {
       (battleChar) => {
         const hasActed = events.some(
           (e) =>
+            isCharacterEvent(e) &&
             e.characterId === battleChar.characterId &&
-            e.eventType === CampaignEventType.CharacterEndRound
+            e.type === "CharacterEndRound"
         );
 
         return !hasActed;
@@ -62,16 +63,5 @@ export class Battle {
     );
 
     return sorted[0];
-  }
-
-  publishNewRoundEvent(nextRoundId: string) {
-    return {
-      id: generateId("event"),
-      eventType: CampaignEventType.NewRound,
-      actionType: ActionType.None,
-      characterId: "system",
-      roundId: nextRoundId,
-      battleId: this.id,
-    };
   }
 }

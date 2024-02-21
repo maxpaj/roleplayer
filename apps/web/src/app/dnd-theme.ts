@@ -47,47 +47,6 @@ export const icons: ClassIcons = {
   Wizard: "assets/dnd/Class Icon - Wizard.svg",
 };
 
-export const ActionIconMap: {
-  [key in ActionType]: { alt: string; icon: any };
-} = {
-  [ActionType.Attack]: {
-    alt: "Attack",
-    icon: attackIcon,
-  },
-  [ActionType.Sprint]: {
-    alt: "Sprint",
-    icon: defaultIcon,
-  },
-  [ActionType.Jump]: {
-    alt: "Jump",
-    icon: defaultIcon,
-  },
-  [ActionType.Cantrip]: {
-    alt: "Cantrip",
-    icon: defaultIcon,
-  },
-  [ActionType.Spell]: {
-    alt: "Spell",
-    icon: defaultIcon,
-  },
-  [ActionType.Item]: {
-    alt: "Item",
-    icon: defaultIcon,
-  },
-  [ActionType.Equipment]: {
-    alt: "Equipment",
-    icon: defaultIcon,
-  },
-  [ActionType.None]: {
-    alt: "None",
-    icon: defaultIcon,
-  },
-  [ActionType.Dodge]: {
-    alt: "Dodge",
-    icon: defaultIcon,
-  },
-};
-
 export const EventIconMap: {
   [key in CampaignEventType["type"]]: { alt: string; icon: any };
 } = {

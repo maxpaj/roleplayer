@@ -12,7 +12,6 @@
     ],
     "actions": [
       {
-        "type": "InteractionType.Attack",
         "name": "Slash attack",
         "rangeDistanceMeters": 1,
         "eligibleTargets": [
@@ -29,7 +28,6 @@
         ]
       },
       {
-        "type": "InteractionType.Attack",
         "name": "Slash attack",
         "rangeDistanceMeters": 1,
         "eligibleTargets": [
@@ -55,7 +53,6 @@
     "properties": [],
     "actions": [
       {
-        "type": "InteractionType.Heal",
         "name": "Drink",
         "rangeDistanceMeters": 0,
         "eligibleTargets": [
@@ -80,7 +77,6 @@
     "properties": [],
     "actions": [
       {
-        "type": "InteractionType.Drink",
         "name": "Drink",
         "rangeDistanceMeters": 0,
         "eligibleTargets": [
@@ -112,7 +108,6 @@
     ],
     "actions": [
       {
-        "type": "InteractionType.Attack",
         "name": "Slash attack",
         "rangeDistanceMeters": 1,
         "eligibleTargets": [
@@ -145,7 +140,6 @@
     ],
     "actions": [
       {
-        "type": "InteractionType.Attack",
         "name": "Shield Bash",
         "rangeDistanceMeters": 1,
         "eligibleTargets": [
@@ -184,7 +178,6 @@
     ],
     "actions": [
       {
-        "type": "InteractionType.OneHandedAttack",
         "name": "Slash attack",
         "spendsResources": [
           "Action.Primary"
@@ -204,7 +197,6 @@
         ]
       },
       {
-        "type": "InteractionType.TwoHandedAttack",
         "name": "Slash attack",
         "rangeDistanceMeters": 1.5,
         "spendsResources": [
@@ -224,7 +216,6 @@
         ]
       },
       {
-        "type": "InteractionType.TwoHandedAttack",
         "name": "Cleave",
         "rangeDistanceMeters": 1.5,
         "spendsResources": [
@@ -258,7 +249,6 @@
     ],
     "actions": [
       {
-        "type": "InteractionType.OneHandedAttack",
         "name": "Slash attack",
         "spendsResources": [
           "Action.Primary"
@@ -278,7 +268,6 @@
         ]
       },
       {
-        "type": "InteractionType.TwoHandedAttack",
         "name": "Slash attack",
         "rangeDistanceMeters": 1.5,
         "spendsResources": [
@@ -298,7 +287,6 @@
         ]
       },
       {
-        "type": "InteractionType.TwoHandedAttack",
         "name": "Cleave",
         "rangeDistanceMeters": 1.5,
         "spendsResources": [

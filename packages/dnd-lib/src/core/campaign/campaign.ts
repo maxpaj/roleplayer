@@ -1,4 +1,5 @@
-import { Id, generateId } from "../../id";
+import { Id, generateId } from "../../lib/generate-id";
+import { AugmentedRequired } from "../../types/withRequired";
 import { Battle, Round } from "../battle/battle";
 import { Character, Spell } from "../character/character";
 import { randomCharacter } from "../character/random-char";
@@ -75,35 +76,21 @@ export function isCharacterEvent(
 export class Campaign {
   id: Id;
   name: string;
-  items: Item[];
-  characters: Character[];
-  battles: Battle[];
-  events: CampaignEventWithRound[];
-  spells: Spell[];
-  rounds: Round[];
-  statuses: Status[];
+  createdUtc: Date;
 
-  constructor(
-    id: Id = generateId("campaign"),
-    name: string = "New campaign",
-    items: Item[] = [],
-    characters: Character[] = [],
-    battles: Battle[] = [],
-    events: CampaignEventWithRound[] = [],
+  items: Item[] = [];
+  characters: Character[] = [];
+  battles: Battle[] = [];
+  events: CampaignEventWithRound[] = [];
+  spells: Spell[] = [];
+  rounds: Round[] = [];
+  statuses: Status[] = [];
 
-    spells: Spell[] = [],
-    rounds: Round[] = [],
-    statuses: Status[] = []
-  ) {
-    this.id = id;
-    this.name = name;
-    this.items = items;
-    this.characters = characters;
-    this.battles = battles;
-    this.events = events;
-    this.spells = spells;
-    this.rounds = rounds;
-    this.statuses = statuses;
+  constructor(c: AugmentedRequired<Partial<Campaign>, "name">) {
+    Object.assign(this, c);
+    this.id = c.id || generateId();
+    this.name = c.name;
+    this.createdUtc = c.createdUtc || new Date();
   }
 
   nextRound() {
@@ -161,6 +148,10 @@ export class Campaign {
     );
   }
 
+  getCharacters() {
+    return [];
+  }
+
   getCurrentBattleEvents() {
     const battle = this.getCurrentBattle();
     if (battle === undefined) {
@@ -204,13 +195,13 @@ export class Campaign {
       defender.defense < diceAttackHitRoll + characterHitModifier;
     const hitDodgeEvent: CampaignEvent = defenderWasHit
       ? {
-          id: generateId("event"),
+          id: generateId(),
           characterId: defender.id,
           interactionId: interaction.id,
           type: "CharacterAttackDefenderHit",
         }
       : {
-          id: generateId("event"),
+          id: generateId(),
           characterId: defender.id,
           interactionId: interaction.id,
           type: "CharacterAttackDefenderDodge",
@@ -226,7 +217,7 @@ export class Campaign {
 
           return [
             {
-              id: generateId("event"),
+              id: generateId(),
               characterId: defender.id,
               interactionId: interaction.id,
               type: "CharacterHealthLoss",
@@ -250,7 +241,7 @@ export class Campaign {
             );
 
             return {
-              id: generateId("event"),
+              id: generateId(),
               characterId: defender.id,
               interactionId: interaction.id,
               type: "CharacterStatusGain",
@@ -260,7 +251,7 @@ export class Campaign {
       : [];
 
     const attackerPrimaryAction = {
-      id: generateId("event"),
+      id: generateId(),
       characterId: attacker.id,
       interactionId: interaction.id,
       type: "CharacterPrimaryAction",
@@ -303,7 +294,7 @@ export class Campaign {
   endCharacterTurn(character: Character) {
     this.publishCampaignEvent({
       type: "CharacterEndRound",
-      id: generateId("event"),
+      id: generateId(),
       characterId: character.id,
     });
   }
@@ -330,7 +321,7 @@ export class Campaign {
     name: string,
     isPlayerControlled: boolean
   ): Character {
-    const random = randomCharacter(generateId("character"));
+    const random = randomCharacter(generateId());
     random.isPlayerControlled = isPlayerControlled;
     random.name = name;
 
@@ -338,14 +329,14 @@ export class Campaign {
 
     this.publishCampaignEvent(
       {
-        id: generateId("event"),
+        id: generateId(),
         characterId: random.id,
         type: "CharacterSpawned",
       },
       ...random.classes.map(
         ({ clazz }) =>
           ({
-            id: generateId("event"),
+            id: generateId(),
             characterId: random.id,
             type: "CharacterClassGain",
             classId: clazz.name,

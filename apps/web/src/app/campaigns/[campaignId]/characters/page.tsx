@@ -2,7 +2,7 @@ import { Character } from "@repo/dnd-lib/character";
 import { CreateCharacterForm } from "./components/create-character-form";
 
 async function getData() {
-  const characters: Character[] = [];
+  const characters: Character[] = [new Character()];
   return characters;
 }
 

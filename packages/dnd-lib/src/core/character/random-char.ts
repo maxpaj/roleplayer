@@ -1,9 +1,9 @@
-import { Id, generateId } from "../../id";
 import { Alignment, Clazz, Race, Character } from "./character";
 import { EffectType, ElementType } from "../interaction/effect";
 import { D2, D6 } from "../dice/dice";
 import { ItemSlot, ItemType, Rarity } from "../item/item";
 import { TargetType } from "../interaction/interaction";
+import { generateId, Id } from "../../lib/generate-id";
 
 function randomEnum<T extends object>(anEnum: T): T[keyof T] {
   const enumValues = Object.keys(anEnum) as T[keyof T][];
@@ -22,7 +22,7 @@ function randomDigit(min: number, max: number) {
 
 function randomClass(): Clazz {
   return {
-    id: generateId("class"),
+    id: generateId(),
     levelProgression: [],
     name: "Random class",
   };
@@ -69,14 +69,14 @@ export function randomCharacter(id: Id): Character {
     inventory: [],
     equipment: [
       {
-        id: generateId("item"),
+        id: generateId(),
         rarity: Rarity.Common,
         name: "Short Sword",
         type: ItemType.Equipment,
         slots: [ItemSlot.MainHand, ItemSlot.OffHand],
         actions: [
           {
-            id: generateId("action"),
+            id: generateId(),
             name: "Slash attack",
             rangeDistanceMeters: 1,
             eligibleTargets: [TargetType.Character, TargetType.Environment],
@@ -94,7 +94,7 @@ export function randomCharacter(id: Id): Character {
     ],
     baseActions: [
       {
-        id: generateId("action"),
+        id: generateId(),
         name: "Unarmed attack",
         rangeDistanceMeters: 1,
         eligibleTargets: [TargetType.Hostile, TargetType.Friendly],

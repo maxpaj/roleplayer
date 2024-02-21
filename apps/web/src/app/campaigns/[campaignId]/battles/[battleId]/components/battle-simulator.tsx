@@ -9,17 +9,17 @@ import { ItemSlot, ItemType, Rarity } from "@repo/dnd-lib/item";
 import { Interaction } from "@repo/dnd-lib/interaction";
 import { Campaign } from "@repo/dnd-lib/campaign";
 import { Id, generateId } from "@repo/dnd-lib/id";
+import { EventIconMap } from "../../../../../dnd-theme";
 
 const EventIconSize = 32;
 
 export default function BattleSimulator({}) {
   const [campaign, setCampaignReact] = useState<Campaign>(
-    new Campaign(
-      generateId("campaign"),
-      "Campaign",
-      [
+    new Campaign({
+      name: "Campaign",
+      items: [
         {
-          id: generateId("item"),
+          id: generateId(),
           actions: [],
           slots: [ItemSlot.MainHand],
           name: "Short sword",
@@ -27,17 +27,13 @@ export default function BattleSimulator({}) {
           rarity: Rarity.Common,
         },
       ],
-      [],
-      [new Battle([])],
-      [],
-      [],
-      [
+      battles: [new Battle("battle", [])],
+      rounds: [
         {
-          id: generateId("round"),
+          id: generateId(),
         },
       ],
-      []
-    )
+    })
   );
   const [, updateState] = useState({});
   const [selectedAction, setSelectedAction] = useState<Interaction | undefined>(

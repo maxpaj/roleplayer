@@ -8,7 +8,7 @@ import {
 } from "../campaign/campaign";
 import { Status } from "../interaction/status";
 import { roll } from "../dice/dice";
-import { Id } from "../../id";
+import { Id, generateId } from "../../lib/generate-id";
 
 export enum ActionResourceType {
   Primary = "Primary",
@@ -107,6 +107,9 @@ export class Character {
   public actionResourcesRemaining: ActionResourceType[];
 
   public constructor(init?: Partial<Character>) {
+    this.id = generateId();
+    this.name = "New character";
+
     this.cantrips = [];
     this.statuses = [];
     this.inventory = [];

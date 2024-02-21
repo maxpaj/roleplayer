@@ -7,7 +7,7 @@
     "./campaign": "./src/core/campaign/campaign.ts",
     "./character": "./src/core/character/character.ts",
     "./dice": "./src/core/dice/dice.ts",
-    "./id": "./src/id.ts",
+    "./id": "./src/lib/generate-id.ts",
     "./interaction": "./src/core/interaction/interaction.ts",
     "./item": "./src/core/item/item.ts"
   },

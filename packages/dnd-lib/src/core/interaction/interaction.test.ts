@@ -1,4 +1,4 @@
-import { Campaign, CampaignEventType } from "../campaign/campaign";
+import { Campaign } from "../campaign/campaign";
 import { Character } from "../character/character";
 import { generateId } from "../../id";
 import { Item, ItemSlot, ItemType, Rarity } from "../item/item";
@@ -76,7 +76,7 @@ describe("interactions", () => {
     defender.id = defenderId;
     defender.defense = 4;
 
-    const campaign = new Campaign();
+    const campaign = new Campaign(generateId, { id: "test", name: "test" });
     campaign.statuses = [frozenStatus];
     campaign.characters = [attacker, defender];
     campaign.rounds = [{ id: generateId("round") }];

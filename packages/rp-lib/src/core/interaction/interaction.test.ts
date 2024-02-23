@@ -1,6 +1,6 @@
+import { generateId } from "../../lib/generate-id";
 import { Campaign } from "../campaign/campaign";
 import { Character } from "../character/character";
-import { generateId } from "../../id";
 import { Item, ItemSlot, ItemType, Rarity } from "../item/item";
 import { EffectType, ElementType } from "./effect";
 import { TargetType } from "./interaction";
@@ -13,7 +13,7 @@ import {
 
 describe("interactions", () => {
   const frozenStatus: Status = {
-    id: generateId("status"),
+    id: generateId(),
     name: "Chill",
     durationRounds: 2,
     durationType: StatusDurationType.NumberOfRounds,
@@ -32,11 +32,11 @@ describe("interactions", () => {
   };
 
   const frostSword: Item = {
-    id: generateId("item"),
+    id: generateId(),
     rarity: Rarity.Rare,
     actions: [
       {
-        id: generateId("action"),
+        id: generateId(),
         appliesEffects: [
           {
             element: ElementType.Slashing,
@@ -62,7 +62,7 @@ describe("interactions", () => {
 
   it("should apply effects from being hit", () => {
     const attacker = new Character();
-    attacker.id = generateId("char");
+    attacker.id = generateId();
     attacker.equipment.push(frostSword);
 
     const actions = attacker.getAvailableActions();
@@ -71,31 +71,35 @@ describe("interactions", () => {
       throw new Error("Could not find attack");
     }
 
-    const defenderId = generateId("char");
+    const defenderId = generateId();
     const defender = new Character();
     defender.id = defenderId;
     defender.defense = 4;
 
-    const campaign = new Campaign(generateId, { id: "test", name: "test" });
+    const campaign = new Campaign({ name: "test" });
     campaign.statuses = [frozenStatus];
     campaign.characters = [attacker, defender];
-    campaign.rounds = [{ id: generateId("round") }];
+    campaign.rounds = [{ id: generateId() }];
     campaign.events = [
       {
-        id: generateId("event"),
+        id: generateId(),
         type: "CharacterHealthChange",
-        amount: 10,
+        healthChange: 10,
         characterId: defenderId,
-        roundId: generateId("round"),
+        roundId: generateId(),
       },
     ];
 
     campaign.performCharacterAttack(attacker, 15, action, defender);
 
-    const defenderFromEvents = campaign.getCharacterFromEvents(defenderId);
-    expect(defenderFromEvents.currentHealth).toBe(8);
+    campaign.applyEvents();
+
+    const defenderFromEvents = campaign.characters.find(
+      (c) => c.id === defenderId
+    );
+    expect(defenderFromEvents!.currentHealth).toBe(8);
     expect(
-      defenderFromEvents.statuses.find((s) => s.name === "Chill")
+      defenderFromEvents!.statuses.find((s) => s.name === "Chill")
     ).toBeDefined();
   });
 });

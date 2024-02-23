@@ -1,7 +1,7 @@
 import { Id, generateId } from "../../lib/generate-id";
 import { AugmentedRequired } from "../../types/withRequired";
 import { Battle, Round } from "../battle/battle";
-import { Character, Spell } from "../character/character";
+import { ActionResourceType, Character, Spell } from "../character/character";
 import { randomCharacter } from "../character/random-char";
 import { Interaction } from "../interaction/interaction";
 import { Status } from "../interaction/status";
@@ -11,6 +11,7 @@ export type CampaignEventType =
   | { type: "Unknown" }
   | { type: "NewRound" }
   | { type: "CharacterSpawned"; characterId: Id }
+  | { type: "CharacterChangedName"; characterId: Id; name: string }
   | { type: "CharacterDespawn"; characterId: Id }
   | { type: "CharacterStartRound"; characterId: Id }
   | { type: "CharacterPrimaryAction"; characterId: Id; interactionId: Id }
@@ -19,13 +20,17 @@ export type CampaignEventType =
   | { type: "CharacterEndRound"; characterId: Id }
   | { type: "CharacterSpellGain"; characterId: Id; spellId: Id }
   | { type: "CharacterItemGain"; characterId: Id; itemId: Id }
-  | { type: "CharacterPermanentHealthChange"; characterId: Id; amount: number }
+  | {
+      type: "CharacterMaximumHealthChange";
+      characterId: Id;
+      maximumHealth: number;
+    }
   | {
       type: "CharacterPositionChange";
       characterId: Id;
       targetPosition: Position;
     }
-  | { type: "CharacterMoveSpeedChange"; characterId: Id; amount: number }
+  | { type: "CharacterMoveSpeedChange"; characterId: Id; movementSpeed: number }
   | {
       type: "CharacterStatusGain";
       characterId: Id;
@@ -41,15 +46,15 @@ export type CampaignEventType =
       type: "CharacterHealthGain";
       characterId: Id;
       interactionId: Id;
-      amount: number;
+      healthGain: number;
     }
   | {
       type: "CharacterHealthLoss";
       characterId: Id;
       interactionId: Id;
-      amount: number;
+      healthLoss: number;
     }
-  | { type: "CharacterHealthChange"; characterId: Id; amount: number }
+  | { type: "CharacterHealthChange"; characterId: Id; healthChange: number }
   | { type: "CharacterClassGain"; characterId: Id; classId: Id };
 
 export type CampaignEvent = CampaignEventType & {
@@ -69,7 +74,7 @@ export type Position = {
 
 export function isCharacterEvent(
   event: CampaignEvent
-): event is Extract<CampaignEvent, { characterId: Id }> {
+): event is Extract<CampaignEvent, { characterId: Character["id"] }> {
   return (event as any).characterId !== undefined;
 }
 
@@ -83,7 +88,11 @@ export class Campaign {
   battles: Battle[] = [];
   events: CampaignEventWithRound[] = [];
   spells: Spell[] = [];
-  rounds: Round[] = [];
+  rounds: Round[] = [
+    {
+      id: generateId(),
+    },
+  ];
   statuses: Status[] = [];
 
   constructor(c: AugmentedRequired<Partial<Campaign>, "name">) {
@@ -104,22 +113,6 @@ export class Campaign {
     if (!character) {
       throw new Error(`Could not find character with id ${characterId}`);
     }
-
-    return character;
-  }
-
-  getCharacterFromEvents(characterId: Id) {
-    const characterEvents = this.events.filter((event) => {
-      return (
-        (isCharacterEvent(event) && event.characterId === characterId) ||
-        event.type === "NewRound"
-      );
-    });
-
-    const character = new Character();
-    characterEvents.forEach((event) => {
-      character.applyEvent(event, this);
-    }, character);
 
     return character;
   }
@@ -149,7 +142,7 @@ export class Campaign {
   }
 
   getCharacters() {
-    return [];
+    return this.characters;
   }
 
   getCurrentBattleEvents() {
@@ -221,7 +214,7 @@ export class Campaign {
               characterId: defender.id,
               interactionId: interaction.id,
               type: "CharacterHealthLoss",
-              amount: defenderDamageTaken,
+              healthLoss: defenderDamageTaken,
             } satisfies CampaignEvent,
           ];
         })
@@ -345,5 +338,216 @@ export class Campaign {
     );
 
     return random;
+  }
+
+  applyEvents() {
+    this.events.forEach(this.applyEvent, this);
+  }
+
+  applyEvent(event: CampaignEventWithRound) {
+    switch (event.type) {
+      case "CharacterSpawned":
+        this.characters.push(new Character({ id: event.characterId }));
+        break;
+      case "CharacterChangedName":
+      case "CharacterMaximumHealthChange":
+      case "CharacterDespawn":
+      case "CharacterStartRound":
+      case "CharacterPrimaryAction":
+      case "CharacterSecondaryAction":
+      case "CharacterMovement":
+      case "CharacterEndRound":
+      case "CharacterSpellGain":
+      case "CharacterItemGain":
+      case "CharacterPositionChange":
+      case "CharacterMoveSpeedChange":
+      case "CharacterStatusGain":
+      case "CharacterAttackAttackerHit":
+      case "CharacterAttackAttackerMiss":
+      case "CharacterAttackDefenderHit":
+      case "CharacterAttackDefenderDodge":
+      case "CharacterAttackDefenderParry":
+      case "CharacterHealthGain":
+      case "CharacterHealthLoss":
+      case "CharacterHealthChange":
+      case "CharacterClassGain":
+        {
+          const character = this.characters.find(
+            (c) => c.id === event.characterId
+          );
+          if (!character) {
+            throw new Error("No such character");
+          }
+
+          this.applyCharacterEvent(character, event);
+        }
+        break;
+
+      default:
+        console.warn(`Unknown event type ${event.type}`);
+    }
+  }
+
+  applyCharacterEvent(character: Character, event: CampaignEventWithRound) {
+    switch (event.type) {
+      case "NewRound": {
+        character.movementRemaining = character.movementSpeed;
+        character.actionResourcesRemaining = [
+          ActionResourceType.Primary,
+          ActionResourceType.Secondary,
+        ];
+        break;
+      }
+
+      case "CharacterChangedName": {
+        character.name = event.name;
+        break;
+      }
+
+      case "CharacterPrimaryAction": {
+        break;
+      }
+
+      case "CharacterSecondaryAction": {
+        break;
+      }
+
+      case "CharacterSpawned": {
+        character.exists = true;
+        break;
+      }
+
+      case "CharacterDespawn": {
+        character.exists = false;
+        break;
+      }
+
+      case "CharacterMoveSpeedChange": {
+        if (event.movementSpeed === undefined || event.movementSpeed < 0) {
+          throw new Error(
+            "Cannot set movespeed to non-positive number for CharacterMoveSpeedChange"
+          );
+        }
+
+        character.movementSpeed = event.movementSpeed;
+        break;
+      }
+
+      case "CharacterPositionChange": {
+        if (event.targetPosition === undefined) {
+          throw new Error(
+            "Target position not defined for CharacterPositionChange"
+          );
+        }
+
+        character.position = event.targetPosition;
+        break;
+      }
+
+      case "CharacterHealthChange": {
+        if (event.healthChange === undefined || event.healthChange < 0) {
+          throw new Error("Amount is not defined for CharacterHealthGain");
+        }
+
+        character.currentHealth = event.healthChange;
+        break;
+      }
+
+      case "CharacterHealthGain": {
+        if (event.healthGain === undefined || event.healthGain < 0) {
+          throw new Error("Amount is not defined for CharacterHealthGain");
+        }
+
+        character.currentHealth += event.healthGain;
+        break;
+      }
+
+      case "CharacterHealthLoss": {
+        if (event.healthLoss === undefined || event.healthLoss < 0) {
+          throw new Error("Amount is not defined for CharacterHealthLoss");
+        }
+
+        character.currentHealth -= event.healthLoss;
+        break;
+      }
+
+      case "CharacterMaximumHealthChange": {
+        if (event.maximumHealth === undefined) {
+          throw new Error(
+            "Amount is not defined for CharacterMaximumHealthChange"
+          );
+        }
+
+        character.maximumHealth = event.maximumHealth || -1;
+        break;
+      }
+
+      case "CharacterSpellGain": {
+        const spell = this.spells.find((s) => s.id === event.spellId);
+        if (spell === undefined) {
+          throw new Error(
+            `Could not find spell with id ${event.spellId} for CharacterGainSpell`
+          );
+        }
+
+        character.spells.push(spell);
+        break;
+      }
+
+      case "CharacterStatusGain": {
+        const status = this.statuses.find((s) => s.id === event.statusId);
+        if (status === undefined) {
+          throw new Error(
+            `Could not find status with id ${event.statusId} for CharacterGainSpell`
+          );
+        }
+
+        character.statuses.push(status);
+        break;
+      }
+
+      case "CharacterItemGain": {
+        const item = this.items.find((eq) => eq.id === event.itemId);
+        if (item === undefined) {
+          throw new Error(
+            `Could not find item with id ${event.itemId} for CharacterGainItem`
+          );
+        }
+
+        character.inventory.push(item);
+        break;
+      }
+
+      case "CharacterMovement": {
+        if (character.movementSpeed === undefined) {
+          throw new Error("Character does not have a defined movement speed");
+        }
+
+        if (event.targetPosition === undefined) {
+          throw new Error("Target position not defined for CharacterMovement");
+        }
+
+        const distanceX = character.position.x + event.targetPosition.x;
+        const distanceY = character.position.y + event.targetPosition.y;
+        const distance = Math.sqrt(
+          Math.pow(distanceX, 2) + Math.pow(distanceY, 2)
+        );
+
+        if (distance > character.movementRemaining) {
+          throw new Error(
+            "Movement exceeds remaining speed for CharacterMovement"
+          );
+        }
+
+        character.movementRemaining -= distance;
+        character.position.x = event.targetPosition.x;
+        character.position.y = event.targetPosition.y;
+        break;
+      }
+
+      default:
+        console.warn(`Unhandled event ${event.id}, type ${event.type}`);
+        break;
+    }
   }
 }

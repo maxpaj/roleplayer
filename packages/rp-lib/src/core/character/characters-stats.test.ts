@@ -1,4 +1,4 @@
-import { generateId } from "../../id";
+import { generateId } from "../../lib/generate-id";
 import { TargetType } from "../interaction/interaction";
 import { Item, ItemSlot, ItemType, Rarity } from "../item/item";
 import { Character, Spell } from "./character";
@@ -6,11 +6,11 @@ import { Character, Spell } from "./character";
 describe("Character interactions", () => {
   it("should return a list of possible interactions based on the character class abilities, spells and inventory", () => {
     const sword: Item = {
-      id: generateId("item"),
+      id: generateId(),
       rarity: Rarity.Common,
       actions: [
         {
-          id: generateId("action"),
+          id: generateId(),
           appliesEffects: [],
           eligibleTargets: [TargetType.Hostile],
           name: "Slash",
@@ -23,11 +23,11 @@ describe("Character interactions", () => {
     };
 
     const spell: Spell = {
-      id: generateId("spell"),
+      id: generateId(),
       name: "Healing Word",
       level: 1,
       action: {
-        id: generateId("action"),
+        id: generateId(),
         appliesEffects: [],
         eligibleTargets: [TargetType.Friendly],
         name: "Healing Word",
@@ -40,7 +40,7 @@ describe("Character interactions", () => {
     char.spells = [spell];
     char.baseActions = [
       {
-        id: generateId("action"),
+        id: generateId(),
         appliesEffects: [],
         eligibleTargets: [TargetType.Hostile],
         name: "Firebolt",

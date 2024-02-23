@@ -1,5 +1,5 @@
 {
-  "name": "dnd-turbo",
+  "name": "rp-turbo",
   "private": true,
   "scripts": {
     "build": "turbo build",

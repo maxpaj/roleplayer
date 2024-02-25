@@ -1,5 +1,7 @@
+import { v4 } from "uuid";
+
 export type Id = string;
 
 export function generateId() {
-  return (crypto || import("node:crypto")).randomUUID();
+  return v4();
 }

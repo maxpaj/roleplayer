@@ -1,4 +1,4 @@
-import { Id, generateId } from "../../id";
+import { Id, generateId } from "../../lib/generate-id";
 import {
   Campaign,
   CampaignEvent,
@@ -31,7 +31,7 @@ export class Battle {
     name: string = "New battle",
     characters: BattleCharacter[] = []
   ) {
-    this.id = generateId("battle");
+    this.id = generateId();
     this.name = name;
     this.characters = characters;
   }

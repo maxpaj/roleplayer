@@ -143,14 +143,18 @@ export const EventIconMap: {
   },
   CharacterClassGain: {
     alt: "",
-    icon: undefined,
+    icon: defaultIcon,
   },
   CharacterChangedName: {
     alt: "",
-    icon: undefined,
+    icon: defaultIcon,
   },
   BattleStarted: {
     alt: "",
-    icon: undefined,
+    icon: defaultIcon,
+  },
+  CharacterSetExperience: {
+    alt: "",
+    icon: defaultIcon,
   },
 };

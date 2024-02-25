@@ -11,52 +11,81 @@ export type CampaignEventType =
   | { type: "Unknown" }
   | { type: "RoundStarted" }
   | { type: "BattleStarted" }
-  | { type: "CharacterSpawned"; characterId: Id }
-  | { type: "CharacterChangedName"; characterId: Id; name: string }
-  | { type: "CharacterDespawn"; characterId: Id }
-  | { type: "CharacterStartRound"; characterId: Id }
-  | { type: "CharacterPrimaryAction"; characterId: Id; interactionId: Id }
-  | { type: "CharacterSecondaryAction"; characterId: Id }
-  | { type: "CharacterMovement"; characterId: Id; targetPosition: Position }
-  | { type: "CharacterEndRound"; characterId: Id }
-  | { type: "CharacterSpellGain"; characterId: Id; spellId: Id }
-  | { type: "CharacterItemGain"; characterId: Id; itemId: Id }
+  | { type: "CharacterSpawned"; characterId: Character["id"] }
+  | { type: "CharacterChangedName"; characterId: Character["id"]; name: string }
+  | {
+      type: "CharacterSetExperience";
+      characterId: Character["id"];
+      experience: number;
+    }
+  | { type: "CharacterDespawn"; characterId: Character["id"] }
+  | { type: "CharacterStartRound"; characterId: Character["id"] }
+  | {
+      type: "CharacterPrimaryAction";
+      characterId: Character["id"];
+      interactionId: Id;
+    }
+  | { type: "CharacterSecondaryAction"; characterId: Character["id"] }
+  | {
+      type: "CharacterMovement";
+      characterId: Character["id"];
+      targetPosition: Position;
+    }
+  | { type: "CharacterEndRound"; characterId: Character["id"] }
+  | { type: "CharacterSpellGain"; characterId: Character["id"]; spellId: Id }
+  | { type: "CharacterItemGain"; characterId: Character["id"]; itemId: Id }
   | {
       type: "CharacterMaximumHealthChange";
-      characterId: Id;
+      characterId: Character["id"];
       maximumHealth: number;
     }
   | {
       type: "CharacterPositionChange";
-      characterId: Id;
+      characterId: Character["id"];
       targetPosition: Position;
     }
-  | { type: "CharacterMoveSpeedChange"; characterId: Id; movementSpeed: number }
+  | {
+      type: "CharacterMoveSpeedChange";
+      characterId: Character["id"];
+      movementSpeed: number;
+    }
   | {
       type: "CharacterStatusGain";
-      characterId: Id;
+      characterId: Character["id"];
       interactionId: Id;
       statusId: Id;
     }
-  | { type: "CharacterAttackAttackerHit"; characterId: Id }
-  | { type: "CharacterAttackAttackerMiss"; characterId: Id }
-  | { type: "CharacterAttackDefenderHit"; characterId: Id; interactionId: Id }
-  | { type: "CharacterAttackDefenderDodge"; characterId: Id; interactionId: Id }
-  | { type: "CharacterAttackDefenderParry"; characterId: Id }
+  | { type: "CharacterAttackAttackerHit"; characterId: Character["id"] }
+  | { type: "CharacterAttackAttackerMiss"; characterId: Character["id"] }
+  | {
+      type: "CharacterAttackDefenderHit";
+      characterId: Character["id"];
+      interactionId: Id;
+    }
+  | {
+      type: "CharacterAttackDefenderDodge";
+      characterId: Character["id"];
+      interactionId: Id;
+    }
+  | { type: "CharacterAttackDefenderParry"; characterId: Character["id"] }
   | {
       type: "CharacterHealthGain";
-      characterId: Id;
+      characterId: Character["id"];
       interactionId: Id;
       healthGain: number;
     }
   | {
       type: "CharacterHealthLoss";
-      characterId: Id;
+      characterId: Character["id"];
       interactionId: Id;
       healthLoss: number;
     }
-  | { type: "CharacterHealthChange"; characterId: Id; healthChange: number }
-  | { type: "CharacterClassGain"; characterId: Id; classId: Id };
+  | {
+      type: "CharacterHealthChange";
+      characterId: Character["id"];
+      healthChange: number;
+    }
+  | { type: "CharacterClassGain"; characterId: Character["id"]; classId: Id };
 
 export type CampaignEvent = CampaignEventType & {
   id: Id;
@@ -352,6 +381,7 @@ export class Campaign {
         this.characters.push(new Character({ id: event.characterId }));
         break;
 
+      case "CharacterSetExperience":
       case "CharacterChangedName":
       case "CharacterMaximumHealthChange":
       case "CharacterDespawn":
@@ -399,6 +429,11 @@ export class Campaign {
           ActionResourceType.Primary,
           ActionResourceType.Secondary,
         ];
+        break;
+      }
+
+      case "CharacterSetExperience": {
+        character.xp = event.experience;
         break;
       }
 

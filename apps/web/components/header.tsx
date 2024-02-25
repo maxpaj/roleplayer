@@ -6,7 +6,7 @@ import { ModeToggle } from "./mode-toggle";
 export function Header() {
   return (
     <header className="flex items-center justify-between p-4 text-sm">
-      <div className="flex items-center invert w-12 h-8 mr-2">
+      <div className="flex items-center invert w-20 h-8 mr-2">
         <Image src={logo} alt="Icon" priority />
       </div>
 

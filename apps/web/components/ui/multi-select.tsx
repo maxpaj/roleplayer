@@ -57,15 +57,15 @@ const MultiSelect = ({
         >
           <DropdownMenuLabel>{placeholder}</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          {options.map((value: SelectProps["options"][0], index: number) => {
+          {options.map((option: SelectProps["options"][0], index: number) => {
             return (
               <DropdownMenuCheckboxItem
                 onSelect={(e) => e.preventDefault()}
                 key={index}
-                checked={isOptionSelected(value.id)}
-                onCheckedChange={() => handleSelectChange(value.id)}
+                checked={isOptionSelected(option.value)}
+                onCheckedChange={() => handleSelectChange(option.value)}
               >
-                {value.value}
+                {option.value}
               </DropdownMenuCheckboxItem>
             );
           })}

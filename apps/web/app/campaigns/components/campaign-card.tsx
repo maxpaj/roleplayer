@@ -8,7 +8,6 @@ export function CampaignCard({ campaign }: CampaignCardProps) {
     <Link href={`/campaigns/${campaign.id}`}>
       <div className="border border-slate-500 p-3 hover-border-slate-100">
         {campaign.name}
-        <div className="text-xs">Created on {campaign.createdUtc}</div>
       </div>
     </Link>
   );

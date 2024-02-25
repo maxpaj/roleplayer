@@ -128,6 +128,15 @@ export class MemoryCampaignRepository
       battleId: campaign.getCurrentBattle()?.id,
     });
 
+    campaign.events.push({
+      type: "CharacterSetExperience",
+      experience: 0,
+      characterId,
+      id: generateId(),
+      roundId: campaign.getCurrentRound().id,
+      battleId: campaign.getCurrentBattle()?.id,
+    });
+
     await this.write(campaigns);
 
     return characterId;
@@ -164,22 +173,6 @@ export class MemoryCampaignRepository
     return campaign;
   }
 }
-
-const validate = z
-  .array(
-    z.object({
-      id: z.string(),
-      name: z.string(),
-      events: z.array(z.any()),
-      characters: z.array(
-        z.object({
-          id: z.string(),
-          name: z.string(),
-        })
-      ),
-    })
-  )
-  .transform((data) => data.map((d) => new Campaign(d)));
 
 export const memoryCampaignRepository = new MemoryCampaignRepository(
   "campaigns",

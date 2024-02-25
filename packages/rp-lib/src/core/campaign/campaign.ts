@@ -9,7 +9,8 @@ import { Item } from "../item/item";
 
 export type CampaignEventType =
   | { type: "Unknown" }
-  | { type: "NewRound" }
+  | { type: "RoundStarted" }
+  | { type: "BattleStarted" }
   | { type: "CharacterSpawned"; characterId: Id }
   | { type: "CharacterChangedName"; characterId: Id; name: string }
   | { type: "CharacterDespawn"; characterId: Id }
@@ -78,6 +79,8 @@ export function isCharacterEvent(
   return (event as any).characterId !== undefined;
 }
 
+type LevelExperience = number;
+
 export class Campaign {
   id: Id;
   name: string;
@@ -94,6 +97,7 @@ export class Campaign {
     },
   ];
   statuses: Status[] = [];
+  levelProgression: LevelExperience[] = [0, 50, 100, 200, 400];
 
   constructor(c: AugmentedRequired<Partial<Campaign>, "name">) {
     Object.assign(this, c);
@@ -139,10 +143,6 @@ export class Campaign {
           e.roundId === round.id
       )
     );
-  }
-
-  getCharacters() {
-    return this.characters;
   }
 
   getCurrentBattleEvents() {
@@ -275,8 +275,6 @@ export class Campaign {
     return events;
   }
 
-  logEvent(e: CampaignEvent) {}
-
   getCharacterRoundEvents(round: Round, characterId: Id) {
     const roundEvents = this.getRoundEvents(round);
     return roundEvents.filter(
@@ -340,6 +338,10 @@ export class Campaign {
     return random;
   }
 
+  getCharacterLevel(character: Character) {
+    return this.levelProgression.findIndex((l) => l < character.xp);
+  }
+
   applyEvents() {
     this.events.forEach(this.applyEvent, this);
   }
@@ -349,6 +351,7 @@ export class Campaign {
       case "CharacterSpawned":
         this.characters.push(new Character({ id: event.characterId }));
         break;
+
       case "CharacterChangedName":
       case "CharacterMaximumHealthChange":
       case "CharacterDespawn":
@@ -390,7 +393,7 @@ export class Campaign {
 
   applyCharacterEvent(character: Character, event: CampaignEventWithRound) {
     switch (event.type) {
-      case "NewRound": {
+      case "RoundStarted": {
         character.movementRemaining = character.movementSpeed;
         character.actionResourcesRemaining = [
           ActionResourceType.Primary,

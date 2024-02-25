@@ -4,7 +4,47 @@ import { Campaign } from "../campaign/campaign";
 import { generateId } from "../../lib/generate-id";
 
 describe("apply campaign events", () => {
-  it("should apply Maximum health change events", () => {
+  it("should created character events", () => {
+    const characterA = generateId();
+    const characterB = generateId();
+
+    const campaign = new Campaign({ name: "Campaign" });
+    campaign.characters = [];
+    campaign.events = [
+      {
+        type: "CharacterSpawned",
+        id: generateId(),
+        characterId: characterA,
+        roundId: generateId(),
+      },
+      {
+        type: "CharacterChangedName",
+        id: generateId(),
+        characterId: characterA,
+        roundId: generateId(),
+        name: "Character A",
+      },
+      {
+        type: "CharacterSpawned",
+        id: generateId(),
+        characterId: characterB,
+        roundId: generateId(),
+      },
+      {
+        type: "CharacterChangedName",
+        id: generateId(),
+        characterId: characterB,
+        roundId: generateId(),
+        name: "Character B",
+      },
+    ];
+
+    campaign.applyEvents();
+
+    expect(campaign.characters.length).toBe(2);
+  });
+
+  it("should apply maximum health change events", () => {
     const characterId = generateId();
     const character = new Character();
     character.id = characterId;
@@ -121,7 +161,7 @@ describe("apply campaign events", () => {
         roundId: generateId(),
       },
       {
-        type: "NewRound",
+        type: "RoundStarted",
         id: generateId(),
         roundId: generateId(),
       },
@@ -246,9 +286,6 @@ describe("apply campaign events", () => {
 
     try {
       campaign.applyEvents();
-      const characterFromEvents = campaign.characters.find(
-        (c) => c.id === characterId
-      );
     } catch (e) {
       // Success
     }

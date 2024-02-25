@@ -29,9 +29,8 @@ describe("Campaign", () => {
 
     const campaign = new Campaign({ name: "Campaign", events });
     campaign.applyEvents();
-    console.log(campaign);
 
-    const characters = campaign.getCharacters();
+    const characters = campaign.characters;
     expect(characters.length).toBe(1);
 
     const character = characters[0];

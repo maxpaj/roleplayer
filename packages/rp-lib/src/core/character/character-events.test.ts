@@ -1,6 +1,6 @@
 import { Character } from "./character";
 import { ItemSlot, ItemType, Rarity } from "../item/item";
-import { Campaign } from "../campaign/campaign";
+import { Campaign, CampaignEvent } from "../campaign/campaign";
 import { generateId } from "../../lib/generate-id";
 
 describe("apply campaign events", () => {
@@ -9,67 +9,31 @@ describe("apply campaign events", () => {
     const characterB = generateId();
 
     const campaign = new Campaign({ name: "Campaign" });
-    campaign.characters = [];
-    campaign.events = [
-      {
-        type: "CharacterSpawned",
-        id: generateId(),
-        characterId: characterA,
-        roundId: generateId(),
-      },
-      {
-        type: "CharacterChangedName",
-        id: generateId(),
-        characterId: characterA,
-        roundId: generateId(),
-        name: "Character A",
-      },
-      {
-        type: "CharacterSpawned",
-        id: generateId(),
-        characterId: characterB,
-        roundId: generateId(),
-      },
-      {
-        type: "CharacterChangedName",
-        id: generateId(),
-        characterId: characterB,
-        roundId: generateId(),
-        name: "Character B",
-      },
-    ];
+    campaign.createCharacter(characterA, "Character A");
+    campaign.createCharacter(characterB, "Character B");
 
-    campaign.applyEvents();
-
-    expect(campaign.characters.length).toBe(2);
+    const data = campaign.applyEvents();
+    expect(data.characters.length).toBe(2);
   });
 
   it("should apply maximum health change events", () => {
     const characterId = generateId();
-    const character = new Character();
-    character.id = characterId;
-    character.maximumHealth = 0;
-
     const campaign = new Campaign({ name: "Campaign" });
-    campaign.characters = [character];
-    campaign.events = [
-      {
-        type: "CharacterSpawned",
-        id: generateId(),
-        characterId: characterId,
-        roundId: generateId(),
-      },
+    campaign.createCharacter(characterId, "Character");
+
+    const events: CampaignEvent[] = [
       {
         type: "CharacterMaximumHealthChange",
         maximumHealth: 12,
         id: generateId(),
         characterId: characterId,
-        roundId: generateId(),
       },
     ];
 
-    campaign.applyEvents();
-    const characterFromEvents = campaign.characters.find(
+    campaign.publishCampaignEvent(...events);
+
+    const data = campaign.applyEvents();
+    const characterFromEvents = data.characters.find(
       (c) => c.id === characterId
     );
     expect(characterFromEvents!.maximumHealth).toBe(12);
@@ -77,24 +41,16 @@ describe("apply campaign events", () => {
 
   it("should apply movement events", () => {
     const characterId = generateId();
-    const character = new Character();
-    character.id = characterId;
-
     const campaign = new Campaign({ name: "Campaign" });
-    campaign.characters = [character];
-    campaign.events = [
-      {
-        type: "CharacterSpawned",
-        id: generateId(),
-        characterId: characterId,
-        roundId: generateId(),
-      },
+
+    campaign.createCharacter(characterId, "Character");
+
+    const events: CampaignEvent[] = [
       {
         type: "CharacterMoveSpeedChange",
         id: generateId(),
         movementSpeed: 35,
         characterId: characterId,
-        roundId: generateId(),
       },
       {
         type: "CharacterPositionChange",
@@ -105,7 +61,6 @@ describe("apply campaign events", () => {
           z: 0,
         },
         characterId: characterId,
-        roundId: generateId(),
       },
       {
         type: "CharacterMovement",
@@ -116,12 +71,13 @@ describe("apply campaign events", () => {
         },
         id: generateId(),
         characterId: characterId,
-        roundId: generateId(),
       },
     ];
 
-    campaign.applyEvents();
-    const characterFromEvents = campaign.characters.find(
+    campaign.publishCampaignEvent(...events);
+
+    const data = campaign.applyEvents();
+    const characterFromEvents = data.characters.find(
       (c) => c.id === characterId
     );
     expect(characterFromEvents!.position.x).toBe(10);
@@ -134,20 +90,14 @@ describe("apply campaign events", () => {
     character.id = characterId;
 
     const campaign = new Campaign({ name: "Campaign" });
-    campaign.characters = [character];
-    campaign.events = [
-      {
-        type: "CharacterSpawned",
-        id: generateId(),
-        characterId: characterId,
-        roundId: generateId(),
-      },
+    campaign.createCharacter(characterId, "Character");
+
+    const events: CampaignEvent[] = [
       {
         type: "CharacterMoveSpeedChange",
         id: generateId(),
         movementSpeed: 35,
         characterId: characterId,
-        roundId: generateId(),
       },
       {
         type: "CharacterPositionChange",
@@ -158,12 +108,10 @@ describe("apply campaign events", () => {
           z: 0,
         },
         characterId: characterId,
-        roundId: generateId(),
       },
       {
         type: "RoundStarted",
         id: generateId(),
-        roundId: generateId(),
       },
       {
         type: "CharacterMovement",
@@ -174,53 +122,45 @@ describe("apply campaign events", () => {
         },
         id: generateId(),
         characterId: characterId,
-        roundId: generateId(),
       },
     ];
+
+    campaign.publishCampaignEvent(...events);
 
     expect(campaign.applyEvents).toThrow();
   });
 
   it("should apply temporary health change events", () => {
     const characterId = generateId();
-    const character = new Character();
-    character.id = characterId;
-
     const campaign = new Campaign({ name: "Campaign" });
-    campaign.characters = [character];
-    campaign.events = [
-      {
-        type: "CharacterSpawned",
-        id: generateId(),
-        characterId: characterId,
-        roundId: generateId(),
-      },
+    campaign.createCharacter(characterId, "Character");
+
+    const events: CampaignEvent[] = [
       {
         type: "CharacterMaximumHealthChange",
         maximumHealth: 12,
         id: generateId(),
         characterId: characterId,
-        roundId: generateId(),
       },
       {
         type: "CharacterHealthChange",
         healthChange: 12,
         id: generateId(),
         characterId: characterId,
-        roundId: generateId(),
       },
       {
         type: "CharacterHealthLoss",
         healthLoss: 4,
         id: generateId(),
         characterId: characterId,
-        roundId: generateId(),
         interactionId: generateId(),
       },
     ];
 
-    campaign.applyEvents();
-    const characterFromEvents = campaign.characters.find(
+    campaign.publishCampaignEvent(...events);
+
+    const data = campaign.applyEvents();
+    const characterFromEvents = data.characters.find(
       (c) => c.id === characterId
     );
     expect(characterFromEvents!.currentHealth).toBe(8);
@@ -228,14 +168,9 @@ describe("apply campaign events", () => {
 
   it("should apply item gain events", () => {
     const characterId = generateId();
-    const character = new Character();
-    character.id = characterId;
-    character.inventory = [];
-
     const campaign = new Campaign({ name: "Campaign" });
-    campaign.characters = [character];
-
     const itemId = generateId();
+
     campaign.items = [
       {
         id: itemId,
@@ -247,24 +182,26 @@ describe("apply campaign events", () => {
       },
     ];
 
-    campaign.events = [
+    campaign.createCharacter(characterId, "Character");
+
+    const events: CampaignEvent[] = [
       {
         type: "CharacterSpawned",
         id: generateId(),
         characterId: characterId,
-        roundId: generateId(),
       },
       {
         type: "CharacterItemGain",
         id: generateId(),
         characterId: characterId,
         itemId: itemId,
-        roundId: generateId(),
       },
     ];
 
-    campaign.applyEvents();
-    const characterFromEvents = campaign.characters.find(
+    campaign.publishCampaignEvent(...events);
+
+    const data = campaign.applyEvents();
+    const characterFromEvents = data.characters.find(
       (c) => c.id === characterId
     );
     expect(characterFromEvents!.inventory.length).toBe(1);
@@ -273,16 +210,16 @@ describe("apply campaign events", () => {
   it("should apply reject character events if character doesn't exist", () => {
     const characterId = generateId();
     const campaign = new Campaign({ name: "Campaign" });
-    campaign.characters = [];
-    campaign.events = [
+    const events: CampaignEvent[] = [
       {
         type: "CharacterMaximumHealthChange",
         maximumHealth: 12,
         id: generateId(),
         characterId: characterId,
-        roundId: generateId(),
       },
     ];
+
+    campaign.publishCampaignEvent(...events);
 
     try {
       campaign.applyEvents();
@@ -293,14 +230,17 @@ describe("apply campaign events", () => {
 
   it("should handle unhandled events gracefully", () => {
     const campaign = new Campaign({ name: "New campaign" });
-    campaign.events = [
+    const events: CampaignEvent[] = [
       {
         type: "Unknown",
         id: generateId(),
-        roundId: generateId(),
       },
     ];
 
-    expect(campaign.applyEvents()).toBeUndefined();
+    campaign.publishCampaignEvent(...events);
+
+    const data = campaign.applyEvents();
+
+    expect(data).toBeDefined();
   });
 });

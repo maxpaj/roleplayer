@@ -1,91 +1,23 @@
 import { Id, generateId } from "../../lib/generate-id";
 import { AugmentedRequired } from "../../types/withRequired";
 import { Battle, Round } from "../battle/battle";
-import { ActionResourceType, Character, Spell } from "../character/character";
+import {
+  ActionResourceType,
+  Character,
+  CharacterClass,
+  Spell,
+} from "../character/character";
 import { randomCharacter } from "../character/random-char";
 import { Interaction } from "../interaction/interaction";
 import { Status } from "../interaction/status";
 import { Item } from "../item/item";
+import { CampaignEventType } from "./campaign-events";
 
-export type CampaignEventType =
-  | { type: "Unknown" }
-  | { type: "RoundStarted" }
-  | { type: "BattleStarted" }
-  | { type: "CharacterSpawned"; characterId: Character["id"] }
-  | { type: "CharacterChangedName"; characterId: Character["id"]; name: string }
-  | {
-      type: "CharacterSetExperience";
-      characterId: Character["id"];
-      experience: number;
-    }
-  | { type: "CharacterDespawn"; characterId: Character["id"] }
-  | { type: "CharacterStartRound"; characterId: Character["id"] }
-  | {
-      type: "CharacterPrimaryAction";
-      characterId: Character["id"];
-      interactionId: Id;
-    }
-  | { type: "CharacterSecondaryAction"; characterId: Character["id"] }
-  | {
-      type: "CharacterMovement";
-      characterId: Character["id"];
-      targetPosition: Position;
-    }
-  | { type: "CharacterEndRound"; characterId: Character["id"] }
-  | { type: "CharacterSpellGain"; characterId: Character["id"]; spellId: Id }
-  | { type: "CharacterItemGain"; characterId: Character["id"]; itemId: Id }
-  | {
-      type: "CharacterMaximumHealthChange";
-      characterId: Character["id"];
-      maximumHealth: number;
-    }
-  | {
-      type: "CharacterPositionChange";
-      characterId: Character["id"];
-      targetPosition: Position;
-    }
-  | {
-      type: "CharacterMoveSpeedChange";
-      characterId: Character["id"];
-      movementSpeed: number;
-    }
-  | {
-      type: "CharacterStatusGain";
-      characterId: Character["id"];
-      interactionId: Id;
-      statusId: Id;
-    }
-  | { type: "CharacterAttackAttackerHit"; characterId: Character["id"] }
-  | { type: "CharacterAttackAttackerMiss"; characterId: Character["id"] }
-  | {
-      type: "CharacterAttackDefenderHit";
-      characterId: Character["id"];
-      interactionId: Id;
-    }
-  | {
-      type: "CharacterAttackDefenderDodge";
-      characterId: Character["id"];
-      interactionId: Id;
-    }
-  | { type: "CharacterAttackDefenderParry"; characterId: Character["id"] }
-  | {
-      type: "CharacterHealthGain";
-      characterId: Character["id"];
-      interactionId: Id;
-      healthGain: number;
-    }
-  | {
-      type: "CharacterHealthLoss";
-      characterId: Character["id"];
-      interactionId: Id;
-      healthLoss: number;
-    }
-  | {
-      type: "CharacterHealthChange";
-      characterId: Character["id"];
-      healthChange: number;
-    }
-  | { type: "CharacterClassGain"; characterId: Character["id"]; classId: Id };
+type CampaignEventData = {
+  battles: Battle[];
+  rounds: Round[];
+  characters: Character[];
+};
 
 export type CampaignEvent = CampaignEventType & {
   id: Id;
@@ -115,16 +47,10 @@ export class Campaign {
   name: string;
   createdUtc: Date;
 
-  items: Item[] = [];
-  characters: Character[] = [];
-  battles: Battle[] = [];
   events: CampaignEventWithRound[] = [];
+  items: Item[] = [];
+  actions: Interaction[] = [];
   spells: Spell[] = [];
-  rounds: Round[] = [
-    {
-      id: generateId(),
-    },
-  ];
   statuses: Status[] = [];
   levelProgression: LevelExperience[] = [0, 50, 100, 200, 400];
 
@@ -133,16 +59,116 @@ export class Campaign {
     this.id = c.id || generateId();
     this.name = c.name;
     this.createdUtc = c.createdUtc || new Date();
+    this.newRound();
   }
 
-  nextRound() {
-    const next = { id: `round-${this.rounds.length + 1}` };
-    this.rounds.push(next);
-    return next;
+  addCharacterAction(characterId: string, actionId: string) {
+    const actionGain: CampaignEventWithRound = {
+      characterId,
+      actionId,
+      id: generateId(),
+      type: "CharacterActionGain",
+      roundId: this.getCurrentRound().id,
+    };
+
+    this.events.push(actionGain);
+  }
+
+  getCharacters() {
+    const campaign = this.applyEvents();
+    return campaign.characters;
+  }
+
+  setCharacterClasses(characterId: Character["id"], classes: CharacterClass[]) {
+    const classUpdates: CampaignEventWithRound[] = classes.map((c) => ({
+      characterId,
+      id: generateId(),
+      type: "CharacterClassGain",
+      roundId: this.getCurrentRound().id,
+      classId: c.clazz.id,
+    }));
+
+    this.events.push(...classUpdates);
+  }
+
+  setCharacterName(characterId: Character["id"], name: string) {
+    const characterUpdate: CampaignEventWithRound = {
+      characterId,
+      id: generateId(),
+      type: "CharacterChangedName",
+      name,
+      roundId: this.getCurrentRound().id,
+    };
+
+    this.events.push(characterUpdate);
+  }
+
+  createCharacter(characterId: Character["id"], name: string) {
+    const events: CampaignEventWithRound[] = [
+      {
+        type: "CharacterSpawned",
+        characterId,
+        id: generateId(),
+        roundId: this.getCurrentRound().id,
+        battleId: this.getCurrentBattle()?.id,
+      },
+      {
+        type: "CharacterChangedName",
+        name: name,
+        characterId,
+        id: generateId(),
+        roundId: this.getCurrentRound().id,
+        battleId: this.getCurrentBattle()?.id,
+      },
+      {
+        type: "CharacterSetExperience",
+        experience: 0,
+        characterId,
+        id: generateId(),
+        roundId: this.getCurrentRound().id,
+        battleId: this.getCurrentBattle()?.id,
+      },
+      {
+        type: "CharacterSetBaseDefense",
+        defense: 10,
+        characterId,
+        id: generateId(),
+        roundId: this.getCurrentRound().id,
+        battleId: this.getCurrentBattle()?.id,
+      },
+    ];
+
+    this.events.push(...events);
+  }
+
+  newRound() {
+    const events: CampaignEventWithRound[] = [
+      {
+        type: "RoundStarted",
+        id: generateId(),
+        roundId: generateId(),
+      },
+    ];
+
+    this.events.push(...events);
+  }
+
+  endRound() {
+    const events: CampaignEventWithRound[] = [
+      {
+        type: "RoundEnded",
+        id: generateId(),
+        roundId: this.getCurrentRound().id,
+      },
+    ];
+
+    this.events.push(...events);
   }
 
   getCharacter(characterId: Id) {
-    const character = this.characters.find((c) => c.id === characterId);
+    const character = this.applyEvents().characters.find(
+      (c) => c.id === characterId
+    );
     if (!character) {
       throw new Error(`Could not find character with id ${characterId}`);
     }
@@ -159,12 +185,13 @@ export class Campaign {
   }
 
   allCharactersHaveActed(events: CampaignEventWithRound[]) {
-    const round = this.rounds[this.rounds.length - 1];
+    const campaignData = this.applyEvents();
+    const round = campaignData.rounds[campaignData.rounds.length - 1];
     if (!round) {
       throw new Error("Could not get current round");
     }
 
-    return this.characters.every((c) =>
+    return campaignData.characters.every((c) =>
       events.some(
         (e) =>
           e.type === "CharacterEndRound" &&
@@ -183,11 +210,14 @@ export class Campaign {
   }
 
   getCurrentBattle(): Battle | undefined {
-    return this.battles[this.battles.length - 1];
+    const campaignData = this.applyEvents();
+
+    return campaignData.battles[campaignData.battles.length - 1];
   }
 
   getCurrentRound(): Round {
-    const round = this.rounds[this.rounds.length - 1];
+    const campaignData = this.applyEvents();
+    const round = campaignData.rounds[campaignData.rounds.length - 1];
     if (!round) {
       throw new Error("No current round");
     }
@@ -345,8 +375,6 @@ export class Campaign {
     random.isPlayerControlled = isPlayerControlled;
     random.name = name;
 
-    this.characters.push(random);
-
     this.publishCampaignEvent(
       {
         id: generateId(),
@@ -372,16 +400,39 @@ export class Campaign {
   }
 
   applyEvents() {
-    this.events.forEach(this.applyEvent, this);
+    const campaignRasterized: CampaignEventData = {
+      characters: [],
+      battles: [],
+      rounds: [],
+    };
+
+    this.events.forEach((e) => this.applyEvent(e, campaignRasterized));
+
+    return campaignRasterized;
   }
 
-  applyEvent(event: CampaignEventWithRound) {
+  applyEvent(
+    event: CampaignEventWithRound,
+    campaignRasterized: CampaignEventData
+  ) {
     switch (event.type) {
       case "CharacterSpawned":
-        this.characters.push(new Character({ id: event.characterId }));
+        campaignRasterized.characters.push(
+          new Character({ id: event.characterId })
+        );
+        break;
+
+      case "RoundEnded":
+        break;
+
+      case "RoundStarted":
+        campaignRasterized.rounds.push({
+          id: event.roundId,
+        });
         break;
 
       case "CharacterSetExperience":
+      case "CharacterSetBaseDefense":
       case "CharacterChangedName":
       case "CharacterMaximumHealthChange":
       case "CharacterDespawn":
@@ -405,11 +456,13 @@ export class Campaign {
       case "CharacterHealthChange":
       case "CharacterClassGain":
         {
-          const character = this.characters.find(
+          const character = campaignRasterized.characters.find(
             (c) => c.id === event.characterId
           );
           if (!character) {
-            throw new Error("No such character");
+            throw new Error(
+              `Character ${event.characterId} not found when processing ${event.type}`
+            );
           }
 
           this.applyCharacterEvent(character, event);
@@ -434,6 +487,11 @@ export class Campaign {
 
       case "CharacterSetExperience": {
         character.xp = event.experience;
+        break;
+      }
+
+      case "CharacterSetBaseDefense": {
+        character.defense = event.defense;
         break;
       }
 

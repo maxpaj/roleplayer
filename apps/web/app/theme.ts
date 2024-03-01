@@ -157,4 +157,8 @@ export const EventIconMap: {
     alt: "",
     icon: defaultIcon,
   },
+  RoundEnded: {
+    alt: "",
+    icon: undefined,
+  },
 };

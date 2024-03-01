@@ -35,25 +35,11 @@ export class MemoryCampaignRepository
     }
 
     if (update.name) {
-      campaign.events.push({
-        characterId,
-        id: generateId(),
-        type: "CharacterChangedName",
-        name: update.name,
-        roundId: campaign.getCurrentRound().id,
-      });
+      campaign.setCharacterName(characterId, update.name);
     }
 
     if (update.classes) {
-      const classUpdates = update.classes.map((c) => ({
-        characterId,
-        id: generateId(),
-        type: "CharacterClassGain" as "CharacterClassGain",
-        roundId: campaign.getCurrentRound().id,
-        classId: c.clazz.id,
-      }));
-
-      campaign.events.push(...classUpdates);
+      campaign.setCharacterClasses(characterId, update.classes);
     }
 
     this.write(campaigns);
@@ -99,7 +85,9 @@ export class MemoryCampaignRepository
       throw new Error("Campaign not found");
     }
 
-    return campaign.characters.find((c) => c.id === characterId);
+    const data = campaign.applyEvents();
+
+    return data.characters.find((c) => c.id === characterId);
   }
 
   async createCharacter(campaignId: Campaign["id"], name: string) {
@@ -110,32 +98,7 @@ export class MemoryCampaignRepository
     }
 
     const characterId = generateId();
-
-    campaign.events.push({
-      type: "CharacterSpawned",
-      characterId,
-      id: generateId(),
-      roundId: campaign.getCurrentRound().id,
-      battleId: campaign.getCurrentBattle()?.id,
-    });
-
-    campaign.events.push({
-      type: "CharacterChangedName",
-      name: name,
-      characterId,
-      id: generateId(),
-      roundId: campaign.getCurrentRound().id,
-      battleId: campaign.getCurrentBattle()?.id,
-    });
-
-    campaign.events.push({
-      type: "CharacterSetExperience",
-      experience: 0,
-      characterId,
-      id: generateId(),
-      roundId: campaign.getCurrentRound().id,
-      battleId: campaign.getCurrentBattle()?.id,
-    });
+    campaign.createCharacter(characterId, name);
 
     await this.write(campaigns);
 

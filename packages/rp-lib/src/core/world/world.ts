@@ -10,7 +10,9 @@ import {
 import { Interaction } from "../interaction/interaction";
 import { Status } from "../interaction/status";
 import { Item, ItemEquipmentType } from "../item/item";
-import { CampaignEventType } from "./world-events";
+import { WorldEventType } from "./world-events";
+
+export type { WorldEventType } from "./world-events";
 
 type CampaignEventData = {
   battles: Battle[];
@@ -18,7 +20,7 @@ type CampaignEventData = {
   characters: Character[];
 };
 
-export type CampaignEvent = CampaignEventType & {
+export type CampaignEvent = WorldEventType & {
   id: Id;
 };
 
@@ -423,7 +425,7 @@ export class World {
   characterHasRoundEvent(
     round: Round,
     characterId: Id,
-    type: CampaignEventType["type"]
+    type: WorldEventType["type"]
   ) {
     const roundCharacterEvents = this.getCharacterRoundEvents(
       round,

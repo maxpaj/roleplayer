@@ -4,7 +4,7 @@ import { Interaction } from "../interaction/interaction";
 import { Item } from "../item/item";
 import { Position } from "./world";
 
-export type CampaignEventType =
+export type WorldEventType =
   | { type: "Unknown" }
   | { type: "RoundStarted" }
   | { type: "RoundEnded" }

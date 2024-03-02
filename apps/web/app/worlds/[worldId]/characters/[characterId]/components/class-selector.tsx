@@ -5,11 +5,9 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "../../../../../../components/ui/dropdown-menu";
-import { Button } from "../../../../../../components/ui/button";
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
 import { Character, Clazz } from "@repo/rp-lib/character";
 import { RemoveFunctions } from "types/without-functions";
 

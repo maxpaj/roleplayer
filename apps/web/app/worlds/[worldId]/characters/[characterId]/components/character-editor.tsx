@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import ClassDropdown from "app/worlds/[worldId]/characters/[characterId]/components/class-selector";
+import ClassDropdown from "./class-selector";
 import { Character, World } from "@repo/rp-lib";
 import { useState } from "react";
 import { RemoveFunctions } from "types/without-functions";

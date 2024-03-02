@@ -14,17 +14,20 @@ import { WorldEventType } from "./world-events";
 
 export type { WorldEventType } from "./world-events";
 
-type CampaignEventData = {
+/**
+ * Represent a world state, where all world events have been processed and applied to the world, characters, etc.
+ */
+type WorldState = {
   battles: Battle[];
   rounds: Round[];
   characters: Character[];
 };
 
-export type CampaignEvent = WorldEventType & {
+export type WorldEvent = WorldEventType & {
   id: Id;
 };
 
-export type CampaignEventWithRound = CampaignEvent & {
+export type WorldEventWithRound = WorldEvent & {
   roundId: Id;
   battleId?: Id;
 };
@@ -36,8 +39,8 @@ export type Position = {
 };
 
 export function isCharacterEvent(
-  event: CampaignEvent
-): event is Extract<CampaignEvent, { characterId: Character["id"] }> {
+  event: WorldEvent
+): event is Extract<WorldEvent, { characterId: Character["id"] }> {
   return (event as any).characterId !== undefined;
 }
 
@@ -58,7 +61,7 @@ export class World {
   name: string;
   createdUtc: Date;
 
-  events: CampaignEventWithRound[] = [];
+  events: WorldEventWithRound[] = [];
   items: Item[] = [];
   actions: Interaction[] = [];
   spells: Spell[] = [];
@@ -81,7 +84,7 @@ export class World {
   }
 
   addCharacterItem(characterId: Character["id"], itemId: Character["id"]) {
-    const actionGain: CampaignEventWithRound = {
+    const actionGain: WorldEventWithRound = {
       characterId,
       itemId,
       id: generateId(),
@@ -96,7 +99,7 @@ export class World {
     characterId: Character["id"],
     equipmentSlotId: EquipmentSlot["id"]
   ) {
-    const equipEvent: CampaignEventWithRound = {
+    const equipEvent: WorldEventWithRound = {
       characterId,
       equipmentSlotId,
       id: generateId(),
@@ -108,7 +111,7 @@ export class World {
   }
 
   characterEquipItem(characterId: Character["id"], itemId: Item["id"]) {
-    const equipEvent: CampaignEventWithRound = {
+    const equipEvent: WorldEventWithRound = {
       characterId,
       itemId,
       equipmentSlotId: "",
@@ -124,7 +127,7 @@ export class World {
     characterId: Character["id"],
     actionId: Interaction["id"]
   ) {
-    const actionGain: CampaignEventWithRound = {
+    const actionGain: WorldEventWithRound = {
       characterId,
       actionId,
       id: generateId(),
@@ -141,7 +144,7 @@ export class World {
   }
 
   setCharacterClasses(characterId: Character["id"], classes: CharacterClass[]) {
-    const classUpdates: CampaignEventWithRound[] = classes.map((c) => ({
+    const classUpdates: WorldEventWithRound[] = classes.map((c) => ({
       characterId,
       id: generateId(),
       type: "CharacterClassGain",
@@ -153,7 +156,7 @@ export class World {
   }
 
   setCharacterName(characterId: Character["id"], name: string) {
-    const characterUpdate: CampaignEventWithRound = {
+    const characterUpdate: WorldEventWithRound = {
       characterId,
       id: generateId(),
       type: "CharacterNameChanged",
@@ -165,7 +168,7 @@ export class World {
   }
 
   setCharacterGainExperience(characterId: Character["id"], experience: number) {
-    const characterUpdate: CampaignEventWithRound = {
+    const characterUpdate: WorldEventWithRound = {
       characterId,
       id: generateId(),
       type: "CharacterExperienceGain",
@@ -177,7 +180,7 @@ export class World {
   }
 
   createCharacter(characterId: Character["id"], name: string) {
-    const events: CampaignEventWithRound[] = [
+    const events: WorldEventWithRound[] = [
       {
         type: "CharacterSpawned",
         characterId,
@@ -215,7 +218,7 @@ export class World {
   }
 
   newRound() {
-    const events: CampaignEventWithRound[] = [
+    const events: WorldEventWithRound[] = [
       {
         type: "RoundStarted",
         id: generateId(),
@@ -227,7 +230,7 @@ export class World {
   }
 
   endRound() {
-    const events: CampaignEventWithRound[] = [
+    const events: WorldEventWithRound[] = [
       {
         type: "RoundEnded",
         id: generateId(),
@@ -257,7 +260,7 @@ export class World {
     return this.events.filter((e) => e.battleId === battle.id);
   }
 
-  allCharactersHaveActed(events: CampaignEventWithRound[]) {
+  allCharactersHaveActed(events: WorldEventWithRound[]) {
     const campaignData = this.applyEvents();
     const round = campaignData.rounds[campaignData.rounds.length - 1];
     if (!round) {
@@ -318,21 +321,23 @@ export class World {
       attacker.getCharacterHitModifierWithInteraction(interaction);
     const defenderWasHit =
       defender.defense < diceAttackHitRoll + characterHitModifier;
-    const hitDodgeEvent: CampaignEvent = defenderWasHit
+    const hitDodgeEvent: WorldEvent = defenderWasHit
       ? {
           id: generateId(),
           characterId: defender.id,
           interactionId: interaction.id,
+          attackerId: attacker.id,
           type: "CharacterAttackDefenderHit",
         }
       : {
           id: generateId(),
           characterId: defender.id,
           interactionId: interaction.id,
+          attackerId: attacker.id,
           type: "CharacterAttackDefenderDodge",
         };
 
-    const damageTakenEvents: CampaignEvent[] = defenderWasHit
+    const damageTakenEvents: WorldEvent[] = defenderWasHit
       ? interaction.appliesEffects.flatMap((attack) => {
           const attackerDamageRoll = attacker.getDamageRoll(attack);
           const defenderDamageTaken = defender.getEffectDamageTaken(
@@ -347,7 +352,7 @@ export class World {
               interactionId: interaction.id,
               type: "CharacterHealthLoss",
               healthLoss: defenderDamageTaken,
-            } satisfies CampaignEvent,
+            } satisfies WorldEvent,
           ];
         })
       : [];
@@ -371,7 +376,7 @@ export class World {
               interactionId: interaction.id,
               type: "CharacterStatusGain",
               statusId: defenderStatus!.id,
-            } satisfies CampaignEvent;
+            } satisfies WorldEvent;
           })
       : [];
 
@@ -380,7 +385,7 @@ export class World {
       characterId: attacker.id,
       interactionId: interaction.id,
       type: "CharacterPrimaryAction",
-    } satisfies CampaignEvent;
+    } satisfies WorldEvent;
 
     return this.publishCampaignEvent(
       ...[
@@ -392,7 +397,7 @@ export class World {
     );
   }
 
-  publishCampaignEvent(...events: CampaignEvent[]) {
+  publishCampaignEvent(...events: WorldEvent[]) {
     const currentBattle = this.getCurrentBattle();
     const currentRound = this.getCurrentRound();
     const eventsWithRoundAndBattle = events.map((e) => {
@@ -445,33 +450,28 @@ export class World {
   }
 
   applyEvents() {
-    const campaignRasterized: CampaignEventData = {
+    const worldState: WorldState = {
       characters: [],
       battles: [],
       rounds: [],
     };
 
-    this.events.forEach((e) => this.applyEvent(e, campaignRasterized));
+    this.events.forEach((e) => this.applyEvent(e, worldState));
 
-    return campaignRasterized;
+    return worldState;
   }
 
-  applyEvent(
-    event: CampaignEventWithRound,
-    campaignRasterized: CampaignEventData
-  ) {
+  applyEvent(event: WorldEventWithRound, worldState: WorldState) {
     switch (event.type) {
       case "CharacterSpawned":
-        campaignRasterized.characters.push(
-          new Character({ id: event.characterId })
-        );
+        worldState.characters.push(new Character({ id: event.characterId }));
         break;
 
       case "RoundEnded":
         break;
 
       case "RoundStarted":
-        campaignRasterized.rounds.push({
+        worldState.rounds.push({
           id: event.roundId,
         });
         break;
@@ -504,7 +504,7 @@ export class World {
       case "CharacterHealthChange":
       case "CharacterClassGain":
         {
-          const character = campaignRasterized.characters.find(
+          const character = worldState.characters.find(
             (c) => c.id === event.characterId
           );
           if (!character) {
@@ -522,7 +522,7 @@ export class World {
     }
   }
 
-  applyCharacterEvent(character: Character, event: CampaignEventWithRound) {
+  applyCharacterEvent(character: Character, event: WorldEventWithRound) {
     switch (event.type) {
       case "RoundStarted": {
         character.movementRemaining = character.movementSpeed;
@@ -594,6 +594,36 @@ export class World {
         }
 
         character.currentHealth = event.healthChange;
+        break;
+      }
+
+      case "CharacterAttackAttackerHit": {
+        break;
+      }
+
+      case "CharacterAttackAttackerMiss": {
+        break;
+      }
+
+      case "CharacterAttackDefenderHit": {
+        break;
+      }
+
+      case "CharacterAttackDefenderDodge": {
+        const availableReactions = character.reactions.filter(
+          (r) => r.eventType === "CharacterAttackDefenderDodge"
+        );
+
+        const reactionResources = availableReactions.map((r) => ({
+          reactionId: r.id,
+          targetId: event.attackerId,
+        }));
+
+        character.reactionsRemaining.push(...reactionResources);
+        break;
+      }
+
+      case "CharacterAttackDefenderParry": {
         break;
       }
 

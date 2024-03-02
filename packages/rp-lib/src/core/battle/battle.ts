@@ -1,5 +1,5 @@
 import { Id, generateId } from "../../lib/generate-id";
-import { World, CampaignEvent, isCharacterEvent } from "../world/world";
+import { World, WorldEvent, isCharacterEvent } from "../world/world";
 import { Character } from "../character/character";
 import { getCharacterInitiative } from "../character/character-stats";
 
@@ -15,7 +15,7 @@ export class BattleCharacter {
     Object.assign(this, init);
   }
 
-  applyEvent(event: CampaignEvent, campaign: World) {}
+  applyEvent(event: WorldEvent, campaign: World) {}
 }
 
 export class Battle {
@@ -45,7 +45,7 @@ export class Battle {
     return added;
   }
 
-  currentCharacterTurn(events: CampaignEvent[]) {
+  currentCharacterTurn(events: WorldEvent[]) {
     const charactersNotActedCurrentRound = this.characters.filter(
       (battleChar) => {
         const hasActed = events.some(

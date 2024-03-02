@@ -1,10 +1,10 @@
 import { generateId } from "../../lib/generate-id";
-import { World, CampaignEventWithRound } from "./world";
+import { World, WorldEventWithRound } from "./world";
 
 describe("Campaign", () => {
   it("applies events", () => {
     const characterId = generateId();
-    const events: CampaignEventWithRound[] = [
+    const events: WorldEventWithRound[] = [
       {
         type: "CharacterSpawned",
         characterId,

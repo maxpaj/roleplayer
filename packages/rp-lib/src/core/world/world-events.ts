@@ -83,6 +83,7 @@ export type WorldEventType =
   | { type: "CharacterAttackAttackerMiss"; characterId: Character["id"] }
   | {
       type: "CharacterAttackDefenderHit";
+      attackerId: Character["id"];
       characterId: Character["id"];
       interactionId: Interaction["id"];
     }
@@ -90,6 +91,7 @@ export type WorldEventType =
       type: "CharacterAttackDefenderDodge";
       characterId: Character["id"];
       interactionId: Interaction["id"];
+      attackerId: Character["id"];
     }
   | { type: "CharacterAttackDefenderParry"; characterId: Character["id"] }
   | {

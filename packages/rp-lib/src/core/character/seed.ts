@@ -1,6 +1,6 @@
 import { Clazz, Race } from "./character";
 import { generateId, Id } from "../../lib/generate-id";
-import { CampaignEvent } from "../world/world";
+import { WorldEvent } from "../world/world";
 
 export function randomEnum<T extends object>(anEnum: T): T[keyof T] {
   const enumValues = Object.keys(anEnum) as T[keyof T][];
@@ -29,6 +29,6 @@ export function randomDigit(min: number, max: number) {
   return min + Math.floor(Math.random() * variable);
 }
 
-export function randomCharacterEvents(id: Id): CampaignEvent[] {
+export function randomCharacterEvents(id: Id): WorldEvent[] {
   return [];
 }

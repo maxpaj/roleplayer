@@ -1,5 +1,5 @@
 import { generateId } from "../../lib/generate-id";
-import { World, CampaignEvent } from "../world/world";
+import { World, WorldEvent } from "../world/world";
 import {
   Item,
   ItemEquipmentType,
@@ -107,7 +107,7 @@ describe("interactions", () => {
     world.createCharacter(defenderId, "Defender");
     world.newRound();
 
-    const events: CampaignEvent[] = [
+    const events: WorldEvent[] = [
       {
         id: generateId(),
         type: "CharacterHealthChange",

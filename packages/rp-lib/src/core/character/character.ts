@@ -1,7 +1,7 @@
 import { Effect, ElementType } from "../interaction/effect";
 import { Interaction } from "../interaction/interaction";
 import { Item } from "../item/item";
-import { Position } from "../world/world";
+import { Position, WorldEventType } from "../world/world";
 import { Status } from "../interaction/status";
 import { roll } from "../dice/dice";
 import { Id } from "../../lib/generate-id";
@@ -62,6 +62,25 @@ export type CharacterEquipmentSlot = {
   slotId: string;
 };
 
+type Reaction = {
+  id: Id;
+  name: string;
+  type: ReactionEventType;
+  eventType: WorldEventType["type"];
+  interaction: Interaction;
+};
+
+export enum ReactionEventType {
+  OnHit = "OnHit",
+  OnOtherSpellCast = "OnOtherSpellCast",
+  OnDodge = "OnDodge",
+}
+
+type ReactionResource = {
+  reactionId: Id;
+  targetId: Id;
+};
+
 export class Character {
   public id!: Id;
   public party!: Id;
@@ -106,6 +125,8 @@ export class Character {
   public temporaryHealth!: number;
   public movementRemaining!: number;
   public actionResourcesRemaining: ActionResourceType[];
+  public reactionsRemaining!: ReactionResource[];
+  public reactions!: Reaction[];
 
   public constructor(init?: Partial<Character>) {
     this.cantrips = [];
@@ -116,6 +137,7 @@ export class Character {
     this.spellSlots = [];
     this.spells = [];
     this.actionResourcesRemaining = [];
+    this.reactionsRemaining = [];
 
     Object.assign(this, init);
   }

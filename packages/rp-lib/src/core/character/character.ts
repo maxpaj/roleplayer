@@ -1,10 +1,22 @@
 import { Effect, ElementType } from "../interaction/effect";
 import { Interaction } from "../interaction/interaction";
 import { Item } from "../item/item";
-import { Position, WorldEventType } from "../world/world";
+import { WorldEvent, WorldEventType } from "../world/world";
 import { Status } from "../interaction/status";
 import { roll } from "../dice/dice";
 import { Id } from "../../lib/generate-id";
+
+export function isCharacterEvent(
+  event: WorldEvent
+): event is Extract<WorldEvent, { characterId: Character["id"] }> {
+  return (event as any).characterId !== undefined;
+}
+
+export type Position = {
+  x: number;
+  y: number;
+  z: number;
+};
 
 export enum ActionResourceType {
   Primary = "Primary",
@@ -56,6 +68,8 @@ export type CharacterClass = {
   level: number;
   clazz: Clazz;
 };
+
+export type LevelExperience = number;
 
 export type CharacterEquipmentSlot = {
   item?: Item;

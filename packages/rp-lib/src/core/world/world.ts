@@ -1,74 +1,25 @@
 import { Id, generateId } from "../../lib/generate-id";
-import { AugmentedRequired } from "../../types/withRequired";
+import { AugmentedRequired } from "../../types/with-required";
 import { Battle, Round } from "../battle/battle";
 import {
   ActionResourceType,
   Character,
   CharacterClass,
+  LevelExperience,
   Spell,
+  isCharacterEvent,
 } from "../character/character";
 import { Interaction } from "../interaction/interaction";
 import { Status } from "../interaction/status";
-import { Item, ItemEquipmentType } from "../item/item";
+import {
+  EquipmentSlotDefinition as EquipmentSlotDefinition,
+  Item,
+  ItemEquipmentType,
+} from "../item/item";
 import { WorldEventType } from "./world-events";
+import { WorldState } from "./world-state";
 
 export type { WorldEventType } from "./world-events";
-
-/**
- * Represent a world state, where all world events have been processed and applied to the world, characters, etc.
- */
-class WorldState {
-  battles: Battle[];
-  rounds: Round[];
-  characters: Character[];
-  world: World;
-
-  constructor(
-    world: World,
-    battles: Battle[] = [],
-    rounds: Round[] = [],
-    characters: Character[] = []
-  ) {
-    this.world = world;
-    this.battles = battles;
-    this.rounds = rounds;
-    this.characters = characters;
-  }
-
-  characterHasRoundEvent(
-    round: Round,
-    characterId: Id,
-    type: WorldEventType["type"]
-  ) {
-    const roundCharacterEvents = this.world.getCharacterRoundEvents(
-      round,
-      characterId
-    );
-
-    return roundCharacterEvents.some(
-      (event) =>
-        isCharacterEvent(event) &&
-        event.characterId === characterId &&
-        event.type === type
-    );
-  }
-
-  allCharactersHaveActed(events: WorldEventWithRound[]) {
-    const round = this.rounds[this.rounds.length - 1];
-    if (!round) {
-      throw new Error("Could not get current round");
-    }
-
-    return this.characters.every((c) =>
-      events.some(
-        (e) =>
-          e.type === "CharacterEndRound" &&
-          e.characterId === c.id &&
-          e.roundId === round.id
-      )
-    );
-  }
-}
 
 export type WorldEvent = WorldEventType & {
   id: Id;
@@ -79,29 +30,9 @@ export type WorldEventWithRound = WorldEvent & {
   battleId?: Id;
 };
 
-export type Position = {
-  x: number;
-  y: number;
-  z: number;
-};
-
-export function isCharacterEvent(
-  event: WorldEvent
-): event is Extract<WorldEvent, { characterId: Character["id"] }> {
-  return (event as any).characterId !== undefined;
-}
-
-type EquipmentSlot = {
-  id: Id;
-  name: string;
-  eligibleEquipmentTypes: ItemEquipmentType[];
-};
-
-type LevelExperience = number;
-
 /**
- * Container class for all world related things.
- * It will hold information about items, spells, statuses, classes, etc. that exists in the world.
+ * Container for all world related things.
+ * Holds information about items, spells, statuses, classes, etc. that exists in the world.
  */
 export class World {
   id: Id;
@@ -114,7 +45,7 @@ export class World {
   spells: Spell[] = [];
   statuses: Status[] = [];
   levelProgression: LevelExperience[] = [0, 50, 100, 200, 400];
-  characterEquipmentSlots: EquipmentSlot[] = [
+  characterEquipmentSlots: EquipmentSlotDefinition[] = [
     {
       id: generateId(),
       eligibleEquipmentTypes: [ItemEquipmentType.OneHandSword],
@@ -144,7 +75,7 @@ export class World {
 
   addCharacterEquipmentSlot(
     characterId: Character["id"],
-    equipmentSlotId: EquipmentSlot["id"]
+    equipmentSlotId: EquipmentSlotDefinition["id"]
   ) {
     const equipEvent: WorldEventWithRound = {
       characterId,
@@ -226,7 +157,9 @@ export class World {
     this.events.push(characterUpdate);
   }
 
-  addCharacterToCurrentBattle(characterId: Character["id"]) {}
+  addCharacterToCurrentBattle(characterId: Character["id"]) {
+    throw new Error("Not implemented");
+  }
 
   createCharacter(characterId: Character["id"], name: string) {
     const events: WorldEventWithRound[] = [

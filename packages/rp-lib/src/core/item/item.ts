@@ -33,6 +33,12 @@ export enum Rarity {
   Artifact = "Artifact",
 }
 
+export type EquipmentSlotDefinition = {
+  id: Id;
+  name: string;
+  eligibleEquipmentTypes: ItemEquipmentType[];
+};
+
 export type Item = {
   id: Id;
   name: string;

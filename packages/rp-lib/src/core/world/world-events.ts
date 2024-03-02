@@ -1,8 +1,7 @@
 import { Id } from "../../lib/generate-id";
-import { Character } from "../character/character";
+import { Character, Position } from "../character/character";
 import { Interaction } from "../interaction/interaction";
 import { Item } from "../item/item";
-import { Position } from "./world";
 
 export type WorldEventType =
   | { type: "Unknown" }

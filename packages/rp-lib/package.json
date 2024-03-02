@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "exports": {
+    ".": "./src/index.ts",
     "./battle": "./src/core/battle/battle.ts",
     "./world": "./src/core/world/world.ts",
     "./character": "./src/core/character/character.ts",

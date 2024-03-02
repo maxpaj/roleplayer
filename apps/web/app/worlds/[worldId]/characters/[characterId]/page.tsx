@@ -1,8 +1,8 @@
-import { World } from "@repo/rp-lib/world";
 import { memoryWorldRepository } from "../../../../../storage/world-repository";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import MultiSelect from "@/components/ui/multi-select";
+import { Character } from "@repo/rp-lib";
+import { CharacterEditor } from "./components/character-editor";
+import { classToPlain } from "@/lib/class-to-plain";
+import { redirect } from "next/navigation";
 
 async function getWorld(worldId: string) {
   const world = await memoryWorldRepository.getWorld(worldId);
@@ -17,14 +17,13 @@ export default async function CharacterPage({
   async function updateCharacter(
     worldId: string,
     characterId: string,
-    formData: FormData
+    characterUpdate: Partial<Character>
   ) {
     "use server";
 
-    memoryWorldRepository.updateCharacter(worldId, characterId, {
-      name: formData.get("name"),
-      classes: [{ clazz: formData.get("classId") }],
-    } as Partial<World>);
+    const world = await memoryWorldRepository.getWorld(worldId);
+    world.setCharacterClasses(characterId, characterUpdate.classes!);
+    await memoryWorldRepository.saveWorld(world);
   }
 
   const { characterId, worldId } = params;
@@ -45,36 +44,16 @@ export default async function CharacterPage({
       <h1>{character.name}</h1>
       <hr className="my-2" />
 
-      {world.getCharacterLevel(character)}
-
-      <form
-        className="flex flex-col gap-2"
-        action={async (formData) => {
+      <CharacterEditor
+        world={classToPlain(world)}
+        character={classToPlain(character)}
+        onSave={async (update) => {
           "use server";
-
-          await updateCharacter(worldId, character.id, formData);
+          console.log(update);
+          await updateCharacter(worldId, characterId, update);
+          redirect("../");
         }}
-      >
-        <Input
-          type="name"
-          id="name"
-          name="name"
-          placeholder="Name"
-          defaultValue={character.name}
-        />
-
-        <MultiSelect
-          options={[
-            {
-              label: "Bard",
-              value: "bard",
-            },
-          ]}
-          values={[]}
-        />
-
-        <Button>Update character</Button>
-      </form>
+      />
     </div>
   );
 }

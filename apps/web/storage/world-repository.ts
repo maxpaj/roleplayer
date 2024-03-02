@@ -1,7 +1,8 @@
-import { World, WorldEventWithRound } from "@repo/rp-lib/world";
+import { World } from "@repo/rp-lib/world";
 import { Character } from "@repo/rp-lib/character";
 import { JSONStorage } from "./json-storage";
 import { generateId } from "@repo/rp-lib/id";
+import { WorldEventWithRound } from "@repo/rp-lib";
 
 export interface IWorldRepository {
   getAll(): Promise<World[]>;
@@ -118,6 +119,18 @@ export class MemoryWorldRepository
     const worlds = await this.read();
     this.write([...worlds, world]);
     return world;
+  }
+
+  async saveWorld(world: World) {
+    const worlds = await this.read();
+    const match = worlds.find((c) => c.id === world.id);
+    if (!match) {
+      throw new Error("Could not find world");
+    }
+
+    Object.assign(match, world);
+
+    await this.write(worlds);
   }
 
   async getWorld(id: World["id"]) {

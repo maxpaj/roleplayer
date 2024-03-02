@@ -1,8 +1,8 @@
 import { Id } from "../../lib/generate-id";
 import { Battle, Round } from "../battle/battle";
 import { Character, isCharacterEvent } from "../character/character";
-import { World, WorldEventWithRound } from "./world";
-import { WorldEventType } from "./world-events";
+import { World } from "./world";
+import { WorldEventType, WorldEventWithRound } from "./world-events";
 
 /**
  * Represent a world state, where all world events have been processed and applied to the world, characters, etc.

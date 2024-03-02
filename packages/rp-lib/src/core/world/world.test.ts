@@ -1,5 +1,6 @@
 import { generateId } from "../../lib/generate-id";
-import { World, WorldEventWithRound } from "./world";
+import { World } from "./world";
+import { WorldEventWithRound } from "./world-events";
 
 describe("World", () => {
   it("applies events", () => {

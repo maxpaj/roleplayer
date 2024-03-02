@@ -5,6 +5,7 @@ import {
   ActionResourceType,
   Character,
   CharacterClass,
+  Clazz,
   LevelExperience,
   Spell,
   isCharacterEvent,
@@ -16,19 +17,8 @@ import {
   Item,
   ItemEquipmentType,
 } from "../item/item";
-import { WorldEventType } from "./world-events";
+import { WorldEvent, WorldEventWithRound } from "./world-events";
 import { WorldState } from "./world-state";
-
-export type { WorldEventType } from "./world-events";
-
-export type WorldEvent = WorldEventType & {
-  id: Id;
-};
-
-export type WorldEventWithRound = WorldEvent & {
-  roundId: Id;
-  battleId?: Id;
-};
 
 /**
  * Container for all world related things.
@@ -52,13 +42,19 @@ export class World {
       name: "Main hand",
     },
   ];
+  classes: Clazz[] = [
+    {
+      id: generateId(),
+      levelProgression: [],
+      name: "Bard",
+    },
+  ];
 
   constructor(c: AugmentedRequired<Partial<World>, "name">) {
     Object.assign(this, c);
     this.id = c.id || generateId();
     this.name = c.name;
     this.createdUtc = c.createdUtc || new Date();
-    this.newRound();
   }
 
   addCharacterItem(characterId: Character["id"], itemId: Character["id"]) {
@@ -125,9 +121,9 @@ export class World {
     const classUpdates: WorldEventWithRound[] = classes.map((c) => ({
       characterId,
       id: generateId(),
-      type: "CharacterClassGain",
+      type: "CharacterClassLevelGain",
       roundId: this.getCurrentRound().id,
-      classId: c.clazz.id,
+      classId: c.classId,
     }));
 
     this.events.push(...classUpdates);
@@ -145,7 +141,19 @@ export class World {
     this.events.push(characterUpdate);
   }
 
-  setCharacterGainExperience(characterId: Character["id"], experience: number) {
+  setCharacterBaseDefense(characterId: Character["id"], defense: number) {
+    const characterUpdate: WorldEventWithRound = {
+      characterId,
+      id: generateId(),
+      type: "CharacterBaseDefenseChanged",
+      defense,
+      roundId: this.getCurrentRound().id,
+    };
+
+    this.events.push(characterUpdate);
+  }
+
+  characterGainExperience(characterId: Character["id"], experience: number) {
     const characterUpdate: WorldEventWithRound = {
       characterId,
       id: generateId(),
@@ -158,7 +166,20 @@ export class World {
   }
 
   addCharacterToCurrentBattle(characterId: Character["id"]) {
-    throw new Error("Not implemented");
+    const battle = this.getCurrentBattle();
+    if (!battle) {
+      throw new Error("No current battle ongoing");
+    }
+
+    const characterUpdate: WorldEventWithRound = {
+      characterId,
+      id: generateId(),
+      type: "CharacterEnterBattle",
+      battleId: battle.id,
+      roundId: this.getCurrentRound().id,
+    };
+
+    this.events.push(characterUpdate);
   }
 
   createCharacter(characterId: Character["id"], name: string) {
@@ -199,7 +220,7 @@ export class World {
     this.events.push(...events);
   }
 
-  newRound() {
+  nextRound() {
     const events: WorldEventWithRound[] = [
       {
         type: "RoundStarted",
@@ -398,9 +419,7 @@ export class World {
 
   applyEvents() {
     const worldState = new WorldState(this, [], [], []);
-
     this.events.forEach((e) => this.applyEvent(e, worldState));
-
     return worldState;
   }
 
@@ -445,7 +464,7 @@ export class World {
       case "CharacterHealthGain":
       case "CharacterHealthLoss":
       case "CharacterHealthChange":
-      case "CharacterClassGain":
+      case "CharacterClassLevelGain":
         {
           const character = worldState.characters.find(
             (c) => c.id === event.characterId
@@ -612,6 +631,25 @@ export class World {
         }
 
         character.spells.push(spell);
+        break;
+      }
+
+      case "CharacterClassLevelGain": {
+        const clazz = this.classes.find((c) => c.id === event.classId);
+        if (!clazz) {
+          throw new Error("Class not found");
+        }
+
+        const characterClass = character.classes.find(
+          (c) => c.classId === event.classId
+        );
+
+        if (!characterClass) {
+          character.classes.push({ classId: event.classId, level: 1 });
+          break;
+        }
+
+        characterClass.level = characterClass.level + 1;
         break;
       }
 

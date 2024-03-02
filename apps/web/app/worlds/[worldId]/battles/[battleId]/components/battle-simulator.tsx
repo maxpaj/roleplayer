@@ -3,7 +3,7 @@
 import { useCallback, useState } from "react";
 import Image from "next/image";
 import { Battle, BattleCharacter, Round } from "@repo/rp-lib/battle";
-import { WorldEvent } from "@repo/rp-lib/world";
+import { WorldEvent } from "@repo/rp-lib";
 import { D20, roll } from "@repo/rp-lib/dice";
 import { ItemSlot, ItemType, Rarity } from "@repo/rp-lib/item";
 import { Interaction } from "@repo/rp-lib/interaction";
@@ -226,7 +226,7 @@ export function BattleSimulator({}) {
   }
 
   function nextRound() {
-    world.newRound();
+    world.nextRound();
     setWorld(world);
   }
 

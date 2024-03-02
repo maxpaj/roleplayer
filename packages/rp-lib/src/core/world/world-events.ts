@@ -1,7 +1,17 @@
 import { Id } from "../../lib/generate-id";
-import { Character, Position } from "../character/character";
+import { Battle, Round } from "../battle/battle";
+import { Character, Clazz, Position } from "../character/character";
 import { Interaction } from "../interaction/interaction";
 import { Item } from "../item/item";
+
+export type WorldEvent = WorldEventType & {
+  id: Id;
+};
+
+export type WorldEventWithRound = WorldEvent & {
+  roundId: Round["id"];
+  battleId?: Battle["id"];
+};
 
 export type WorldEventType =
   | { type: "Unknown" }
@@ -110,4 +120,12 @@ export type WorldEventType =
       characterId: Character["id"];
       healthChange: number;
     }
-  | { type: "CharacterClassGain"; characterId: Character["id"]; classId: Id };
+  | {
+      type: "CharacterClassLevelGain";
+      characterId: Character["id"];
+      classId: Clazz["id"];
+    }
+  | {
+      type: "CharacterEnterBattle";
+      characterId: Character["id"];
+    };

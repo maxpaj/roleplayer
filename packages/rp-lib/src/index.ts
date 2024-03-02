@@ -1,5 +1,10 @@
 export { World } from "./core/world/world";
 export { WorldState } from "./core/world/world-state";
+export type {
+  WorldEventType,
+  WorldEventWithRound,
+  WorldEvent,
+} from "./core/world/world-events";
 export { Character } from "./core/character/character";
 export { Battle } from "./core/battle/battle";
 export type { Interaction } from "./core/interaction/interaction";

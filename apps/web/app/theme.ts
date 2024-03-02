@@ -6,7 +6,7 @@ import secondaryActionIcon from "../assets/icons/skoll/rank-2.svg";
 import dodgeEvent from "../assets/icons/felbrigg/dodge.svg";
 import characterLostHealthEventIcon from "../assets/icons/zeromancer/heart-minus.svg";
 import characterGainHealthEventIcon from "../assets/icons/zeromancer/heart-plus.svg";
-import { WorldEventType } from "@repo/rp-lib/world";
+import { WorldEventType } from "@repo/rp-lib";
 
 type ClassColors = {
   [key: string]: string;
@@ -141,7 +141,7 @@ export const EventIconMap: {
     alt: "Character lost health",
     icon: characterLostHealthEventIcon,
   },
-  CharacterClassGain: {
+  CharacterClassLevelGain: {
     alt: "",
     icon: defaultIcon,
   },
@@ -178,6 +178,10 @@ export const EventIconMap: {
     icon: defaultIcon,
   },
   CharacterItemEquip: {
+    alt: "",
+    icon: defaultIcon,
+  },
+  CharacterEnterBattle: {
     alt: "",
     icon: defaultIcon,
   },

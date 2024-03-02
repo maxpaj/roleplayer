@@ -7,8 +7,13 @@ module.exports = {
   extends: ["eslint:recommended", "prettier", "eslint-config-turbo"],
   plugins: ["only-warn"],
   globals: {
+    // Jest stuff
     it: true,
     expect: true,
+    describe: true,
+    test: true,
+
+    // React stuff
     React: true,
     JSX: true,
   },

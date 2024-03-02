@@ -1,5 +1,5 @@
 import { generateId } from "../../lib/generate-id";
-import { World, WorldEvent } from "../world/world";
+import { World } from "../world/world";
 import {
   Item,
   ItemEquipmentType,
@@ -15,6 +15,7 @@ import {
   StatusDurationType,
   StatusType,
 } from "./status";
+import { WorldEvent } from "../world/world-events";
 
 describe("interactions", () => {
   const frozenStatus: Status = {
@@ -67,6 +68,7 @@ describe("interactions", () => {
 
   it("should apply effects from being hit", () => {
     const world = new World({ name: "test" });
+    world.nextRound();
     world.statuses = [frozenStatus];
     world.items = [frostSword];
 
@@ -104,7 +106,7 @@ describe("interactions", () => {
     world.addCharacterItem(attackerId, frostSword.id);
 
     world.createCharacter(defenderId, "Defender");
-    world.newRound();
+    world.nextRound();
 
     const events: WorldEvent[] = [
       {

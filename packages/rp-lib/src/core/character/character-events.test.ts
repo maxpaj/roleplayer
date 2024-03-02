@@ -1,6 +1,6 @@
 import { Character } from "./character";
 import { ItemSlot, ItemType, Rarity } from "../item/item";
-import { Campaign, CampaignEvent } from "../campaign/campaign";
+import { World, CampaignEvent } from "../world/world";
 import { generateId } from "../../lib/generate-id";
 
 describe("apply campaign events", () => {
@@ -8,7 +8,7 @@ describe("apply campaign events", () => {
     const characterA = generateId();
     const characterB = generateId();
 
-    const campaign = new Campaign({ name: "Campaign" });
+    const campaign = new World({ name: "Campaign" });
     campaign.createCharacter(characterA, "Character A");
     campaign.createCharacter(characterB, "Character B");
 
@@ -18,7 +18,7 @@ describe("apply campaign events", () => {
 
   it("should apply maximum health change events", () => {
     const characterId = generateId();
-    const campaign = new Campaign({ name: "Campaign" });
+    const campaign = new World({ name: "Campaign" });
     campaign.createCharacter(characterId, "Character");
 
     const events: CampaignEvent[] = [
@@ -41,7 +41,7 @@ describe("apply campaign events", () => {
 
   it("should apply movement events", () => {
     const characterId = generateId();
-    const campaign = new Campaign({ name: "Campaign" });
+    const campaign = new World({ name: "Campaign" });
 
     campaign.createCharacter(characterId, "Character");
 
@@ -89,7 +89,7 @@ describe("apply campaign events", () => {
     const character = new Character();
     character.id = characterId;
 
-    const campaign = new Campaign({ name: "Campaign" });
+    const campaign = new World({ name: "Campaign" });
     campaign.createCharacter(characterId, "Character");
 
     const events: CampaignEvent[] = [
@@ -132,7 +132,7 @@ describe("apply campaign events", () => {
 
   it("should apply temporary health change events", () => {
     const characterId = generateId();
-    const campaign = new Campaign({ name: "Campaign" });
+    const campaign = new World({ name: "Campaign" });
     campaign.createCharacter(characterId, "Character");
 
     const events: CampaignEvent[] = [
@@ -168,16 +168,17 @@ describe("apply campaign events", () => {
 
   it("should apply item gain events", () => {
     const characterId = generateId();
-    const campaign = new Campaign({ name: "Campaign" });
+    const campaign = new World({ name: "Campaign" });
     const itemId = generateId();
 
     campaign.items = [
       {
         id: itemId,
         rarity: Rarity.Common,
+        occupiesSlots: [],
         actions: [],
         name: "Item",
-        slots: [ItemSlot.Inventory],
+        eligibleSlots: [ItemSlot.Inventory],
         type: ItemType.Equipment,
       },
     ];
@@ -209,7 +210,7 @@ describe("apply campaign events", () => {
 
   it("should apply reject character events if character doesn't exist", () => {
     const characterId = generateId();
-    const campaign = new Campaign({ name: "Campaign" });
+    const campaign = new World({ name: "Campaign" });
     const events: CampaignEvent[] = [
       {
         type: "CharacterMaximumHealthChange",
@@ -229,7 +230,7 @@ describe("apply campaign events", () => {
   });
 
   it("should handle unhandled events gracefully", () => {
-    const campaign = new Campaign({ name: "New campaign" });
+    const campaign = new World({ name: "New campaign" });
     const events: CampaignEvent[] = [
       {
         type: "Unknown",

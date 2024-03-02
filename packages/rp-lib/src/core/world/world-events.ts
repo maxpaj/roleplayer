@@ -1,6 +1,8 @@
 import { Id } from "../../lib/generate-id";
 import { Character } from "../character/character";
-import { Position } from "./campaign";
+import { Interaction } from "../interaction/interaction";
+import { Item } from "../item/item";
+import { Position } from "./world";
 
 export type CampaignEventType =
   | { type: "Unknown" }
@@ -8,14 +10,19 @@ export type CampaignEventType =
   | { type: "RoundEnded" }
   | { type: "BattleStarted" }
   | { type: "CharacterSpawned"; characterId: Character["id"] }
-  | { type: "CharacterChangedName"; characterId: Character["id"]; name: string }
+  | { type: "CharacterNameChanged"; characterId: Character["id"]; name: string }
   | {
-      type: "CharacterSetBaseDefense";
+      type: "CharacterBaseDefenseChanged";
       characterId: Character["id"];
       defense: number;
     }
   | {
-      type: "CharacterSetExperience";
+      type: "CharacterExperienceGain";
+      characterId: Character["id"];
+      experience: number;
+    }
+  | {
+      type: "CharacterExperienceChanged";
       characterId: Character["id"];
       experience: number;
     }
@@ -24,7 +31,7 @@ export type CampaignEventType =
   | {
       type: "CharacterPrimaryAction";
       characterId: Character["id"];
-      interactionId: Id;
+      interactionId: Interaction["id"];
     }
   | { type: "CharacterSecondaryAction"; characterId: Character["id"] }
   | {
@@ -35,7 +42,22 @@ export type CampaignEventType =
   | { type: "CharacterEndRound"; characterId: Character["id"] }
   | { type: "CharacterActionGain"; characterId: Character["id"]; actionId: Id }
   | { type: "CharacterSpellGain"; characterId: Character["id"]; spellId: Id }
-  | { type: "CharacterItemGain"; characterId: Character["id"]; itemId: Id }
+  | {
+      type: "CharacterEquipmentSlotGain";
+      characterId: Character["id"];
+      equipmentSlotId: Id;
+    }
+  | {
+      type: "CharacterItemGain";
+      characterId: Character["id"];
+      itemId: Item["id"];
+    }
+  | {
+      type: "CharacterItemEquip";
+      characterId: Character["id"];
+      itemId: Item["id"];
+      equipmentSlotId: Id;
+    }
   | {
       type: "CharacterMaximumHealthChange";
       characterId: Character["id"];
@@ -54,7 +76,7 @@ export type CampaignEventType =
   | {
       type: "CharacterStatusGain";
       characterId: Character["id"];
-      interactionId: Id;
+      interactionId: Interaction["id"];
       statusId: Id;
     }
   | { type: "CharacterAttackAttackerHit"; characterId: Character["id"] }
@@ -62,24 +84,24 @@ export type CampaignEventType =
   | {
       type: "CharacterAttackDefenderHit";
       characterId: Character["id"];
-      interactionId: Id;
+      interactionId: Interaction["id"];
     }
   | {
       type: "CharacterAttackDefenderDodge";
       characterId: Character["id"];
-      interactionId: Id;
+      interactionId: Interaction["id"];
     }
   | { type: "CharacterAttackDefenderParry"; characterId: Character["id"] }
   | {
       type: "CharacterHealthGain";
       characterId: Character["id"];
-      interactionId: Id;
+      interactionId: Interaction["id"];
       healthGain: number;
     }
   | {
       type: "CharacterHealthLoss";
       characterId: Character["id"];
-      interactionId: Id;
+      interactionId: Interaction["id"];
       healthLoss: number;
     }
   | {

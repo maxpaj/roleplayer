@@ -1,7 +1,7 @@
 import { Effect, ElementType } from "../interaction/effect";
 import { Interaction } from "../interaction/interaction";
 import { Item } from "../item/item";
-import { Position } from "../campaign/campaign";
+import { Position } from "../world/world";
 import { Status } from "../interaction/status";
 import { roll } from "../dice/dice";
 import { Id } from "../../lib/generate-id";
@@ -57,6 +57,11 @@ export type CharacterClass = {
   clazz: Clazz;
 };
 
+export type CharacterEquipmentSlot = {
+  item?: Item;
+  slotId: string;
+};
+
 export class Character {
   public id!: Id;
   public party!: Id;
@@ -90,7 +95,7 @@ export class Character {
   public classes!: CharacterClass[];
   public statuses!: Status[];
   public inventory!: Item[];
-  public equipment!: Item[];
+  public equipment!: CharacterEquipmentSlot[];
   public baseActions!: Interaction[];
   public spells!: Spell[];
   public position!: Position;
@@ -134,7 +139,10 @@ export class Character {
   getAvailableActions(): Interaction[] {
     return [
       ...this.baseActions,
-      ...this.equipment.flatMap((eq) => eq.actions),
+      ...this.equipment
+        .flatMap((eq) => eq.item)
+        .filter((i) => i)
+        .flatMap((i) => i!.actions),
       ...this.spells.map((s) => s.action),
       ...this.inventory.flatMap((i) => i.actions),
     ];

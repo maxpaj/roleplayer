@@ -6,6 +6,15 @@ export enum ItemType {
   Potion = "Potion",
 }
 
+export enum ItemEquipmentType {
+  Shield = "Shield",
+  OneHandSword = "OneHandSword",
+  TwoHandSword = "TwoHandSword",
+  Dagger = "Dagger",
+  OneHandMace = "OneHandMace",
+  TwoHandMace = "TwoHandMace",
+}
+
 export enum ItemSlot {
   Inventory = "Inventory",
   MainHand = "MainHand",
@@ -29,6 +38,19 @@ export type Item = {
   name: string;
   type: ItemType;
   rarity: Rarity;
-  slots: ItemSlot[];
+
+  /**
+   * Actions available for the item.
+   */
   actions: Interaction[];
+
+  /**
+   * Eligible slots where the item can fit on a character.
+   */
+  eligibleSlots: ItemSlot[];
+
+  /**
+   * An item may occupy additional slots while equipped.
+   */
+  occupiesSlots: ItemSlot[];
 };

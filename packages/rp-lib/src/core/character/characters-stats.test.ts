@@ -18,8 +18,9 @@ describe("Character interactions", () => {
         },
       ],
       name: "Sword",
-      slots: [ItemSlot.MainHand],
+      eligibleSlots: [ItemSlot.MainHand],
       type: ItemType.Equipment,
+      occupiesSlots: [],
     };
 
     const spell: Spell = {
@@ -36,7 +37,12 @@ describe("Character interactions", () => {
     };
 
     const char = new Character();
-    char.equipment = [sword];
+    char.equipment = [
+      {
+        slotId: "main-hand",
+        item: sword,
+      },
+    ];
     char.spells = [spell];
     char.baseActions = [
       {

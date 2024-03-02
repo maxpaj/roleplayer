@@ -1,5 +1,5 @@
 import { generateId } from "../../lib/generate-id";
-import { Campaign, CampaignEventWithRound } from "./campaign";
+import { World, CampaignEventWithRound } from "./world";
 
 describe("Campaign", () => {
   it("applies events", () => {
@@ -12,7 +12,7 @@ describe("Campaign", () => {
         roundId: generateId(),
       },
       {
-        type: "CharacterChangedName",
+        type: "CharacterNameChanged",
         characterId,
         id: generateId(),
         name: "Some name",
@@ -27,7 +27,7 @@ describe("Campaign", () => {
       },
     ];
 
-    const campaign = new Campaign({ name: "Campaign", events });
+    const campaign = new World({ name: "Campaign", events });
     campaign.applyEvents();
 
     const characters = campaign.getCharacters();

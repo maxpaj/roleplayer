@@ -7,11 +7,10 @@ import {
   CharacterClass,
   Spell,
 } from "../character/character";
-import { randomCharacter } from "../character/random-char";
 import { Interaction } from "../interaction/interaction";
 import { Status } from "../interaction/status";
-import { Item } from "../item/item";
-import { CampaignEventType } from "./campaign-events";
+import { Item, ItemEquipmentType } from "../item/item";
+import { CampaignEventType } from "./world-events";
 
 type CampaignEventData = {
   battles: Battle[];
@@ -40,9 +39,19 @@ export function isCharacterEvent(
   return (event as any).characterId !== undefined;
 }
 
+type EquipmentSlot = {
+  id: Id;
+  name: string;
+  eligibleEquipmentTypes: ItemEquipmentType[];
+};
+
 type LevelExperience = number;
 
-export class Campaign {
+/**
+ * Container class for all world related things.
+ * It will hold information about items, spells, statuses, classes, etc. that exists in the world.
+ */
+export class World {
   id: Id;
   name: string;
   createdUtc: Date;
@@ -53,8 +62,15 @@ export class Campaign {
   spells: Spell[] = [];
   statuses: Status[] = [];
   levelProgression: LevelExperience[] = [0, 50, 100, 200, 400];
+  characterEquipmentSlots: EquipmentSlot[] = [
+    {
+      id: generateId(),
+      eligibleEquipmentTypes: [ItemEquipmentType.OneHandSword],
+      name: "Main hand",
+    },
+  ];
 
-  constructor(c: AugmentedRequired<Partial<Campaign>, "name">) {
+  constructor(c: AugmentedRequired<Partial<World>, "name">) {
     Object.assign(this, c);
     this.id = c.id || generateId();
     this.name = c.name;
@@ -62,7 +78,50 @@ export class Campaign {
     this.newRound();
   }
 
-  addCharacterAction(characterId: string, actionId: string) {
+  addCharacterItem(characterId: Character["id"], itemId: Character["id"]) {
+    const actionGain: CampaignEventWithRound = {
+      characterId,
+      itemId,
+      id: generateId(),
+      type: "CharacterItemGain",
+      roundId: this.getCurrentRound().id,
+    };
+
+    this.events.push(actionGain);
+  }
+
+  addCharacterEquipmentSlot(
+    characterId: Character["id"],
+    equipmentSlotId: EquipmentSlot["id"]
+  ) {
+    const equipEvent: CampaignEventWithRound = {
+      characterId,
+      equipmentSlotId,
+      id: generateId(),
+      type: "CharacterEquipmentSlotGain",
+      roundId: this.getCurrentRound().id,
+    };
+
+    this.events.push(equipEvent);
+  }
+
+  characterEquipItem(characterId: Character["id"], itemId: Item["id"]) {
+    const equipEvent: CampaignEventWithRound = {
+      characterId,
+      itemId,
+      equipmentSlotId: "",
+      id: generateId(),
+      type: "CharacterItemEquip",
+      roundId: this.getCurrentRound().id,
+    };
+
+    this.events.push(equipEvent);
+  }
+
+  addCharacterAction(
+    characterId: Character["id"],
+    actionId: Interaction["id"]
+  ) {
     const actionGain: CampaignEventWithRound = {
       characterId,
       actionId,
@@ -95,8 +154,20 @@ export class Campaign {
     const characterUpdate: CampaignEventWithRound = {
       characterId,
       id: generateId(),
-      type: "CharacterChangedName",
+      type: "CharacterNameChanged",
       name,
+      roundId: this.getCurrentRound().id,
+    };
+
+    this.events.push(characterUpdate);
+  }
+
+  setCharacterGainExperience(characterId: Character["id"], experience: number) {
+    const characterUpdate: CampaignEventWithRound = {
+      characterId,
+      id: generateId(),
+      type: "CharacterExperienceGain",
+      experience,
       roundId: this.getCurrentRound().id,
     };
 
@@ -113,7 +184,7 @@ export class Campaign {
         battleId: this.getCurrentBattle()?.id,
       },
       {
-        type: "CharacterChangedName",
+        type: "CharacterNameChanged",
         name: name,
         characterId,
         id: generateId(),
@@ -121,7 +192,7 @@ export class Campaign {
         battleId: this.getCurrentBattle()?.id,
       },
       {
-        type: "CharacterSetExperience",
+        type: "CharacterExperienceChanged",
         experience: 0,
         characterId,
         id: generateId(),
@@ -129,7 +200,7 @@ export class Campaign {
         battleId: this.getCurrentBattle()?.id,
       },
       {
-        type: "CharacterSetBaseDefense",
+        type: "CharacterBaseDefenseChanged",
         defense: 10,
         characterId,
         id: generateId(),
@@ -203,7 +274,7 @@ export class Campaign {
 
   getCurrentBattleEvents() {
     const battle = this.getCurrentBattle();
-    if (battle === undefined) {
+    if (!battle) {
       return [];
     }
     return this.getBattleEvents(battle);
@@ -367,34 +438,6 @@ export class Campaign {
     );
   }
 
-  addRandomCharacterToCampaign(
-    name: string,
-    isPlayerControlled: boolean
-  ): Character {
-    const random = randomCharacter(generateId());
-    random.isPlayerControlled = isPlayerControlled;
-    random.name = name;
-
-    this.publishCampaignEvent(
-      {
-        id: generateId(),
-        characterId: random.id,
-        type: "CharacterSpawned",
-      },
-      ...random.classes.map(
-        ({ clazz }) =>
-          ({
-            id: generateId(),
-            characterId: random.id,
-            type: "CharacterClassGain",
-            classId: clazz.name,
-          }) satisfies CampaignEvent
-      )
-    );
-
-    return random;
-  }
-
   getCharacterLevel(character: Character) {
     return this.levelProgression.findIndex((l) => l < character.xp);
   }
@@ -431,9 +474,10 @@ export class Campaign {
         });
         break;
 
-      case "CharacterSetExperience":
-      case "CharacterSetBaseDefense":
-      case "CharacterChangedName":
+      case "CharacterExperienceChanged":
+      case "CharacterBaseDefenseChanged":
+      case "CharacterNameChanged":
+      case "CharacterActionGain":
       case "CharacterMaximumHealthChange":
       case "CharacterDespawn":
       case "CharacterStartRound":
@@ -443,6 +487,8 @@ export class Campaign {
       case "CharacterEndRound":
       case "CharacterSpellGain":
       case "CharacterItemGain":
+      case "CharacterItemEquip":
+      case "CharacterEquipmentSlotGain":
       case "CharacterPositionChange":
       case "CharacterMoveSpeedChange":
       case "CharacterStatusGain":
@@ -485,17 +531,17 @@ export class Campaign {
         break;
       }
 
-      case "CharacterSetExperience": {
+      case "CharacterExperienceChanged": {
         character.xp = event.experience;
         break;
       }
 
-      case "CharacterSetBaseDefense": {
+      case "CharacterBaseDefenseChanged": {
         character.defense = event.defense;
         break;
       }
 
-      case "CharacterChangedName": {
+      case "CharacterNameChanged": {
         character.name = event.name;
         break;
       }
@@ -519,7 +565,7 @@ export class Campaign {
       }
 
       case "CharacterMoveSpeedChange": {
-        if (event.movementSpeed === undefined || event.movementSpeed < 0) {
+        if (!event.movementSpeed || event.movementSpeed < 0) {
           throw new Error(
             "Cannot set movespeed to non-positive number for CharacterMoveSpeedChange"
           );
@@ -530,7 +576,7 @@ export class Campaign {
       }
 
       case "CharacterPositionChange": {
-        if (event.targetPosition === undefined) {
+        if (!event.targetPosition) {
           throw new Error(
             "Target position not defined for CharacterPositionChange"
           );
@@ -559,6 +605,10 @@ export class Campaign {
       }
 
       case "CharacterHealthLoss": {
+        if (!character.currentHealth && character.currentHealth !== 0) {
+          throw new Error("Character health unknown");
+        }
+
         if (event.healthLoss === undefined || event.healthLoss < 0) {
           throw new Error("Amount is not defined for CharacterHealthLoss");
         }
@@ -580,7 +630,7 @@ export class Campaign {
 
       case "CharacterSpellGain": {
         const spell = this.spells.find((s) => s.id === event.spellId);
-        if (spell === undefined) {
+        if (!spell) {
           throw new Error(
             `Could not find spell with id ${event.spellId} for CharacterGainSpell`
           );
@@ -592,7 +642,7 @@ export class Campaign {
 
       case "CharacterStatusGain": {
         const status = this.statuses.find((s) => s.id === event.statusId);
-        if (status === undefined) {
+        if (!status) {
           throw new Error(
             `Could not find status with id ${event.statusId} for CharacterGainSpell`
           );
@@ -604,7 +654,7 @@ export class Campaign {
 
       case "CharacterItemGain": {
         const item = this.items.find((eq) => eq.id === event.itemId);
-        if (item === undefined) {
+        if (!item) {
           throw new Error(
             `Could not find item with id ${event.itemId} for CharacterGainItem`
           );
@@ -614,12 +664,59 @@ export class Campaign {
         break;
       }
 
+      case "CharacterEquipmentSlotGain": {
+        const characterSlot = this.characterEquipmentSlots.find(
+          (slot) => slot.id === event.equipmentSlotId
+        );
+
+        if (!characterSlot) {
+          throw new Error("Cannot find slot");
+        }
+
+        const existing = character.equipment.find(
+          (eq) => eq.slotId === event.equipmentSlotId
+        );
+
+        if (existing) {
+          throw new Error("Character already have equipment slot");
+        }
+
+        character.equipment.push({ slotId: characterSlot.id, item: undefined });
+
+        break;
+      }
+
+      case "CharacterItemEquip": {
+        const item = this.items.find((eq) => eq.id === event.itemId);
+        if (!item) {
+          throw new Error(`Could not find item on campaign`);
+        }
+
+        const characterHasItem = character.inventory.find(
+          (eq) => eq.id === event.itemId
+        );
+        if (!characterHasItem) {
+          throw new Error(`Could not find item on character`);
+        }
+
+        const slot = character.equipment.find(
+          (e) => e.slotId === event.equipmentSlotId
+        );
+        if (!slot) {
+          throw new Error(`Could not find slot on event`);
+        }
+
+        slot.item = item;
+
+        break;
+      }
+
       case "CharacterMovement": {
         if (character.movementSpeed === undefined) {
           throw new Error("Character does not have a defined movement speed");
         }
 
-        if (event.targetPosition === undefined) {
+        if (!event.targetPosition) {
           throw new Error("Target position not defined for CharacterMovement");
         }
 
@@ -639,6 +736,15 @@ export class Campaign {
         character.position.x = event.targetPosition.x;
         character.position.y = event.targetPosition.y;
         break;
+      }
+
+      case "CharacterActionGain": {
+        const action = this.actions.find((a) => a.id === event.actionId);
+        if (!action) {
+          throw new Error(`Unknown action ${event.actionId}`);
+        }
+        character.baseActions.push(action);
+        return;
       }
 
       default:

@@ -1,9 +1,5 @@
 import { Id, generateId } from "../../lib/generate-id";
-import {
-  Campaign,
-  CampaignEvent,
-  isCharacterEvent,
-} from "../campaign/campaign";
+import { World, CampaignEvent, isCharacterEvent } from "../world/world";
 import { Character } from "../character/character";
 import { getCharacterInitiative } from "../character/character-stats";
 
@@ -19,7 +15,7 @@ export class BattleCharacter {
     Object.assign(this, init);
   }
 
-  applyEvent(event: CampaignEvent, campaign: Campaign) {}
+  applyEvent(event: CampaignEvent, campaign: World) {}
 }
 
 export class Battle {

@@ -1,6 +1,12 @@
 import { generateId } from "../../lib/generate-id";
-import { Campaign, CampaignEvent } from "../campaign/campaign";
-import { Item, ItemSlot, ItemType, Rarity } from "../item/item";
+import { World, CampaignEvent } from "../world/world";
+import {
+  Item,
+  ItemEquipmentType,
+  ItemSlot,
+  ItemType,
+  Rarity,
+} from "../item/item";
 import { EffectType, ElementType } from "./effect";
 import { TargetType } from "./interaction";
 import {
@@ -33,6 +39,7 @@ describe("interactions", () => {
   const frostSword: Item = {
     id: generateId(),
     rarity: Rarity.Rare,
+    occupiesSlots: [],
     actions: [
       {
         id: generateId(),
@@ -55,33 +62,50 @@ describe("interactions", () => {
       },
     ],
     name: "Sword of Frost",
-    slots: [ItemSlot.MainHand],
+    eligibleSlots: [ItemSlot.MainHand],
     type: ItemType.Equipment,
   };
 
   it("should apply effects from being hit", () => {
-    const campaign = new Campaign({ name: "test" });
-    campaign.statuses = [frozenStatus];
-    campaign.items = [];
+    const world = new World({ name: "test" });
+    world.statuses = [frozenStatus];
+    world.items = [frostSword];
 
-    const actionId = generateId();
-    campaign.actions = [
-      {
-        id: actionId,
-        appliesEffects: [],
-        eligibleTargets: [],
-        name: "Slash",
-        rangeDistanceMeters: 10,
-      },
-    ];
+    const action = {
+      id: generateId(),
+      appliesEffects: [
+        {
+          element: ElementType.Slashing,
+          type: EffectType.HealthLoss,
+          amountStatic: 2,
+          amountVariable: 0,
+          appliesStatusId: frozenStatus.id,
+        },
+      ],
+      eligibleTargets: [],
+      name: "Slash",
+      rangeDistanceMeters: 10,
+    };
+
+    world.actions = [action];
+
+    const equipmentSlot = {
+      eligibleEquipmentTypes: [ItemEquipmentType.OneHandSword],
+      id: generateId(),
+      name: "Main hand",
+    };
+
+    world.characterEquipmentSlots = [equipmentSlot];
 
     const attackerId = generateId();
     const defenderId = generateId();
 
-    campaign.createCharacter(attackerId, "Attacker");
-    campaign.addCharacterAction(attackerId, actionId);
-    campaign.createCharacter(defenderId, "Defender");
-    campaign.newRound();
+    world.createCharacter(attackerId, "Attacker");
+    world.addCharacterEquipmentSlot(attackerId, equipmentSlot.id);
+    world.addCharacterItem(attackerId, frostSword.id);
+
+    world.createCharacter(defenderId, "Defender");
+    world.newRound();
 
     const events: CampaignEvent[] = [
       {
@@ -92,17 +116,19 @@ describe("interactions", () => {
       },
     ];
 
-    campaign.publishCampaignEvent(...events);
+    world.publishCampaignEvent(...events);
 
-    const beforeAttack = campaign.applyEvents();
+    const beforeAttack = world.applyEvents();
     const attacker = beforeAttack.characters.find((c) => c.id === attackerId);
-    const defender = beforeAttack.characters.find((c) => c.id === attackerId);
+    const defender = beforeAttack.characters.find((c) => c.id === defenderId);
     const actions = attacker!.getAvailableActions();
-    const action = actions.find((a) => a.name === "Slash");
+    const characterAction = actions.find((a) => a.name === "Slash");
 
-    campaign.performCharacterAttack(attacker!, 15, action!, defender!);
+    world.performCharacterAttack(attacker!, 15, characterAction!, defender!);
 
-    const afterAttack = campaign.applyEvents();
+    console.log(world.events);
+
+    const afterAttack = world.applyEvents();
     const defenderFromEvents = afterAttack.characters.find(
       (c) => c.id === defenderId
     );

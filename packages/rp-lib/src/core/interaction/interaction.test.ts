@@ -126,8 +126,6 @@ describe("interactions", () => {
 
     world.performCharacterAttack(attacker!, 15, characterAction!, defender!);
 
-    console.log(world.events);
-
     const afterAttack = world.applyEvents();
     const defenderFromEvents = afterAttack.characters.find(
       (c) => c.id === defenderId

@@ -4,7 +4,7 @@
   "private": true,
   "exports": {
     "./battle": "./src/core/battle/battle.ts",
-    "./campaign": "./src/core/campaign/campaign.ts",
+    "./world": "./src/core/world/world.ts",
     "./character": "./src/core/character/character.ts",
     "./dice": "./src/core/dice/dice.ts",
     "./id": "./src/lib/generate-id.ts",

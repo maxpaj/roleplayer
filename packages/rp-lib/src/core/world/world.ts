@@ -17,11 +17,58 @@ export type { WorldEventType } from "./world-events";
 /**
  * Represent a world state, where all world events have been processed and applied to the world, characters, etc.
  */
-type WorldState = {
+class WorldState {
   battles: Battle[];
   rounds: Round[];
   characters: Character[];
-};
+  world: World;
+
+  constructor(
+    world: World,
+    battles: Battle[] = [],
+    rounds: Round[] = [],
+    characters: Character[] = []
+  ) {
+    this.world = world;
+    this.battles = battles;
+    this.rounds = rounds;
+    this.characters = characters;
+  }
+
+  characterHasRoundEvent(
+    round: Round,
+    characterId: Id,
+    type: WorldEventType["type"]
+  ) {
+    const roundCharacterEvents = this.world.getCharacterRoundEvents(
+      round,
+      characterId
+    );
+
+    return roundCharacterEvents.some(
+      (event) =>
+        isCharacterEvent(event) &&
+        event.characterId === characterId &&
+        event.type === type
+    );
+  }
+
+  allCharactersHaveActed(events: WorldEventWithRound[]) {
+    const round = this.rounds[this.rounds.length - 1];
+    if (!round) {
+      throw new Error("Could not get current round");
+    }
+
+    return this.characters.every((c) =>
+      events.some(
+        (e) =>
+          e.type === "CharacterEndRound" &&
+          e.characterId === c.id &&
+          e.roundId === round.id
+      )
+    );
+  }
+}
 
 export type WorldEvent = WorldEventType & {
   id: Id;
@@ -123,7 +170,7 @@ export class World {
     this.events.push(equipEvent);
   }
 
-  addCharacterAction(
+  addActionToCharacter(
     characterId: Character["id"],
     actionId: Interaction["id"]
   ) {
@@ -139,8 +186,8 @@ export class World {
   }
 
   getCharacters() {
-    const campaign = this.applyEvents();
-    return campaign.characters;
+    const world = this.applyEvents();
+    return world.characters;
   }
 
   setCharacterClasses(characterId: Character["id"], classes: CharacterClass[]) {
@@ -178,6 +225,8 @@ export class World {
 
     this.events.push(characterUpdate);
   }
+
+  addCharacterToCurrentBattle(characterId: Character["id"]) {}
 
   createCharacter(characterId: Character["id"], name: string) {
     const events: WorldEventWithRound[] = [
@@ -260,23 +309,6 @@ export class World {
     return this.events.filter((e) => e.battleId === battle.id);
   }
 
-  allCharactersHaveActed(events: WorldEventWithRound[]) {
-    const campaignData = this.applyEvents();
-    const round = campaignData.rounds[campaignData.rounds.length - 1];
-    if (!round) {
-      throw new Error("Could not get current round");
-    }
-
-    return campaignData.characters.every((c) =>
-      events.some(
-        (e) =>
-          e.type === "CharacterEndRound" &&
-          e.characterId === c.id &&
-          e.roundId === round.id
-      )
-    );
-  }
-
   getCurrentBattleEvents() {
     const battle = this.getCurrentBattle();
     if (!battle) {
@@ -286,14 +318,14 @@ export class World {
   }
 
   getCurrentBattle(): Battle | undefined {
-    const campaignData = this.applyEvents();
+    const worldData = this.applyEvents();
 
-    return campaignData.battles[campaignData.battles.length - 1];
+    return worldData.battles[worldData.battles.length - 1];
   }
 
   getCurrentRound(): Round {
-    const campaignData = this.applyEvents();
-    const round = campaignData.rounds[campaignData.rounds.length - 1];
+    const worldData = this.applyEvents();
+    const round = worldData.rounds[worldData.rounds.length - 1];
     if (!round) {
       throw new Error("No current round");
     }
@@ -387,7 +419,7 @@ export class World {
       type: "CharacterPrimaryAction",
     } satisfies WorldEvent;
 
-    return this.publishCampaignEvent(
+    return this.publishWorldEvent(
       ...[
         attackerPrimaryAction,
         hitDodgeEvent,
@@ -397,7 +429,7 @@ export class World {
     );
   }
 
-  publishCampaignEvent(...events: WorldEvent[]) {
+  publishWorldEvent(...events: WorldEvent[]) {
     const currentBattle = this.getCurrentBattle();
     const currentRound = this.getCurrentRound();
     const eventsWithRoundAndBattle = events.map((e) => {
@@ -420,29 +452,11 @@ export class World {
   }
 
   endCharacterTurn(character: Character) {
-    this.publishCampaignEvent({
+    this.publishWorldEvent({
       type: "CharacterEndRound",
       id: generateId(),
       characterId: character.id,
     });
-  }
-
-  characterHasRoundEvent(
-    round: Round,
-    characterId: Id,
-    type: WorldEventType["type"]
-  ) {
-    const roundCharacterEvents = this.getCharacterRoundEvents(
-      round,
-      characterId
-    );
-
-    return roundCharacterEvents.some(
-      (event) =>
-        isCharacterEvent(event) &&
-        event.characterId === characterId &&
-        event.type === type
-    );
   }
 
   getCharacterLevel(character: Character) {
@@ -450,11 +464,7 @@ export class World {
   }
 
   applyEvents() {
-    const worldState: WorldState = {
-      characters: [],
-      battles: [],
-      rounds: [],
-    };
+    const worldState = new WorldState(this, [], [], []);
 
     this.events.forEach((e) => this.applyEvent(e, worldState));
 
@@ -721,7 +731,7 @@ export class World {
       case "CharacterItemEquip": {
         const item = this.items.find((eq) => eq.id === event.itemId);
         if (!item) {
-          throw new Error(`Could not find item on campaign`);
+          throw new Error(`Could not find item on world`);
         }
 
         const characterHasItem = character.inventory.find(

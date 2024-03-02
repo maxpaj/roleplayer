@@ -1,26 +1,27 @@
 import { CreateCharacterForm } from "./components/create-character-form";
 import { CharacterCard } from "./components/character-card";
-import { memoryCampaignRepository } from "../../../../storage/campaign-repository";
+import { memoryWorldRepository } from "../../../../storage/world-repository";
 
-async function getData(campaignId: string) {
-  const campaign = await memoryCampaignRepository.getCampaign(campaignId);
-  return campaign.characters;
+async function getData(worldId: string) {
+  const world = await memoryWorldRepository.getWorld(worldId);
+  const data = world.applyEvents();
+  return data.characters;
 }
 
 export default async function CharactersPage({
   params,
 }: {
-  params: { campaignId: string };
+  params: { worldId: string };
 }) {
-  const { campaignId } = params;
-  const characters = await getData(campaignId);
+  const { worldId } = params;
+  const characters = await getData(worldId);
 
   return (
     <div>
       <h1>Create a new character</h1>
       <hr className="my-2" />
 
-      <CreateCharacterForm campaignId={params.campaignId} />
+      <CreateCharacterForm worldId={params.worldId} />
       <hr className="my-2" />
 
       <div className="flex gap-2">
@@ -28,7 +29,7 @@ export default async function CharactersPage({
           <CharacterCard
             key={character.id}
             character={character}
-            campaignId={campaignId}
+            worldId={worldId}
           />
         ))}
       </div>

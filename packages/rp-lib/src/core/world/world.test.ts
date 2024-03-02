@@ -1,7 +1,7 @@
 import { generateId } from "../../lib/generate-id";
 import { World, WorldEventWithRound } from "./world";
 
-describe("Campaign", () => {
+describe("World", () => {
   it("applies events", () => {
     const characterId = generateId();
     const events: WorldEventWithRound[] = [
@@ -27,10 +27,10 @@ describe("Campaign", () => {
       },
     ];
 
-    const campaign = new World({ name: "Campaign", events });
-    campaign.applyEvents();
+    const world = new World({ name: "World", events });
+    world.applyEvents();
 
-    const characters = campaign.getCharacters();
+    const characters = world.getCharacters();
     expect(characters.length).toBe(1);
 
     const character = characters[0];

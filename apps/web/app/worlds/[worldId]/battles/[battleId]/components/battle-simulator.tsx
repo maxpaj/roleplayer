@@ -3,11 +3,11 @@
 import { useCallback, useState } from "react";
 import Image from "next/image";
 import { Battle, BattleCharacter, Round } from "@repo/rp-lib/battle";
-import { CampaignEvent } from "@repo/rp-lib/world";
+import { WorldEvent } from "@repo/rp-lib/world";
 import { D20, roll } from "@repo/rp-lib/dice";
 import { ItemSlot, ItemType, Rarity } from "@repo/rp-lib/item";
 import { Interaction } from "@repo/rp-lib/interaction";
-import { Campaign } from "@repo/rp-lib/world";
+import { World } from "@repo/rp-lib/world";
 import { Id, generateId } from "@repo/rp-lib/id";
 import { EventIconMap } from "../../../../../theme";
 import { Button } from "@/components/ui/button";
@@ -15,27 +15,22 @@ import { Button } from "@/components/ui/button";
 const EventIconSize = 32;
 
 export function BattleSimulator({}) {
-  const [campaign, setCampaignReact] = useState<Campaign>(
-    new Campaign({
-      name: "Campaign",
+  const [world, setWorldReact] = useState<World>(
+    new World({
+      name: "World",
       items: [
         {
           id: generateId(),
           actions: [],
-          slots: [ItemSlot.MainHand],
+          occupiesSlots: [ItemSlot.MainHand],
           name: "Short sword",
           type: ItemType.Equipment,
           rarity: Rarity.Common,
         },
       ],
-      battles: [new Battle("battle", [])],
-      rounds: [
-        {
-          id: generateId(),
-        },
-      ],
     })
   );
+
   const [, updateState] = useState({});
   const [selectedAction, setSelectedAction] = useState<Interaction | undefined>(
     undefined
@@ -43,17 +38,14 @@ export function BattleSimulator({}) {
   const forceUpdate = useCallback(() => updateState({}), []);
 
   function addCharacter(isPlayer: boolean) {
-    const char = campaign.addRandomCharacterToCampaign(
-      "Character name",
-      isPlayer
-    );
-    const battle = campaign.getCurrentBattle();
-    battle?.addCharacterToCurrentBattle(char);
-    setCampaign(campaign);
+    const characterId = generateId();
+    world.createCharacter(characterId, "Character A");
+    world.addCharacterToCurrentBattle(characterId);
+    setWorld(world);
   }
 
-  function setCampaign(campaign: Campaign) {
-    setCampaignReact(campaign);
+  function setWorld(world: World) {
+    setWorldReact(world);
     forceUpdate();
   }
 
@@ -62,14 +54,14 @@ export function BattleSimulator({}) {
     defenderIds: Id[],
     action: Interaction
   ) {
-    const attacker = campaign.getCharacter(attackerId);
+    const attacker = world.getCharacter(attackerId);
 
     if (!attacker.baseActions.length) {
       throw new Error("Has no attacks");
     }
 
     const defenders = defenderIds.map((defenderId) =>
-      campaign.getCharacter(defenderId)
+      world.getCharacter(defenderId)
     );
 
     const attack = attacker
@@ -80,7 +72,7 @@ export function BattleSimulator({}) {
     }
 
     defenders.forEach((defender) => {
-      return campaign.performCharacterAttack(
+      return world.performCharacterAttack(
         attacker,
         roll(D20),
         attack,
@@ -88,7 +80,7 @@ export function BattleSimulator({}) {
       );
     });
 
-    setCampaign(campaign);
+    setWorld(world);
   }
 
   function renderCharacter(
@@ -98,22 +90,28 @@ export function BattleSimulator({}) {
     characterToAct?: BattleCharacter
   ) {
     const { characterId } = battleCharacter;
-    const character = campaign.characters.find((c) => c.id === characterId);
-    const hasSpentAction = campaign.characterHasRoundEvent(
+    const c = world.applyEvents();
+    const character = c.characters.find((c) => c.id === characterId);
+
+    if (!character) {
+      throw new Error("Character not found");
+    }
+
+    const hasSpentAction = c.characterHasRoundEvent(
       currentRound,
-      characterId,
+      character.id,
       "CharacterPrimaryAction"
     );
 
-    const hasSpentBonus = campaign.characterHasRoundEvent(
+    const hasSpentBonus = c.characterHasRoundEvent(
       currentRound,
-      characterId,
+      character.id,
       "CharacterSecondaryAction"
     );
 
-    const hasFinished = campaign.characterHasRoundEvent(
+    const hasFinished = c.characterHasRoundEvent(
       currentRound,
-      characterId,
+      character.id,
       "CharacterEndRound"
     );
 
@@ -124,10 +122,6 @@ export function BattleSimulator({}) {
     const currentActionClass = currentCharacterAction
       ? "shadow-[0_0px_40px_0px_rgba(0,0,0,0.3)] shadow-red-600"
       : "";
-
-    if (!character) {
-      throw new Error("Character not found");
-    }
 
     return (
       <div
@@ -202,8 +196,8 @@ export function BattleSimulator({}) {
                 <Button
                   disabled={hasFinished}
                   onClick={() => {
-                    campaign.endCharacterTurn(character);
-                    setCampaign(campaign);
+                    world.endCharacterTurn(character);
+                    setWorld(world);
                   }}
                 >
                   End
@@ -217,7 +211,7 @@ export function BattleSimulator({}) {
   }
 
   function renderBattleEvents() {
-    const battleEvents = campaign.getCurrentBattleEvents();
+    const battleEvents = world.getCurrentBattleEvents();
 
     return (
       <div className="w-full gap-2 mb-4 flex flex-col">
@@ -226,12 +220,17 @@ export function BattleSimulator({}) {
     );
   }
 
-  function isVisibleEvent(event: CampaignEvent) {
+  function isVisibleEvent(event: WorldEvent) {
     const excludedActions = ["RoundStarted"];
     return !excludedActions.includes(event.type);
   }
 
-  function renderBattleEvent(event: CampaignEvent) {
+  function nextRound() {
+    world.newRound();
+    setWorld(world);
+  }
+
+  function renderBattleEvent(event: WorldEvent) {
     const eventIcon = EventIconMap[event.type];
 
     return (
@@ -248,26 +247,21 @@ export function BattleSimulator({}) {
     );
   }
 
-  const battle = campaign.getCurrentBattle();
+  const battle = world.getCurrentBattle();
   if (battle === undefined) {
     return <>No active battle</>;
   }
 
-  const currentRound = campaign.getCurrentRound();
+  const currentRound = world.getCurrentRound();
   if (currentRound === undefined) {
     return <>No active round</>;
   }
 
-  const battleEvents = campaign.getCurrentBattleEvents();
+  const battleEvents = world.getCurrentBattleEvents();
   const roundEvents = battleEvents.filter((e) => e.roundId === currentRound.id);
   const currentCharacter = battle.currentCharacterTurn(roundEvents);
-
-  const canEndTurn = campaign.allCharactersHaveActed(battleEvents);
-
-  function nextRound() {
-    campaign.nextRound();
-    setCampaign(campaign);
-  }
+  const worldState = world.applyEvents();
+  const canEndTurn = worldState.allCharactersHaveActed(battleEvents);
 
   return (
     <div className="w-full">
@@ -278,7 +272,7 @@ export function BattleSimulator({}) {
         </div>
       </div>
 
-      <h1 className="text-xl mb-4">Round {campaign.rounds.length}</h1>
+      <h1 className="text-xl mb-4">Round {worldState.rounds.length}</h1>
       <div className="w-full flex gap-4">
         <div className="w-3/4">
           <div className="flex flex-col w-full gap-y-4 mb-4">
@@ -305,7 +299,7 @@ export function BattleSimulator({}) {
         </div>
 
         <div className="w-1/4">
-          <h1>Events ({campaign.events.length})</h1>
+          <h1>Events ({world.events.length})</h1>
           {renderBattleEvents()}
         </div>
       </div>

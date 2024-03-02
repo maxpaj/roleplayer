@@ -18,9 +18,8 @@ describe("Character interactions", () => {
         },
       ],
       name: "Sword",
-      eligibleSlots: [ItemSlot.MainHand],
+      occupiesSlots: [ItemSlot.MainHand],
       type: ItemType.Equipment,
-      occupiesSlots: [],
     };
 
     const spell: Spell = {

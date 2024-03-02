@@ -39,7 +39,6 @@ describe("interactions", () => {
   const frostSword: Item = {
     id: generateId(),
     rarity: Rarity.Rare,
-    occupiesSlots: [],
     actions: [
       {
         id: generateId(),
@@ -62,7 +61,7 @@ describe("interactions", () => {
       },
     ],
     name: "Sword of Frost",
-    eligibleSlots: [ItemSlot.MainHand],
+    occupiesSlots: [ItemSlot.MainHand],
     type: ItemType.Equipment,
   };
 
@@ -116,7 +115,7 @@ describe("interactions", () => {
       },
     ];
 
-    world.publishCampaignEvent(...events);
+    world.publishWorldEvent(...events);
 
     const beforeAttack = world.applyEvents();
     const attacker = beforeAttack.characters.find((c) => c.id === attackerId);

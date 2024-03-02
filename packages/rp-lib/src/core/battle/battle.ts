@@ -15,7 +15,7 @@ export class BattleCharacter {
     Object.assign(this, init);
   }
 
-  applyEvent(event: WorldEvent, campaign: World) {}
+  applyEvent(event: WorldEvent, world: World) {}
 }
 
 export class Battle {

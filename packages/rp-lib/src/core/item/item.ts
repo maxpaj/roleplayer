@@ -45,11 +45,6 @@ export type Item = {
   actions: Interaction[];
 
   /**
-   * Eligible slots where the item can fit on a character.
-   */
-  eligibleSlots: ItemSlot[];
-
-  /**
    * An item may occupy additional slots while equipped.
    */
   occupiesSlots: ItemSlot[];

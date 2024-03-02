@@ -1,18 +1,18 @@
 import z from "zod";
-import { memoryCampaignRepository } from "../../../../../storage/campaign-repository";
+import { memoryWorldRepository } from "../../../../../storage/world-repository";
 import { redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 type NewCharacterProps = {
-  campaignId: string;
+  worldId: string;
 };
 
 const validateCharacterFormSchema = z.object({
   name: z.string().min(1),
 });
 
-export function CreateCharacterForm({ campaignId }: NewCharacterProps) {
+export function CreateCharacterForm({ worldId }: NewCharacterProps) {
   async function createNewCharacter(formData: FormData) {
     "use server";
 
@@ -24,12 +24,12 @@ export function CreateCharacterForm({ campaignId }: NewCharacterProps) {
       throw new Error("Character 'name' missing");
     }
 
-    const characterId = await memoryCampaignRepository.createCharacter(
-      campaignId,
+    const characterId = await memoryWorldRepository.createCharacter(
+      worldId,
       validationResult.data.name
     );
 
-    return redirect(`/campaigns/${campaignId}/characters/${characterId}`);
+    return redirect(`/worlds/${worldId}/characters/${characterId}`);
   }
 
   return (

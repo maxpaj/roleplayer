@@ -9,15 +9,15 @@ async function getData() {
 export default async function BattlesPage({
   params,
 }: {
-  params: { campaignId: string };
+  params: { worldId: string };
 }) {
   const battles = await getData();
-  const { campaignId } = params;
+  const { worldId } = params;
 
   return (
     <div>
       <h1>Battles</h1>
-      <CreateBattleForm campaignId={campaignId} />
+      <CreateBattleForm worldId={worldId} />
       <div>
         {battles.map((battle) => (
           <>{battle.name}</>

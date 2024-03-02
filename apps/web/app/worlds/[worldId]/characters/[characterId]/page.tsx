@@ -1,36 +1,40 @@
-import { Campaign } from "@repo/rp-lib/world";
-import { memoryCampaignRepository } from "../../../../../storage/campaign-repository";
+import { World } from "@repo/rp-lib/world";
+import { memoryWorldRepository } from "../../../../../storage/world-repository";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import MultiSelect from "@/components/ui/multi-select";
 
-async function getCampaign(campaignId: string) {
-  const campaign = await memoryCampaignRepository.getCampaign(campaignId);
-
-  return campaign;
+async function getWorld(worldId: string) {
+  const world = await memoryWorldRepository.getWorld(worldId);
+  return world;
 }
 
 export default async function CharacterPage({
   params,
 }: {
-  params: { campaignId: string; characterId: string };
+  params: { worldId: string; characterId: string };
 }) {
   async function updateCharacter(
-    campaignId: string,
+    worldId: string,
     characterId: string,
     formData: FormData
   ) {
     "use server";
 
-    memoryCampaignRepository.updateCharacter(campaignId, characterId, {
+    memoryWorldRepository.updateCharacter(worldId, characterId, {
       name: formData.get("name"),
       classes: [{ clazz: formData.get("classId") }],
-    } as Partial<Campaign>);
+    } as Partial<World>);
   }
 
-  const { characterId, campaignId } = params;
-  const campaign = await getCampaign(campaignId);
-  const character = campaign.characters.find((c) => c.id === characterId);
+  const { characterId, worldId } = params;
+  const world = await getWorld(worldId);
+  if (!world) {
+    throw new Error("Could not find world");
+  }
+
+  const data = world.applyEvents();
+  const character = data.characters.find((c) => c.id === characterId);
 
   if (!character) {
     return <>Character not found</>;
@@ -41,14 +45,14 @@ export default async function CharacterPage({
       <h1>{character.name}</h1>
       <hr className="my-2" />
 
-      {campaign.getCharacterLevel(character)}
+      {world.getCharacterLevel(character)}
 
       <form
         className="flex flex-col gap-2"
         action={async (formData) => {
           "use server";
 
-          await updateCharacter(campaignId, character.id, formData);
+          await updateCharacter(worldId, character.id, formData);
         }}
       >
         <Input

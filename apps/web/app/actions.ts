@@ -8,7 +8,7 @@ const schema = z.object({
   }),
 });
 
-export async function createCampaign(formData: FormData) {
+export async function createWorld(formData: FormData) {
   const validatedFields = schema.safeParse({
     name: formData.get("name"),
   });

@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { memoryCampaignRepository } from "../../../../../storage/campaign-repository";
+import { memoryWorldRepository } from "../../../../../storage/world-repository";
 import z from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,10 +9,10 @@ const validateBattleFormSchema = z.object({
 });
 
 type CreateBattleFormProps = {
-  campaignId: string;
+  worldId: string;
 };
 
-export function CreateBattleForm({ campaignId }: CreateBattleFormProps) {
+export function CreateBattleForm({ worldId }: CreateBattleFormProps) {
   async function createNewBattle(formData: FormData) {
     "use server";
 
@@ -23,9 +23,9 @@ export function CreateBattleForm({ campaignId }: CreateBattleFormProps) {
       throw new Error("Battle 'name' missing");
     }
 
-    const battleId = await memoryCampaignRepository.createBattle(campaignId);
+    const battleId = await memoryWorldRepository.createBattle(worldId);
 
-    return redirect(`/campaigns/${campaignId}/battles/${battleId}`);
+    return redirect(`/worlds/${worldId}/battles/${battleId}`);
   }
 
   return (

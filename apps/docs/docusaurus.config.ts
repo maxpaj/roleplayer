@@ -3,8 +3,8 @@ import type { Config } from "@docusaurus/types";
 import type * as Preset from "@docusaurus/preset-classic";
 
 const config: Config = {
-  title: "BattleMan",
-  tagline: "Dungeons and Dragons battle simulator.",
+  title: "Roleplayer",
+  tagline: "Role playing battle simulator.",
   favicon: "img/favicon.ico",
 
   // Set the production url of your site here
@@ -58,9 +58,9 @@ const config: Config = {
     // Replace with your project's social card
     image: "img/docusaurus-social-card.jpg",
     navbar: {
-      title: "BattleMan",
+      title: "Roleplayer",
       logo: {
-        alt: "BattleMan logo",
+        alt: "Roleplayer logo",
         src: "img/logo.svg",
       },
       items: [

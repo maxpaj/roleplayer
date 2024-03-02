@@ -1,4 +1,4 @@
-import { Campaign } from "@repo/rp-lib/campaign";
+import { Campaign } from "@repo/rp-lib/world";
 import { memoryCampaignRepository } from "../../../../../storage/campaign-repository";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

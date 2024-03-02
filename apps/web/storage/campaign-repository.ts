@@ -1,4 +1,4 @@
-import { Campaign, CampaignEventWithRound } from "@repo/rp-lib/campaign";
+import { Campaign, CampaignEventWithRound } from "@repo/rp-lib/world";
 import { Character } from "@repo/rp-lib/character";
 import { JSONStorage } from "./json-storage";
 import { generateId } from "@repo/rp-lib/id";

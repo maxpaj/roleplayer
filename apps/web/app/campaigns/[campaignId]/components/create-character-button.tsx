@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Campaign } from "@repo/rp-lib/campaign";
+import { Campaign } from "@repo/rp-lib/world";
 import { Button } from "@/components/ui/button";
 
 export function CreateCharacterButton({

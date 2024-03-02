@@ -3,11 +3,11 @@
 import { useCallback, useState } from "react";
 import Image from "next/image";
 import { Battle, BattleCharacter, Round } from "@repo/rp-lib/battle";
-import { CampaignEvent } from "@repo/rp-lib/campaign";
+import { CampaignEvent } from "@repo/rp-lib/world";
 import { D20, roll } from "@repo/rp-lib/dice";
 import { ItemSlot, ItemType, Rarity } from "@repo/rp-lib/item";
 import { Interaction } from "@repo/rp-lib/interaction";
-import { Campaign } from "@repo/rp-lib/campaign";
+import { Campaign } from "@repo/rp-lib/world";
 import { Id, generateId } from "@repo/rp-lib/id";
 import { EventIconMap } from "../../../../../theme";
 import { Button } from "@/components/ui/button";

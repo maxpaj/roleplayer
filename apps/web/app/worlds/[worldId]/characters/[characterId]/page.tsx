@@ -20,7 +20,6 @@ export default async function CharacterPage({
     characterUpdate: Partial<Character>
   ) {
     "use server";
-
     const world = await memoryWorldRepository.getWorld(worldId);
     world.setCharacterClasses(characterId, characterUpdate.classes!);
     await memoryWorldRepository.saveWorld(world);
@@ -49,7 +48,6 @@ export default async function CharacterPage({
         character={classToPlain(character)}
         onSave={async (update) => {
           "use server";
-          console.log(update);
           await updateCharacter(worldId, characterId, update);
           redirect("../");
         }}

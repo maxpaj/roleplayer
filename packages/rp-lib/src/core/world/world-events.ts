@@ -121,6 +121,10 @@ export type WorldEventType =
       healthChange: number;
     }
   | {
+      type: "CharacterClassReset";
+      characterId: Character["id"];
+    }
+  | {
       type: "CharacterClassLevelGain";
       characterId: Character["id"];
       classId: Clazz["id"];

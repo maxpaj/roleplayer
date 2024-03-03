@@ -118,6 +118,13 @@ export class World {
   }
 
   setCharacterClasses(characterId: Character["id"], classes: CharacterClass[]) {
+    const classResetEvent: WorldEventWithRound = {
+      characterId,
+      id: generateId(),
+      type: "CharacterClassReset",
+      roundId: this.getCurrentRound().id,
+    };
+
     const classUpdates: WorldEventWithRound[] = classes.map((c) => ({
       characterId,
       id: generateId(),
@@ -126,7 +133,7 @@ export class World {
       classId: c.classId,
     }));
 
-    this.events.push(...classUpdates);
+    this.events.push(...[classResetEvent, ...classUpdates]);
   }
 
   setCharacterName(characterId: Character["id"], name: string) {
@@ -464,6 +471,7 @@ export class World {
       case "CharacterHealthGain":
       case "CharacterHealthLoss":
       case "CharacterHealthChange":
+      case "CharacterClassReset":
       case "CharacterClassLevelGain":
         {
           const character = worldState.characters.find(
@@ -634,7 +642,21 @@ export class World {
         break;
       }
 
+      case "CharacterClassReset": {
+        character.classes = [];
+        break;
+      }
+
       case "CharacterClassLevelGain": {
+        const characterClassLevels = character.classes.length;
+        const characterLevel = this.getCharacterLevel(character);
+
+        if (characterClassLevels >= characterLevel) {
+          throw new Error(
+            "Cannot add class levels to character, character levels already distributed"
+          );
+        }
+
         const clazz = this.classes.find((c) => c.id === event.classId);
         if (!clazz) {
           throw new Error("Class not found");

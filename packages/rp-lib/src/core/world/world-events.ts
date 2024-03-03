@@ -3,6 +3,7 @@ import { Battle, Round } from "../battle/battle";
 import {
   Character,
   CharacterResourceType,
+  CharacterStatType,
   Clazz,
   Position,
 } from "../character/character";
@@ -24,9 +25,27 @@ export type WorldEventType =
   | { type: "RoundEnded" }
   | { type: "BattleStarted" }
   | { type: "CharacterSpawned"; characterId: Character["id"] }
-  | { type: "CharacterNameChanged"; characterId: Character["id"]; name: string }
+  | { type: "CharacterNameSet"; characterId: Character["id"]; name: string }
   | {
-      type: "CharacterBaseDefenseChanged";
+      type: "CharacterResourceMaxSet";
+      characterId: Character["id"];
+      resourceId: CharacterResourceType["id"];
+      max: number;
+    }
+  | {
+      type: "CharacterResourceCurrentChange";
+      characterId: Character["id"];
+      amount: number;
+      resourceId: CharacterResourceType["id"];
+    }
+  | {
+      type: "CharacterStatChange";
+      characterId: Character["id"];
+      amount: number;
+      statId: CharacterStatType["id"];
+    }
+  | {
+      type: "CharacterBaseDefenseSet";
       characterId: Character["id"];
       defense: number;
     }
@@ -36,7 +55,7 @@ export type WorldEventType =
       experience: number;
     }
   | {
-      type: "CharacterExperienceChanged";
+      type: "CharacterExperienceSet";
       characterId: Character["id"];
       experience: number;
     }
@@ -72,20 +91,14 @@ export type WorldEventType =
       equipmentSlotId: Id;
     }
   | {
-      type: "CharacterMaximumHealthChange";
+      type: "CharacterMaximumHealthSet";
       characterId: Character["id"];
       maximumHealth: number;
     }
   | {
-      type: "CharacterPositionChange";
+      type: "CharacterPositionSet";
       characterId: Character["id"];
       targetPosition: Position;
-    }
-  | {
-      type: "CharacterResourceGain";
-      characterId: Character["id"];
-      amount: number;
-      resourceId: CharacterResourceType["id"];
     }
   | {
       type: "CharacterStatusGain";
@@ -121,7 +134,7 @@ export type WorldEventType =
       healthLoss: number;
     }
   | {
-      type: "CharacterHealthChange";
+      type: "CharacterHealthSet";
       characterId: Character["id"];
       healthChange: number;
     }

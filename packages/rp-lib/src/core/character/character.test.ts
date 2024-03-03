@@ -30,7 +30,7 @@ describe("Character", () => {
 
       const events: WorldEvent[] = [
         {
-          type: "CharacterMaximumHealthChange",
+          type: "CharacterMaximumHealthSet",
           maximumHealth: 12,
           id: generateId(),
           characterId: characterId,
@@ -54,20 +54,20 @@ describe("Character", () => {
         name: "Movement speed",
       };
 
-      world.characterResources = [movementResource];
+      world.characterResourceTypes = [movementResource];
       world.nextRound();
       world.createCharacter(characterId, "Character");
 
       const events: WorldEvent[] = [
         {
-          type: "CharacterResourceGain",
+          type: "CharacterResourceCurrentChange",
           id: generateId(),
           resourceId: movementResource.id,
           amount: 35,
           characterId: characterId,
         },
         {
-          type: "CharacterPositionChange",
+          type: "CharacterPositionSet",
           id: generateId(),
           targetPosition: {
             x: 10,
@@ -109,20 +109,20 @@ describe("Character", () => {
       const character = new Character(world);
       character.id = characterId;
 
-      world.characterResources = [movementResource];
+      world.characterResourceTypes = [movementResource];
       world.nextRound();
       world.createCharacter(characterId, "Character");
 
       const events: WorldEvent[] = [
         {
-          type: "CharacterResourceGain",
+          type: "CharacterResourceCurrentChange",
           id: generateId(),
           amount: 35,
           characterId: characterId,
           resourceId: movementResource.id,
         },
         {
-          type: "CharacterPositionChange",
+          type: "CharacterPositionSet",
           id: generateId(),
           targetPosition: {
             x: 10,
@@ -160,13 +160,13 @@ describe("Character", () => {
 
       const events: WorldEvent[] = [
         {
-          type: "CharacterMaximumHealthChange",
+          type: "CharacterMaximumHealthSet",
           maximumHealth: 12,
           id: generateId(),
           characterId: characterId,
         },
         {
-          type: "CharacterHealthChange",
+          type: "CharacterHealthSet",
           healthChange: 12,
           id: generateId(),
           characterId: characterId,
@@ -238,7 +238,7 @@ describe("Character", () => {
 
       const events: WorldEvent[] = [
         {
-          type: "CharacterMaximumHealthChange",
+          type: "CharacterMaximumHealthSet",
           maximumHealth: 12,
           id: generateId(),
           characterId: characterId,

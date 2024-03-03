@@ -38,7 +38,7 @@ export enum Alignment {
 
 export type ClassLevelProgression = {
   unlockedAtLevel: number;
-  ability: Interaction;
+  abilityId: Interaction["id"];
 };
 
 export type Race = {
@@ -96,6 +96,16 @@ type ReactionResource = {
   targetId: Id;
 };
 
+export type CharacterStatType = {
+  id: Id;
+  name: string;
+};
+
+export type CharacterStat = {
+  statId: CharacterStatType["id"];
+  amount: number;
+};
+
 export class Character {
   public id!: Id;
   public party!: Id;
@@ -114,15 +124,9 @@ export class Character {
   public alignment!: Alignment;
   public maximumHealth!: number;
 
-  public baseSpeed!: number;
   public baseArmorClass!: number;
-  public baseStrength!: number;
-  public baseDexterity!: number;
-  public baseConstitution!: number;
-  public baseIntelligence!: number;
-  public baseWisdom!: number;
-  public baseCharisma!: number;
-  public defense!: number;
+  public armorClass!: number;
+  public stats!: CharacterStat[];
 
   public classes!: CharacterClass[];
   public statuses!: Status[];
@@ -130,6 +134,7 @@ export class Character {
   public equipment!: CharacterEquipmentSlot[];
   public actions!: Interaction[];
   public position!: Position;
+  public spellCastingAbilityStatId!: CharacterStatType["id"];
 
   // Temporary resources
   public resourcesCurrent!: CharacterResource[];
@@ -146,12 +151,14 @@ export class Character {
     this.equipment = [];
     this.actions = [];
     this.classes = [];
+    this.stats = [];
+
     this.reactionsRemaining = [];
-    this.resourcesCurrent = world.characterResources.map((cr) => ({
+    this.resourcesCurrent = world.characterResourceTypes.map((cr) => ({
       amount: cr.defaultMax || 0,
       resourceId: cr.id,
     }));
-    this.resourcesMax = world.characterResources.map((cr) => ({
+    this.resourcesMax = world.characterResourceTypes.map((cr) => ({
       amount: cr.defaultMax || 0,
       resourceId: cr.id,
     }));

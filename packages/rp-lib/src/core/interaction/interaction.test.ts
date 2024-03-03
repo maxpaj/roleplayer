@@ -113,7 +113,7 @@ describe("interactions", () => {
     const events: WorldEvent[] = [
       {
         id: generateId(),
-        type: "CharacterHealthChange",
+        type: "CharacterHealthSet",
         healthChange: 10,
         characterId: defenderId,
       },

@@ -13,14 +13,14 @@ describe("World", () => {
         roundId: generateId(),
       },
       {
-        type: "CharacterNameChanged",
+        type: "CharacterNameSet",
         characterId,
         id: generateId(),
         name: "Some name",
         roundId: generateId(),
       },
       {
-        type: "CharacterMaximumHealthChange",
+        type: "CharacterMaximumHealthSet",
         characterId,
         id: generateId(),
         roundId: generateId(),

@@ -5,6 +5,8 @@ import {
   Character,
   CharacterClass,
   CharacterResourceType,
+  CharacterStat,
+  CharacterStatType,
   Clazz,
   LevelExperience,
   isCharacterEvent,
@@ -36,13 +38,41 @@ export class World {
   actions: Interaction[] = [];
   statuses: Status[] = [];
   levelProgression: LevelExperience[] = [0, 50, 100, 200, 400];
-  characterResources: CharacterResourceType[] = [
+  characterStatTypes: CharacterStatType[] = [
+    {
+      id: generateId(),
+      name: "Strength",
+    },
+    {
+      id: generateId(),
+      name: "Intelligence",
+    },
+    {
+      id: generateId(),
+      name: "Wisdom",
+    },
+    {
+      id: generateId(),
+      name: "Charisma",
+    },
+    {
+      id: generateId(),
+      name: "Dexterity",
+    },
+    {
+      id: generateId(),
+      name: "Constitution",
+    },
+  ];
+
+  characterResourceTypes: CharacterResourceType[] = [
     {
       id: generateId(),
       name: "Movement Speed",
       defaultMax: 35,
     },
   ];
+
   characterEquipmentSlots: EquipmentSlotDefinition[] = [
     {
       id: generateId(),
@@ -50,6 +80,7 @@ export class World {
       name: "Main hand",
     },
   ];
+
   classes: Clazz[] = [
     {
       id: generateId(),
@@ -126,6 +157,20 @@ export class World {
     return world.characters;
   }
 
+  setCharacterStats(characterId: Character["id"], stats: CharacterStat[]) {
+    const statsEvents: WorldEventWithRound[] = stats.map((st) => ({
+      type: "CharacterStatChange",
+      amount: st.amount,
+      characterId,
+      statId: st.statId,
+      id: generateId(),
+      roundId: this.getCurrentRound().id,
+      battleId: this.getCurrentBattle()?.id,
+    }));
+
+    this.publishWorldEvent(...statsEvents);
+  }
+
   setCharacterClasses(characterId: Character["id"], classes: CharacterClass[]) {
     const classResetEvent: WorldEventWithRound = {
       characterId,
@@ -149,7 +194,7 @@ export class World {
     const characterUpdate: WorldEventWithRound = {
       characterId,
       id: generateId(),
-      type: "CharacterNameChanged",
+      type: "CharacterNameSet",
       name,
       roundId: this.getCurrentRound().id,
     };
@@ -161,7 +206,7 @@ export class World {
     const characterUpdate: WorldEventWithRound = {
       characterId,
       id: generateId(),
-      type: "CharacterBaseDefenseChanged",
+      type: "CharacterBaseDefenseSet",
       defense,
       roundId: this.getCurrentRound().id,
     };
@@ -199,7 +244,29 @@ export class World {
   }
 
   createCharacter(characterId: Character["id"], name: string) {
-    const events: WorldEventWithRound[] = [
+    const defaultResourcesEvents: WorldEventWithRound[] =
+      this.characterResourceTypes.map((cr) => ({
+        type: "CharacterResourceMaxSet",
+        max: 10,
+        characterId,
+        resourceId: cr.id,
+        id: generateId(),
+        roundId: this.getCurrentRound().id,
+        battleId: this.getCurrentBattle()?.id,
+      }));
+
+    const defaultStatsEvents: WorldEventWithRound[] =
+      this.characterStatTypes.map((st) => ({
+        type: "CharacterStatChange",
+        amount: 0,
+        characterId,
+        statId: st.id,
+        id: generateId(),
+        roundId: this.getCurrentRound().id,
+        battleId: this.getCurrentBattle()?.id,
+      }));
+
+    const characterSpawnEvents: WorldEventWithRound[] = [
       {
         type: "CharacterSpawned",
         characterId,
@@ -208,7 +275,7 @@ export class World {
         battleId: this.getCurrentBattle()?.id,
       },
       {
-        type: "CharacterNameChanged",
+        type: "CharacterNameSet",
         name: name,
         characterId,
         id: generateId(),
@@ -216,7 +283,7 @@ export class World {
         battleId: this.getCurrentBattle()?.id,
       },
       {
-        type: "CharacterExperienceChanged",
+        type: "CharacterExperienceSet",
         experience: 0,
         characterId,
         id: generateId(),
@@ -224,16 +291,18 @@ export class World {
         battleId: this.getCurrentBattle()?.id,
       },
       {
-        type: "CharacterBaseDefenseChanged",
+        type: "CharacterBaseDefenseSet",
         defense: 10,
         characterId,
         id: generateId(),
         roundId: this.getCurrentRound().id,
         battleId: this.getCurrentBattle()?.id,
       },
+      ...defaultResourcesEvents,
+      ...defaultStatsEvents,
     ];
 
-    this.events.push(...events);
+    this.events.push(...characterSpawnEvents);
   }
 
   nextRound() {
@@ -322,7 +391,7 @@ export class World {
     const characterHitModifier =
       attacker.getCharacterHitModifierWithInteraction(interaction);
     const defenderWasHit =
-      defender.defense < diceAttackHitRoll + characterHitModifier;
+      defender.armorClass < diceAttackHitRoll + characterHitModifier;
     const hitDodgeEvent: WorldEvent = defenderWasHit
       ? {
           id: generateId(),
@@ -459,11 +528,12 @@ export class World {
         worldState.characters.forEach((c) => c.resetResources());
         break;
 
-      case "CharacterExperienceChanged":
-      case "CharacterBaseDefenseChanged":
-      case "CharacterNameChanged":
+      case "CharacterStatChange":
+      case "CharacterExperienceSet":
+      case "CharacterBaseDefenseSet":
+      case "CharacterNameSet":
       case "CharacterActionGain":
-      case "CharacterMaximumHealthChange":
+      case "CharacterMaximumHealthSet":
       case "CharacterDespawn":
       case "CharacterStartRound":
       case "CharacterPrimaryAction":
@@ -473,8 +543,8 @@ export class World {
       case "CharacterItemGain":
       case "CharacterItemEquip":
       case "CharacterEquipmentSlotGain":
-      case "CharacterPositionChange":
-      case "CharacterResourceGain":
+      case "CharacterPositionSet":
+      case "CharacterResourceCurrentChange":
       case "CharacterStatusGain":
       case "CharacterAttackAttackerHit":
       case "CharacterAttackAttackerMiss":
@@ -483,7 +553,7 @@ export class World {
       case "CharacterAttackDefenderParry":
       case "CharacterHealthGain":
       case "CharacterHealthLoss":
-      case "CharacterHealthChange":
+      case "CharacterHealthSet":
       case "CharacterClassReset":
       case "CharacterClassLevelGain":
         {
@@ -512,18 +582,30 @@ export class World {
         break;
       }
 
-      case "CharacterExperienceChanged": {
+      case "CharacterExperienceSet": {
         character.xp = event.experience;
         break;
       }
 
-      case "CharacterBaseDefenseChanged": {
-        character.defense = event.defense;
+      case "CharacterBaseDefenseSet": {
+        character.armorClass = event.defense;
         break;
       }
 
-      case "CharacterNameChanged": {
+      case "CharacterNameSet": {
         character.name = event.name;
+        break;
+      }
+
+      case "CharacterStatChange": {
+        const stat = character.stats.find((s) => s.statId === event.statId);
+
+        if (!stat) {
+          character.stats.push({ statId: event.statId, amount: event.amount });
+          break;
+        }
+
+        stat.amount = event.amount;
         break;
       }
 
@@ -545,13 +627,7 @@ export class World {
         break;
       }
 
-      case "CharacterResourceGain": {
-        if (!event.amount || event.amount < 0) {
-          throw new Error(
-            "Cannot set to non-positive number for CharacterResourceGain"
-          );
-        }
-
+      case "CharacterResourceCurrentChange": {
         const resource = character.resourcesCurrent.find(
           (r) => r.resourceId === event.resourceId
         );
@@ -564,10 +640,10 @@ export class World {
         break;
       }
 
-      case "CharacterPositionChange": {
+      case "CharacterPositionSet": {
         if (!event.targetPosition) {
           throw new Error(
-            "Target position not defined for CharacterPositionChange"
+            "Target position not defined for CharacterPositionSet"
           );
         }
 
@@ -575,7 +651,7 @@ export class World {
         break;
       }
 
-      case "CharacterHealthChange": {
+      case "CharacterHealthSet": {
         if (event.healthChange === undefined || event.healthChange < 0) {
           throw new Error("Amount is not defined for CharacterHealthGain");
         }
@@ -636,10 +712,10 @@ export class World {
         break;
       }
 
-      case "CharacterMaximumHealthChange": {
+      case "CharacterMaximumHealthSet": {
         if (event.maximumHealth === undefined) {
           throw new Error(
-            "Amount is not defined for CharacterMaximumHealthChange"
+            "Amount is not defined for CharacterMaximumHealthSet"
           );
         }
 
@@ -752,7 +828,7 @@ export class World {
       }
 
       case "CharacterMovement": {
-        const resourceType = this.characterResources.find(
+        const resourceType = this.characterResourceTypes.find(
           (r) => r.name === "Movement speed"
         );
         if (!resourceType) {
@@ -802,7 +878,7 @@ export class World {
 
       default:
         console.warn(`Unhandled event ${event.id}, type ${event.type}`);
-        break;
+        throw new Error(`Unhandled event type ${event.type}`);
     }
   }
 }

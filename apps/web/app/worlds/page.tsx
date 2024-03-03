@@ -1,5 +1,5 @@
 import { CreateWorldForm } from "./components/create-world-form";
-import { WorldCard } from "./components/world-card";
+import { WorldCard } from "../../components/world-card";
 import { memoryWorldRepository } from "../../storage/world-repository";
 
 async function getData() {

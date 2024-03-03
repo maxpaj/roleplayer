@@ -22,6 +22,7 @@ export default async function CharacterPage({
     "use server";
     const world = await memoryWorldRepository.getWorld(worldId);
     world.setCharacterClasses(characterId, characterUpdate.classes!);
+    world.setCharacterStats(characterId, characterUpdate.stats!);
     await memoryWorldRepository.saveWorld(world);
   }
 

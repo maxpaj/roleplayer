@@ -7,6 +7,8 @@ import { Character, World } from "@repo/rp-lib";
 import { useState } from "react";
 import { RemoveFunctions } from "types/without-functions";
 import { CharacterClassEditor } from "./class-editor";
+import { CharacterStatsEditor } from "./character-stats-editor";
+import { CharacterInventoryEditor } from "./character-inventory-editor";
 
 type CharacterEditorProps = {
   onSave: (character: RemoveFunctions<Character>) => void;
@@ -49,27 +51,39 @@ export function CharacterEditor({
           characterLevel={characterLevel}
           availableClasses={world.classes}
           character={update}
-          onChange={(values) => {
-            setUpdate((prev) => {
-              prev.classes = [...values];
-              return { ...prev };
-            });
+          onChange={(classes) => {
+            setUpdate((prev) => ({ ...prev, classes }));
           }}
         />
+        <h2>Stats</h2>
+        <CharacterStatsEditor
+          character={update}
+          world={world}
+          onChange={(stats) => {
+            setUpdate((prev) => ({ ...prev, stats }));
+          }}
+        />
+        <hr />
+        <h2>Equipment/inventory</h2>
+        <CharacterInventoryEditor
+          character={update}
+          world={world}
+          onChange={(inventory) => {
+            setUpdate((prev) => ({ ...prev, inventory }));
+          }}
+        />
+        <hr />
+        <h2>Classes</h2>
         {update.classes.map((characterClass) => {
-          const clazz = world.classes.find(
-            (c) => c.id === characterClass.classId
-          );
-
-          if (!clazz) {
-            throw new Error("Clazz not found");
-          }
-
           return (
-            <>
-              <CharacterClassEditor clazz={clazz} character={update} />
+            <div key={characterClass.classId}>
+              <CharacterClassEditor
+                classId={characterClass.classId}
+                world={world}
+                character={update}
+              />
               <hr />
-            </>
+            </div>
           );
         })}
         <Button onClick={() => onSave(update)}>Save</Button>

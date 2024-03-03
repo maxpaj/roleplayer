@@ -150,10 +150,7 @@ export function BattleSimulator({}) {
                 {character.temporaryHealth} temporary)
               </div>
               <div>{battleCharacter.initiative} initiative</div>
-              <div>
-                Level {character.classes[0]?.level}{" "}
-                {character.classes[0]?.clazz.name}
-              </div>
+              <div>Level {world.getCharacterLevel(character)}</div>
             </div>
 
             {currentCharacterAction && (

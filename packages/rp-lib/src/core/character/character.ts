@@ -5,6 +5,7 @@ import { Status } from "../interaction/status";
 import { roll } from "../dice/dice";
 import { Id } from "../../lib/generate-id";
 import { WorldEvent, WorldEventType } from "../world/world-events";
+import { World } from "../world/world";
 
 export function isCharacterEvent(
   event: WorldEvent
@@ -37,7 +38,7 @@ export enum Alignment {
 
 export type ClassLevelProgression = {
   unlockedAtLevel: number;
-  ability: Interaction | Spell;
+  ability: Interaction;
 };
 
 export type Race = {
@@ -50,19 +51,20 @@ export type Clazz = {
   levelProgression: ClassLevelProgression[];
 };
 
-export type Spell = {
+export type CharacterResourceType = {
   id: Id;
   name: string;
-  level: number;
-  action: Interaction;
+  defaultMax?: number;
 };
 
-export type SpellSlot = {
-  level: number;
-  used: boolean;
+export type CharacterResource = {
+  resourceId: CharacterResourceType["id"];
+  amount: number;
 };
 
-export type Cantrip = {};
+export type CharacterResourceGeneration = CharacterResource & {
+  onEvent: WorldEventType;
+};
 
 export type CharacterClass = {
   level: number;
@@ -86,7 +88,6 @@ type Reaction = {
 
 export enum ReactionEventType {
   OnHit = "OnHit",
-  OnOtherSpellCast = "OnOtherSpellCast",
   OnDodge = "OnDodge",
 }
 
@@ -123,38 +124,47 @@ export class Character {
   public baseCharisma!: number;
   public defense!: number;
 
-  public spellSlots!: SpellSlot[];
-  public cantrips!: Cantrip[];
   public classes!: CharacterClass[];
   public statuses!: Status[];
   public inventory!: Item[];
   public equipment!: CharacterEquipmentSlot[];
-  public baseActions!: Interaction[];
-  public spells!: Spell[];
+  public actions!: Interaction[];
   public position!: Position;
-  public movementSpeed!: number;
 
   // Temporary resources
+  public resourcesCurrent!: CharacterResource[];
+  public resourcesMax!: CharacterResource[];
+
   public currentHealth!: number;
   public temporaryHealth!: number;
-  public movementRemaining!: number;
-  public actionResourcesRemaining: ActionResourceType[];
   public reactionsRemaining!: ReactionResource[];
   public reactions!: Reaction[];
 
-  public constructor(init?: Partial<Character>) {
-    this.cantrips = [];
+  public constructor(world: World, init?: Partial<Character>) {
     this.statuses = [];
     this.inventory = [];
     this.equipment = [];
-    this.baseActions = [];
-    this.spellSlots = [];
-    this.spells = [];
+    this.actions = [];
     this.classes = [];
-    this.actionResourcesRemaining = [];
     this.reactionsRemaining = [];
+    this.resourcesCurrent = world.characterResources.map((cr) => ({
+      amount: cr.defaultMax || 0,
+      resourceId: cr.id,
+    }));
+    this.resourcesMax = world.characterResources.map((cr) => ({
+      amount: cr.defaultMax || 0,
+      resourceId: cr.id,
+    }));
 
     Object.assign(this, init);
+  }
+
+  getResourceGeneration(): CharacterResourceGeneration[] {
+    return [];
+  }
+
+  resetResources() {
+    this.resourcesCurrent = this.resourcesMax;
   }
 
   getDamageRoll(effect: Effect) {
@@ -175,12 +185,11 @@ export class Character {
    */
   getAvailableActions(): Interaction[] {
     return [
-      ...this.baseActions,
+      ...this.actions,
       ...this.equipment
         .flatMap((eq) => eq.item)
         .filter((i) => i)
         .flatMap((i) => i!.actions),
-      ...this.spells.map((s) => s.action),
       ...this.inventory.flatMap((i) => i.actions),
     ];
   }

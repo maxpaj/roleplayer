@@ -1,9 +1,9 @@
 import { generateId } from "../../lib/generate-id";
-import { TargetType } from "../interaction/interaction";
+import { Interaction, TargetType } from "../interaction/interaction";
 import { Item, ItemSlot, ItemType, Rarity } from "../item/item";
 import { World } from "../world/world";
 import { WorldEvent } from "../world/world-events";
-import { Character, Spell } from "./character";
+import { Character, CharacterResourceType } from "./character";
 
 describe("Character", () => {
   describe("Create character events", () => {
@@ -49,15 +49,21 @@ describe("Character", () => {
     it("should apply movement events", () => {
       const characterId = generateId();
       const world = new World({ name: "World" });
+      const movementResource: CharacterResourceType = {
+        id: generateId(),
+        name: "Movement speed",
+      };
 
+      world.characterResources = [movementResource];
       world.nextRound();
       world.createCharacter(characterId, "Character");
 
       const events: WorldEvent[] = [
         {
-          type: "CharacterMoveSpeedChange",
+          type: "CharacterResourceGain",
           id: generateId(),
-          movementSpeed: 35,
+          resourceId: movementResource.id,
+          amount: 35,
           characterId: characterId,
         },
         {
@@ -93,20 +99,27 @@ describe("Character", () => {
     });
 
     it("should reject movement event when movement exceeds remaining movement", () => {
+      const world = new World({ name: "World" });
+      const movementResource: CharacterResourceType = {
+        id: generateId(),
+        name: "Movement speed",
+      };
+
       const characterId = generateId();
-      const character = new Character();
+      const character = new Character(world);
       character.id = characterId;
 
-      const world = new World({ name: "World" });
+      world.characterResources = [movementResource];
       world.nextRound();
       world.createCharacter(characterId, "Character");
 
       const events: WorldEvent[] = [
         {
-          type: "CharacterMoveSpeedChange",
+          type: "CharacterResourceGain",
           id: generateId(),
-          movementSpeed: 35,
+          amount: 35,
           characterId: characterId,
+          resourceId: movementResource.id,
         },
         {
           type: "CharacterPositionChange",
@@ -271,6 +284,7 @@ describe("Character", () => {
             eligibleTargets: [TargetType.Hostile],
             name: "Slash",
             rangeDistanceMeters: 5,
+            requiresResources: [],
           },
         ],
         name: "Sword",
@@ -278,36 +292,38 @@ describe("Character", () => {
         type: ItemType.Equipment,
       };
 
-      const spell: Spell = {
+      const healingWord: Interaction = {
         id: generateId(),
-        name: "Healing Word",
-        level: 1,
-        action: {
-          id: generateId(),
-          appliesEffects: [],
-          eligibleTargets: [TargetType.Friendly],
-          name: "Healing Word",
-          rangeDistanceMeters: 30,
-        },
+        name: "Healing Word (Level 1)",
+        appliesEffects: [],
+        eligibleTargets: [TargetType.Friendly],
+        rangeDistanceMeters: 30,
+        requiresResources: [],
       };
 
-      const char = new Character();
+      const firebolt: Interaction = {
+        id: generateId(),
+        appliesEffects: [],
+        eligibleTargets: [TargetType.Hostile],
+        name: "Firebolt",
+        rangeDistanceMeters: 35,
+        requiresResources: [
+          {
+            resourceId: "spell-slot-level-1",
+            amount: 1,
+          },
+        ],
+      };
+
+      const char = new Character(new World({ name: "World" }));
       char.equipment = [
         {
           slotId: "main-hand",
           item: sword,
         },
       ];
-      char.spells = [spell];
-      char.baseActions = [
-        {
-          id: generateId(),
-          appliesEffects: [],
-          eligibleTargets: [TargetType.Hostile],
-          name: "Firebolt",
-          rangeDistanceMeters: 35,
-        },
-      ];
+
+      char.actions = [healingWord, firebolt];
 
       const actions = char.getAvailableActions();
       expect(actions.length).toBe(3);

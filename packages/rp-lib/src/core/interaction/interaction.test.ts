@@ -8,7 +8,7 @@ import {
   Rarity,
 } from "../item/item";
 import { EffectType, ElementType } from "./effect";
-import { TargetType } from "./interaction";
+import { Interaction, TargetType } from "./interaction";
 import {
   Status,
   StatusApplicationTrigger,
@@ -59,6 +59,7 @@ describe("interactions", () => {
         eligibleTargets: [TargetType.Hostile],
         name: "Slash",
         rangeDistanceMeters: 5,
+        requiresResources: [],
       },
     ],
     name: "Sword of Frost",
@@ -72,7 +73,7 @@ describe("interactions", () => {
     world.statuses = [frozenStatus];
     world.items = [frostSword];
 
-    const action = {
+    const action: Interaction = {
       id: generateId(),
       appliesEffects: [
         {
@@ -86,6 +87,7 @@ describe("interactions", () => {
       eligibleTargets: [],
       name: "Slash",
       rangeDistanceMeters: 10,
+      requiresResources: [],
     };
 
     world.actions = [action];

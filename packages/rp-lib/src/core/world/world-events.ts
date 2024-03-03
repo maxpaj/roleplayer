@@ -1,6 +1,11 @@
 import { Id } from "../../lib/generate-id";
 import { Battle, Round } from "../battle/battle";
-import { Character, Clazz, Position } from "../character/character";
+import {
+  Character,
+  CharacterResourceType,
+  Clazz,
+  Position,
+} from "../character/character";
 import { Interaction } from "../interaction/interaction";
 import { Item } from "../item/item";
 
@@ -50,7 +55,6 @@ export type WorldEventType =
     }
   | { type: "CharacterEndRound"; characterId: Character["id"] }
   | { type: "CharacterActionGain"; characterId: Character["id"]; actionId: Id }
-  | { type: "CharacterSpellGain"; characterId: Character["id"]; spellId: Id }
   | {
       type: "CharacterEquipmentSlotGain";
       characterId: Character["id"];
@@ -78,9 +82,10 @@ export type WorldEventType =
       targetPosition: Position;
     }
   | {
-      type: "CharacterMoveSpeedChange";
+      type: "CharacterResourceGain";
       characterId: Character["id"];
-      movementSpeed: number;
+      amount: number;
+      resourceId: CharacterResourceType["id"];
     }
   | {
       type: "CharacterStatusGain";

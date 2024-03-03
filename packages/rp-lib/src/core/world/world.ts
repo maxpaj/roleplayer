@@ -2,12 +2,11 @@ import { Id, generateId } from "../../lib/generate-id";
 import { AugmentedRequired } from "../../types/with-required";
 import { Battle, Round } from "../battle/battle";
 import {
-  ActionResourceType,
   Character,
   CharacterClass,
+  CharacterResourceType,
   Clazz,
   LevelExperience,
-  Spell,
   isCharacterEvent,
 } from "../character/character";
 import { Interaction } from "../interaction/interaction";
@@ -20,6 +19,8 @@ import {
 import { WorldEvent, WorldEventWithRound } from "./world-events";
 import { WorldState } from "./world-state";
 
+type Version = `${string}.${string}.${string}`;
+
 /**
  * Container for all world related things.
  * Holds information about items, spells, statuses, classes, etc. that exists in the world.
@@ -28,13 +29,20 @@ export class World {
   id: Id;
   name: string;
   createdUtc: Date;
+  libVersion: Version;
 
   events: WorldEventWithRound[] = [];
   items: Item[] = [];
   actions: Interaction[] = [];
-  spells: Spell[] = [];
   statuses: Status[] = [];
   levelProgression: LevelExperience[] = [0, 50, 100, 200, 400];
+  characterResources: CharacterResourceType[] = [
+    {
+      id: generateId(),
+      name: "Movement Speed",
+      defaultMax: 35,
+    },
+  ];
   characterEquipmentSlots: EquipmentSlotDefinition[] = [
     {
       id: generateId(),
@@ -55,6 +63,7 @@ export class World {
     this.id = c.id || generateId();
     this.name = c.name;
     this.createdUtc = c.createdUtc || new Date();
+    this.libVersion = c.libVersion || "0.0.1"; // TODO: Should be injected at build time, should throw if the version of the world isn't supported by the lib
   }
 
   addCharacterItem(characterId: Character["id"], itemId: Character["id"]) {
@@ -421,7 +430,9 @@ export class World {
   }
 
   getCharacterLevel(character: Character) {
-    return this.levelProgression.findIndex((l) => l < character.xp);
+    return this.levelProgression
+      .sort((a, b) => a - b)
+      .findIndex((l) => l > character.xp);
   }
 
   applyEvents() {
@@ -433,7 +444,9 @@ export class World {
   applyEvent(event: WorldEventWithRound, worldState: WorldState) {
     switch (event.type) {
       case "CharacterSpawned":
-        worldState.characters.push(new Character({ id: event.characterId }));
+        worldState.characters.push(
+          new Character(this, { id: event.characterId })
+        );
         break;
 
       case "RoundEnded":
@@ -443,6 +456,7 @@ export class World {
         worldState.rounds.push({
           id: event.roundId,
         });
+        worldState.characters.forEach((c) => c.resetResources());
         break;
 
       case "CharacterExperienceChanged":
@@ -456,12 +470,11 @@ export class World {
       case "CharacterSecondaryAction":
       case "CharacterMovement":
       case "CharacterEndRound":
-      case "CharacterSpellGain":
       case "CharacterItemGain":
       case "CharacterItemEquip":
       case "CharacterEquipmentSlotGain":
       case "CharacterPositionChange":
-      case "CharacterMoveSpeedChange":
+      case "CharacterResourceGain":
       case "CharacterStatusGain":
       case "CharacterAttackAttackerHit":
       case "CharacterAttackAttackerMiss":
@@ -495,11 +508,7 @@ export class World {
   applyCharacterEvent(character: Character, event: WorldEventWithRound) {
     switch (event.type) {
       case "RoundStarted": {
-        character.movementRemaining = character.movementSpeed;
-        character.actionResourcesRemaining = [
-          ActionResourceType.Primary,
-          ActionResourceType.Secondary,
-        ];
+        character.resetResources();
         break;
       }
 
@@ -536,14 +545,22 @@ export class World {
         break;
       }
 
-      case "CharacterMoveSpeedChange": {
-        if (!event.movementSpeed || event.movementSpeed < 0) {
+      case "CharacterResourceGain": {
+        if (!event.amount || event.amount < 0) {
           throw new Error(
-            "Cannot set movespeed to non-positive number for CharacterMoveSpeedChange"
+            "Cannot set to non-positive number for CharacterResourceGain"
           );
         }
 
-        character.movementSpeed = event.movementSpeed;
+        const resource = character.resourcesCurrent.find(
+          (r) => r.resourceId === event.resourceId
+        );
+
+        if (!resource) {
+          throw new Error("Cannot find resource");
+        }
+
+        resource.amount = event.amount;
         break;
       }
 
@@ -630,18 +647,6 @@ export class World {
         break;
       }
 
-      case "CharacterSpellGain": {
-        const spell = this.spells.find((s) => s.id === event.spellId);
-        if (!spell) {
-          throw new Error(
-            `Could not find spell with id ${event.spellId} for CharacterGainSpell`
-          );
-        }
-
-        character.spells.push(spell);
-        break;
-      }
-
       case "CharacterClassReset": {
         character.classes = [];
         break;
@@ -653,7 +658,7 @@ export class World {
 
         if (characterClassLevels >= characterLevel) {
           throw new Error(
-            "Cannot add class levels to character, character levels already distributed"
+            "Cannot add class levels to character, character level not high enough"
           );
         }
 
@@ -679,7 +684,7 @@ export class World {
         const status = this.statuses.find((s) => s.id === event.statusId);
         if (!status) {
           throw new Error(
-            `Could not find status with id ${event.statusId} for CharacterGainSpell`
+            `Could not find status with id ${event.statusId} for CharacterStatusGain`
           );
         }
 
@@ -747,8 +752,21 @@ export class World {
       }
 
       case "CharacterMovement": {
-        if (character.movementSpeed === undefined) {
-          throw new Error("Character does not have a defined movement speed");
+        const resourceType = this.characterResources.find(
+          (r) => r.name === "Movement speed"
+        );
+        if (!resourceType) {
+          throw new Error("Movement resource not defined in world");
+        }
+
+        const characterMovementResource = character.resourcesCurrent.find(
+          (r) => r.resourceId === resourceType.id
+        );
+
+        if (!characterMovementResource) {
+          throw new Error(
+            "Character does not have a defined movement speed resource"
+          );
         }
 
         if (!event.targetPosition) {
@@ -761,13 +779,13 @@ export class World {
           Math.pow(distanceX, 2) + Math.pow(distanceY, 2)
         );
 
-        if (distance > character.movementRemaining) {
+        if (distance > characterMovementResource.amount) {
           throw new Error(
             "Movement exceeds remaining speed for CharacterMovement"
           );
         }
 
-        character.movementRemaining -= distance;
+        characterMovementResource.amount -= distance;
         character.position.x = event.targetPosition.x;
         character.position.y = event.targetPosition.y;
         break;
@@ -778,7 +796,7 @@ export class World {
         if (!action) {
           throw new Error(`Unknown action ${event.actionId}`);
         }
-        character.baseActions.push(action);
+        character.actions.push(action);
         return;
       }
 

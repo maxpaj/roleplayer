@@ -1,4 +1,5 @@
 import { Id } from "../../lib/generate-id";
+import { CharacterResourceType } from "../character/character";
 import { Effect } from "./effect";
 
 export enum TargetType {
@@ -18,4 +19,8 @@ export type Interaction = {
   appliesEffects: Effect[];
   eligibleTargets: TargetType[];
   rangeDistanceMeters: number;
+  requiresResources: {
+    resourceId: CharacterResourceType["id"];
+    amount: number;
+  }[];
 };

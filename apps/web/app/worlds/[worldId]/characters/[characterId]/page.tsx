@@ -39,19 +39,14 @@ export default async function CharacterPage({
   }
 
   return (
-    <div>
-      <h1>{character.name}</h1>
-      <hr className="my-2" />
-
-      <CharacterEditor
-        world={classToPlain(world)}
-        character={classToPlain(character)}
-        onSave={async (update) => {
-          "use server";
-          await updateCharacter(worldId, characterId, update);
-          redirect("../");
-        }}
-      />
-    </div>
+    <CharacterEditor
+      world={classToPlain(world)}
+      character={classToPlain(character)}
+      onSave={async (update) => {
+        "use server";
+        await updateCharacter(worldId, characterId, update);
+        redirect("../");
+      }}
+    />
   );
 }

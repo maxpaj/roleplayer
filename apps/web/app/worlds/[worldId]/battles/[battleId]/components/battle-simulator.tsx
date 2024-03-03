@@ -56,7 +56,7 @@ export function BattleSimulator({}) {
   ) {
     const attacker = world.getCharacter(attackerId);
 
-    if (!attacker.baseActions.length) {
+    if (!attacker.actions.length) {
       throw new Error("Has no attacks");
     }
 

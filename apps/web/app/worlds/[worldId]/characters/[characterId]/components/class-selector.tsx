@@ -19,7 +19,7 @@ type ClassDropdownProps = {
   onChange: (classes: { classId: string; level: number }[]) => void;
 };
 
-export default function ClassDropdown({
+export function ClassSelector({
   placeholder = "Select classes",
   availableClasses,
   onChange,

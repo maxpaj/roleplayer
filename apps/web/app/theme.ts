@@ -73,10 +73,6 @@ export const EventIconMap: {
     alt: "New round",
     icon: newRoundIcon,
   },
-  CharacterSpellGain: {
-    alt: "Character gained health",
-    icon: characterGainHealthEventIcon,
-  },
   CharacterAttackDefenderDodge: {
     alt: "Dodge",
     icon: dodgeEvent,
@@ -109,7 +105,7 @@ export const EventIconMap: {
     alt: "",
     icon: defaultIcon,
   },
-  CharacterMoveSpeedChange: {
+  CharacterResourceGain: {
     alt: "",
     icon: defaultIcon,
   },
@@ -184,5 +180,9 @@ export const EventIconMap: {
   CharacterEnterBattle: {
     alt: "",
     icon: defaultIcon,
+  },
+  CharacterClassReset: {
+    alt: "",
+    icon: undefined,
   },
 };

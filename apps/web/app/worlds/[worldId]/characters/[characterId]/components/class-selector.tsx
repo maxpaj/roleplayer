@@ -8,7 +8,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { Character, Clazz } from "@repo/rp-lib/character";
+import { Character, Clazz } from "@repo/rp-lib";
 import { RemoveFunctions } from "types/without-functions";
 
 type ClassDropdownProps = {

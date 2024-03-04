@@ -1,6 +1,6 @@
 import { Interaction } from "@repo/rp-lib";
 import { Card } from "./ui/card";
-import { ClassLevelProgression } from "@repo/rp-lib/character";
+import { ClassLevelProgression } from "@repo/rp-lib";
 import { H3 } from "./ui/typography";
 
 type AbilityCardProps = {

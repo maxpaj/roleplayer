@@ -1,5 +1,5 @@
 import { Character, Item, World } from "@repo/rp-lib";
-import { CharacterEquipmentSlot } from "@repo/rp-lib/character";
+import { CharacterEquipmentSlot } from "@repo/rp-lib";
 import { ItemCard } from "@/components/item-card";
 import { RemoveFunctions } from "types/without-functions";
 

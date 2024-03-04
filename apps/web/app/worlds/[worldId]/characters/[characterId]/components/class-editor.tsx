@@ -1,5 +1,5 @@
 import { World } from "@repo/rp-lib";
-import { Character, Clazz } from "@repo/rp-lib/character";
+import { Character, Clazz } from "@repo/rp-lib";
 import { AbilityCard } from "@/components/ability-card";
 import { RemoveFunctions } from "types/without-functions";
 import { H2, H3 } from "@/components/ui/typography";

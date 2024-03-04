@@ -1,7 +1,7 @@
-import { World } from "@repo/rp-lib/world";
-import { Character } from "@repo/rp-lib/character";
+import { World } from "@repo/rp-lib";
+import { Character } from "@repo/rp-lib";
 import { EntityRecord, JSONEntityStorage } from "./json-storage";
-import { generateId } from "@repo/rp-lib/id";
+import { generateId } from "@repo/rp-lib";
 import { WorldEventWithRound } from "@repo/rp-lib";
 
 type WorldMetadata = { isDemo: boolean; isTemplate: boolean };
@@ -135,7 +135,10 @@ export class MemoryWorldRepository
       name,
     });
     const worlds = await this.read();
-    this.write([...worlds, { entity: world, metadata: { isDemo: false } }]);
+    this.write([
+      ...worlds,
+      { entity: world, metadata: { isTemplate: false, isDemo: false } },
+    ]);
     return world;
   }
 

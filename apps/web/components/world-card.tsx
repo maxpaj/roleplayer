@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { World } from "@repo/rp-lib/world";
+import { World } from "@repo/rp-lib";
 import { H3, Muted } from "./ui/typography";
 import { Separator } from "./ui/separator";
 

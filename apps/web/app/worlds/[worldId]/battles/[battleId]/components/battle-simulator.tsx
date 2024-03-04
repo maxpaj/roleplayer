@@ -2,13 +2,13 @@
 
 import { useCallback, useState } from "react";
 import Image from "next/image";
-import { Battle, BattleCharacter, Round } from "@repo/rp-lib/battle";
+import { Battle, BattleCharacter, Round } from "@repo/rp-lib";
 import { WorldEvent } from "@repo/rp-lib";
-import { D20, roll } from "@repo/rp-lib/dice";
-import { ItemSlot, ItemType, Rarity } from "@repo/rp-lib/item";
-import { Interaction } from "@repo/rp-lib/interaction";
-import { World } from "@repo/rp-lib/world";
-import { Id, generateId } from "@repo/rp-lib/id";
+import { D20, roll } from "@repo/rp-lib";
+import { ItemSlot, ItemType, Rarity } from "@repo/rp-lib";
+import { Interaction } from "@repo/rp-lib";
+import { World } from "@repo/rp-lib";
+import { Id, generateId } from "@repo/rp-lib";
 import { EventIconMap } from "../../../../../theme";
 import { Button } from "@/components/ui/button";
 import { H2 } from "@/components/ui/typography";

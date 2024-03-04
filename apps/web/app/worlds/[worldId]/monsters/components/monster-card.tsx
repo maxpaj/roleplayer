@@ -1,4 +1,4 @@
-import { Monster } from "../../../../../../../packages/rp-lib/src/core/monster/monster";
+import { Monster } from "@repo/rp-lib";
 
 type MonsterCardProps = {
   monster: Monster;

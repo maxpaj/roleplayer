@@ -1,4 +1,4 @@
-import { Battle } from "@repo/rp-lib/battle";
+import { Battle } from "@repo/rp-lib";
 import { CreateBattleForm } from "./components/create-battle-form";
 import { H2 } from "@/components/ui/typography";
 

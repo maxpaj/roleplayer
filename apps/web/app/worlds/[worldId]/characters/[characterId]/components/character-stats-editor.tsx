@@ -2,7 +2,7 @@
 
 import { Input } from "@/components/ui/input";
 import { Character, World } from "@repo/rp-lib";
-import { CharacterStat } from "@repo/rp-lib/character";
+import { CharacterStat } from "@repo/rp-lib";
 import { useState } from "react";
 import { RemoveFunctions } from "types/without-functions";
 

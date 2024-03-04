@@ -1,5 +1,5 @@
 import { H4 } from "@/components/ui/typography";
-import { Character } from "@repo/rp-lib/character";
+import { Character } from "@repo/rp-lib";
 import Link from "next/link";
 
 type CharacterCardProps = {

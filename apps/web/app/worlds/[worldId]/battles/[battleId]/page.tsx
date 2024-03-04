@@ -1,4 +1,4 @@
-import { Battle } from "@repo/rp-lib/battle";
+import { Battle } from "@repo/rp-lib";
 import { BattleSimulator } from "./components/battle-simulator";
 import { H2 } from "@/components/ui/typography";
 

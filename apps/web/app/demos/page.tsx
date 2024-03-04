@@ -1,4 +1,4 @@
-import { H2, Lead, Muted } from "@/components/ui/typography";
+import { H2, Muted } from "@/components/ui/typography";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Carousel,
@@ -7,12 +7,10 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { Button } from "@/components/ui/button";
 import { World } from "@repo/rp-lib";
 import { memoryWorldRepository } from "storage/world-repository";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertTriangle } from "lucide-react";
-import { redirect } from "next/navigation";
 import { ButtonLink } from "@/components/ui/button-link";
 
 async function getDemoWorlds(): Promise<World[]> {

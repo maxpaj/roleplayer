@@ -1,100 +1,297 @@
 [
     {
-        "id": "00000000-1111-1111-1111-000000000000",
-        "name": "My world",
-        "libVersion": "0.0.1",
-        "createdUtc": "2024-03-02T18:26:15.959Z",
-        "events": [
-            {
-                "type": "RoundStarted",
-                "id": "daa8b660-1234-4e78-84f9-857c40e78656",
-                "roundId": "b6f41c25-d5fc-4668-b289-faa3e4257295"
-            },
-            {
-                "type": "CharacterSpawned",
-                "characterId": "ba28c043-90bd-41c5-bad3-71d0d9c930d1",
-                "id": "3f193b44-7bf4-4bfe-bd27-ecc1ea5f89cf",
-                "roundId": "b6f41c25-d5fc-4668-b289-faa3e4257295"
-            },
-            {
-                "type": "CharacterNameChanged",
-                "name": "Nisse",
-                "characterId": "ba28c043-90bd-41c5-bad3-71d0d9c930d1",
-                "id": "b72924e2-7ad8-441f-a95f-ee4a0cd80acd",
-                "roundId": "b6f41c25-d5fc-4668-b289-faa3e4257295"
-            },
-            {
-                "type": "CharacterExperienceChanged",
-                "experience": 120,
-                "characterId": "ba28c043-90bd-41c5-bad3-71d0d9c930d1",
-                "id": "bf006296-b4c7-4f17-ad6e-6c1079b0ac6c",
-                "roundId": "b6f41c25-d5fc-4668-b289-faa3e4257295"
-            },
-            {
-                "type": "CharacterBaseDefenseChanged",
-                "defense": 10,
-                "characterId": "ba28c043-90bd-41c5-bad3-71d0d9c930d1",
-                "id": "acf6ef5c-c9fa-439c-abaa-c4734e98c1f6",
-                "roundId": "b6f41c25-d5fc-4668-b289-faa3e4257295"
-            },
-            {
-                "characterId": "ba28c043-90bd-41c5-bad3-71d0d9c930d1",
-                "id": "3fea74f6-d2ce-4252-9cac-5d9830520b47",
-                "type": "CharacterClassLevelGain",
-                "roundId": "b6f41c25-d5fc-4668-b289-faa3e4257295",
-                "classId": "00000000-0000-0000-2222-000000002000"
-            }
-        ],
-        "items": [],
-        "actions": [
-            {
-                "id": "00000000-0000-0000-2222-000000000001",
-                "name": "Healing Touch"
-            },
-            {
-                "id": "00000000-0000-0000-1111-000000001001",
-                "name": "Backstab"
-            }
-        ],
-        "spells": [],
-        "statuses": [],
-        "levelProgression": [
-            0,
-            50,
-            100,
-            200,
-            400
-        ],
-        "characterEquipmentSlots": [
-            {
-                "id": "45020823-b153-46fc-bdda-4feac57eb6cb",
-                "eligibleEquipmentTypes": [
-                    "OneHandSword"
-                ],
-                "name": "Main hand"
-            }
-        ],
-        "classes": [
-            {
-                "id": "00000000-0000-0000-2222-000000002000",
-                "name": "Bard",
-                "levelProgression": [
-                    {
-                        "unlockedAtLevel": 1,
-                        "abilityId": "00000000-0000-0000-2222-000000000001"
-                    }
-                ]
-            },
-            {
-                "id": "00000000-0000-0000-1111-000000001000",
-                "name": "Rogue",
-                "levelProgression": [
-                    {
-                        "unlockedAtLevel": 1,
-                        "abilityId": "00000000-0000-0000-1111-000000001001"
-                    }
-                ]
-            }
-        ]
+        "entity": {
+            "id": "867f174b-d34b-4bc4-ab72-1bb84811b577",
+            "name": "D&D",
+            "createdUtc": "2024-03-04T13:16:59.857Z",
+            "libVersion": "0.0.1",
+            "events": [
+                {
+                    "type": "RoundStarted",
+                    "id": "8ae50566-7fa8-4f46-a836-da2888b6e49f",
+                    "roundId": "bfe580e4-f1a5-4a1d-b745-a599b4f09080"
+                },
+                {
+                    "type": "CharacterSpawned",
+                    "characterId": "ac5d4d74-0184-45e5-8665-e851f2f91538",
+                    "id": "c6e9630c-64e7-4d04-8392-2087857c74a5",
+                    "roundId": "bfe580e4-f1a5-4a1d-b745-a599b4f09080"
+                },
+                {
+                    "type": "CharacterNameSet",
+                    "name": "Nisse",
+                    "characterId": "ac5d4d74-0184-45e5-8665-e851f2f91538",
+                    "id": "1394595d-4f41-46b8-9b9f-fde76c7e038c",
+                    "roundId": "bfe580e4-f1a5-4a1d-b745-a599b4f09080"
+                },
+                {
+                    "type": "CharacterExperienceSet",
+                    "experience": 0,
+                    "characterId": "ac5d4d74-0184-45e5-8665-e851f2f91538",
+                    "id": "89e2ebc8-3567-460e-b3d7-e0477db12723",
+                    "roundId": "bfe580e4-f1a5-4a1d-b745-a599b4f09080"
+                },
+                {
+                    "type": "CharacterBaseDefenseSet",
+                    "defense": 10,
+                    "characterId": "ac5d4d74-0184-45e5-8665-e851f2f91538",
+                    "id": "36f3133c-21d4-4706-b3b2-b506d8c019e4",
+                    "roundId": "bfe580e4-f1a5-4a1d-b745-a599b4f09080"
+                },
+                {
+                    "type": "CharacterResourceMaxSet",
+                    "max": 10,
+                    "characterId": "ac5d4d74-0184-45e5-8665-e851f2f91538",
+                    "resourceId": "9f6e188b-25ea-4fbb-b852-76125567a0e8",
+                    "id": "a127e5f4-89d7-4c70-8388-73ca965434f6",
+                    "roundId": "bfe580e4-f1a5-4a1d-b745-a599b4f09080"
+                },
+                {
+                    "type": "CharacterStatChange",
+                    "amount": 0,
+                    "characterId": "ac5d4d74-0184-45e5-8665-e851f2f91538",
+                    "statId": "7e3eb82f-7fd3-40f3-b7bb-d56d87445e51",
+                    "id": "fc044c0c-6bb2-4742-94a6-4be112f2bbe2",
+                    "roundId": "bfe580e4-f1a5-4a1d-b745-a599b4f09080"
+                },
+                {
+                    "type": "CharacterStatChange",
+                    "amount": 0,
+                    "characterId": "ac5d4d74-0184-45e5-8665-e851f2f91538",
+                    "statId": "b08c68c9-968d-45a2-b977-d35e5e4d5626",
+                    "id": "6d70fca4-077d-4cfd-93b2-78447e6413c7",
+                    "roundId": "bfe580e4-f1a5-4a1d-b745-a599b4f09080"
+                },
+                {
+                    "type": "CharacterStatChange",
+                    "amount": 0,
+                    "characterId": "ac5d4d74-0184-45e5-8665-e851f2f91538",
+                    "statId": "60fd552c-c539-4609-92b6-0289023b6c0e",
+                    "id": "13f302c9-1a91-42f2-84e3-d7efbaead59d",
+                    "roundId": "bfe580e4-f1a5-4a1d-b745-a599b4f09080"
+                },
+                {
+                    "type": "CharacterStatChange",
+                    "amount": 0,
+                    "characterId": "ac5d4d74-0184-45e5-8665-e851f2f91538",
+                    "statId": "914578bb-75c2-4146-ac78-f41b410d2756",
+                    "id": "56796f28-be15-43ab-8fa1-38b27bbbf0bf",
+                    "roundId": "bfe580e4-f1a5-4a1d-b745-a599b4f09080"
+                },
+                {
+                    "type": "CharacterStatChange",
+                    "amount": 0,
+                    "characterId": "ac5d4d74-0184-45e5-8665-e851f2f91538",
+                    "statId": "da14f572-aaf7-41ac-98dc-29997b6aecd0",
+                    "id": "0095ab4a-7ff6-4baf-b420-eba269ee410f",
+                    "roundId": "bfe580e4-f1a5-4a1d-b745-a599b4f09080"
+                },
+                {
+                    "type": "CharacterStatChange",
+                    "amount": 0,
+                    "characterId": "ac5d4d74-0184-45e5-8665-e851f2f91538",
+                    "statId": "e9495f04-02e3-4a0d-9b9d-8f997ceeccf1",
+                    "id": "a0e27d0f-d227-421e-bb08-bf523d0a6ab1",
+                    "roundId": "bfe580e4-f1a5-4a1d-b745-a599b4f09080"
+                },
+                {
+                    "characterId": "ac5d4d74-0184-45e5-8665-e851f2f91538",
+                    "id": "088c8806-5e0f-4a92-bd3e-476477e1e106",
+                    "type": "CharacterClassReset",
+                    "roundId": "bfe580e4-f1a5-4a1d-b745-a599b4f09080"
+                },
+                {
+                    "type": "CharacterStatChange",
+                    "amount": 0,
+                    "characterId": "ac5d4d74-0184-45e5-8665-e851f2f91538",
+                    "statId": "7e3eb82f-7fd3-40f3-b7bb-d56d87445e51",
+                    "id": "f1b9dbc7-a8cb-41f7-aec1-13c74d695d36",
+                    "roundId": "bfe580e4-f1a5-4a1d-b745-a599b4f09080"
+                },
+                {
+                    "type": "CharacterStatChange",
+                    "amount": 0,
+                    "characterId": "ac5d4d74-0184-45e5-8665-e851f2f91538",
+                    "statId": "b08c68c9-968d-45a2-b977-d35e5e4d5626",
+                    "id": "68d15dc3-7459-4f3a-aae2-e4770fd67d50",
+                    "roundId": "bfe580e4-f1a5-4a1d-b745-a599b4f09080"
+                },
+                {
+                    "type": "CharacterStatChange",
+                    "amount": 0,
+                    "characterId": "ac5d4d74-0184-45e5-8665-e851f2f91538",
+                    "statId": "60fd552c-c539-4609-92b6-0289023b6c0e",
+                    "id": "780fb9c5-279f-4f07-a00d-00474ee7882a",
+                    "roundId": "bfe580e4-f1a5-4a1d-b745-a599b4f09080"
+                },
+                {
+                    "type": "CharacterStatChange",
+                    "amount": 0,
+                    "characterId": "ac5d4d74-0184-45e5-8665-e851f2f91538",
+                    "statId": "914578bb-75c2-4146-ac78-f41b410d2756",
+                    "id": "85833a48-46fd-47ef-9840-5407561f6bfa",
+                    "roundId": "bfe580e4-f1a5-4a1d-b745-a599b4f09080"
+                },
+                {
+                    "type": "CharacterStatChange",
+                    "amount": 0,
+                    "characterId": "ac5d4d74-0184-45e5-8665-e851f2f91538",
+                    "statId": "da14f572-aaf7-41ac-98dc-29997b6aecd0",
+                    "id": "119e6a88-6383-4880-8f87-a0e6a5dc4800",
+                    "roundId": "bfe580e4-f1a5-4a1d-b745-a599b4f09080"
+                },
+                {
+                    "type": "CharacterStatChange",
+                    "amount": 0,
+                    "characterId": "ac5d4d74-0184-45e5-8665-e851f2f91538",
+                    "statId": "e9495f04-02e3-4a0d-9b9d-8f997ceeccf1",
+                    "id": "bf54ca4e-687f-401b-a959-002e15004e52",
+                    "roundId": "bfe580e4-f1a5-4a1d-b745-a599b4f09080"
+                }
+            ],
+            "monsters": [],
+            "items": [],
+            "actions": [],
+            "statuses": [],
+            "levelProgression": [
+                0,
+                50,
+                100,
+                200,
+                400
+            ],
+            "characterStatTypes": [
+                {
+                    "id": "7e3eb82f-7fd3-40f3-b7bb-d56d87445e51",
+                    "name": "Strength"
+                },
+                {
+                    "id": "b08c68c9-968d-45a2-b977-d35e5e4d5626",
+                    "name": "Intelligence"
+                },
+                {
+                    "id": "60fd552c-c539-4609-92b6-0289023b6c0e",
+                    "name": "Wisdom"
+                },
+                {
+                    "id": "914578bb-75c2-4146-ac78-f41b410d2756",
+                    "name": "Charisma"
+                },
+                {
+                    "id": "da14f572-aaf7-41ac-98dc-29997b6aecd0",
+                    "name": "Dexterity"
+                },
+                {
+                    "id": "e9495f04-02e3-4a0d-9b9d-8f997ceeccf1",
+                    "name": "Constitution"
+                }
+            ],
+            "characterResourceTypes": [
+                {
+                    "id": "9f6e188b-25ea-4fbb-b852-76125567a0e8",
+                    "name": "Movement Speed",
+                    "defaultMax": 35
+                }
+            ],
+            "characterEquipmentSlots": [
+                {
+                    "id": "46c9fb70-3a92-40a2-9784-d845c38e22cf",
+                    "eligibleEquipmentTypes": [
+                        "OneHandSword"
+                    ],
+                    "name": "Main hand"
+                }
+            ],
+            "classes": [
+                {
+                    "id": "63193e44-26fc-47ca-a718-921f5e3ab087",
+                    "levelProgression": [],
+                    "name": "Bard"
+                }
+            ]
+        },
+        "metadata": {
+            "isDemo": true,
+            "isTemplate": true
+        }
+    },
+    {
+        "entity": {
+            "id": "5db73790-f580-4df6-8e04-34bfb8dc4387",
+            "name": "Rick and Morty",
+            "createdUtc": "2024-03-04T13:47:47.253Z",
+            "libVersion": "0.0.1",
+            "events": [
+                {
+                    "type": "RoundStarted",
+                    "id": "6e1582c3-b968-4bea-af4e-85cdc4b6e754",
+                    "roundId": "db26584d-9237-49a2-bcad-a68952cce2f5"
+                }
+            ],
+            "monsters": [],
+            "items": [],
+            "actions": [],
+            "statuses": [],
+            "levelProgression": [
+                0,
+                50,
+                100,
+                200,
+                400
+            ],
+            "characterStatTypes": [
+                {
+                    "id": "cb84f596-a49b-4d89-bda5-59bd7ff69207",
+                    "name": "Strength"
+                },
+                {
+                    "id": "d147d6f1-9135-4eca-82cb-788c20c9c40b",
+                    "name": "Intelligence"
+                },
+                {
+                    "id": "93428c62-d57c-44e6-b9b8-bd69773c2f15",
+                    "name": "Wisdom"
+                },
+                {
+                    "id": "0bbec8fc-10b0-42c4-a55e-b5b22fe1748b",
+                    "name": "Charisma"
+                },
+                {
+                    "id": "a057c10a-886c-4c7a-9a11-e9e2d799440c",
+                    "name": "Dexterity"
+                },
+                {
+                    "id": "fdd71f08-65a3-48d6-a340-a7d52e3541f6",
+                    "name": "Constitution"
+                }
+            ],
+            "characterResourceTypes": [
+                {
+                    "id": "5766861b-8ede-4aad-b04f-cab9f37eaed7",
+                    "name": "Movement Speed",
+                    "defaultMax": 35
+                }
+            ],
+            "characterEquipmentSlots": [
+                {
+                    "id": "dbadb80c-7ebf-4722-9462-38c230996144",
+                    "eligibleEquipmentTypes": [
+                        "OneHandSword"
+                    ],
+                    "name": "Main hand"
+                }
+            ],
+            "classes": [
+                {
+                    "id": "15c9d019-ee3c-4957-825b-a22879310479",
+                    "levelProgression": [],
+                    "name": "Bard"
+                }
+            ]
+        },
+        "metadata": {
+            "isTemplate": true,
+            "isDemo": true
+        }
     }
 ]

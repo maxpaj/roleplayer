@@ -3,30 +3,35 @@ import process from "process";
 
 const storageDir = `${process.cwd()}/../../data`;
 
-export class JSONStorage<T> {
+export type EntityRecord<T, U> = { entity: T; metadata: U };
+
+export class JSONEntityStorage<T, U> {
   private filePath: string;
-  private type: new (param: T) => T;
-  private parse: (param: unknown) => T[];
+  private entityType: new (param: T) => T;
+  private parse: (param: unknown) => EntityRecord<T, U>[];
 
   constructor(
     fileName: string,
     type: new (param: T) => T,
-    parse: (param: unknown) => T[]
+    parse: (param: unknown) => EntityRecord<T, U>[]
   ) {
     this.filePath = `${storageDir}/${fileName}.json`;
-    this.type = type;
+    this.entityType = type;
     this.parse = parse;
   }
 
   async read() {
     const fileContents = await readFile(this.filePath, { encoding: "utf-8" });
     const json = JSON.parse(fileContents);
-    const typed = this.parse(json);
+    const typed = this.parse(json) as EntityRecord<T, U>[];
 
-    return typed.map((obj: T) => new this.type(obj));
+    return typed.map(({ entity, metadata }: EntityRecord<T, U>) => ({
+      entity: new this.entityType(entity),
+      metadata,
+    }));
   }
 
-  async write(content: T[]) {
+  async write(content: EntityRecord<T, U>[]) {
     await writeFile(this.filePath, JSON.stringify(content));
   }
 }

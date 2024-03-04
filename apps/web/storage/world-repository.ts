@@ -1,11 +1,13 @@
 import { World } from "@repo/rp-lib/world";
 import { Character } from "@repo/rp-lib/character";
-import { JSONStorage } from "./json-storage";
+import { EntityRecord, JSONEntityStorage } from "./json-storage";
 import { generateId } from "@repo/rp-lib/id";
 import { WorldEventWithRound } from "@repo/rp-lib";
 
+type WorldMetadata = { isDemo: boolean; isTemplate: boolean };
+
 export interface IWorldRepository {
-  getAll(): Promise<World[]>;
+  getAll(): Promise<EntityRecord<World, WorldMetadata>[]>;
   deleteWorld(worldId: World["id"]): Promise<void>;
   createWorld(name: string): Promise<World>;
   getWorld(worldId: World["id"]): Promise<World | undefined>;
@@ -17,7 +19,7 @@ export interface IWorldRepository {
 }
 
 export class MemoryWorldRepository
-  extends JSONStorage<World>
+  extends JSONEntityStorage<World, WorldMetadata>
   implements IWorldRepository
 {
   async updateCharacter(
@@ -26,10 +28,12 @@ export class MemoryWorldRepository
     update: Partial<Character>
   ) {
     const worlds = await this.getAll();
-    const world = worlds.find((c) => c.id === worldId);
-    if (!world) {
+    const worldData = worlds.find((c) => c.entity.id === worldId);
+    if (!worldData) {
       throw new Error("World not found");
     }
+
+    const { entity: world } = worldData;
 
     if (update.name) {
       world.setCharacterName(characterId, update.name);
@@ -43,11 +47,12 @@ export class MemoryWorldRepository
   }
 
   async createBattle(worldId: string) {
-    const worlds = await this.getAll();
-    const world = worlds.find((c) => c.id === worldId);
-    if (!world) {
+    const entities = await this.getAll();
+    const entityData = entities.find((c) => c.entity.id === worldId);
+    if (!entityData) {
       throw new Error("World not found");
     }
+    const { entity: world } = entityData;
 
     const battleId = generateId();
 
@@ -65,14 +70,16 @@ export class MemoryWorldRepository
     worldId: World["id"],
     event: WorldEventWithRound
   ): Promise<World> {
-    const worlds = await this.getAll();
-    const world = worlds.find((c) => c.id === worldId);
-    if (!world) {
+    const entities = await this.getAll();
+    const entityData = entities.find((c) => c.entity.id === worldId);
+    if (!entityData) {
       throw new Error("World not found");
     }
+    const { entity: world } = entityData;
 
     world.events.push(event);
-    await this.write(worlds);
+
+    await this.write(entities);
     return world;
   }
 
@@ -88,28 +95,39 @@ export class MemoryWorldRepository
   }
 
   async createCharacter(worldId: World["id"], name: string) {
-    const worlds = await this.getAll();
-    const world = worlds.find((c) => c.id === worldId);
-    if (!world) {
+    const entities = await this.getAll();
+    const entityData = entities.find((c) => c.entity.id === worldId);
+    if (!entityData) {
       throw new Error("World not found");
     }
+    const { entity: world } = entityData;
 
     const characterId = generateId();
     world.createCharacter(characterId, name);
 
-    await this.write(worlds);
+    await this.write(entities);
 
     return characterId;
   }
 
   async deleteWorld(id: World["id"]) {
     const worlds = await this.read();
-    const removed = worlds.filter((c) => c.id !== id);
+    const removed = worlds.filter((c) => c.entity.id !== id);
     await this.write(removed);
   }
 
-  async getAll(): Promise<World[]> {
+  async getAll(): Promise<EntityRecord<World, WorldMetadata>[]> {
     return this.read();
+  }
+
+  async getDemoWorlds(): Promise<World[]> {
+    const all = await this.getAll();
+    return all.filter((w) => w.metadata.isDemo).map((w) => w.entity);
+  }
+
+  async getTemplateWorlds(): Promise<World[]> {
+    const all = await this.getAll();
+    return all.filter((w) => w.metadata.isTemplate).map((w) => w.entity);
   }
 
   async createWorld(name: string) {
@@ -117,28 +135,30 @@ export class MemoryWorldRepository
       name,
     });
     const worlds = await this.read();
-    this.write([...worlds, world]);
+    this.write([...worlds, { entity: world, metadata: { isDemo: false } }]);
     return world;
   }
 
-  async saveWorld(world: World) {
-    const worlds = await this.read();
-    const match = worlds.find((c) => c.id === world.id);
-    if (!match) {
-      throw new Error("Could not find world");
+  async saveWorld(worldUpdate: World) {
+    const entities = await this.getAll();
+    const entityData = entities.find((c) => c.entity.id === worldUpdate.id);
+    if (!entityData) {
+      throw new Error("World not found");
     }
+    const { entity: world } = entityData;
 
-    Object.assign(match, world);
+    Object.assign(world, worldUpdate);
 
-    await this.write(worlds);
+    await this.write(entities);
   }
 
   async getWorld(id: World["id"]) {
-    const worlds = await this.read();
-    const world = worlds.find((c) => c.id === id);
-    if (!world) {
-      throw new Error("Could not find world");
+    const entities = await this.getAll();
+    const entityData = entities.find((c) => c.entity.id === id);
+    if (!entityData) {
+      throw new Error("World not found");
     }
+    const { entity: world } = entityData;
 
     world.applyEvents();
 
@@ -149,5 +169,5 @@ export class MemoryWorldRepository
 export const memoryWorldRepository = new MemoryWorldRepository(
   "worlds",
   World,
-  (worlds: unknown) => worlds as World[]
+  (worlds: unknown) => worlds as EntityRecord<World, WorldMetadata>[]
 );

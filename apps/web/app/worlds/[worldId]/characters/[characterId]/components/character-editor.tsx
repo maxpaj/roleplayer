@@ -9,6 +9,7 @@ import { RemoveFunctions } from "types/without-functions";
 import { CharacterClassEditor } from "./class-editor";
 import { CharacterStatsEditor } from "./character-stats-editor";
 import { CharacterInventoryEditor } from "./character-inventory-editor";
+import { Separator } from "@/components/ui/separator";
 
 type CharacterEditorProps = {
   onSave: (character: RemoveFunctions<Character>) => void;
@@ -63,7 +64,7 @@ export function CharacterEditor({
             setUpdate((prev) => ({ ...prev, stats }));
           }}
         />
-        <hr />
+        <Separator className="my-4" />
         <h2>Equipment/inventory</h2>
         <CharacterInventoryEditor
           character={update}
@@ -72,7 +73,7 @@ export function CharacterEditor({
             setUpdate((prev) => ({ ...prev, inventory }));
           }}
         />
-        <hr />
+        <Separator className="my-4" />
         <h2>Classes</h2>
         {update.classes.map((characterClass) => {
           return (
@@ -82,7 +83,7 @@ export function CharacterEditor({
                 world={world}
                 character={update}
               />
-              <hr />
+              <Separator className="my-4" />
             </div>
           );
         })}

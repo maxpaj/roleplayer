@@ -1,7 +1,8 @@
-import { getWorld } from "./actions";
+import { deleteWorld, getWorld } from "./actions";
 import { DeleteWorldButton } from "./components/delete-world-button";
 import { CreateCharacterButton } from "./components/create-character-button";
 import { CharacterCard } from "./characters/components/character-card";
+import { redirect } from "next/navigation";
 
 export default async function WorldPage({
   params,
@@ -23,7 +24,13 @@ export default async function WorldPage({
 
       <div className="flex justify-between my-2">
         <CreateCharacterButton worldId={world.id} />
-        <DeleteWorldButton worldId={world.id} />
+        <DeleteWorldButton
+          worldId={world.id}
+          onDeleteConfirm={async () => {
+            await deleteWorld(world.id);
+            redirect("/worlds/");
+          }}
+        />
       </div>
 
       <h2>Characters</h2>

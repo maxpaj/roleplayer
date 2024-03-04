@@ -11,6 +11,7 @@ import { World } from "@repo/rp-lib/world";
 import { Id, generateId } from "@repo/rp-lib/id";
 import { EventIconMap } from "../../../../../theme";
 import { Button } from "@/components/ui/button";
+import { H2 } from "@/components/ui/typography";
 
 const EventIconSize = 32;
 
@@ -239,7 +240,6 @@ export function BattleSimulator({}) {
           alt={eventIcon.alt}
           src={eventIcon.icon}
         />
-        {JSON.stringify(event)}
       </div>
     );
   }
@@ -296,7 +296,7 @@ export function BattleSimulator({}) {
         </div>
 
         <div className="w-1/4">
-          <h1>Events ({world.events.length})</h1>
+          <H2>Events ({world.events.length})</H2>
           {renderBattleEvents()}
         </div>
       </div>

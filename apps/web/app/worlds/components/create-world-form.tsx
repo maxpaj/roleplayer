@@ -3,10 +3,15 @@ import z from "zod";
 import { redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Combobox } from "@/components/ui/combobox";
 
 const validateWorldFormSchema = z.object({
   name: z.string().min(1),
 });
+
+async function getTemplateWorlds() {
+  return memoryWorldRepository.getTemplateWorlds();
+}
 
 export async function CreateWorldForm() {
   async function createWorld(formData: FormData) {
@@ -26,9 +31,18 @@ export async function CreateWorldForm() {
     return redirect(`/worlds/${stored.id}`);
   }
 
+  const templates = await getTemplateWorlds();
+
   return (
-    <form className="flex flex-col items-start gap-y-2" action={createWorld}>
+    <form className="flex items-start gap-x-2" action={createWorld}>
       <Input type="name" id="name" name="name" placeholder="New world name" />
+      <Combobox
+        options={templates.map((t) => ({
+          label: t.name,
+          value: t.id,
+        }))}
+        placeholder="Use template"
+      />
       <Button type="submit">Create world</Button>
     </form>
   );

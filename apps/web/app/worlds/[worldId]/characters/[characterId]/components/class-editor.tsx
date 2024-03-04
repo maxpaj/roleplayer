@@ -2,6 +2,7 @@ import { World } from "@repo/rp-lib";
 import { Character, Clazz } from "@repo/rp-lib/character";
 import { AbilityCard } from "@/components/ability-card";
 import { RemoveFunctions } from "types/without-functions";
+import { H2, H3 } from "@/components/ui/typography";
 
 type ClassEditorProps = {
   world: RemoveFunctions<World>;
@@ -28,11 +29,11 @@ export function CharacterClassEditor({
 
   return (
     <div>
-      <h2>
+      <H2>
         {clazz.name} (Level {characterClass.level})
-      </h2>
+      </H2>
 
-      <h3>Select skills</h3>
+      <H3>Select skills</H3>
       {clazz.levelProgression.map((lp) => {
         const ability = world.actions.find((a) => a.id === lp.abilityId);
         if (!ability) {
@@ -41,8 +42,11 @@ export function CharacterClassEditor({
 
         return (
           <div key={lp.abilityId}>
-            <span>Unlocks at level {lp.unlockedAtLevel}</span>
-            <AbilityCard key={lp.abilityId} ability={ability} />
+            <AbilityCard
+              key={lp.abilityId}
+              ability={ability}
+              levelProgression={lp}
+            />
           </div>
         );
       })}

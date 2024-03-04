@@ -12,15 +12,12 @@ import {
 } from "@/components/ui/dialog";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
+import { deleteWorld } from "../actions";
+import { useRouter } from "next/navigation";
 
-export function DeleteWorldButton({
-  worldId,
-  onDeleteConfirm,
-}: {
-  onDeleteConfirm: () => void;
-  worldId: string;
-}) {
+export function DeleteWorldButton({ worldId }: { worldId: string }) {
   const [confirm, setConfirm] = useState("");
+  const router = useRouter();
 
   return (
     <Dialog>
@@ -44,7 +41,10 @@ export function DeleteWorldButton({
           <Button
             disabled={confirm !== worldId}
             variant="destructive"
-            onClick={onDeleteConfirm}
+            onClick={async () => {
+              await deleteWorld(worldId);
+              router.push("/");
+            }}
           >
             Confirm
           </Button>

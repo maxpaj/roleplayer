@@ -1,13 +1,12 @@
 "use client";
 
-import Link from "next/link";
 import { World } from "@repo/rp-lib/world";
-import { Button } from "@/components/ui/button";
+import { ButtonLink } from "@/components/ui/button-link";
 
 export function CreateCharacterButton({ worldId }: { worldId: World["id"] }) {
   return (
-    <Button>
-      <Link href={`/worlds/${worldId}/characters`}>Create character</Link>
-    </Button>
+    <ButtonLink href={`/worlds/${worldId}/characters`}>
+      Create character
+    </ButtonLink>
   );
 }

@@ -1,5 +1,6 @@
 import { Battle } from "@repo/rp-lib/battle";
 import { CreateBattleForm } from "./components/create-battle-form";
+import { H2 } from "@/components/ui/typography";
 
 async function getData() {
   const battles: Battle[] = [];
@@ -16,7 +17,7 @@ export default async function BattlesPage({
 
   return (
     <div>
-      <h1>Battles</h1>
+      <H2>Battles</H2>
       <CreateBattleForm worldId={worldId} />
       <div>
         {battles.map((battle) => (

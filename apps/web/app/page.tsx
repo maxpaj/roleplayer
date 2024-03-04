@@ -1,4 +1,5 @@
 import { ButtonLink } from "@/components/ui/button-link";
+import { Lead } from "@/components/ui/typography";
 
 export default function Home() {
   return (
@@ -7,14 +8,14 @@ export default function Home() {
         <h1 className="text-3xl font-semibold sm:text-5xl md:text-6xl lg:text-7xl">
           Roleplaying campaign manager
         </h1>
-        <p className="max-w-[42rem] leading-normal text-muted-foreground sm:text-xl sm:leading-8">
+        <Lead>
           Build a world, create characters, bring them into battle. Toggle help
           features on and off at a whim, depending on the level of support you
           want
-        </p>
+        </Lead>
         <div className="flex gap-2">
           <ButtonLink href={"/worlds"}>Create your world</ButtonLink>
-          <ButtonLink variant="outline" href={"/demo"}>
+          <ButtonLink variant="outline" href={"/demos"}>
             Play demo
           </ButtonLink>
         </div>

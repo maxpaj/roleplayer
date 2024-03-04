@@ -3,6 +3,7 @@ import { memoryWorldRepository } from "../../../../../storage/world-repository";
 import z from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { H2 } from "@/components/ui/typography";
 
 const validateBattleFormSchema = z.object({
   name: z.string().min(1),
@@ -30,7 +31,7 @@ export function CreateBattleForm({ worldId }: CreateBattleFormProps) {
 
   return (
     <>
-      <h1>New battle form</h1>
+      <H2>New battle form</H2>
       <hr className="my-2" />
 
       <form action={createNewBattle}>

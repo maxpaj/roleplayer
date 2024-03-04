@@ -10,6 +10,7 @@ import { CharacterClassEditor } from "./class-editor";
 import { CharacterStatsEditor } from "./character-stats-editor";
 import { CharacterInventoryEditor } from "./character-inventory-editor";
 import { Separator } from "@/components/ui/separator";
+import { H2, H3, Muted } from "@/components/ui/typography";
 
 type CharacterEditorProps = {
   onSave: (character: RemoveFunctions<Character>) => void;
@@ -27,20 +28,37 @@ export function CharacterEditor({
 
   return (
     <>
+      <H2>
+        <div className="flex items-center gap-2">
+          <Input
+            type="name"
+            id="name"
+            className="scroll-m-20 focus-visible:ring-offset-0 focus-visible:ring-0 text-3xl font-semibold tracking-tight border-none px-0"
+            name="name"
+            placeholder="Name"
+            value={update.name}
+            onChange={(e) => {
+              setUpdate((prev) => {
+                return { ...prev, name: e.target.value };
+              });
+            }}
+          />
+          <Button
+            variant="outline"
+            className="text-xs px-3 py-4 h-4"
+            onClick={() => onSave(update)}
+          >
+            Save
+          </Button>
+        </div>
+      </H2>
+
       <div className="flex flex-col gap-2">
-        <Input
-          type="name"
-          id="name"
-          name="name"
-          placeholder="Name"
-          value={update.name}
-          onChange={(e) => {
-            setUpdate((prev) => {
-              return { ...prev, name: e.target.value };
-            });
-          }}
-        />
         Level {characterLevel} ({character.xp} XP)
+        <H3>Classes</H3>
+        {update.classes.length === 0 && (
+          <Muted>Choose your character class</Muted>
+        )}
         <ClassSelector
           placeholder={
             <>
@@ -56,25 +74,6 @@ export function CharacterEditor({
             setUpdate((prev) => ({ ...prev, classes }));
           }}
         />
-        <h2>Stats</h2>
-        <CharacterStatsEditor
-          character={update}
-          world={world}
-          onChange={(stats) => {
-            setUpdate((prev) => ({ ...prev, stats }));
-          }}
-        />
-        <Separator className="my-4" />
-        <h2>Equipment/inventory</h2>
-        <CharacterInventoryEditor
-          character={update}
-          world={world}
-          onChange={(inventory) => {
-            setUpdate((prev) => ({ ...prev, inventory }));
-          }}
-        />
-        <Separator className="my-4" />
-        <h2>Classes</h2>
         {update.classes.map((characterClass) => {
           return (
             <div key={characterClass.classId}>
@@ -87,7 +86,28 @@ export function CharacterEditor({
             </div>
           );
         })}
-        <Button onClick={() => onSave(update)}>Save</Button>
+        <H3>Stats</H3>
+        <Muted>
+          Stats determine the strengths and weaknesses of your character
+        </Muted>
+        <CharacterStatsEditor
+          character={update}
+          world={world}
+          onChange={(stats) => {
+            setUpdate((prev) => ({ ...prev, stats }));
+          }}
+        />
+        <H3>Equipment/inventory</H3>
+        <Muted>
+          Stuff your character with swords, axes, armors, potions, and more
+        </Muted>
+        <CharacterInventoryEditor
+          character={update}
+          world={world}
+          onChange={(inventory) => {
+            setUpdate((prev) => ({ ...prev, inventory }));
+          }}
+        />
       </div>
     </>
   );

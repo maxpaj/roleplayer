@@ -1,5 +1,5 @@
+import { H4 } from "@/components/ui/typography";
 import { Character } from "@repo/rp-lib/character";
-import Image from "next/image";
 import Link from "next/link";
 
 type CharacterCardProps = {
@@ -10,9 +10,9 @@ type CharacterCardProps = {
 export function CharacterCard({ worldId, character }: CharacterCardProps) {
   return (
     <Link href={`/worlds/${worldId}/characters/${character.id}`}>
-      <div className="border border-slate-500 bg-slate-800 p-2">
-        <h1>{character.name}</h1>
-        <Image src={character.imageUrl} alt={character.name} />
+      <div className="border border-slate-500 bg-slate-800 py-2 px-3">
+        <H4>{character.name}</H4>
+        {character.xp} XP
       </div>
     </Link>
   );

@@ -1,5 +1,6 @@
 import { Battle } from "@repo/rp-lib/battle";
 import { BattleSimulator } from "./components/battle-simulator";
+import { H2 } from "@/components/ui/typography";
 
 async function getData(battleId: string) {
   const battle: Battle = new Battle();
@@ -16,7 +17,7 @@ export default async function BattlePage({
 
   return (
     <>
-      <h1>{battle.name}</h1>
+      <H2>{battle.name}</H2>
       <BattleSimulator />
     </>
   );

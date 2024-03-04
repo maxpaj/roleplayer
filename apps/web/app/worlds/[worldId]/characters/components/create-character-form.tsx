@@ -34,7 +34,7 @@ export function CreateCharacterForm({ worldId }: NewCharacterProps) {
 
   return (
     <>
-      <form action={createNewCharacter}>
+      <form action={createNewCharacter} className="flex gap-2">
         <Input
           type="name"
           id="name"

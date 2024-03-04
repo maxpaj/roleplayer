@@ -93,19 +93,11 @@ export const EventIconMap: {
     alt: "",
     icon: defaultIcon,
   },
-  CharacterHealthChange: {
+  CharacterPositionSet: {
     alt: "",
     icon: defaultIcon,
   },
-  CharacterMaximumHealthChange: {
-    alt: "",
-    icon: defaultIcon,
-  },
-  CharacterPositionChange: {
-    alt: "",
-    icon: defaultIcon,
-  },
-  CharacterResourceGain: {
+  CharacterResourceCurrentChange: {
     alt: "",
     icon: defaultIcon,
   },
@@ -141,7 +133,7 @@ export const EventIconMap: {
     alt: "",
     icon: defaultIcon,
   },
-  CharacterNameChanged: {
+  CharacterNameSet: {
     alt: "",
     icon: defaultIcon,
   },
@@ -149,7 +141,7 @@ export const EventIconMap: {
     alt: "",
     icon: defaultIcon,
   },
-  CharacterExperienceChanged: {
+  CharacterExperienceSet: {
     alt: "",
     icon: defaultIcon,
   },
@@ -157,11 +149,7 @@ export const EventIconMap: {
     alt: "",
     icon: defaultIcon,
   },
-  CharacterBaseDefenseChanged: {
-    alt: "",
-    icon: defaultIcon,
-  },
-  CharacterExperienceGain: {
+  CharacterBaseDefenseSet: {
     alt: "",
     icon: defaultIcon,
   },
@@ -183,6 +171,26 @@ export const EventIconMap: {
   },
   CharacterClassReset: {
     alt: "",
-    icon: undefined,
+    icon: defaultIcon,
+  },
+  CharacterResourceMaxSet: {
+    alt: "",
+    icon: defaultIcon,
+  },
+  CharacterStatChange: {
+    alt: "",
+    icon: defaultIcon,
+  },
+  CharacterExperienceChanged: {
+    alt: "",
+    icon: defaultIcon,
+  },
+  CharacterMaximumHealthSet: {
+    alt: "",
+    icon: defaultIcon,
+  },
+  CharacterHealthSet: {
+    alt: "",
+    icon: defaultIcon,
   },
 };

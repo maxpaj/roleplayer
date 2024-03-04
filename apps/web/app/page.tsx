@@ -1,5 +1,7 @@
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { ButtonLink } from "@/components/ui/button-link";
 import { Lead } from "@/components/ui/typography";
+import { AlertTriangle } from "lucide-react";
 
 export default function Home() {
   return (
@@ -19,6 +21,14 @@ export default function Home() {
             Play demo
           </ButtonLink>
         </div>
+
+        <Alert>
+          <AlertTriangle className="h-4 w-4" />
+          <AlertTitle>Production is read-only</AlertTitle>
+          <AlertDescription>
+            Production is read-only, come back later.
+          </AlertDescription>
+        </Alert>
       </div>
     </section>
   );

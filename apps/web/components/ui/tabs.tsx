@@ -27,7 +27,7 @@ export function Tabs({ tabs }: TabsProps) {
       <div className="flex gap-2 mb-3">
         {tabs.map((t) => (
           <Badge
-            variant={t.label === selectedTab.label ? "tabSelected" : "tab"}
+            variant={t.label === selectedTab.label ? "tab-selected" : "tab"}
             onClick={() => {
               setSelectedTab(t);
             }}

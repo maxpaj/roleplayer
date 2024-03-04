@@ -18,6 +18,7 @@ import {
   Item,
   ItemEquipmentType,
 } from "../item/item";
+import { Monster } from "../monster/monster";
 import { WorldEvent, WorldEventWithRound } from "./world-events";
 import { WorldState } from "./world-state";
 
@@ -34,6 +35,7 @@ export class World {
   libVersion: Version;
 
   events: WorldEventWithRound[] = [];
+  monsters: Monster[] = [];
   items: Item[] = [];
   actions: Interaction[] = [];
   statuses: Status[] = [];
@@ -95,6 +97,18 @@ export class World {
     this.name = c.name;
     this.createdUtc = c.createdUtc || new Date();
     this.libVersion = c.libVersion || "0.0.1"; // TODO: Should be injected at build time, should throw if the version of the world isn't supported by the lib
+    this.events = c.events || [
+      {
+        type: "RoundStarted",
+        id: generateId(),
+        roundId: generateId(),
+      },
+    ];
+  }
+
+  getNumberOfRounds() {
+    const data = this.applyEvents();
+    return data.rounds.length;
   }
 
   addCharacterItem(characterId: Character["id"], itemId: Character["id"]) {
@@ -218,7 +232,7 @@ export class World {
     const characterUpdate: WorldEventWithRound = {
       characterId,
       id: generateId(),
-      type: "CharacterExperienceGain",
+      type: "CharacterExperienceChanged",
       experience,
       roundId: this.getCurrentRound().id,
     };
@@ -582,6 +596,11 @@ export class World {
         break;
       }
 
+      case "CharacterExperienceChanged": {
+        character.xp += event.experience;
+        break;
+      }
+
       case "CharacterExperienceSet": {
         character.xp = event.experience;
         break;
@@ -731,6 +750,8 @@ export class World {
       case "CharacterClassLevelGain": {
         const characterClassLevels = character.classes.length;
         const characterLevel = this.getCharacterLevel(character);
+
+        console.log(character);
 
         if (characterClassLevels >= characterLevel) {
           throw new Error(

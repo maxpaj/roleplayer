@@ -50,7 +50,7 @@ export type WorldEventType =
       defense: number;
     }
   | {
-      type: "CharacterExperienceGain";
+      type: "CharacterExperienceChanged";
       characterId: Character["id"];
       experience: number;
     }

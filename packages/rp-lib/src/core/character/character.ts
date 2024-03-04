@@ -69,8 +69,6 @@ export type CharacterResourceGeneration = CharacterResource & {
 export type CharacterClass = {
   level: number;
   classId: Clazz["id"];
-  abilityModifierStatId: CharacterStatType["id"];
-  spellCastingAbilityStatId: CharacterStatType["id"];
 };
 
 export type LevelExperience = number;
@@ -136,6 +134,10 @@ export class Character {
   public equipment!: CharacterEquipmentSlot[];
   public actions!: Interaction[];
   public position!: Position;
+
+  // TODO: Should these be inherited from the first class the character gains?
+  public spellCastingAbilityStatId!: CharacterStatType["id"];
+  public abilityModifierStatId!: CharacterStatType["id"];
 
   // Temporary resources
   public resourcesCurrent!: CharacterResource[];

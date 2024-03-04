@@ -1,8 +1,8 @@
 import { Id, generateId } from "../../lib/generate-id";
-import { World, WorldEvent } from "../world/world";
+import { World } from "../world/world";
 import { Character, isCharacterEvent } from "../character/character";
-import { D20 } from "../..";
-import { getAbilityModifier } from "../character/ability-modifier/ability-modifier";
+import { WorldEvent } from "../world/world-events";
+import { D20 } from "../dice/dice";
 import { roll } from "../dice/dice";
 
 export type Round = {
@@ -21,7 +21,7 @@ export class BattleCharacter {
 }
 
 export function getCharacterInitiative(c: Character) {
-  return roll(D20) + getAbilityModifier(c.baseDexterity);
+  return roll(D20) + c.getAbilityModifier();
 }
 
 export class Battle {

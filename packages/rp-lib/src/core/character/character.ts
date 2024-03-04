@@ -69,6 +69,8 @@ export type CharacterResourceGeneration = CharacterResource & {
 export type CharacterClass = {
   level: number;
   classId: Clazz["id"];
+  abilityModifierStatId: CharacterStatType["id"];
+  spellCastingAbilityStatId: CharacterStatType["id"];
 };
 
 export type LevelExperience = number;
@@ -134,7 +136,6 @@ export class Character {
   public equipment!: CharacterEquipmentSlot[];
   public actions!: Interaction[];
   public position!: Position;
-  public spellCastingAbilityStatId!: CharacterStatType["id"];
 
   // Temporary resources
   public resourcesCurrent!: CharacterResource[];
@@ -164,6 +165,10 @@ export class Character {
     }));
 
     Object.assign(this, init);
+  }
+
+  getAbilityModifier() {
+    return 0;
   }
 
   getResourceGeneration(): CharacterResourceGeneration[] {

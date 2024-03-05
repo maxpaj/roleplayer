@@ -46,7 +46,7 @@ export function UnpublishWorldButton({ worldId }: { worldId: string }) {
             variant="destructive"
             onClick={async () => {
               await unpublishWorld(worldId);
-              router.push("/");
+              router.push(`/worlds/${worldId}/settings`);
             }}
           >
             Confirm

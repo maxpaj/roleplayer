@@ -17,7 +17,7 @@ export default async function ItemsPage({
       <Separator className="my-3" />
 
       {world.items.length === 0 && (
-        <Paragraph>It's empty! No items added yet.</Paragraph>
+        <Paragraph className="my-4">It's empty! No items added yet.</Paragraph>
       )}
 
       <ButtonLink variant="outline" href={`/worlds/${world.id}/monsters`}>

@@ -18,7 +18,9 @@ export default async function MonstersPage({
       <Separator className="my-3" />
 
       {world.monsters.length === 0 && (
-        <Paragraph>It's empty! No items added yet.</Paragraph>
+        <Paragraph className="my-4">
+          It's empty! No monsters added yet.
+        </Paragraph>
       )}
 
       {world.monsters.map((m) => (

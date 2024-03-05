@@ -2,13 +2,13 @@ import { Input } from "@/components/ui/input";
 import { getWorld } from "./actions";
 import { memoryWorldRepository } from "storage/world-repository";
 import { redirect } from "next/navigation";
-import { H4, Muted } from "@/components/ui/typography";
-import { DeleteWorldButton } from "./components/delete-world-button";
-import { PublishWorldButton } from "./components/publish-world-button";
-import { UnpublishWorldButton } from "./components/unpublish-world-button";
-import { Separator } from "@/components/ui/separator";
 import { World } from "@repo/rp-lib";
 import { Textarea } from "@/components/ui/textarea";
+import { Muted } from "@/components/ui/typography";
+import Link from "next/link";
+import { Info } from "lucide-react";
+import { WorldEditorForm } from "./components/world-editor-form";
+import { classToPlain } from "@/lib/class-to-plain";
 
 async function updateWorld(formData: FormData) {
   "use server";
@@ -35,14 +35,7 @@ export default async function WorldPage({
 
   return (
     <>
-      <div className="flex flex-col gap-2">
-        <Input type="name" id="name" name="name" placeholder="World name" />
-        <Textarea
-          id="story"
-          name="story"
-          placeholder="Describe the world, the story, background, conflicts, factions, etc."
-        />
-      </div>
+      <WorldEditorForm world={classToPlain(world)} />
     </>
   );
 }

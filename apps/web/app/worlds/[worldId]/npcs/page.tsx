@@ -1,5 +1,5 @@
 import { ButtonLink } from "@/components/ui/button-link";
-import { H3, Muted } from "@/components/ui/typography";
+import { H3, Muted, Paragraph } from "@/components/ui/typography";
 import { CharacterCard } from "../characters/components/character-card";
 import { Separator } from "@/components/ui/separator";
 import { getWorld } from "../actions";
@@ -21,6 +21,12 @@ export default async function NpcPage({
         player
       </Muted>
       <Separator className="my-3" />
+
+      {worldData.characters.length === 0 && (
+        <Paragraph className="my-4">
+          It's empty! No characters added yet.
+        </Paragraph>
+      )}
 
       {worldData.characters.length > 0 && (
         <div className="flex gap-2 mb-4">

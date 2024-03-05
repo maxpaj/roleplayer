@@ -22,7 +22,7 @@ export default async function WorldLayout({
         <div className="flex justify-between gap-x-4 flex-wrap">
           <H2>{world.name}</H2>
 
-          <ButtonLink href={`/worlds/${world.id}/campaigns`}>
+          <ButtonLink href={`/worlds/${world.id}/campaigns/new`}>
             Start a new campaign
           </ButtonLink>
         </div>
@@ -30,8 +30,8 @@ export default async function WorldLayout({
         <Muted className={"mb-4"}>{world.description}</Muted>
       </div>
 
-      <div className="flex gap-2 mb-4 justify-between flex-wrap">
-        <div>
+      <div className="flex mb-4 justify-between flex-wrap">
+        <div className="flex gap-1">
           <BadgeLink href={`/worlds/${world.id}`}>World</BadgeLink>
           <BadgeLink href={`/worlds/${world.id}/monsters`}>Monsters</BadgeLink>
           <BadgeLink href={`/worlds/${world.id}/items`}>Items</BadgeLink>

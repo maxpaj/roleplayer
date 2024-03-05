@@ -33,6 +33,7 @@ export class World {
   name: string;
   createdUtc: Date;
   libVersion: Version;
+  description: string;
 
   events: WorldEventWithRound[] = [];
   monsters: Monster[] = [];
@@ -95,6 +96,7 @@ export class World {
     Object.assign(this, c);
     this.id = c.id || generateId();
     this.name = c.name;
+    this.description = c.description || "";
     this.createdUtc = c.createdUtc || new Date();
     this.libVersion = c.libVersion || "0.0.1"; // TODO: Should be injected at build time, should throw if the version of the world isn't supported by the lib
     this.events = c.events || [

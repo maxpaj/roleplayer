@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { memoryWorldRepository } from "../../../../../storage/world-repository";
+import { memoryWorldRepository } from "../../../../../../../storage/world-repository";
 import z from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

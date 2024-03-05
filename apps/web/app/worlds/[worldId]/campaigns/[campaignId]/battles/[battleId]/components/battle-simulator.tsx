@@ -9,7 +9,7 @@ import { ItemSlot, ItemType, Rarity } from "@repo/rp-lib";
 import { Interaction } from "@repo/rp-lib";
 import { World } from "@repo/rp-lib";
 import { Id, generateId } from "@repo/rp-lib";
-import { EventIconMap } from "../../../../../theme";
+import { EventIconMap } from "../../../../../../../theme";
 import { Button } from "@/components/ui/button";
 import { H2 } from "@/components/ui/typography";
 

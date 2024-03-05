@@ -3,12 +3,6 @@
 import { ReactNode, useState } from "react";
 import { Badge } from "./badge";
 
-type TabRender = (
-  tab: Tab,
-  isSelected: boolean,
-  onClick: (t: Tab) => void
-) => ReactNode;
-
 type Tab = {
   label: string;
   content: ReactNode;
@@ -17,7 +11,11 @@ type Tab = {
 
 type TabsProps = {
   onTabSelected?: (t: Tab) => void;
-  renderTab: TabRender;
+  renderTab?: (
+    tab: Tab,
+    isSelected: boolean,
+    onClick: (t: Tab) => void
+  ) => ReactNode;
   tabs: Tab[];
 };
 

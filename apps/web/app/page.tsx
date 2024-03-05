@@ -10,9 +10,10 @@ export default function Home() {
         <div className="text-left">
           <Alert>
             <AlertTriangle className="h-4 w-4" />
-            <AlertTitle>Production is read-only</AlertTitle>
+            <AlertTitle>Read-only</AlertTitle>
             <AlertDescription>
-              Production is read-only, come back later.
+              We are currently read-only, meaning, you can browse the site, but
+              nothing will be saved. Come back later.
             </AlertDescription>
           </Alert>
         </div>

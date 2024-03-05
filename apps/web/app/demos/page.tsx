@@ -1,4 +1,4 @@
-import { H2, Muted } from "@/components/ui/typography";
+import { H2, H3, Muted } from "@/components/ui/typography";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Carousel,
@@ -43,17 +43,16 @@ export default async function DemosPage() {
           <Carousel className="w-full max-w-xs">
             <CarouselContent>
               {demos.map((demo, index) => (
-                <CarouselItem key={index} className="basis-1/2">
-                  <div className="p-1">
-                    <Card>
-                      <CardContent className="flex flex-col gap-4 aspect-square items-center justify-center p-6">
-                        <div className="text-4xl font-semibold">
-                          {demo.name}
-                        </div>
-                        <ButtonLink href={`/demos/${demo.id}`}>Play</ButtonLink>
-                      </CardContent>
-                    </Card>
-                  </div>
+                <CarouselItem key={index}>
+                  <Card>
+                    <CardContent className="flex flex-col gap-4 aspect-square justify-between p-4">
+                      <div>
+                        <H3 className="my-3">{demo.name}</H3>
+                        <Muted>{demo.description}</Muted>
+                      </div>
+                      <ButtonLink href={`/demos/${demo.id}`}>Play</ButtonLink>
+                    </CardContent>
+                  </Card>
                 </CarouselItem>
               ))}
             </CarouselContent>

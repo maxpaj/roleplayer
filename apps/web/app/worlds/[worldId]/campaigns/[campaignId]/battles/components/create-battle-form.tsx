@@ -4,6 +4,7 @@ import z from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { H2 } from "@/components/ui/typography";
+import { Separator } from "@/components/ui/separator";
 
 const validateBattleFormSchema = z.object({
   name: z.string().min(1),
@@ -32,7 +33,7 @@ export function CreateBattleForm({ worldId }: CreateBattleFormProps) {
   return (
     <>
       <H2>New battle form</H2>
-      <hr className="my-2" />
+      <Separator />
 
       <form action={createNewBattle}>
         <Input

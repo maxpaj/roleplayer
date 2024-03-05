@@ -29,7 +29,7 @@ const defaultRender = (
     <Badge
       key={tab.label}
       onClick={() => onClick(tab)}
-      variant={isSelected ? "tab-selected" : "tab"}
+      variant={isSelected ? "selected" : "ghost"}
     >
       {tab.label}
     </Badge>

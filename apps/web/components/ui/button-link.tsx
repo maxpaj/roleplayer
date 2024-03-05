@@ -30,7 +30,7 @@ export function BadgeLink({ children, href }: ButtonLinkProps) {
   return (
     <Link
       className={badgeVariants({
-        variant: pathname.endsWith(href) ? "link-selected" : "link",
+        variant: pathname.endsWith(href) ? "selected" : "ghost",
       })}
       href={href}
     >

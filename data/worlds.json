@@ -5,6 +5,7 @@
             "name": "D&D",
             "createdUtc": "2024-03-04T13:16:59.857Z",
             "libVersion": "0.0.1",
+            "description": "A classic D&D world, with bards, rogues, sorceresses, dwarves, halflings, scrolls, potions, etc.",
             "events": [
                 {
                     "type": "RoundStarted",
@@ -147,6 +148,60 @@
                     "statId": "e9495f04-02e3-4a0d-9b9d-8f997ceeccf1",
                     "id": "bf54ca4e-687f-401b-a959-002e15004e52",
                     "roundId": "bfe580e4-f1a5-4a1d-b745-a599b4f09080"
+                },
+                {
+                    "characterId": "ac5d4d74-0184-45e5-8665-e851f2f91538",
+                    "id": "e6bef9af-9f95-4414-9928-b20d409ac11d",
+                    "type": "CharacterClassReset",
+                    "roundId": "bfe580e4-f1a5-4a1d-b745-a599b4f09080"
+                },
+                {
+                    "type": "CharacterStatChange",
+                    "amount": 0,
+                    "characterId": "ac5d4d74-0184-45e5-8665-e851f2f91538",
+                    "statId": "7e3eb82f-7fd3-40f3-b7bb-d56d87445e51",
+                    "id": "e4983f1a-da35-44e4-b280-71eda1cfc544",
+                    "roundId": "bfe580e4-f1a5-4a1d-b745-a599b4f09080"
+                },
+                {
+                    "type": "CharacterStatChange",
+                    "amount": 0,
+                    "characterId": "ac5d4d74-0184-45e5-8665-e851f2f91538",
+                    "statId": "b08c68c9-968d-45a2-b977-d35e5e4d5626",
+                    "id": "d5ca99b8-61c1-48ba-8661-bc4861f3cdc0",
+                    "roundId": "bfe580e4-f1a5-4a1d-b745-a599b4f09080"
+                },
+                {
+                    "type": "CharacterStatChange",
+                    "amount": 0,
+                    "characterId": "ac5d4d74-0184-45e5-8665-e851f2f91538",
+                    "statId": "60fd552c-c539-4609-92b6-0289023b6c0e",
+                    "id": "666202b6-d183-40b3-8c9d-ac3f68cce39f",
+                    "roundId": "bfe580e4-f1a5-4a1d-b745-a599b4f09080"
+                },
+                {
+                    "type": "CharacterStatChange",
+                    "amount": 0,
+                    "characterId": "ac5d4d74-0184-45e5-8665-e851f2f91538",
+                    "statId": "914578bb-75c2-4146-ac78-f41b410d2756",
+                    "id": "89d33cb1-b81b-4a9e-a3a7-32eea6673e64",
+                    "roundId": "bfe580e4-f1a5-4a1d-b745-a599b4f09080"
+                },
+                {
+                    "type": "CharacterStatChange",
+                    "amount": 0,
+                    "characterId": "ac5d4d74-0184-45e5-8665-e851f2f91538",
+                    "statId": "da14f572-aaf7-41ac-98dc-29997b6aecd0",
+                    "id": "9dc40e6c-dfcb-4693-922a-684b2db4a6aa",
+                    "roundId": "bfe580e4-f1a5-4a1d-b745-a599b4f09080"
+                },
+                {
+                    "type": "CharacterStatChange",
+                    "amount": 0,
+                    "characterId": "ac5d4d74-0184-45e5-8665-e851f2f91538",
+                    "statId": "e9495f04-02e3-4a0d-9b9d-8f997ceeccf1",
+                    "id": "ec211399-5ae5-44d4-92b0-29ec8eb034d7",
+                    "roundId": "bfe580e4-f1a5-4a1d-b745-a599b4f09080"
                 }
             ],
             "monsters": [],
@@ -211,8 +266,8 @@
             ]
         },
         "metadata": {
-            "isDemo": true,
-            "isTemplate": true
+            "isPublicTemplate": true,
+            "isDemo": true
         }
     },
     {
@@ -221,10 +276,94 @@
             "name": "Rick and Morty",
             "createdUtc": "2024-03-04T13:47:47.253Z",
             "libVersion": "0.0.1",
+            "description": "Let's get Schwifty! Jump from dimension to dimension, fight intergalactic monsters, and resolve family conflicts?",
             "events": [
                 {
                     "type": "RoundStarted",
                     "id": "6e1582c3-b968-4bea-af4e-85cdc4b6e754",
+                    "roundId": "db26584d-9237-49a2-bcad-a68952cce2f5"
+                },
+                {
+                    "type": "CharacterSpawned",
+                    "characterId": "c96c858d-c93f-4b55-ad66-e44340a7cd0f",
+                    "id": "e550f329-de62-42b4-83cf-544f4c54b823",
+                    "roundId": "db26584d-9237-49a2-bcad-a68952cce2f5"
+                },
+                {
+                    "type": "CharacterNameSet",
+                    "name": "Nisse",
+                    "characterId": "c96c858d-c93f-4b55-ad66-e44340a7cd0f",
+                    "id": "4e7bea56-099a-49f9-8a8e-188f867e88d7",
+                    "roundId": "db26584d-9237-49a2-bcad-a68952cce2f5"
+                },
+                {
+                    "type": "CharacterExperienceSet",
+                    "experience": 0,
+                    "characterId": "c96c858d-c93f-4b55-ad66-e44340a7cd0f",
+                    "id": "1fa31241-fa7d-4928-ad17-2322851f17e7",
+                    "roundId": "db26584d-9237-49a2-bcad-a68952cce2f5"
+                },
+                {
+                    "type": "CharacterBaseDefenseSet",
+                    "defense": 10,
+                    "characterId": "c96c858d-c93f-4b55-ad66-e44340a7cd0f",
+                    "id": "bcd9a435-df06-45b1-b617-b6e02dcf221d",
+                    "roundId": "db26584d-9237-49a2-bcad-a68952cce2f5"
+                },
+                {
+                    "type": "CharacterResourceMaxSet",
+                    "max": 10,
+                    "characterId": "c96c858d-c93f-4b55-ad66-e44340a7cd0f",
+                    "resourceId": "5766861b-8ede-4aad-b04f-cab9f37eaed7",
+                    "id": "f45e2706-be6a-498d-a2fc-e5aa933f1383",
+                    "roundId": "db26584d-9237-49a2-bcad-a68952cce2f5"
+                },
+                {
+                    "type": "CharacterStatChange",
+                    "amount": 0,
+                    "characterId": "c96c858d-c93f-4b55-ad66-e44340a7cd0f",
+                    "statId": "cb84f596-a49b-4d89-bda5-59bd7ff69207",
+                    "id": "0bcf2674-bab8-4b05-ab36-dd7eb4f5f25b",
+                    "roundId": "db26584d-9237-49a2-bcad-a68952cce2f5"
+                },
+                {
+                    "type": "CharacterStatChange",
+                    "amount": 0,
+                    "characterId": "c96c858d-c93f-4b55-ad66-e44340a7cd0f",
+                    "statId": "d147d6f1-9135-4eca-82cb-788c20c9c40b",
+                    "id": "3c90ef3a-89e7-4e81-a140-5270e50948f8",
+                    "roundId": "db26584d-9237-49a2-bcad-a68952cce2f5"
+                },
+                {
+                    "type": "CharacterStatChange",
+                    "amount": 0,
+                    "characterId": "c96c858d-c93f-4b55-ad66-e44340a7cd0f",
+                    "statId": "93428c62-d57c-44e6-b9b8-bd69773c2f15",
+                    "id": "ba3106f2-ea56-4e52-adae-7405e14d4889",
+                    "roundId": "db26584d-9237-49a2-bcad-a68952cce2f5"
+                },
+                {
+                    "type": "CharacterStatChange",
+                    "amount": 0,
+                    "characterId": "c96c858d-c93f-4b55-ad66-e44340a7cd0f",
+                    "statId": "0bbec8fc-10b0-42c4-a55e-b5b22fe1748b",
+                    "id": "3300ff0a-3aae-4fe3-978f-417f36204978",
+                    "roundId": "db26584d-9237-49a2-bcad-a68952cce2f5"
+                },
+                {
+                    "type": "CharacterStatChange",
+                    "amount": 0,
+                    "characterId": "c96c858d-c93f-4b55-ad66-e44340a7cd0f",
+                    "statId": "a057c10a-886c-4c7a-9a11-e9e2d799440c",
+                    "id": "5055178a-8e50-4a56-8acd-2fb77a90187f",
+                    "roundId": "db26584d-9237-49a2-bcad-a68952cce2f5"
+                },
+                {
+                    "type": "CharacterStatChange",
+                    "amount": 0,
+                    "characterId": "c96c858d-c93f-4b55-ad66-e44340a7cd0f",
+                    "statId": "fdd71f08-65a3-48d6-a340-a7d52e3541f6",
+                    "id": "fb60e5fd-3e63-4c09-9390-abd47f33dccf",
                     "roundId": "db26584d-9237-49a2-bcad-a68952cce2f5"
                 }
             ],
@@ -290,8 +429,88 @@
             ]
         },
         "metadata": {
-            "isTemplate": true,
+            "isPublicTemplate": true,
             "isDemo": true
+        }
+    },
+    {
+        "entity": {
+            "id": "d0e6f343-61bf-4ce8-b465-4b2cc7be0daa",
+            "name": "Solaris",
+            "createdUtc": "2024-03-05T08:11:26.050Z",
+            "libVersion": "0.0.1",
+            "description": "",
+            "events": [
+                {
+                    "type": "RoundStarted",
+                    "id": "469284b1-0040-4196-91be-b968cd618365",
+                    "roundId": "00fffb68-997f-4e7a-ad6c-30da6104de0f"
+                }
+            ],
+            "monsters": [],
+            "items": [],
+            "actions": [],
+            "statuses": [],
+            "levelProgression": [
+                0,
+                50,
+                100,
+                200,
+                400
+            ],
+            "characterStatTypes": [
+                {
+                    "id": "ebf22ec8-ab00-422a-82a8-f2b428fd4976",
+                    "name": "Strength"
+                },
+                {
+                    "id": "cfb49531-d276-4c24-99c8-375d168e44e4",
+                    "name": "Intelligence"
+                },
+                {
+                    "id": "65029ae1-e962-4047-bec5-38858aea9dd3",
+                    "name": "Wisdom"
+                },
+                {
+                    "id": "5b73894c-7163-4d6a-9cac-fd3e9a2b37cc",
+                    "name": "Charisma"
+                },
+                {
+                    "id": "6cecd605-8090-4b7b-a311-9ec121ce5f3b",
+                    "name": "Dexterity"
+                },
+                {
+                    "id": "fb95c89e-ee39-4425-9aca-a04dba207eda",
+                    "name": "Constitution"
+                }
+            ],
+            "characterResourceTypes": [
+                {
+                    "id": "38824bb7-4ec4-47ba-bffb-9ba9584c998a",
+                    "name": "Movement Speed",
+                    "defaultMax": 35
+                }
+            ],
+            "characterEquipmentSlots": [
+                {
+                    "id": "4a0479d1-8ab5-4677-9bea-7d69d53a6d0e",
+                    "eligibleEquipmentTypes": [
+                        "OneHandSword"
+                    ],
+                    "name": "Main hand"
+                }
+            ],
+            "classes": [
+                {
+                    "id": "5913b666-e2b2-4d59-9b32-191989b5b1f6",
+                    "levelProgression": [],
+                    "name": "Bard"
+                }
+            ]
+        },
+        "metadata": {
+            "isPublicTemplate": true,
+            "isDemo": false
         }
     }
 ]

@@ -4,6 +4,7 @@ import { ReactNode, useState } from "react";
 import { Badge } from "./badge";
 
 type Tab = {
+  id: string;
   label: string;
   content: ReactNode;
   defaultSelected?: boolean;
@@ -26,6 +27,7 @@ const defaultRender = (
 ) => {
   return (
     <Badge
+      key={tab.label}
       onClick={() => onClick(tab)}
       variant={isSelected ? "tab-selected" : "tab"}
     >

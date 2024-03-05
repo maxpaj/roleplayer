@@ -10,3 +10,11 @@ export async function getWorld(id: string) {
 export async function deleteWorld(id: string) {
   await memoryWorldRepository.deleteWorld(id);
 }
+
+export async function unpublishWorld(id: string) {
+  await memoryWorldRepository.setWorldPublicVisibility(id, false);
+}
+
+export async function publishWorld(id: string) {
+  await memoryWorldRepository.setWorldPublicVisibility(id, true);
+}

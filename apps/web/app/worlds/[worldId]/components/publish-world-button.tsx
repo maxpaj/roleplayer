@@ -12,39 +12,41 @@ import {
 } from "@/components/ui/dialog";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
-import { deleteWorld } from "../actions";
-import { useRouter } from "next/navigation";
+import { publishWorld } from "../actions";
 import { Paragraph } from "@/components/ui/typography";
 
-export function DeleteWorldButton({ worldId }: { worldId: string }) {
+export function PublishWorldButton({ worldId }: { worldId: string }) {
   const [confirm, setConfirm] = useState("");
-  const router = useRouter();
+  const [open, setOpen] = useState(false);
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="destructive-outlined">Delete world</Button>
+        <Button variant="outline" onClick={() => setOpen(true)}>
+          Publish world
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Delete world</DialogTitle>
+          <DialogTitle>Publish world</DialogTitle>
           <DialogDescription>
-            Are you sure you want to permanently delete {worldId}?
+            Are you sure you want to share {worldId} with the public?
           </DialogDescription>
         </DialogHeader>
+
         <Paragraph>Type the name of the world below</Paragraph>
         <Input
           placeholder={worldId}
           value={confirm}
           onChange={(e) => setConfirm(e.target.value)}
         />
+
         <DialogFooter>
           <Button
             disabled={confirm !== worldId}
-            variant="destructive"
             onClick={async () => {
-              await deleteWorld(worldId);
-              router.push("/");
+              await publishWorld(worldId);
+              setOpen(false);
             }}
           >
             Confirm

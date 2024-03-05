@@ -72,7 +72,7 @@ export function Paragraph({
   return (
     <p
       className={cn(
-        `text-sm leading-7 [&:not(:first-child)]:mt-3 mb-2`,
+        `text-sm leading-2 [&:not(:first-child)]:mt-3 mb-2`,
         className
       )}
     >

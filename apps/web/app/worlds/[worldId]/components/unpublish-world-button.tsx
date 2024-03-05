@@ -12,26 +12,28 @@ import {
 } from "@/components/ui/dialog";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
-import { deleteWorld } from "../actions";
+import { unpublishWorld } from "../actions";
 import { useRouter } from "next/navigation";
 import { Paragraph } from "@/components/ui/typography";
 
-export function DeleteWorldButton({ worldId }: { worldId: string }) {
+export function UnpublishWorldButton({ worldId }: { worldId: string }) {
   const [confirm, setConfirm] = useState("");
   const router = useRouter();
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="destructive-outlined">Delete world</Button>
+        <Button variant="outline">Unpublish world</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Delete world</DialogTitle>
+          <DialogTitle>Unpublish world</DialogTitle>
           <DialogDescription>
-            Are you sure you want to permanently delete {worldId}?
+            Are you sure you want to unpublish {worldId}? This will revoke any
+            access to campaigns currently running within this world.
           </DialogDescription>
         </DialogHeader>
+
         <Paragraph>Type the name of the world below</Paragraph>
         <Input
           placeholder={worldId}
@@ -43,7 +45,7 @@ export function DeleteWorldButton({ worldId }: { worldId: string }) {
             disabled={confirm !== worldId}
             variant="destructive"
             onClick={async () => {
-              await deleteWorld(worldId);
+              await unpublishWorld(worldId);
               router.push("/");
             }}
           >

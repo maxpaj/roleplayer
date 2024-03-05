@@ -4,13 +4,14 @@ import { EntityRecord, JSONEntityStorage } from "./json-storage";
 import { generateId } from "@repo/rp-lib";
 import { WorldEventWithRound } from "@repo/rp-lib";
 
-type WorldMetadata = { isDemo: boolean; isTemplate: boolean };
+export type WorldMetadata = { isPublicTemplate: boolean; isDemo: boolean };
+export type WorldStorageType = EntityRecord<World, WorldMetadata>;
 
 export interface IWorldRepository {
-  getAll(): Promise<EntityRecord<World, WorldMetadata>[]>;
+  getAll(): Promise<WorldStorageType[]>;
   deleteWorld(worldId: World["id"]): Promise<void>;
   createWorld(name: string): Promise<World>;
-  getWorld(worldId: World["id"]): Promise<World | undefined>;
+  getWorld(worldId: World["id"]): Promise<WorldStorageType>;
   createCharacter(worldId: World["id"], name: string): Promise<Character["id"]>;
   publishEvent(
     worldId: World["id"],
@@ -22,6 +23,18 @@ export class MemoryWorldRepository
   extends JSONEntityStorage<World, WorldMetadata>
   implements IWorldRepository
 {
+  async setWorldPublicVisibility(worldId: World["id"], isVisible: boolean) {
+    const worlds = await this.getAll();
+    const worldData = worlds.find((c) => c.entity.id === worldId);
+    if (!worldData) {
+      throw new Error("World not found");
+    }
+
+    const { metadata } = worldData;
+    metadata.isPublicTemplate = isVisible;
+    await this.write(worlds);
+  }
+
   async updateCharacter(
     worldId: World["id"],
     characterId: Character["id"],
@@ -84,7 +97,7 @@ export class MemoryWorldRepository
   }
 
   async getCharacter(worldId: World["id"], characterId: Character["id"]) {
-    const world = await this.getWorld(worldId);
+    const { entity: world } = await this.getWorld(worldId);
     if (!world) {
       throw new Error("World not found");
     }
@@ -127,7 +140,7 @@ export class MemoryWorldRepository
 
   async getTemplateWorlds(): Promise<World[]> {
     const all = await this.getAll();
-    return all.filter((w) => w.metadata.isTemplate).map((w) => w.entity);
+    return all.filter((w) => w.metadata.isPublicTemplate).map((w) => w.entity);
   }
 
   async createWorld(name: string) {
@@ -137,7 +150,7 @@ export class MemoryWorldRepository
     const worlds = await this.read();
     this.write([
       ...worlds,
-      { entity: world, metadata: { isTemplate: false, isDemo: false } },
+      { entity: world, metadata: { isPublicTemplate: false, isDemo: false } },
     ]);
     return world;
   }
@@ -165,7 +178,7 @@ export class MemoryWorldRepository
 
     world.applyEvents();
 
-    return world;
+    return entityData;
   }
 }
 

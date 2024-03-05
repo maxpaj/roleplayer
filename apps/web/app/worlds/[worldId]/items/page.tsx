@@ -1,10 +1,9 @@
+import { ButtonLink } from "@/components/ui/button-link";
 import { Separator } from "@/components/ui/separator";
 import { H3, Paragraph } from "@/components/ui/typography";
-import { MonsterCard } from "./components/monster-card";
-import { ButtonLink } from "@/components/ui/button-link";
 import { getWorld } from "../actions";
 
-export default async function MonstersPage({
+export default async function ItemsPage({
   params,
 }: {
   params: { worldId: string };
@@ -14,19 +13,15 @@ export default async function MonstersPage({
 
   return (
     <>
-      <H3>Monsters</H3>
+      <H3>Items</H3>
       <Separator className="my-3" />
 
-      {world.monsters.length === 0 && (
+      {world.items.length === 0 && (
         <Paragraph>It's empty! No items added yet.</Paragraph>
       )}
 
-      {world.monsters.map((m) => (
-        <MonsterCard monster={m} />
-      ))}
-
       <ButtonLink variant="outline" href={`/worlds/${world.id}/monsters`}>
-        Create monster
+        Create item
       </ButtonLink>
     </>
   );

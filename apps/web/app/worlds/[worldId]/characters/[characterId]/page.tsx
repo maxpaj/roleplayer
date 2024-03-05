@@ -20,14 +20,14 @@ export default async function CharacterPage({
     characterUpdate: Partial<Character>
   ) {
     "use server";
-    const world = await memoryWorldRepository.getWorld(worldId);
+    const { entity: world } = await memoryWorldRepository.getWorld(worldId);
     world.setCharacterClasses(characterId, characterUpdate.classes!);
     world.setCharacterStats(characterId, characterUpdate.stats!);
     await memoryWorldRepository.saveWorld(world);
   }
 
   const { characterId, worldId } = params;
-  const world = await getWorld(worldId);
+  const { entity: world } = await getWorld(worldId);
   if (!world) {
     throw new Error("Could not find world");
   }

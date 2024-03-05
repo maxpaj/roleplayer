@@ -70,7 +70,12 @@ export function Paragraph({
   children,
 }: HTMLProps<HTMLParagraphElement>) {
   return (
-    <p className={cn(`leading-7 [&:not(:first-child)]:mt-6`, className)}>
+    <p
+      className={cn(
+        `text-sm leading-7 [&:not(:first-child)]:mt-3 mb-2`,
+        className
+      )}
+    >
       {children}
     </p>
   );

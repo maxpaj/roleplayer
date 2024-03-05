@@ -16,7 +16,7 @@ const badgeVariants = cva(
           "border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80",
         outline: "text-foreground",
         "tab-selected":
-          "cursor-pointer rounded-full px-4 py-2 transition-colors hover:text-primary font-medium text-primary",
+          "cursor-pointer rounded-full px-4 py-2 transition-colors hover:text-primary-foreground bg-primary font-medium text-primary-foreground",
         tab: "border-none cursor-pointer text-foreground px-4 py-2",
       },
     },

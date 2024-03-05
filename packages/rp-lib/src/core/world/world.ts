@@ -11,13 +11,18 @@ import {
   LevelExperience,
   isCharacterEvent,
 } from "../character/character";
-import { Interaction } from "../interaction/interaction";
+import { ElementType, EffectType } from "../interaction/effect";
+import { Interaction, TargetType } from "../interaction/interaction";
 import { Status } from "../interaction/status";
 import {
   EquipmentSlotDefinition as EquipmentSlotDefinition,
   Item,
   ItemEquipmentType,
+  ItemSlot,
+  ItemType,
+  Rarity,
 } from "../item/item";
+import { WorldMap } from "../map/map";
 import { Monster } from "../monster/monster";
 import { WorldEvent, WorldEventWithRound } from "./world-events";
 import { WorldState } from "./world-state";
@@ -34,10 +39,40 @@ export class World {
   createdUtc: Date;
   libVersion: Version;
   description: string;
-
   events: WorldEventWithRound[] = [];
-  monsters: Monster[] = [];
-  items: Item[] = [];
+  monsters: Monster[] = [
+    {
+      id: generateId(),
+      name: "Bandit",
+    },
+  ];
+  maps: WorldMap[] = [];
+  items: Item[] = [
+    {
+      id: generateId(),
+      rarity: Rarity.Uncommon,
+      actions: [
+        {
+          id: generateId(),
+          appliesEffects: [
+            {
+              element: ElementType.Slashing,
+              type: EffectType.HealthLoss,
+              amountStatic: 2,
+              amountVariable: 0,
+            },
+          ],
+          eligibleTargets: [TargetType.Hostile],
+          name: "Slash",
+          rangeDistanceMeters: 5,
+          requiresResources: [],
+        },
+      ],
+      name: "Short Sword +1",
+      occupiesSlots: [ItemSlot.MainHand],
+      type: ItemType.Equipment,
+    },
+  ];
   actions: Interaction[] = [];
   statuses: Status[] = [];
   levelProgression: LevelExperience[] = [0, 50, 100, 200, 400];

@@ -44,6 +44,7 @@ export type Item = {
   name: string;
   type: ItemType;
   rarity: Rarity;
+  description: string;
 
   /**
    * Actions available for the item.

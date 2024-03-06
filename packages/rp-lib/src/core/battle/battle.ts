@@ -10,10 +10,10 @@ export type Round = {
 };
 
 export class BattleCharacter {
-  public characterId!: Id;
-  public initiative!: number;
+  characterId!: Id;
+  initiative!: number;
 
-  public constructor(init?: Partial<BattleCharacter>) {
+  constructor(init?: Partial<BattleCharacter>) {
     Object.assign(this, init);
   }
 
@@ -25,14 +25,11 @@ export function getCharacterInitiative(c: Character) {
 }
 
 export class Battle {
-  public id: Id;
-  public name: string;
-  public characters: BattleCharacter[];
+  id: Id;
+  name: string;
+  characters: BattleCharacter[];
 
-  public constructor(
-    name: string = "New battle",
-    characters: BattleCharacter[] = []
-  ) {
+  constructor(name: string = "New battle", characters: BattleCharacter[] = []) {
     this.id = generateId();
     this.name = name;
     this.characters = characters;

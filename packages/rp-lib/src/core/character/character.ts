@@ -78,7 +78,7 @@ export type CharacterEquipmentSlot = {
   slotId: string;
 };
 
-type Reaction = {
+export type Reaction = {
   id: Id;
   name: string;
   type: ReactionEventType;
@@ -91,7 +91,7 @@ export enum ReactionEventType {
   OnDodge = "OnDodge",
 }
 
-type ReactionResource = {
+export type ReactionResource = {
   reactionId: Id;
   targetId: Id;
 };
@@ -107,55 +107,49 @@ export type CharacterStat = {
 };
 
 export class Character {
-  public id!: Id;
-  public party!: Id;
-  public isPlayerControlled!: boolean;
-  public exists!: boolean;
+  id!: Id;
+  party!: Id;
+  isPlayerControlled!: boolean;
+  exists!: boolean;
 
-  public name!: string;
-  public playerName!: string;
-  public imageUrl!: string;
+  name!: string;
+  description!: string;
+  playerName!: string;
+  imageUrl!: string;
 
-  public xp!: number;
-  public race!: Race;
-  public gold!: number;
-  public faction!: string;
-  public background!: string;
-  public alignment!: Alignment;
-  public maximumHealth!: number;
+  alignment!: Alignment;
 
-  public baseArmorClass!: number;
-  public armorClass!: number;
-  public stats!: CharacterStat[];
+  xp!: number;
+  race!: Race;
+  gold!: number;
 
-  public classes!: CharacterClass[];
-  public statuses!: Status[];
-  public inventory!: Item[];
-  public equipment!: CharacterEquipmentSlot[];
-  public actions!: Interaction[];
-  public position!: Position;
+  baseArmorClass!: number;
+  armorClass!: number;
+  stats: CharacterStat[] = [];
+
+  classes: CharacterClass[] = [];
+  statuses: Status[] = [];
+  inventory: Item[] = [];
+  equipment: CharacterEquipmentSlot[] = [];
+  actions: Interaction[] = [];
+  position!: Position;
+
+  maximumHealth!: number;
 
   // TODO: Should these be inherited from the first class the character gains?
-  public spellCastingAbilityStatId!: CharacterStatType["id"];
-  public abilityModifierStatId!: CharacterStatType["id"];
+  spellCastingAbilityStatId!: CharacterStatType["id"];
+  abilityModifierStatId!: CharacterStatType["id"];
 
   // Temporary resources
-  public resourcesCurrent!: CharacterResource[];
-  public resourcesMax!: CharacterResource[];
+  resourcesCurrent: CharacterResource[] = [];
+  resourcesMax: CharacterResource[] = [];
 
-  public currentHealth!: number;
-  public temporaryHealth!: number;
-  public reactionsRemaining!: ReactionResource[];
-  public reactions!: Reaction[];
+  currentHealth!: number;
+  temporaryHealth!: number;
+  reactionsRemaining: ReactionResource[] = [];
+  reactions: Reaction[] = [];
 
-  public constructor(world: World, init?: Partial<Character>) {
-    this.statuses = [];
-    this.inventory = [];
-    this.equipment = [];
-    this.actions = [];
-    this.classes = [];
-    this.stats = [];
-
+  constructor(world: World, init?: Partial<Character>) {
     this.reactionsRemaining = [];
     this.resourcesCurrent = world.characterResourceTypes.map((cr) => ({
       amount: cr.defaultMax || 0,

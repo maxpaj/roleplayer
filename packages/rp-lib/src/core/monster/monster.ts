@@ -4,24 +4,33 @@ import { CharacterResource, Position } from "../character/character";
 import { Status } from "../interaction/status";
 
 export class Monster {
-  id!: Id;
-  name!: string;
-  actions!: Interaction[];
+  definition!: MonsterDefinition;
   party!: Id;
-  imageUrl!: string;
-  baseArmorClass!: number;
+
   armorClass!: number;
   statuses!: Status[];
   position!: Position;
 
-  maximumHealth!: number;
   currentHealth!: number;
   temporaryHealth!: number;
 
   resourcesCurrent!: CharacterResource[];
   resourcesMax!: CharacterResource[];
 
-  constructor(world: World, init?: Partial<Monster>) {
+  constructor(world: World, init?: Partial<Monster>) {}
+}
+
+export class MonsterDefinition {
+  id!: Id;
+  name!: string;
+  description!: string;
+
+  actions!: Interaction[];
+  imageUrl!: string;
+  baseArmorClass!: number;
+  maximumHealth!: number;
+
+  constructor(world: World, init?: Partial<MonsterDefinition>) {
     Object.assign(this, init);
   }
 }

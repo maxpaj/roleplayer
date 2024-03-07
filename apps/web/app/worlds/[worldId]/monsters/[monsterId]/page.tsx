@@ -1,3 +1,3 @@
-export default function MonsterPage() {
-  return <></>;
+export default function MonsterDetailsPage() {
+  return <>Monster details page</>;
 }

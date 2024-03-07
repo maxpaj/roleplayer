@@ -27,9 +27,9 @@ export default function Home() {
           want
         </Lead>
         <div className="flex gap-2">
-          <ButtonLink href={"/worlds"}>Create your world</ButtonLink>
-          <ButtonLink variant="outline" href={"/demos"}>
-            Play demo
+          <ButtonLink href={"/demos"}>Play demo</ButtonLink>
+          <ButtonLink variant="outline" href={"/worlds"}>
+            Create your world
           </ButtonLink>
         </div>
       </div>

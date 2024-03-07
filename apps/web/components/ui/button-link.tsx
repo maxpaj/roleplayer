@@ -5,20 +5,23 @@ import { buttonVariants } from "./button";
 import { ReactNode } from "react";
 import { badgeVariants } from "./badge";
 import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 type ButtonLinkProps = {
   children: ReactNode;
   href: string;
   variant?: "outline" | "default";
+  className?: string;
 };
 
 export function ButtonLink({
+  className = "",
   children,
   variant = "default",
   href,
 }: ButtonLinkProps) {
   return (
-    <Link className={buttonVariants({ variant })} href={href}>
+    <Link className={cn(buttonVariants({ variant }), className)} href={href}>
       {children}
     </Link>
   );

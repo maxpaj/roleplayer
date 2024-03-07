@@ -1,4 +1,4 @@
-import { H3, H4, Muted } from "@/components/ui/typography";
+import { H3, H5, Muted } from "@/components/ui/typography";
 import { getWorld } from "../actions";
 import { DeleteWorldButton } from "../components/delete-world-button";
 import { PublishWorldButton } from "../components/publish-world-button";
@@ -18,7 +18,7 @@ export default async function SettingsPage({
       <H3>Settings</H3>
       <Separator className="my-3" />
 
-      <H4>Publish world</H4>
+      <H5>Publish world</H5>
       <Muted className="my-2">
         Sharing your world with others will allow others to play campaigns in
         your world
@@ -27,7 +27,7 @@ export default async function SettingsPage({
       {!metadata.isPublicTemplate && <PublishWorldButton worldId={world.id} />}
       {metadata.isPublicTemplate && <UnpublishWorldButton worldId={world.id} />}
 
-      <H4 className="my-2">Delete world</H4>
+      <H5 className="my-2">Delete world</H5>
       <DeleteWorldButton worldId={world.id} />
     </>
   );

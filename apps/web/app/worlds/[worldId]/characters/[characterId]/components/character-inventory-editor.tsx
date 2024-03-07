@@ -16,7 +16,7 @@ export function CharacterInventoryEditor({
   return (
     <>
       {character.inventory.map((item) => {
-        return <ItemCard item={item} />;
+        return <ItemCard key={item.id} worldId={world.id} item={item} />;
       })}
     </>
   );

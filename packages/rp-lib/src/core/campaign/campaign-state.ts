@@ -1,25 +1,25 @@
 import { Id } from "../../lib/generate-id";
 import { Battle, Round } from "../battle/battle";
 import { Character, isCharacterEvent } from "../character/character";
-import { World } from "./world";
-import { WorldEventType, WorldEventWithRound } from "./world-events";
+import { Campaign } from "./campaign";
+import { CampaignEventType, CampaignEventWithRound } from "./campaign-events";
 
 /**
- * Represent a world state, where all world events have been processed and applied to the world, characters, etc.
+ * Represent a campaign state, where all campaign events have been processed and applied to the campaign, characters, etc.
  */
-export class WorldState {
+export class CampaignState {
   battles: Battle[];
   rounds: Round[];
   characters: Character[];
-  world: World;
+  campaign: Campaign;
 
   constructor(
-    world: World,
+    campaign: Campaign,
     battles: Battle[] = [],
     rounds: Round[] = [],
     characters: Character[] = []
   ) {
-    this.world = world;
+    this.campaign = campaign;
     this.battles = battles;
     this.rounds = rounds;
     this.characters = characters;
@@ -28,9 +28,9 @@ export class WorldState {
   characterHasRoundEvent(
     round: Round,
     characterId: Id,
-    type: WorldEventType["type"]
+    type: CampaignEventType["type"]
   ) {
-    const roundCharacterEvents = this.world.getCharacterRoundEvents(
+    const roundCharacterEvents = this.campaign.getCharacterRoundEvents(
       round,
       characterId
     );
@@ -43,7 +43,7 @@ export class WorldState {
     );
   }
 
-  allCharactersHaveActed(events: WorldEventWithRound[]) {
+  allCharactersHaveActed(events: CampaignEventWithRound[]) {
     const round = this.rounds[this.rounds.length - 1];
     if (!round) {
       throw new Error("Could not get current round");

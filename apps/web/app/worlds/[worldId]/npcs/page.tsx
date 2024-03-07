@@ -1,6 +1,6 @@
 import { ButtonLink } from "@/components/ui/button-link";
-import { H3, Muted, Paragraph } from "@/components/ui/typography";
-import { CharacterCard } from "../characters/components/character-card";
+import { H3, Muted } from "@/components/ui/typography";
+import { CharacterCard } from "@/components/character-card";
 import { Separator } from "@/components/ui/separator";
 import { getWorld } from "../actions";
 
@@ -11,7 +11,6 @@ export default async function NpcPage({
 }) {
   const { worldId: id } = params;
   const { entity: world } = await getWorld(id);
-  const worldData = world.applyEvents();
 
   return (
     <>
@@ -22,29 +21,27 @@ export default async function NpcPage({
       </Muted>
       <Separator className="my-3" />
 
-      {worldData.characters.length === 0 && (
-        <Paragraph className="my-4">
-          It's empty! No characters added yet.
-        </Paragraph>
-      )}
-
-      {worldData.characters.length > 0 && (
-        <div className="flex gap-2 mb-4">
-          {worldData.characters.map((character) => (
-            <CharacterCard
-              key={character.id}
-              worldId={world.id}
-              character={character}
-            />
-          ))}
-        </div>
+      {world.characters.length === 0 && (
+        <Muted className="my-4">It's empty! No characters added yet.</Muted>
       )}
 
       <div className="flex gap-2">
-        <ButtonLink variant="outline" href={`/worlds/${world.id}/characters`}>
-          Create character
-        </ButtonLink>
+        {world.characters.map((character) => (
+          <CharacterCard
+            key={character.id}
+            worldId={world.id}
+            character={character}
+          />
+        ))}
       </div>
+
+      <ButtonLink
+        className="my-2"
+        variant="outline"
+        href={`/worlds/${world.id}/characters`}
+      >
+        Create character
+      </ButtonLink>
     </>
   );
 }

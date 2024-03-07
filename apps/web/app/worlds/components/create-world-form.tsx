@@ -1,16 +1,16 @@
-import { memoryWorldRepository } from "../../../storage/world-repository";
 import z from "zod";
 import { redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Combobox } from "@/components/ui/combobox";
+import { jsonWorldRepository } from "storage/json/json-world-repository";
 
 const validateWorldFormSchema = z.object({
   name: z.string().min(1),
 });
 
 async function getTemplateWorlds() {
-  return memoryWorldRepository.getTemplateWorlds();
+  return jsonWorldRepository.getTemplateWorlds();
 }
 
 export async function CreateWorldForm() {
@@ -24,7 +24,7 @@ export async function CreateWorldForm() {
       throw new Error("World name missing");
     }
 
-    const stored = await memoryWorldRepository.createWorld(
+    const stored = await jsonWorldRepository.createWorld(
       validationResult.data.name
     );
 

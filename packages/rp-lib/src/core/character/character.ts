@@ -4,12 +4,12 @@ import { Item } from "../item/item";
 import { Status } from "../interaction/status";
 import { roll } from "../dice/dice";
 import { Id } from "../../lib/generate-id";
-import { WorldEvent, WorldEventType } from "../world/world-events";
+import { CampaignEvent, CampaignEventType } from "../campaign/campaign-events";
 import { World } from "../world/world";
 
 export function isCharacterEvent(
-  event: WorldEvent
-): event is Extract<WorldEvent, { characterId: Character["id"] }> {
+  event: CampaignEvent
+): event is Extract<CampaignEvent, { characterId: Character["id"] }> {
   return (event as any).characterId !== undefined;
 }
 
@@ -63,7 +63,7 @@ export type CharacterResource = {
 };
 
 export type CharacterResourceGeneration = CharacterResource & {
-  onEvent: WorldEventType;
+  onEvent: CampaignEventType;
 };
 
 export type CharacterClass = {
@@ -82,7 +82,7 @@ export type Reaction = {
   id: Id;
   name: string;
   type: ReactionEventType;
-  eventType: WorldEventType["type"];
+  eventType: CampaignEventType["type"];
   interaction: Interaction;
 };
 

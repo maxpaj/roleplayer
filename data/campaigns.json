@@ -1,0 +1,231 @@
+[
+    {
+        "entity": {
+            "id": "00000000-0000-4cfd-93b2-78447e6413c7",
+            "name": "Demo D&D campaign",
+            "world": "00000000-d34b-4bc4-ab72-1bb84811b577",
+            "events": [
+                {
+                    "type": "RoundStarted",
+                    "id": "00000000-0000-4f46-a836-da2888b6e49f",
+                    "roundId": "bfe580e4-f1a5-4a1d-b745-a599b4f09080"
+                },
+                {
+                    "type": "CharacterSpawned",
+                    "characterId": "ac5d4d74-0184-45e5-8665-e851f2f91538",
+                    "id": "00000000-0000-4d04-8392-2087857c74a5",
+                    "roundId": "bfe580e4-f1a5-4a1d-b745-a599b4f09080"
+                },
+                {
+                    "type": "CharacterNameSet",
+                    "name": "Nisse",
+                    "characterId": "ac5d4d74-0184-45e5-8665-e851f2f91538",
+                    "id": "00000000-0000-46b8-9b9f-fde76c7e038c",
+                    "roundId": "bfe580e4-f1a5-4a1d-b745-a599b4f09080"
+                },
+                {
+                    "type": "CharacterExperienceSet",
+                    "experience": 0,
+                    "characterId": "ac5d4d74-0184-45e5-8665-e851f2f91538",
+                    "id": "00000000-0000-460e-b3d7-e0477db12723",
+                    "roundId": "bfe580e4-f1a5-4a1d-b745-a599b4f09080"
+                },
+                {
+                    "type": "CharacterBaseDefenseSet",
+                    "defense": 10,
+                    "characterId": "ac5d4d74-0184-45e5-8665-e851f2f91538",
+                    "id": "00000000-0000-4706-b3b2-b506d8c019e4",
+                    "roundId": "bfe580e4-f1a5-4a1d-b745-a599b4f09080"
+                },
+                {
+                    "type": "CharacterResourceMaxSet",
+                    "max": 10,
+                    "characterId": "ac5d4d74-0184-45e5-8665-e851f2f91538",
+                    "resourceId": "9f6e188b-25ea-4fbb-b852-76125567a0e8",
+                    "id": "00000000-0000-4c70-8388-73ca965434f6",
+                    "roundId": "bfe580e4-f1a5-4a1d-b745-a599b4f09080"
+                },
+                {
+                    "type": "CharacterStatChange",
+                    "amount": 0,
+                    "characterId": "ac5d4d74-0184-45e5-8665-e851f2f91538",
+                    "statId": "7e3eb82f-7fd3-40f3-b7bb-d56d87445e51",
+                    "id": "00000000-0000-4742-94a6-4be112f2bbe2",
+                    "roundId": "bfe580e4-f1a5-4a1d-b745-a599b4f09080"
+                },
+                {
+                    "type": "CharacterStatChange",
+                    "amount": 0,
+                    "characterId": "ac5d4d74-0184-45e5-8665-e851f2f91538",
+                    "statId": "b08c68c9-968d-45a2-b977-d35e5e4d5626",
+                    "id": "00000000-0000-4cfd-93b2-78447e6413c7",
+                    "roundId": "bfe580e4-f1a5-4a1d-b745-a599b4f09080"
+                },
+                {
+                    "type": "CharacterStatChange",
+                    "amount": 0,
+                    "characterId": "ac5d4d74-0184-45e5-8665-e851f2f91538",
+                    "statId": "60fd552c-c539-4609-92b6-0289023b6c0e",
+                    "id": "00000000-0000-42f2-84e3-d7efbaead59d",
+                    "roundId": "bfe580e4-f1a5-4a1d-b745-a599b4f09080"
+                },
+                {
+                    "type": "CharacterStatChange",
+                    "amount": 0,
+                    "characterId": "ac5d4d74-0184-45e5-8665-e851f2f91538",
+                    "statId": "914578bb-75c2-4146-ac78-f41b410d2756",
+                    "id": "00000000-0000-43ab-8fa1-38b27bbbf0bf",
+                    "roundId": "bfe580e4-f1a5-4a1d-b745-a599b4f09080"
+                },
+                {
+                    "type": "CharacterStatChange",
+                    "amount": 0,
+                    "characterId": "ac5d4d74-0184-45e5-8665-e851f2f91538",
+                    "statId": "da14f572-aaf7-41ac-98dc-29997b6aecd0",
+                    "id": "00000000-0000-4baf-b420-eba269ee410f",
+                    "roundId": "bfe580e4-f1a5-4a1d-b745-a599b4f09080"
+                },
+                {
+                    "type": "CharacterStatChange",
+                    "amount": 0,
+                    "characterId": "ac5d4d74-0184-45e5-8665-e851f2f91538",
+                    "statId": "e9495f04-02e3-4a0d-9b9d-8f997ceeccf1",
+                    "id": "00000000-0000-421e-bb08-bf523d0a6ab1",
+                    "roundId": "bfe580e4-f1a5-4a1d-b745-a599b4f09080"
+                },
+                {
+                    "characterId": "ac5d4d74-0184-45e5-8665-e851f2f91538",
+                    "id": "00000000-0000-4a92-bd3e-476477e1e106",
+                    "type": "CharacterClassReset",
+                    "roundId": "bfe580e4-f1a5-4a1d-b745-a599b4f09080"
+                },
+                {
+                    "type": "CharacterStatChange",
+                    "amount": 0,
+                    "characterId": "ac5d4d74-0184-45e5-8665-e851f2f91538",
+                    "statId": "7e3eb82f-7fd3-40f3-b7bb-d56d87445e51",
+                    "id": "00000000-0000-41f7-aec1-13c74d695d36",
+                    "roundId": "bfe580e4-f1a5-4a1d-b745-a599b4f09080"
+                },
+                {
+                    "type": "CharacterStatChange",
+                    "amount": 0,
+                    "characterId": "ac5d4d74-0184-45e5-8665-e851f2f91538",
+                    "statId": "b08c68c9-968d-45a2-b977-d35e5e4d5626",
+                    "id": "00000000-0000-4f3a-aae2-e4770fd67d50",
+                    "roundId": "bfe580e4-f1a5-4a1d-b745-a599b4f09080"
+                },
+                {
+                    "type": "CharacterStatChange",
+                    "amount": 0,
+                    "characterId": "ac5d4d74-0184-45e5-8665-e851f2f91538",
+                    "statId": "60fd552c-c539-4609-92b6-0289023b6c0e",
+                    "id": "00000000-0000-4f07-a00d-00474ee7882a",
+                    "roundId": "bfe580e4-f1a5-4a1d-b745-a599b4f09080"
+                },
+                {
+                    "type": "CharacterStatChange",
+                    "amount": 0,
+                    "characterId": "ac5d4d74-0184-45e5-8665-e851f2f91538",
+                    "statId": "914578bb-75c2-4146-ac78-f41b410d2756",
+                    "id": "00000000-0000-47ef-9840-5407561f6bfa",
+                    "roundId": "bfe580e4-f1a5-4a1d-b745-a599b4f09080"
+                },
+                {
+                    "type": "CharacterStatChange",
+                    "amount": 0,
+                    "characterId": "ac5d4d74-0184-45e5-8665-e851f2f91538",
+                    "statId": "da14f572-aaf7-41ac-98dc-29997b6aecd0",
+                    "id": "00000000-0000-4880-8f87-a0e6a5dc4800",
+                    "roundId": "bfe580e4-f1a5-4a1d-b745-a599b4f09080"
+                },
+                {
+                    "type": "CharacterStatChange",
+                    "amount": 0,
+                    "characterId": "ac5d4d74-0184-45e5-8665-e851f2f91538",
+                    "statId": "e9495f04-02e3-4a0d-9b9d-8f997ceeccf1",
+                    "id": "00000000-0000-401b-a959-002e15004e52",
+                    "roundId": "bfe580e4-f1a5-4a1d-b745-a599b4f09080"
+                },
+                {
+                    "characterId": "ac5d4d74-0184-45e5-8665-e851f2f91538",
+                    "id": "00000000-0000-4414-9928-b20d409ac11d",
+                    "type": "CharacterClassReset",
+                    "roundId": "bfe580e4-f1a5-4a1d-b745-a599b4f09080"
+                },
+                {
+                    "type": "CharacterStatChange",
+                    "amount": 0,
+                    "characterId": "ac5d4d74-0184-45e5-8665-e851f2f91538",
+                    "statId": "7e3eb82f-7fd3-40f3-b7bb-d56d87445e51",
+                    "id": "00000000-0000-44e4-b280-71eda1cfc544",
+                    "roundId": "bfe580e4-f1a5-4a1d-b745-a599b4f09080"
+                },
+                {
+                    "type": "CharacterStatChange",
+                    "amount": 0,
+                    "characterId": "ac5d4d74-0184-45e5-8665-e851f2f91538",
+                    "statId": "b08c68c9-968d-45a2-b977-d35e5e4d5626",
+                    "id": "00000000-0000-48ba-8661-bc4861f3cdc0",
+                    "roundId": "bfe580e4-f1a5-4a1d-b745-a599b4f09080"
+                },
+                {
+                    "type": "CharacterStatChange",
+                    "amount": 0,
+                    "characterId": "ac5d4d74-0184-45e5-8665-e851f2f91538",
+                    "statId": "60fd552c-c539-4609-92b6-0289023b6c0e",
+                    "id": "00000000-0000-40b3-8c9d-ac3f68cce39f",
+                    "roundId": "bfe580e4-f1a5-4a1d-b745-a599b4f09080"
+                },
+                {
+                    "type": "CharacterStatChange",
+                    "amount": 0,
+                    "characterId": "ac5d4d74-0184-45e5-8665-e851f2f91538",
+                    "statId": "914578bb-75c2-4146-ac78-f41b410d2756",
+                    "id": "00000000-0000-4a9e-a3a7-32eea6673e64",
+                    "roundId": "bfe580e4-f1a5-4a1d-b745-a599b4f09080"
+                },
+                {
+                    "type": "CharacterStatChange",
+                    "amount": 0,
+                    "characterId": "ac5d4d74-0184-45e5-8665-e851f2f91538",
+                    "statId": "da14f572-aaf7-41ac-98dc-29997b6aecd0",
+                    "id": "00000000-0000-4693-922a-684b2db4a6aa",
+                    "roundId": "bfe580e4-f1a5-4a1d-b745-a599b4f09080"
+                },
+                {
+                    "type": "CharacterStatChange",
+                    "amount": 0,
+                    "characterId": "ac5d4d74-0184-45e5-8665-e851f2f91538",
+                    "statId": "e9495f04-02e3-4a0d-9b9d-8f997ceeccf1",
+                    "id": "00000000-0000-44d4-92b0-29ec8eb034d7",
+                    "roundId": "bfe580e4-f1a5-4a1d-b745-a599b4f09080"
+                }
+            ]
+        },
+        "metadata": {
+            "description": "Join four adventurers, stuck in a forest, with no way out but to fight their way through one of the surrounding gnoll patrols.",
+            "createdUtc": "2024-03-07T08:32:00.000Z",
+            "isDemo": true
+        }
+    },
+    {
+        "entity": {
+            "id": "5b25cd4a-fe1b-49f7-9d59-4054b03c28a0",
+            "name": "A gnarly place",
+            "world": "d0e6f343-61bf-4ce8-b465-4b2cc7be0daa",
+            "adventurers": [],
+            "events": [
+                {
+                    "type": "RoundStarted",
+                    "id": "b8a1115e-a494-47cf-bb4c-7b22da432732",
+                    "roundId": "02a87d65-4dab-417e-9746-fb5fc3f02f05"
+                }
+            ]
+        },
+        "metadata": {
+            "isDemo": false,
+            "createdUtc": "2024-03-07T08:23:45.351Z"
+        }
+    }
+]

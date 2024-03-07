@@ -15,7 +15,8 @@ import {
   StatusDurationType,
   StatusType,
 } from "./status";
-import { WorldEvent } from "../world/world-events";
+import { CampaignEvent } from "../campaign/campaign-events";
+import { Campaign } from "../..";
 
 describe("interactions", () => {
   const frozenStatus: Status = {
@@ -69,9 +70,16 @@ describe("interactions", () => {
 
   it("should apply effects from being hit", () => {
     const world = new World({ name: "test" });
-    world.nextRound();
     world.statuses = [frozenStatus];
     world.items = [frostSword];
+
+    const equipmentSlot = {
+      eligibleEquipmentTypes: [ItemEquipmentType.OneHandSword],
+      id: generateId(),
+      name: "Main hand",
+    };
+
+    world.characterEquipmentSlots = [equipmentSlot];
 
     const action: Interaction = {
       id: generateId(),
@@ -92,25 +100,20 @@ describe("interactions", () => {
 
     world.actions = [action];
 
-    const equipmentSlot = {
-      eligibleEquipmentTypes: [ItemEquipmentType.OneHandSword],
-      id: generateId(),
-      name: "Main hand",
-    };
-
-    world.characterEquipmentSlots = [equipmentSlot];
+    const campaign = new Campaign({ name: "test", world });
+    campaign.nextRound();
 
     const attackerId = generateId();
     const defenderId = generateId();
 
-    world.createCharacter(attackerId, "Attacker");
-    world.addCharacterEquipmentSlot(attackerId, equipmentSlot.id);
-    world.addCharacterItem(attackerId, frostSword.id);
+    campaign.createCharacter(attackerId, "Attacker");
+    campaign.addCharacterEquipmentSlot(attackerId, equipmentSlot.id);
+    campaign.addCharacterItem(attackerId, frostSword.id);
 
-    world.createCharacter(defenderId, "Defender");
-    world.nextRound();
+    campaign.createCharacter(defenderId, "Defender");
+    campaign.nextRound();
 
-    const events: WorldEvent[] = [
+    const events: CampaignEvent[] = [
       {
         id: generateId(),
         type: "CharacterHealthSet",
@@ -119,17 +122,17 @@ describe("interactions", () => {
       },
     ];
 
-    world.publishWorldEvent(...events);
+    campaign.publishCampaignEvent(...events);
 
-    const beforeAttack = world.applyEvents();
+    const beforeAttack = campaign.applyEvents();
     const attacker = beforeAttack.characters.find((c) => c.id === attackerId);
     const defender = beforeAttack.characters.find((c) => c.id === defenderId);
     const actions = attacker!.getAvailableActions();
     const characterAction = actions.find((a) => a.name === "Slash");
 
-    world.performCharacterAttack(attacker!, 15, characterAction!, defender!);
+    campaign.performCharacterAttack(attacker!, 15, characterAction!, defender!);
 
-    const afterAttack = world.applyEvents();
+    const afterAttack = campaign.applyEvents();
     const defenderFromEvents = afterAttack.characters.find(
       (c) => c.id === defenderId
     );

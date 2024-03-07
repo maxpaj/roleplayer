@@ -12,6 +12,7 @@ export function Header() {
 
       <nav className="flex items-center gap-x-4">
         <Link href="/">Home</Link>
+        <Link href="/campaigns">Campaigns</Link>
         <Link href="/worlds">Worlds</Link>
         <ModeToggle />
       </nav>

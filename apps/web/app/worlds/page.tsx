@@ -1,12 +1,12 @@
 import { CreateWorldForm } from "./components/create-world-form";
 import { WorldCard } from "../../components/world-card";
-import { memoryWorldRepository } from "../../storage/world-repository";
 import { H2, Muted } from "@/components/ui/typography";
 import { Separator } from "@/components/ui/separator";
+import { jsonWorldRepository } from "storage/json/json-world-repository";
 
 async function getData() {
-  const worlds = await memoryWorldRepository.getAll();
-  return worlds.map((w) => w.entity);
+  const worlds = await jsonWorldRepository.getAll();
+  return worlds;
 }
 
 export default async function WorldsPage({}) {
@@ -26,7 +26,11 @@ export default async function WorldsPage({}) {
 
       <div className="my-2 flex gap-2">
         {worlds.map((world) => (
-          <WorldCard world={world} />
+          <WorldCard
+            key={world.entity.id}
+            world={world.entity}
+            metadata={world.metadata}
+          />
         ))}
       </div>
     </div>

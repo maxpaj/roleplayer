@@ -1,6 +1,7 @@
 import { getWorld } from "./actions";
-import { H2, Muted } from "@/components/ui/typography";
+import { H2 } from "@/components/ui/typography";
 import { BadgeLink, ButtonLink } from "@/components/ui/button-link";
+import { GitForkIcon } from "lucide-react";
 
 export default async function WorldLayout({
   params,
@@ -18,19 +19,21 @@ export default async function WorldLayout({
 
   return (
     <div>
-      <div className="flex flex-col gap-2">
-        <div className="flex justify-between gap-x-4 flex-wrap">
-          <H2>{world.name}</H2>
+      <div className="flex justify-between gap-x-4 flex-wrap mb-4">
+        <H2>{world.name}</H2>
+
+        <div className="flex gap-x-2">
+          <ButtonLink variant="outline" href={`/worlds/${world.id}/fork`}>
+            <GitForkIcon size={16} className="mr-2" /> Copy world
+          </ButtonLink>
 
           <ButtonLink href={`/worlds/${world.id}/campaigns/new`}>
             Start a new campaign
           </ButtonLink>
         </div>
-
-        <Muted className={"mb-4"}>{world.description}</Muted>
       </div>
 
-      <div className="flex mb-4 justify-between flex-wrap">
+      <div className="flex mb-8 justify-between flex-wrap">
         <div className="flex gap-1">
           <BadgeLink href={`/worlds/${world.id}`}>World</BadgeLink>
           <BadgeLink href={`/worlds/${world.id}/monsters`}>Monsters</BadgeLink>

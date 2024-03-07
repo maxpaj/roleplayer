@@ -7,18 +7,27 @@ import { World } from "@repo/rp-lib";
 import { Info } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import { WorldMetadata } from "storage/world-repository";
 import { RemoveFunctions } from "types/without-functions";
 
-type WorldEditorFormProps = { world: RemoveFunctions<World> };
+type WorldEditorFormProps = {
+  world: RemoveFunctions<World>;
+  metadata: WorldMetadata;
+};
 
-export function WorldEditorForm({ world }: WorldEditorFormProps) {
-  const [update, setUpdate] = useState(world);
+export function WorldEditorForm({ world, metadata }: WorldEditorFormProps) {
+  const [update, setUpdate] = useState({ entity: world, metadata });
 
   return (
     <div className="flex flex-col gap-2">
       <Input
-        value={update.name}
-        onChange={(e) => setUpdate({ ...update, name: e.target.value })}
+        value={update.entity.name}
+        onChange={(e) =>
+          setUpdate({
+            ...update,
+            entity: { ...update.entity, name: e.target.value },
+          })
+        }
         type="name"
         id="name"
         name="name"
@@ -28,8 +37,13 @@ export function WorldEditorForm({ world }: WorldEditorFormProps) {
       <Textarea
         id="story"
         name="story"
-        onChange={(e) => setUpdate({ ...update, description: e.target.value })}
-        value={update.description}
+        onChange={(e) =>
+          setUpdate({
+            ...update,
+            metadata: { ...update.metadata, description: e.target.value },
+          })
+        }
+        value={update.metadata.description}
         placeholder="Describe the world, the story, background, conflicts, factions, etc."
       />
 

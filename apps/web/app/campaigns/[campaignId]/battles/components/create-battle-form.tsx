@@ -1,10 +1,10 @@
 import { redirect } from "next/navigation";
-import { memoryWorldRepository } from "../../../../../../../storage/world-repository";
 import z from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { H2 } from "@/components/ui/typography";
 import { Separator } from "@/components/ui/separator";
+import { jsonCampaignRepository } from "storage/json/json-campaign-repository";
 
 const validateBattleFormSchema = z.object({
   name: z.string().min(1),
@@ -25,7 +25,7 @@ export function CreateBattleForm({ worldId }: CreateBattleFormProps) {
       throw new Error("Battle 'name' missing");
     }
 
-    const battleId = await memoryWorldRepository.createBattle(worldId);
+    const battleId = await jsonCampaignRepository.createBattle(worldId);
 
     return redirect(`/worlds/${worldId}/battles/${battleId}`);
   }

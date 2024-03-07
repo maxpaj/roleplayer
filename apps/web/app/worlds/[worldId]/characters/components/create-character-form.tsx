@@ -1,5 +1,6 @@
 import z from "zod";
-import { memoryWorldRepository } from "../../../../../storage/world-repository";
+
+import { jsonWorldRepository } from "storage/json/json-world-repository";
 import { redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -24,7 +25,7 @@ export function CreateCharacterForm({ worldId }: NewCharacterProps) {
       throw new Error("Character 'name' missing");
     }
 
-    const characterId = await memoryWorldRepository.createCharacter(
+    const characterId = await jsonWorldRepository.createCharacter(
       worldId,
       validationResult.data.name
     );

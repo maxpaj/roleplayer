@@ -1,5 +1,5 @@
 import { ButtonLink } from "@/components/ui/button-link";
-import { H3, Paragraph } from "@/components/ui/typography";
+import { H3, Muted } from "@/components/ui/typography";
 import { getWorld } from "../actions";
 import { Separator } from "@/components/ui/separator";
 
@@ -17,7 +17,7 @@ export default async function MapsPage({
       <Separator className="my-3" />
 
       {world.maps.length === 0 && (
-        <Paragraph className="my-4">It's empty! No maps added yet.</Paragraph>
+        <Muted className="my-4">It's empty! No maps added yet.</Muted>
       )}
 
       <ButtonLink variant="outline" href={`/worlds/${world.id}/maps`}>

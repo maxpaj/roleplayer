@@ -1,25 +1,20 @@
-import { Id } from "../../lib/generate-id";
-import { Battle, Round } from "../battle/battle";
+import { Id, Round, Battle, Character, Interaction, Item, Clazz } from "../..";
 import {
-  Character,
   CharacterResourceType,
   CharacterStatType,
-  Clazz,
   Position,
 } from "../character/character";
-import { Interaction } from "../interaction/interaction";
-import { Item } from "../item/item";
 
-export type WorldEvent = WorldEventType & {
+export type CampaignEvent = CampaignEventType & {
   id: Id;
 };
 
-export type WorldEventWithRound = WorldEvent & {
+export type CampaignEventWithRound = CampaignEvent & {
   roundId: Round["id"];
   battleId?: Battle["id"];
 };
 
-export type WorldEventType =
+export type CampaignEventType =
   | { type: "Unknown" }
   | { type: "RoundStarted" }
   | { type: "RoundEnded" }

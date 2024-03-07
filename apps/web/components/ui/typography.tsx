@@ -65,6 +65,19 @@ export function H4({
   );
 }
 
+export function H5({
+  className = "",
+  children,
+}: HTMLProps<HTMLHeadingElement>) {
+  return (
+    <h5
+      className={cn(`scroll-m-20 font-semibold tracking-tight mb-2`, className)}
+    >
+      {children}
+    </h5>
+  );
+}
+
 export function Paragraph({
   className = "",
   children,

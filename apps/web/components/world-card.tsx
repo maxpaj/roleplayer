@@ -1,29 +1,19 @@
 import Link from "next/link";
 import { World } from "@repo/rp-lib";
-import { H3, Muted } from "./ui/typography";
+import { WorldMetadata } from "storage/world-repository";
+import { Card, CardDescription, CardHeader, CardTitle } from "./ui/card";
 
-type WorldCardProps = { world: World };
+type WorldCardProps = { world: World; metadata: WorldMetadata };
 
-export function WorldCard({ world }: WorldCardProps) {
-  const worldData = world.applyEvents();
-
+export function WorldCard({ world, metadata }: WorldCardProps) {
   return (
     <Link href={`/worlds/${world.id}`}>
-      <div className="border border-slate-500 p-3 hover-border-slate-100">
-        <H3>{world.name}</H3>
-        <Muted>
-          {worldData.rounds.length > 0 && (
-            <>Played for {worldData.rounds.length} rounds</>
-          )}
-          {worldData.rounds.length === 0 && <>Not started</>}
-        </Muted>
-        <Muted>
-          {worldData.characters.length > 0 && (
-            <>{worldData.characters.length} characters</>
-          )}
-          {worldData.characters.length === 0 && <>No character created yet</>}
-        </Muted>
-      </div>
+      <Card className="w-[200px] h-[150px] overflow-hidden">
+        <CardHeader className="p-2">
+          <CardTitle className={"text-md"}>{world.name}</CardTitle>
+          <CardDescription>{metadata.description}</CardDescription>
+        </CardHeader>
+      </Card>
     </Link>
   );
 }

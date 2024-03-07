@@ -117,9 +117,9 @@ export class JSONWorldRepository
     await this.write(entities);
   }
 
-  async getWorld(id: World["id"]) {
+  async getWorld(worldId: World["id"]) {
     const entities = await this.getAll();
-    const entityData = entities.find((c) => c.entity.id === id);
+    const entityData = entities.find((c) => c.entity.id === worldId);
     if (!entityData) {
       throw new Error("World not found");
     }

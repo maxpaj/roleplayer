@@ -4,6 +4,8 @@ import { CharacterResource, Position } from "../character/character";
 import { Status } from "../interaction/status";
 
 export class Monster {
+  id!: Id;
+
   definition!: MonsterDefinition;
   party!: Id;
 

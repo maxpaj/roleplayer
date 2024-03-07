@@ -2,7 +2,7 @@
     {
         "entity": {
             "id": "00000000-d34b-4bc4-ab72-1bb84811b577",
-            "name": "D&D",
+            "name": "Dungeons & Dragons",
             "libVersion": "0.0.1",
             "monsters": [
                 {
@@ -770,6 +770,76 @@
             "createdUtc": "2024-03-07T08:45:30.546Z",
             "imageUrl": "",
             "description": "A detailed old school solo/co-op dungeon crawl with heavy RPG elements, lots of dungeon tiles, monsters, loot and replayability."
+        }
+    },
+    {
+        "entity": {
+            "id": "1efff7f0-fd5f-4bc2-92ba-4758674ba7d1",
+            "name": "Coriolis - The Third Horizon",
+            "libVersion": "0.0.0",
+            "monsters": [],
+            "maps": [],
+            "items": [],
+            "characters": [],
+            "actions": [],
+            "statuses": [],
+            "levelProgression": [
+                0,
+                50,
+                100,
+                200,
+                400
+            ],
+            "characterStatTypes": [
+                {
+                    "id": "74822a97-623b-4c3b-83fe-8e017882349f",
+                    "name": "Strength"
+                },
+                {
+                    "id": "f9a92fdf-bcdb-457f-a45d-e5af8febfea3",
+                    "name": "Intelligence"
+                },
+                {
+                    "id": "439508d9-a87c-4632-be2e-c5a936c0ae81",
+                    "name": "Wisdom"
+                },
+                {
+                    "id": "df7723e3-7196-4b9c-8934-e723a8010a25",
+                    "name": "Charisma"
+                },
+                {
+                    "id": "aeed7b1e-4155-4739-a471-dc22ba82a189",
+                    "name": "Dexterity"
+                },
+                {
+                    "id": "58df1c00-9487-4b17-ad59-68cccd511a29",
+                    "name": "Constitution"
+                }
+            ],
+            "characterResourceTypes": [
+                {
+                    "id": "1082a9bb-f700-4c49-86d2-c85db6f86373",
+                    "name": "Movement Speed",
+                    "defaultMax": 35
+                }
+            ],
+            "characterEquipmentSlots": [
+                {
+                    "id": "fc5ab6ba-b245-426c-831c-8cb900913aac",
+                    "name": "Main hand",
+                    "eligibleEquipmentTypes": [
+                        "OneHandSword"
+                    ]
+                }
+            ],
+            "classes": []
+        },
+        "metadata": {
+            "description": "A science fiction role playing game set in a remote cluster of star systems called The Third Horizon",
+            "imageUrl": "",
+            "wikiUrl": "",
+            "isPublicTemplate": false,
+            "createdUtc": "2024-03-07T16:20:39.278Z"
         }
     }
 ]

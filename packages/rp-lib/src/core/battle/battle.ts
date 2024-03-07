@@ -1,9 +1,9 @@
-import { Id, generateId } from "../../lib/generate-id";
-import { World } from "../world/world";
+import { Id } from "../../lib/generate-id";
 import { Character, isCharacterEvent } from "../character/character";
 import { CampaignEvent } from "../campaign/campaign-events";
 import { D20 } from "../dice/dice";
 import { roll } from "../dice/dice";
+import { AugmentedRequired } from "../../types/with-required";
 
 export type Round = {
   id: Id;
@@ -16,8 +16,6 @@ export class BattleCharacter {
   constructor(init?: Partial<BattleCharacter>) {
     Object.assign(this, init);
   }
-
-  applyEvent(event: CampaignEvent, world: World) {}
 }
 
 export function getCharacterInitiative(c: Character) {
@@ -25,14 +23,12 @@ export function getCharacterInitiative(c: Character) {
 }
 
 export class Battle {
-  id: Id;
-  name: string;
-  characters: BattleCharacter[];
+  id!: Id;
+  name!: string;
+  characters: BattleCharacter[] = [];
 
-  constructor(name: string = "New battle", characters: BattleCharacter[] = []) {
-    this.id = generateId();
-    this.name = name;
-    this.characters = characters;
+  constructor(b: AugmentedRequired<Partial<Battle>, "name">) {
+    Object.assign(this, b);
   }
 
   hasRolledForInitiative() {

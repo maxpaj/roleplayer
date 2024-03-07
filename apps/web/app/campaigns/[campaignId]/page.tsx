@@ -1,5 +1,7 @@
-import { H2, Muted, Paragraph } from "@/components/ui/typography";
+import { H2, H3, H4, Paragraph } from "@/components/ui/typography";
 import { getCampaign } from "../actions";
+import { ButtonLink } from "@/components/ui/button-link";
+import { Separator } from "@/components/ui/separator";
 
 export default async function CampaignPage({
   params,
@@ -12,10 +14,13 @@ export default async function CampaignPage({
   }
 
   return (
-    <div>
-      <H2>{campaign.entity.name}</H2>
-      <Muted className="mb-4">Let's play the campaign!</Muted>
+    <>
+      <H3>Campaign</H3>
+      <Separator className="my-3" />
       <Paragraph>{campaign.metadata.description}</Paragraph>
-    </div>
+
+      <H4>World</H4>
+      <Paragraph>{campaign.entity.world?.name}</Paragraph>
+    </>
   );
 }

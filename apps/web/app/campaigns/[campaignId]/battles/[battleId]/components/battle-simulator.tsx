@@ -6,59 +6,48 @@ import {
   Battle,
   BattleCharacter,
   Round,
-  World,
   CampaignEvent,
+  CampaignEventType,
 } from "@repo/rp-lib";
 import { D20, roll } from "@repo/rp-lib";
-import { ItemSlot, ItemType, Rarity } from "@repo/rp-lib";
 import { Interaction } from "@repo/rp-lib";
 import { Campaign } from "@repo/rp-lib";
-import { Id, generateId } from "@repo/rp-lib";
+import { Id } from "@repo/rp-lib";
 import { EventIconMap } from "../../../../../theme";
 import { Button } from "@/components/ui/button";
-import { H2 } from "@/components/ui/typography";
+import { H3, Muted } from "@/components/ui/typography";
+import { RemoveFunctions } from "types/without-functions";
+import { AddBattleCharacterButton } from "./add-battle-character-button";
+import { AddBattleMonsterButton } from "./add-battle-monster-button";
 
 const EventIconSize = 32;
 
-export function BattleSimulator({}) {
-  const world = new World({
-    name: "World",
-    items: [
-      {
-        id: generateId(),
-        actions: [],
-        occupiesSlots: [ItemSlot.MainHand],
-        name: "Short sword",
-        type: ItemType.Equipment,
-        rarity: Rarity.Common,
-        description: "",
-        imageUrl: "",
-      },
-    ],
-  });
-
-  const [campaign, setCampaignReact] = useState<Campaign>(
-    new Campaign({
-      name: "Campaign",
-      world: world,
-    })
+export function BattleSimulator({
+  campaign,
+}: {
+  campaign: RemoveFunctions<Campaign>;
+}) {
+  const [tempCampaign, setTempCampaignReact] = useState<Campaign>(
+    new Campaign(campaign)
   );
-
   const [, updateState] = useState({});
   const [selectedAction, setSelectedAction] = useState<Interaction | undefined>(
     undefined
   );
   const forceUpdate = useCallback(() => updateState({}), []);
 
-  function addCharacter(isPlayer: boolean) {
-    const characterId = generateId();
-    campaign.createCharacter(characterId, "Character A");
-    campaign.addCharacterToCurrentBattle(characterId);
-    setCampaign(campaign);
+  function addCharacter(characterId: string) {
+    tempCampaign.addCharacterToCurrentBattle(characterId);
+    setCampaign(tempCampaign);
+  }
+
+  function addMonster(monsterId: string) {
+    tempCampaign.addMonsterToCurrentBattle(monsterId);
+    setCampaign(tempCampaign);
   }
 
   function setCampaign(campaign: Campaign) {
-    setCampaignReact(campaign);
+    setTempCampaignReact(campaign);
     forceUpdate();
   }
 
@@ -67,14 +56,14 @@ export function BattleSimulator({}) {
     defenderIds: Id[],
     action: Interaction
   ) {
-    const attacker = campaign.getCharacter(attackerId);
+    const attacker = tempCampaign.getCharacter(attackerId);
 
     if (!attacker.actions.length) {
       throw new Error("Has no attacks");
     }
 
     const defenders = defenderIds.map((defenderId) =>
-      campaign.getCharacter(defenderId)
+      tempCampaign.getCharacter(defenderId)
     );
 
     const attack = attacker
@@ -85,7 +74,7 @@ export function BattleSimulator({}) {
     }
 
     defenders.forEach((defender) => {
-      return campaign.performCharacterAttack(
+      return tempCampaign.performCharacterAttack(
         attacker,
         roll(D20),
         attack,
@@ -93,7 +82,7 @@ export function BattleSimulator({}) {
       );
     });
 
-    setCampaign(campaign);
+    setCampaign(tempCampaign);
   }
 
   function renderCharacter(
@@ -103,7 +92,7 @@ export function BattleSimulator({}) {
     characterToAct?: BattleCharacter
   ) {
     const { characterId } = battleCharacter;
-    const c = campaign.applyEvents();
+    const c = tempCampaign.applyEvents();
     const character = c.characters.find((c) => c.id === characterId);
 
     if (!character) {
@@ -163,7 +152,7 @@ export function BattleSimulator({}) {
                 {character.temporaryHealth} temporary)
               </div>
               <div>{battleCharacter.initiative} initiative</div>
-              <div>Level {campaign.getCharacterLevel(character)}</div>
+              <div>Level {tempCampaign.getCharacterLevel(character)}</div>
             </div>
 
             {currentCharacterAction && (
@@ -206,8 +195,8 @@ export function BattleSimulator({}) {
                 <Button
                   disabled={hasFinished}
                   onClick={() => {
-                    campaign.endCharacterTurn(character);
-                    setCampaign(campaign);
+                    tempCampaign.endCharacterTurn(character);
+                    setCampaign(tempCampaign);
                   }}
                 >
                   End
@@ -221,23 +210,23 @@ export function BattleSimulator({}) {
   }
 
   function renderBattleEvents() {
-    const battleEvents = campaign.getCurrentBattleEvents();
+    const battleEvents = tempCampaign.getCurrentBattleEvents();
 
     return (
-      <div className="w-full gap-2 mb-4 flex flex-col">
+      <div className="w-full mb-4 gap-y-4 flex flex-col">
         {battleEvents.filter(isVisibleEvent).map(renderBattleEvent)}
       </div>
     );
   }
 
   function isVisibleEvent(event: CampaignEvent) {
-    const excludedActions = ["RoundStarted"];
+    const excludedActions: CampaignEventType["type"][] = [];
     return !excludedActions.includes(event.type);
   }
 
   function nextRound() {
-    campaign.nextRound();
-    setCampaign(campaign);
+    tempCampaign.nextRound();
+    setCampaign(tempCampaign);
   }
 
   function renderBattleEvent(event: CampaignEvent) {
@@ -256,59 +245,66 @@ export function BattleSimulator({}) {
     );
   }
 
-  const battle = campaign.getCurrentBattle();
+  const battle = tempCampaign.getCurrentBattle();
   if (battle === undefined) {
     return <>No active battle</>;
   }
 
-  const currentRound = campaign.getCurrentRound();
+  const currentRound = tempCampaign.getCurrentRound();
   if (currentRound === undefined) {
     return <>No active round</>;
   }
 
-  const battleEvents = campaign.getCurrentBattleEvents();
+  const battleEvents = tempCampaign.getCurrentBattleEvents();
   const roundEvents = battleEvents.filter((e) => e.roundId === currentRound.id);
   const currentCharacter = battle.currentCharacterTurn(roundEvents);
-  const campaignState = campaign.applyEvents();
+  const campaignState = tempCampaign.applyEvents();
   const canEndTurn = campaignState.allCharactersHaveActed(battleEvents);
 
   return (
     <div className="w-full">
-      <div className="flex mb-4 justify-between">
-        <div className="flex gap-x-2">
-          <Button onClick={() => addCharacter(true)}>Add character</Button>
-          <Button onClick={() => addCharacter(false)}>Add monster</Button>
-        </div>
+      <div className="flex mb-4 gap-2">
+        <AddBattleCharacterButton
+          campaign={campaign}
+          onAddCharacter={addCharacter}
+        />
+        <AddBattleMonsterButton campaign={campaign} onAddMonster={addMonster} />
+
+        <Button
+          disabled={!canEndTurn}
+          onClick={() => {
+            nextRound();
+          }}
+        >
+          Next round
+        </Button>
       </div>
 
-      <h1 className="text-xl mb-4">Round {campaignState.rounds.length}</h1>
       <div className="w-full flex gap-4">
         <div className="w-3/4">
-          <div className="flex flex-col w-full gap-y-4 mb-4">
-            {battle.characters
-              .sort((a, b) => b.initiative - a.initiative)
-              .map((battleChar) =>
-                renderCharacter(
-                  battle,
-                  battleChar,
-                  currentRound,
-                  currentCharacter
-                )
-              )}
-          </div>
+          <H3>Round</H3>
+          {battle.characters.length === 0 && (
+            <Muted>No characters added to battle yet</Muted>
+          )}
 
-          <Button
-            disabled={!canEndTurn}
-            onClick={() => {
-              nextRound();
-            }}
-          >
-            Next round
-          </Button>
+          {battle.characters.length > 0 && (
+            <div className="flex flex-col w-full gap-y-4 mb-4">
+              {battle.characters
+                .sort((a, b) => b.initiative - a.initiative)
+                .map((battleChar) =>
+                  renderCharacter(
+                    battle,
+                    battleChar,
+                    currentRound,
+                    currentCharacter
+                  )
+                )}
+            </div>
+          )}
         </div>
 
         <div className="w-1/4">
-          <H2>Events ({campaign.events.length})</H2>
+          <H3>Events ({tempCampaign.events.length})</H3>
           {renderBattleEvents()}
         </div>
       </div>

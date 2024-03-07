@@ -50,6 +50,6 @@ export class JSONEntityStorage<T, U> {
   }
 
   async write(content: EntityRecord<T, U>[]) {
-    await writeFile(this.filePath, JSON.stringify(content));
+    await writeFile(this.filePath, JSON.stringify(content, null, 2));
   }
 }

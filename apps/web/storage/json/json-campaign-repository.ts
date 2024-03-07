@@ -38,7 +38,7 @@ export class JSONCampaignRepository
       campaign.setCharacterClasses(characterId, update.classes);
     }
 
-    this.write(campaigns);
+    this.saveCampaigns(campaigns);
   }
 
   async createBattle(campaignId: string) {
@@ -49,15 +49,8 @@ export class JSONCampaignRepository
     }
     const { entity: campaign } = entityData;
 
-    const battleId = generateId();
-
-    campaign.events.push({
-      id: generateId(),
-      type: "BattleStarted",
-      battleId,
-      roundId: generateId(),
-    });
-
+    const battleId = campaign.startBattle();
+    await this.saveCampaigns(entities);
     return battleId;
   }
 
@@ -74,7 +67,7 @@ export class JSONCampaignRepository
 
     campaign.events.push(event);
 
-    await this.write(entities);
+    await this.saveCampaigns(entities);
     return campaign;
   }
 
@@ -100,19 +93,44 @@ export class JSONCampaignRepository
     const characterId = generateId();
     campaign.createCharacter(characterId, name);
 
-    await this.write(entities);
+    await this.saveCampaigns(entities);
 
     return characterId;
   }
 
   async deleteCampaign(id: Campaign["id"]) {
-    const campaigns = await this.read();
+    const campaigns = await this.getAll();
     const removed = campaigns.filter((c) => c.entity.id !== id);
-    await this.write(removed);
+    await this.saveCampaigns(removed);
+  }
+
+  async saveCampaigns(campaigns: EntityRecord<Campaign, CampaignMetadata>[]) {
+    this.write(
+      campaigns.map((c) => {
+        delete c.entity.world;
+        return c;
+      })
+    );
   }
 
   async getAll(): Promise<EntityRecord<Campaign, CampaignMetadata>[]> {
-    return this.read();
+    const campaigns = await this.read();
+    const withWorlds = await Promise.all(
+      campaigns.map(async (c) => {
+        const worldRecord = await jsonWorldRepository.getWorld(
+          c.entity.worldId
+        );
+
+        c.entity.world = worldRecord.entity;
+
+        return {
+          entity: c.entity,
+          metadata: c.metadata,
+        };
+      })
+    );
+
+    return withWorlds;
   }
 
   async getDemoCampaigns(): Promise<
@@ -134,9 +152,9 @@ export class JSONCampaignRepository
       adventurers,
     });
 
-    const campaigns = await this.read();
+    const campaigns = await this.getAll();
 
-    this.write([
+    this.saveCampaigns([
       ...campaigns,
       {
         entity: campaign,
@@ -162,7 +180,7 @@ export class JSONCampaignRepository
 
     Object.assign(campaign, campaignUpdate);
 
-    await this.write(entities);
+    await this.saveCampaigns(entities);
   }
 
   async getCampaign(id: Campaign["id"]) {
@@ -180,29 +198,14 @@ export class JSONCampaignRepository
 
   async getWorldCampaigns(worldId: World["id"]) {
     const records = await this.getAll();
-    const world = await jsonWorldRepository.getWorld(worldId);
-
-    const withWorlds = await Promise.all(
-      records
-        .filter((r) => (r.entity.world as unknown as World["id"]) === worldId)
-        .map(async (r) => {
-          return {
-            ...r,
-            entity: {
-              ...r.entity,
-              world: world.entity,
-            },
-          };
-        })
-    );
-
-    return withWorlds.filter((c) => c.entity.world.id === worldId);
+    return records.filter((c) => c.entity.worldId === worldId);
   }
 }
 
 export const jsonCampaignRepository = new JSONCampaignRepository(
   "campaigns",
   Campaign,
-  (campaigns: unknown) =>
-    campaigns as EntityRecord<Campaign, CampaignMetadata>[]
+  (campaigns: unknown) => {
+    return campaigns as EntityRecord<Campaign, CampaignMetadata>[];
+  }
 );

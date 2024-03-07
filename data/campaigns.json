@@ -3,7 +3,7 @@
         "entity": {
             "id": "00000000-0000-4cfd-93b2-78447e6413c7",
             "name": "Demo D&D campaign",
-            "world": "00000000-d34b-4bc4-ab72-1bb84811b577",
+            "worldId": "00000000-d34b-4bc4-ab72-1bb84811b577",
             "events": [
                 {
                     "type": "RoundStarted",
@@ -213,13 +213,25 @@
         "entity": {
             "id": "5b25cd4a-fe1b-49f7-9d59-4054b03c28a0",
             "name": "A gnarly place",
-            "world": "d0e6f343-61bf-4ce8-b465-4b2cc7be0daa",
+            "worldId": "00000000-d34b-4bc4-ab72-1bb84811b577",
             "adventurers": [],
             "events": [
                 {
                     "type": "RoundStarted",
                     "id": "b8a1115e-a494-47cf-bb4c-7b22da432732",
                     "roundId": "02a87d65-4dab-417e-9746-fb5fc3f02f05"
+                },
+                {
+                    "id": "ec010473-85cf-4eb9-be00-2de31233d6cf",
+                    "type": "BattleStarted",
+                    "battleId": "6985b6c5-7826-43ad-8cad-2f42a0e244ad",
+                    "roundId": "4e6f4b44-f811-4ba7-a372-da6b28abe824"
+                },
+                {
+                    "id": "85042464-4ad6-49c5-8974-b88dad5c8ae4",
+                    "type": "BattleStarted",
+                    "battleId": "3e4727bf-35ef-4878-b39b-da18949fbd62",
+                    "roundId": "3e870c45-0d77-463f-8e38-e6cc9f24c9d5"
                 }
             ]
         },

@@ -10,6 +10,7 @@ import {
   CampaignEvent,
   CampaignEventWithRound,
   generateId,
+  Monster,
 } from "../..";
 import { AugmentedRequired } from "../../types/with-required";
 import { CharacterClass, isCharacterEvent } from "../character/character";
@@ -19,7 +20,8 @@ import { CampaignState } from "./campaign-state";
 export class Campaign {
   id!: Id;
   name!: string;
-  world!: World;
+  world?: World;
+  worldId!: World["id"];
   adventurers!: Character[];
   events: CampaignEventWithRound[] = [];
 
@@ -169,6 +171,23 @@ export class Campaign {
     this.events.push(characterUpdate);
   }
 
+  addMonsterToCurrentBattle(monsterId: Monster["id"]) {
+    const battle = this.getCurrentBattle();
+    if (!battle) {
+      throw new Error("No current battle ongoing");
+    }
+
+    const monsterUpdate: CampaignEventWithRound = {
+      monsterId,
+      id: generateId(),
+      type: "MonsterEnterBattle",
+      battleId: battle.id,
+      roundId: this.getCurrentRound().id,
+    };
+
+    this.events.push(monsterUpdate);
+  }
+
   addCharacterToCurrentBattle(characterId: Character["id"]) {
     const battle = this.getCurrentBattle();
     if (!battle) {
@@ -188,7 +207,7 @@ export class Campaign {
 
   createCharacter(characterId: Character["id"], name: string) {
     const defaultResourcesEvents: CampaignEventWithRound[] =
-      this.world.characterResourceTypes.map((cr) => ({
+      this.world!.characterResourceTypes.map((cr) => ({
         type: "CharacterResourceMaxSet",
         max: 10,
         characterId,
@@ -199,7 +218,7 @@ export class Campaign {
       }));
 
     const defaultStatsEvents: CampaignEventWithRound[] =
-      this.world.characterStatTypes.map((st) => ({
+      this.world!.characterStatTypes.map((st) => ({
         type: "CharacterStatChange",
         amount: 0,
         characterId,
@@ -299,6 +318,19 @@ export class Campaign {
     return this.getBattleEvents(battle);
   }
 
+  startBattle() {
+    const battleId = generateId();
+
+    this.events.push({
+      id: generateId(),
+      type: "BattleStarted",
+      battleId,
+      roundId: generateId(),
+    });
+
+    return battleId;
+  }
+
   getCurrentBattle(): Battle | undefined {
     const worldData = this.applyEvents();
 
@@ -316,7 +348,7 @@ export class Campaign {
   }
 
   getItem(itemId: Id) {
-    const item = this.world.items.find((i) => i.id === itemId);
+    const item = this.world!.items.find((i) => i.id === itemId);
 
     if (!item) {
       throw new Error("No such item");
@@ -374,14 +406,14 @@ export class Campaign {
     const statusChangeEvents = defenderWasHit
       ? interaction.appliesEffects
           .filter((attack) => {
-            const status = this.world.statuses.find(
+            const status = this.world!.statuses.find(
               (s) => s.id === attack.appliesStatusId
             );
             return status !== undefined;
           })
           .flatMap((attack) => {
             const defenderStatus = defender.getEffectAppliedStatuses(
-              this.world.statuses.find((s) => s.id === attack.appliesStatusId)
+              this.world!.statuses.find((s) => s.id === attack.appliesStatusId)
             );
 
             return {
@@ -442,9 +474,9 @@ export class Campaign {
   }
 
   getCharacterLevel(character: Character) {
-    return this.world.levelProgression
-      .sort((a, b) => a - b)
-      .findIndex((l) => l > character.xp);
+    return this.world!.levelProgression.sort((a, b) => a - b).findIndex(
+      (l) => l > character.xp
+    );
   }
 
   applyEvents() {
@@ -457,12 +489,20 @@ export class Campaign {
     switch (event.type) {
       case "CharacterSpawned":
         campaignState.characters.push(
-          new Character(this.world, { id: event.characterId })
+          new Character(this.world!, { id: event.characterId })
         );
         break;
 
       case "RoundEnded":
         break;
+
+      case "MonsterEnterBattle": {
+        break;
+      }
+
+      case "CharacterEnterBattle": {
+        break;
+      }
 
       case "RoundStarted":
         campaignState.rounds.push({
@@ -470,6 +510,17 @@ export class Campaign {
         });
         campaignState.characters.forEach((c) => c.resetResources());
         break;
+
+      case "BattleStarted": {
+        campaignState.battles.push(
+          new Battle({
+            id: event.battleId,
+            name: "Battle",
+          })
+        );
+
+        break;
+      }
 
       case "CharacterStatChange":
       case "CharacterExperienceSet":
@@ -699,7 +750,7 @@ export class Campaign {
           );
         }
 
-        const clazz = this.world.classes.find((c) => c.id === event.classId);
+        const clazz = this.world!.classes.find((c) => c.id === event.classId);
         if (!clazz) {
           throw new Error("Class not found");
         }
@@ -718,7 +769,9 @@ export class Campaign {
       }
 
       case "CharacterStatusGain": {
-        const status = this.world.statuses.find((s) => s.id === event.statusId);
+        const status = this.world!.statuses.find(
+          (s) => s.id === event.statusId
+        );
         if (!status) {
           throw new Error(
             `Could not find status with id ${event.statusId} for CharacterStatusGain`
@@ -730,7 +783,7 @@ export class Campaign {
       }
 
       case "CharacterItemGain": {
-        const item = this.world.items.find((eq) => eq.id === event.itemId);
+        const item = this.world!.items.find((eq) => eq.id === event.itemId);
         if (!item) {
           throw new Error(
             `Could not find item with id ${event.itemId} for CharacterGainItem`
@@ -742,7 +795,7 @@ export class Campaign {
       }
 
       case "CharacterEquipmentSlotGain": {
-        const characterSlot = this.world.characterEquipmentSlots.find(
+        const characterSlot = this.world!.characterEquipmentSlots.find(
           (slot) => slot.id === event.equipmentSlotId
         );
 
@@ -764,7 +817,7 @@ export class Campaign {
       }
 
       case "CharacterItemEquip": {
-        const item = this.world.items.find((eq) => eq.id === event.itemId);
+        const item = this.world!.items.find((eq) => eq.id === event.itemId);
         if (!item) {
           throw new Error(`Could not find item on world`);
         }
@@ -789,7 +842,7 @@ export class Campaign {
       }
 
       case "CharacterMovement": {
-        const resourceType = this.world.characterResourceTypes.find(
+        const resourceType = this.world!.characterResourceTypes.find(
           (r) => r.name === "Movement speed"
         );
         if (!resourceType) {
@@ -829,7 +882,7 @@ export class Campaign {
       }
 
       case "CharacterActionGain": {
-        const action = this.world.actions.find((a) => a.id === event.actionId);
+        const action = this.world!.actions.find((a) => a.id === event.actionId);
         if (!action) {
           throw new Error(`Unknown action ${event.actionId}`);
         }

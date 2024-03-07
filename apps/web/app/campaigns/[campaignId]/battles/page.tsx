@@ -1,27 +1,36 @@
-import { Battle } from "@repo/rp-lib";
-import { CreateBattleForm } from "./components/create-battle-form";
-import { H2 } from "@/components/ui/typography";
+import { H2, H3, Muted } from "@/components/ui/typography";
+import { jsonCampaignRepository } from "storage/json/json-campaign-repository";
+import { BattleCard } from "./components/battle-card";
+import { StartBattleButton } from "./components/start-battle-button";
+import { Separator } from "@/components/ui/separator";
 
-async function getData() {
-  const battles: Battle[] = [];
-  return battles;
+async function getData(campaignId: string) {
+  const campaign = await jsonCampaignRepository.getCampaign(campaignId);
+  const campaignData = campaign.entity.applyEvents();
+  return campaignData.battles;
 }
 
 export default async function BattlesPage({
   params,
 }: {
-  params: { worldId: string };
+  params: { campaignId: string };
 }) {
-  const battles = await getData();
-  const { worldId } = params;
+  const { campaignId } = params;
+  const battles = await getData(campaignId);
 
   return (
     <div>
-      <H2>Battles</H2>
-      <CreateBattleForm worldId={worldId} />
-      <div>
+      <H3>Battles</H3>
+      <Separator className="my-3" />
+
+      <StartBattleButton campaignId={campaignId} />
+
+      <H3 className="mt-4">Previous battles</H3>
+
+      {battles.length === 0 && <Muted>No previous battles fought.</Muted>}
+      <div className="flex gap-2">
         {battles.map((battle) => (
-          <>{battle.name}</>
+          <BattleCard battle={battle} />
         ))}
       </div>
     </div>

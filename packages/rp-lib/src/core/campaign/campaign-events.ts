@@ -4,6 +4,7 @@ import {
   CharacterStatType,
   Position,
 } from "../character/character";
+import { Monster } from "../monster/monster";
 
 export type CampaignEvent = CampaignEventType & {
   id: Id;
@@ -145,4 +146,8 @@ export type CampaignEventType =
   | {
       type: "CharacterEnterBattle";
       characterId: Character["id"];
+    }
+  | {
+      type: "MonsterEnterBattle";
+      monsterId: Monster["id"];
     };

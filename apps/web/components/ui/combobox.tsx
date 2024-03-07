@@ -22,11 +22,13 @@ import { useState } from "react";
 type ComboboxProps = {
   placeholder?: string;
   options: { value: string; label: string }[];
+  onChange?: (value: string) => void;
 };
 
 export function Combobox({
   options,
   placeholder = "Select item",
+  onChange,
 }: ComboboxProps) {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");

@@ -5,6 +5,11 @@ import { redirect } from "next/navigation";
 import { jsonCampaignRepository } from "storage/json/json-campaign-repository";
 import { jsonWorldRepository } from "storage/json/json-world-repository";
 
+export async function createBattle(campaignId: Campaign["id"]) {
+  const battleId = await jsonCampaignRepository.createBattle(campaignId);
+  redirect(`/campaigns/${campaignId}/battles/${battleId}`);
+}
+
 export async function createCampaign(
   worldId: World["id"],
   characters: Character[]

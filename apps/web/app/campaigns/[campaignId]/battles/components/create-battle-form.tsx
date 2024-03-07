@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import z from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { H2 } from "@/components/ui/typography";
+import { H4 } from "@/components/ui/typography";
 import { Separator } from "@/components/ui/separator";
 import { jsonCampaignRepository } from "storage/json/json-campaign-repository";
 
@@ -11,10 +11,10 @@ const validateBattleFormSchema = z.object({
 });
 
 type CreateBattleFormProps = {
-  worldId: string;
+  campaignId: string;
 };
 
-export function CreateBattleForm({ worldId }: CreateBattleFormProps) {
+export function CreateBattleForm({ campaignId }: CreateBattleFormProps) {
   async function createNewBattle(formData: FormData) {
     "use server";
 
@@ -25,14 +25,14 @@ export function CreateBattleForm({ worldId }: CreateBattleFormProps) {
       throw new Error("Battle 'name' missing");
     }
 
-    const battleId = await jsonCampaignRepository.createBattle(worldId);
+    const battleId = await jsonCampaignRepository.createBattle(campaignId);
 
-    return redirect(`/worlds/${worldId}/battles/${battleId}`);
+    return redirect(`/campaign/${campaignId}/battles/${battleId}`);
   }
 
   return (
     <>
-      <H2>New battle form</H2>
+      <H4>New battle</H4>
       <Separator />
 
       <form action={createNewBattle}>

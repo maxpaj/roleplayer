@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { H4 } from "@/components/ui/typography";
 import { Separator } from "@/components/ui/separator";
-import { jsonCampaignRepository } from "storage/json/json-campaign-repository";
+import { jsonCampaignRepository } from "db/json/json-campaign-repository";
 
 const validateBattleFormSchema = z.object({
   name: z.string().min(1),

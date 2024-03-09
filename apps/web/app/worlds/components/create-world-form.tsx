@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Combobox } from "@/components/ui/combobox";
-import { jsonWorldRepository } from "storage/json/json-world-repository";
+import { jsonWorldRepository } from "db/json/json-world-repository";
 
 const validateWorldFormSchema = z.object({
   name: z.string().min(1),

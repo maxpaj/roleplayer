@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { World } from "@repo/rp-lib";
 import { WorldEditorForm } from "./components/world-editor-form";
 import { classToPlain } from "@/lib/class-to-plain";
-import { jsonWorldRepository } from "storage/json/json-world-repository";
+import { jsonWorldRepository } from "db/json/json-world-repository";
 
 async function updateWorld(formData: FormData) {
   "use server";

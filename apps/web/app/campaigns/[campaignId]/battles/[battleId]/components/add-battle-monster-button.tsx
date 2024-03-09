@@ -8,7 +8,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Paragraph } from "@/components/ui/typography";
+import { Muted, Paragraph } from "@/components/ui/typography";
 import { Campaign, Monster } from "@repo/rp-lib";
 import { useState } from "react";
 import { RemoveFunctions } from "types/without-functions";
@@ -21,9 +21,10 @@ export function AddBattleMonsterButton({
   campaign: RemoveFunctions<Campaign>;
 }) {
   const [selectedMonster, setSelectedMonster] = useState<Monster["id"]>();
+  const [open, setOpen] = useState<boolean>(false);
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="outline">Add monster</Button>
       </DialogTrigger>
@@ -31,22 +32,32 @@ export function AddBattleMonsterButton({
         <DialogHeader>
           <DialogTitle>Add monster</DialogTitle>
         </DialogHeader>
+
         <Paragraph>Select monster type to add</Paragraph>
-        <Combobox
-          onChange={(monsterId) => setSelectedMonster(monsterId)}
-          options={campaign.adventurers.map((c) => ({
-            label: c.name,
-            value: c.id,
-          }))}
-        />
+
+        {campaign.world!.monsters.length === 0 && (
+          <Muted>No monsters added to the world.</Muted>
+        )}
+
+        {campaign.world!.monsters.length > 0 && (
+          <Combobox
+            onChange={(monsterId) => setSelectedMonster(monsterId)}
+            options={campaign.world!.monsters.map((c) => ({
+              label: c.name,
+              value: c.id,
+            }))}
+          />
+        )}
 
         <DialogFooter>
           <Button
+            disabled={!selectedMonster}
             onClick={() => {
               if (!selectedMonster) {
                 return;
               }
 
+              setOpen(false);
               onAddMonster(selectedMonster);
             }}
           >

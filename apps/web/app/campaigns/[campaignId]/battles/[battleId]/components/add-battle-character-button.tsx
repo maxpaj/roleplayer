@@ -8,7 +8,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Paragraph } from "@/components/ui/typography";
+import { Muted, Paragraph } from "@/components/ui/typography";
 import { Campaign, Character } from "@repo/rp-lib";
 import { useState } from "react";
 import { RemoveFunctions } from "types/without-functions";
@@ -21,9 +21,10 @@ export function AddBattleCharacterButton({
   campaign: RemoveFunctions<Campaign>;
 }) {
   const [selectedCharacter, setSelectedCharacter] = useState<Character["id"]>();
+  const [open, setOpen] = useState<boolean>(false);
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="outline">Add character</Button>
       </DialogTrigger>
@@ -32,21 +33,30 @@ export function AddBattleCharacterButton({
           <DialogTitle>Add character</DialogTitle>
         </DialogHeader>
         <Paragraph>Select character to add</Paragraph>
-        <Combobox
-          onChange={(characterId) => setSelectedCharacter(characterId)}
-          options={campaign.adventurers.map((c) => ({
-            label: c.name,
-            value: c.id,
-          }))}
-        />
+
+        {campaign.adventurers.length === 0 && (
+          <Muted>No adventurers added to the campaign.</Muted>
+        )}
+
+        {campaign.adventurers.length > 0 && (
+          <Combobox
+            onChange={(characterId) => setSelectedCharacter(characterId)}
+            options={campaign.adventurers.map((c) => ({
+              label: c.name,
+              value: c.id,
+            }))}
+          />
+        )}
 
         <DialogFooter>
           <Button
+            disabled={!selectedCharacter}
             onClick={() => {
               if (!selectedCharacter) {
                 return;
               }
 
+              setOpen(false);
               onAddCharacter(selectedCharacter);
             }}
           >

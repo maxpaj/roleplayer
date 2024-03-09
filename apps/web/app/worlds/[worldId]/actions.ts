@@ -2,8 +2,8 @@
 
 import { Character, World } from "@repo/rp-lib";
 import { redirect } from "next/navigation";
-import { jsonCampaignRepository } from "storage/json/json-campaign-repository";
-import { jsonWorldRepository } from "storage/json/json-world-repository";
+import { jsonCampaignRepository } from "db/json/json-campaign-repository";
+import { jsonWorldRepository } from "db/json/json-world-repository";
 
 export async function getWorld(id: World["id"]) {
   const world = await jsonWorldRepository.getWorld(id);

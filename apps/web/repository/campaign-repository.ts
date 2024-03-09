@@ -1,26 +1,19 @@
 import { Campaign, World } from "@repo/rp-lib";
 import { Character } from "@repo/rp-lib";
 import { CampaignEventWithRound } from "@repo/rp-lib";
-import { EntityRecord } from "./entity";
-
-export type CampaignMetadata = {
-  isDemo: boolean;
-  createdUtc: Date;
-  imageUrl: string;
-  description: string;
-};
-
-export type CampaignStorageType = EntityRecord<Campaign, CampaignMetadata>;
+import { CampaignRecord } from "db/json/schema/campaign";
+import { JSONUserRecord } from "db/json/schema/user";
 
 export interface ICampaignRepository {
-  getAll(): Promise<CampaignStorageType[]>;
+  getAll(): Promise<CampaignRecord[]>;
   deleteCampaign(campaignId: Campaign["id"]): Promise<void>;
   createCampaign(
     name: string,
     world: World["id"],
-    adventurers: Character[]
+    adventurers: Character[],
+    userId: JSONUserRecord["id"]
   ): Promise<Campaign>;
-  getCampaign(campaignId: Campaign["id"]): Promise<CampaignStorageType>;
+  getCampaign(campaignId: Campaign["id"]): Promise<CampaignRecord>;
   createCharacter(
     campaignId: Campaign["id"],
     name: string
@@ -29,5 +22,5 @@ export interface ICampaignRepository {
     campaignId: Campaign["id"],
     event: CampaignEventWithRound
   ): Promise<Campaign>;
-  getDemoCampaigns(): Promise<EntityRecord<Campaign, CampaignMetadata>[]>;
+  getDemoCampaigns(): Promise<CampaignRecord[]>;
 }

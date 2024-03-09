@@ -1,8 +1,7 @@
-import { H2, H3, Muted } from "@/components/ui/typography";
-import { jsonCampaignRepository } from "storage/json/json-campaign-repository";
+import { H3, Muted } from "@/components/ui/typography";
+import { jsonCampaignRepository } from "db/json/json-campaign-repository";
 import { BattleCard } from "./components/battle-card";
 import { StartBattleButton } from "./components/start-battle-button";
-import { Separator } from "@/components/ui/separator";
 
 async function getData(campaignId: string) {
   const campaign = await jsonCampaignRepository.getCampaign(campaignId);
@@ -20,18 +19,40 @@ export default async function BattlesPage({
 
   return (
     <div>
-      <H3>Battles</H3>
-      <Separator className="my-3" />
+      {battles.filter((b) => !b.finished).length === 0 && (
+        <Muted>No ongoing battles.</Muted>
+      )}
+
+      <div className="flex gap-2 my-3">
+        {battles
+          .filter((b) => !b.finished)
+          .map((battle) => (
+            <BattleCard
+              key={battle.id}
+              battle={battle}
+              campaignId={campaignId}
+            />
+          ))}
+      </div>
 
       <StartBattleButton campaignId={campaignId} />
 
       <H3 className="mt-4">Previous battles</H3>
 
-      {battles.length === 0 && <Muted>No previous battles fought.</Muted>}
+      {battles.filter((b) => b.finished).length === 0 && (
+        <Muted>No previous battles fought.</Muted>
+      )}
+
       <div className="flex gap-2">
-        {battles.map((battle) => (
-          <BattleCard battle={battle} />
-        ))}
+        {battles
+          .filter((b) => b.finished)
+          .map((battle) => (
+            <BattleCard
+              key={battle.id}
+              battle={battle}
+              campaignId={campaignId}
+            />
+          ))}
       </div>
     </div>
   );

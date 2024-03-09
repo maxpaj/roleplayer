@@ -1,10 +1,11 @@
 import { World, Character, generateId } from "@repo/rp-lib";
-import { WorldMetadata, IWorldRepository } from "storage/world-repository";
-import { JSONEntityStorage } from "./json-storage";
-import { EntityRecord } from "storage/entity";
+import { IWorldRepository } from "repository/world-repository";
+import { JSONWorldRecord } from "db/json/schema/world";
+import { JSONEntityStorage } from ".";
+import { generateEntityId } from "db/json/schema/entity";
 
 export class JSONWorldRepository
-  extends JSONEntityStorage<World, WorldMetadata>
+  extends JSONEntityStorage<JSONWorldRecord>
   implements IWorldRepository
 {
   async setWorldPublicVisibility(worldId: World["id"], isVisible: boolean) {
@@ -14,8 +15,7 @@ export class JSONWorldRepository
       throw new Error("World not found");
     }
 
-    const { metadata } = worldData;
-    metadata.isPublicTemplate = isVisible;
+    worldData.isPublicTemplate = isVisible;
     await this.write(worlds);
   }
 
@@ -74,13 +74,13 @@ export class JSONWorldRepository
     await this.write(removed);
   }
 
-  async getAll(): Promise<EntityRecord<World, WorldMetadata>[]> {
+  async getAll(): Promise<JSONWorldRecord[]> {
     return this.read();
   }
 
   async getTemplateWorlds(): Promise<World[]> {
     const all = await this.getAll();
-    return all.filter((w) => w.metadata.isPublicTemplate).map((w) => w.entity);
+    return all.filter((w) => w.isPublicTemplate).map((w) => w.entity);
   }
 
   async createWorld(name: string) {
@@ -88,19 +88,20 @@ export class JSONWorldRepository
       name,
     });
     const worlds = await this.read();
-    this.write([
+    const records: JSONWorldRecord[] = [
       ...worlds,
       {
+        id: generateEntityId(),
         entity: world,
-        metadata: {
-          description: "",
-          imageUrl: "",
-          wikiUrl: "",
-          isPublicTemplate: false,
-          createdUtc: new Date(),
-        },
+        description: "",
+        imageUrl: "",
+        wikiUrl: "",
+        isPublicTemplate: false,
+        createdUtc: new Date(),
       },
-    ]);
+    ];
+
+    this.write(records);
     return world;
   }
 
@@ -131,5 +132,5 @@ export class JSONWorldRepository
 export const jsonWorldRepository = new JSONWorldRepository(
   "worlds",
   World,
-  (worlds: unknown) => worlds as EntityRecord<World, WorldMetadata>[]
+  (worlds: unknown) => worlds as JSONWorldRecord[]
 );

@@ -2,7 +2,7 @@ import { CreateWorldForm } from "./components/create-world-form";
 import { WorldCard } from "../../components/world-card";
 import { H2, Muted } from "@/components/ui/typography";
 import { Separator } from "@/components/ui/separator";
-import { jsonWorldRepository } from "storage/json/json-world-repository";
+import { jsonWorldRepository } from "db/json/json-world-repository";
 
 async function getData() {
   const worlds = await jsonWorldRepository.getAll();

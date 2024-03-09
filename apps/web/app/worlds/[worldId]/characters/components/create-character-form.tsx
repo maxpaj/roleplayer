@@ -1,6 +1,6 @@
 import z from "zod";
 
-import { jsonWorldRepository } from "storage/json/json-world-repository";
+import { jsonWorldRepository } from "db/json/json-world-repository";
 import { redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

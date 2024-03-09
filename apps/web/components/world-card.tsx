@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { World } from "@repo/rp-lib";
-import { WorldMetadata } from "storage/world-repository";
+import { WorldMetadata } from "repository/world-repository";
 import { Card, CardDescription, CardHeader, CardTitle } from "./ui/card";
 
 type WorldCardProps = { world: World; metadata: WorldMetadata };

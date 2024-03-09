@@ -60,6 +60,7 @@ export function Combobox({
                 onSelect={(currentValue) => {
                   setValue(currentValue === value ? "" : currentValue);
                   setOpen(false);
+                  onChange && onChange(currentValue);
                 }}
               >
                 <Check

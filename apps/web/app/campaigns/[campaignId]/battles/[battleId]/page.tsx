@@ -1,15 +1,14 @@
 import { Battle, Campaign } from "@repo/rp-lib";
 import { BattleSimulator } from "./components/battle-simulator";
-import { H2 } from "@/components/ui/typography";
-import { jsonCampaignRepository } from "storage/json/json-campaign-repository";
+import { H3 } from "@/components/ui/typography";
+import { jsonCampaignRepository } from "db/json/json-campaign-repository";
 import { classToPlain } from "@/lib/class-to-plain";
 
 async function getData(campaignId: Campaign["id"], battleId: Battle["id"]) {
-  const { entity: campaign } =
-    await jsonCampaignRepository.getCampaign(campaignId);
-  const campaignData = campaign.applyEvents();
+  const campaignRecord = await jsonCampaignRepository.getCampaign(campaignId);
+  const campaignData = campaignRecord.entity.applyEvents();
   const battle = campaignData.battles.find((b) => b.id === battleId);
-  return { battle, campaign };
+  return { battle, campaign: campaignRecord };
 }
 
 export default async function BattlePage({
@@ -21,12 +20,12 @@ export default async function BattlePage({
   const { campaign, battle } = await getData(campaignId, battleId);
 
   if (!battle) {
-    return <H2>Battle not found!</H2>;
+    return <H3>Battle not found!</H3>;
   }
 
   return (
     <>
-      <BattleSimulator campaign={classToPlain(campaign)} />
+      <BattleSimulator campaign={classToPlain(campaign)} battleId={battleId} />
     </>
   );
 }

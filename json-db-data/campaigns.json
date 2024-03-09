@@ -212,7 +212,7 @@
     {
         "entity": {
             "id": "5b25cd4a-fe1b-49f7-9d59-4054b03c28a0",
-            "name": "A gnarly place",
+            "name": "A gnarly campaign",
             "worldId": "00000000-d34b-4bc4-ab72-1bb84811b577",
             "adventurers": [],
             "events": [
@@ -220,12 +220,6 @@
                     "type": "RoundStarted",
                     "id": "b8a1115e-a494-47cf-bb4c-7b22da432732",
                     "roundId": "02a87d65-4dab-417e-9746-fb5fc3f02f05"
-                },
-                {
-                    "id": "ec010473-85cf-4eb9-be00-2de31233d6cf",
-                    "type": "BattleStarted",
-                    "battleId": "6985b6c5-7826-43ad-8cad-2f42a0e244ad",
-                    "roundId": "4e6f4b44-f811-4ba7-a372-da6b28abe824"
                 },
                 {
                     "id": "85042464-4ad6-49c5-8974-b88dad5c8ae4",

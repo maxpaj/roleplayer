@@ -2,7 +2,7 @@ import { Character } from "@repo/rp-lib";
 import { CharacterEditor } from "./components/character-editor";
 import { classToPlain } from "@/lib/class-to-plain";
 import { redirect } from "next/navigation";
-import { jsonCampaignRepository } from "storage/json/json-campaign-repository";
+import { jsonCampaignRepository } from "db/json/json-campaign-repository";
 
 async function getCampaign(campaignId: string) {
   const campaign = await jsonCampaignRepository.getCampaign(campaignId);

@@ -7,7 +7,7 @@ import { World } from "@repo/rp-lib";
 import { Info } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-import { WorldMetadata } from "storage/world-repository";
+import { WorldMetadata } from "repository/world-repository";
 import { RemoveFunctions } from "types/without-functions";
 
 type WorldEditorFormProps = {

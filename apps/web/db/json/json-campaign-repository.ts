@@ -5,16 +5,14 @@ import {
   World,
   generateId,
 } from "@repo/rp-lib";
-import {
-  CampaignMetadata,
-  ICampaignRepository,
-} from "storage/campaign-repository";
-import { EntityRecord } from "storage/entity";
-import { JSONEntityStorage } from "storage/json/json-storage";
+import { ICampaignRepository } from "repository/campaign-repository";
+import { JSONEntityStorage } from "db/json";
 import { jsonWorldRepository } from "./json-world-repository";
+import { generateEntityId } from "db/json/schema/entity";
+import { JSONCampaignRecord } from "db/json/schema/campaign";
 
 export class JSONCampaignRepository
-  extends JSONEntityStorage<Campaign, CampaignMetadata>
+  extends JSONEntityStorage<JSONCampaignRecord>
   implements ICampaignRepository
 {
   async updateCharacter(
@@ -71,7 +69,10 @@ export class JSONCampaignRepository
     return campaign;
   }
 
-  async getCharacter(campaignId: Campaign["id"], characterId: Character["id"]) {
+  async getCharacter(
+    campaignId: JSONCampaignRecord["id"],
+    characterId: Character["id"]
+  ) {
     const { entity: campaign } = await this.getCampaign(campaignId);
     if (!campaign) {
       throw new Error("Campaign not found");
@@ -82,7 +83,7 @@ export class JSONCampaignRepository
     return data.characters.find((c) => c.id === characterId);
   }
 
-  async createCharacter(campaignId: Campaign["id"], name: string) {
+  async createCharacter(campaignId: JSONCampaignRecord["id"], name: string) {
     const entities = await this.getAll();
     const entityData = entities.find((c) => c.entity.id === campaignId);
     if (!entityData) {
@@ -98,13 +99,13 @@ export class JSONCampaignRepository
     return characterId;
   }
 
-  async deleteCampaign(id: Campaign["id"]) {
+  async deleteCampaign(id: JSONCampaignRecord["id"]) {
     const campaigns = await this.getAll();
     const removed = campaigns.filter((c) => c.entity.id !== id);
     await this.saveCampaigns(removed);
   }
 
-  async saveCampaigns(campaigns: EntityRecord<Campaign, CampaignMetadata>[]) {
+  async saveCampaigns(campaigns: JSONCampaignRecord[]) {
     this.write(
       campaigns.map((c) => {
         delete c.entity.world;
@@ -113,7 +114,7 @@ export class JSONCampaignRepository
     );
   }
 
-  async getAll(): Promise<EntityRecord<Campaign, CampaignMetadata>[]> {
+  async getAll(): Promise<JSONCampaignRecord[]> {
     const campaigns = await this.read();
     const withWorlds = await Promise.all(
       campaigns.map(async (c) => {
@@ -124,8 +125,8 @@ export class JSONCampaignRepository
         c.entity.world = worldRecord.entity;
 
         return {
+          ...c,
           entity: c.entity,
-          metadata: c.metadata,
         };
       })
     );
@@ -133,11 +134,9 @@ export class JSONCampaignRepository
     return withWorlds;
   }
 
-  async getDemoCampaigns(): Promise<
-    EntityRecord<Campaign, CampaignMetadata>[]
-  > {
+  async getDemoCampaigns(): Promise<JSONCampaignRecord[]> {
     const all = await this.getAll();
-    return all.filter((w) => w.metadata.isDemo);
+    return all.filter((w) => w.isDemo);
   }
 
   async createCampaign(
@@ -157,13 +156,12 @@ export class JSONCampaignRepository
     this.saveCampaigns([
       ...campaigns,
       {
+        id: generateEntityId(),
         entity: campaign,
-        metadata: {
-          description: "",
-          imageUrl: "",
-          isDemo: false,
-          createdUtc: new Date(),
-        },
+        description: "",
+        imageUrl: "",
+        isDemo: false,
+        createdUtc: new Date(),
       },
     ]);
 
@@ -183,7 +181,7 @@ export class JSONCampaignRepository
     await this.saveCampaigns(entities);
   }
 
-  async getCampaign(id: Campaign["id"]) {
+  async getCampaign(id: JSONCampaignRecord["id"]) {
     const entities = await this.getAll();
     const entityData = entities.find((c) => c.entity.id === id);
     if (!entityData) {
@@ -206,6 +204,6 @@ export const jsonCampaignRepository = new JSONCampaignRepository(
   "campaigns",
   Campaign,
   (campaigns: unknown) => {
-    return campaigns as EntityRecord<Campaign, CampaignMetadata>[];
+    return campaigns as JSONCampaignRecord[];
   }
 );

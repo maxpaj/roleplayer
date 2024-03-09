@@ -193,4 +193,8 @@ export const EventIconMap: {
     alt: "",
     icon: defaultIcon,
   },
+  MonsterEnterBattle: {
+    alt: "",
+    icon: defaultIcon,
+  },
 };

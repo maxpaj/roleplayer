@@ -2,10 +2,15 @@ import { Effect, ElementType } from "../interaction/effect";
 import { Interaction } from "../interaction/interaction";
 import { Item } from "../item/item";
 import { Status } from "../interaction/status";
-import { roll } from "../dice/dice";
+import { D20, roll } from "../dice/dice";
 import { Id } from "../../lib/generate-id";
-import { CampaignEvent, CampaignEventType } from "../campaign/campaign-events";
+import {
+  CampaignEvent,
+  CampaignEventType,
+  CampaignEventWithRound,
+} from "../campaign/campaign-events";
 import { World } from "../world/world";
+import { Actor } from "./actor";
 
 export function isCharacterEvent(
   event: CampaignEvent
@@ -106,17 +111,15 @@ export type CharacterStat = {
   amount: number;
 };
 
-export class Character {
+export class Character implements Actor {
   id!: Id;
   party!: Id;
-  isPlayerControlled!: boolean;
   exists!: boolean;
+  isPlayerControlled!: boolean;
 
   name!: string;
   description!: string;
   playerName!: string;
-  imageUrl!: string;
-
   alignment!: Alignment;
 
   xp!: number;
@@ -161,6 +164,18 @@ export class Character {
     }));
 
     Object.assign(this, init);
+  }
+
+  performAction(): CampaignEventWithRound[] {
+    throw new Error("Method not implemented.");
+  }
+
+  getInitiative(): number {
+    return roll(D20);
+  }
+
+  getActions(): Interaction[] {
+    return this.actions;
   }
 
   getAbilityModifier() {

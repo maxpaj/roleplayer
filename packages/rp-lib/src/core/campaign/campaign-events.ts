@@ -1,10 +1,15 @@
-import { Id, Round, Battle, Character, Interaction, Item, Clazz } from "../..";
+import { Id } from "../../lib/generate-id";
+import { Battle, Round } from "../battle/battle";
 import {
+  Character,
   CharacterResourceType,
   CharacterStatType,
+  Clazz,
   Position,
 } from "../character/character";
-import { Monster } from "../monster/monster";
+import { Monster } from "../character/monster";
+import { Interaction } from "../interaction/interaction";
+import { Item } from "../item/item";
 
 export type CampaignEvent = CampaignEventType & {
   id: Id;

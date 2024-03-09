@@ -13,9 +13,10 @@ export type {
   Clazz,
 } from "./core/character/character";
 export { Character } from "./core/character/character";
-export { Battle, BattleCharacter } from "./core/battle/battle";
+export type { Actor } from "./core/character/actor";
+export { Battle, BattleEntity } from "./core/battle/battle";
 export type { Round } from "./core/battle/battle";
-export { MonsterDefinition as Monster } from "./core/monster/monster";
+export { MonsterDefinition, Monster } from "./core/character/monster";
 export type { Interaction } from "./core/interaction/interaction";
 export type { Item } from "./core/item/item";
 export { ItemSlot, ItemType, Rarity } from "./core/item/item";

@@ -4,17 +4,20 @@ import { CampaignEvent } from "../campaign/campaign-events";
 import { D20 } from "../dice/dice";
 import { roll } from "../dice/dice";
 import { AugmentedRequired } from "../../types/with-required";
+import { Monster } from "../character/monster";
+import { Actor } from "../character/actor";
 
 export type Round = {
   id: Id;
 };
 
-export class BattleCharacter {
-  characterId!: Id;
-  initiative!: number;
+export class BattleEntity {
+  initiative: number;
+  actor: Actor;
 
-  constructor(init?: Partial<BattleCharacter>) {
-    Object.assign(this, init);
+  constructor(actor: Actor, initiative: number) {
+    this.initiative = initiative;
+    this.actor = actor;
   }
 }
 
@@ -22,35 +25,38 @@ export function getCharacterInitiative(c: Character) {
   return roll(D20) + c.getAbilityModifier();
 }
 
+export function getMonsterInitiative(c: Monster) {
+  return roll(D20);
+}
+
 export class Battle {
   id!: Id;
   name!: string;
-  characters: BattleCharacter[] = [];
+  finished!: boolean;
+  entities: BattleEntity[] = [];
 
   constructor(b: AugmentedRequired<Partial<Battle>, "name">) {
     Object.assign(this, b);
+    this.finished = this.finished || false;
   }
 
   hasRolledForInitiative() {
-    return this.characters.every((c) => c.initiative != 0);
+    return this.entities.every((c) => c.initiative != 0);
   }
 
-  addCharacterToCurrentBattle(character: Character) {
-    const added = new BattleCharacter({
-      characterId: character.id,
-      initiative: getCharacterInitiative(character),
-    });
-    this.characters.push(added);
+  addEntity(entity: Actor) {
+    const added = new BattleEntity(entity, entity.getInitiative());
+    this.entities.push(added);
     return added;
   }
 
   currentCharacterTurn(events: CampaignEvent[]) {
-    const charactersNotActedCurrentRound = this.characters.filter(
+    const charactersNotActedCurrentRound = this.entities.filter(
       (battleChar) => {
         const hasActed = events.some(
           (e) =>
             isCharacterEvent(e) &&
-            e.characterId === battleChar.characterId &&
+            e.id === battleChar.actor.id &&
             e.type === "CharacterEndRound"
         );
 

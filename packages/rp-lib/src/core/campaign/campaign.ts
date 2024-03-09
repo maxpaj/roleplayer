@@ -11,6 +11,7 @@ import {
   CampaignEventWithRound,
   generateId,
   Monster,
+  BattleEntity,
 } from "../..";
 import { AugmentedRequired } from "../../types/with-required";
 import { CharacterClass, isCharacterEvent } from "../character/character";
@@ -267,12 +268,13 @@ export class Campaign {
     this.events.push(...characterSpawnEvents);
   }
 
-  nextRound() {
+  nextRound(battleId?: Battle["id"]) {
     const events: CampaignEventWithRound[] = [
       {
         type: "RoundStarted",
         id: generateId(),
         roundId: generateId(),
+        battleId,
       },
     ];
 
@@ -465,11 +467,11 @@ export class Campaign {
     );
   }
 
-  endCharacterTurn(character: Character) {
+  endCharacterTurn(entity: BattleEntity) {
     this.publishCampaignEvent({
       type: "CharacterEndRound",
       id: generateId(),
-      characterId: character.id,
+      characterId: entity.actor.id,
     });
   }
 
@@ -497,10 +499,23 @@ export class Campaign {
         break;
 
       case "MonsterEnterBattle": {
-        break;
-      }
+        const battle = campaignState.battles.find(
+          (b) => b.id === event.battleId
+        );
+        if (!battle) {
+          throw new Error("Cannot find battle");
+        }
 
-      case "CharacterEnterBattle": {
+        const monsterDefinition = this.world?.monsters.find(
+          (m) => m.id === event.monsterId
+        );
+
+        battle.addEntity(
+          new Monster(this.world!, {
+            id: generateId(),
+            definition: monsterDefinition,
+          })
+        );
         break;
       }
 
@@ -522,8 +537,11 @@ export class Campaign {
         break;
       }
 
+      case "CharacterEnterBattle":
       case "CharacterStatChange":
       case "CharacterExperienceSet":
+      case "CharacterResourceMaxSet":
+      case "CharacterExperienceChanged":
       case "CharacterBaseDefenseSet":
       case "CharacterNameSet":
       case "CharacterActionGain":
@@ -560,7 +578,7 @@ export class Campaign {
             );
           }
 
-          this.applyCharacterEvent(character, event);
+          this.applyCharacterEvent(character, campaignState, event);
         }
         break;
 
@@ -569,10 +587,35 @@ export class Campaign {
     }
   }
 
-  applyCharacterEvent(character: Character, event: CampaignEventWithRound) {
+  applyCharacterEvent(
+    character: Character,
+    campaignState: CampaignState,
+    event: CampaignEventWithRound
+  ) {
     switch (event.type) {
       case "RoundStarted": {
         character.resetResources();
+        break;
+      }
+
+      case "CharacterEnterBattle": {
+        const battle = campaignState.battles.find(
+          (b) => b.id === event.battleId
+        );
+        if (!battle) {
+          throw new Error("Cannot find battle");
+        }
+
+        const character = campaignState.characters.find(
+          (m) => m.id === event.characterId
+        );
+
+        if (!character) {
+          throw new Error("Cannot find character");
+        }
+
+        battle.addEntity(character);
+
         break;
       }
 

@@ -21,7 +21,7 @@ import {
   Item,
 } from "../item/item";
 import { WorldMap } from "../map/map";
-import { MonsterDefinition } from "../monster/monster";
+import { MonsterDefinition } from "../character/monster";
 
 type Version = `${string}.${string}.${string}`;
 

@@ -11,12 +11,16 @@ export type {
   CharacterStat,
   ClassLevelProgression,
   Clazz,
-} from "./core/character/character";
-export { Character } from "./core/character/character";
-export type { Actor } from "./core/character/actor";
-export { Battle, BattleEntity } from "./core/battle/battle";
+} from "./core/actor/character";
+export { Character } from "./core/actor/character";
+export type { Actor } from "./core/actor/actor";
+export { ActorType } from "./core/actor/actor";
+export { Battle, BattleActor as BattleEntity } from "./core/battle/battle";
 export type { Round } from "./core/battle/battle";
-export { MonsterDefinition, Monster } from "./core/character/monster";
+export {
+  Monster as MonsterDefinition,
+  MonsterInstance as Monster,
+} from "./core/actor/monster";
 export type { Interaction } from "./core/interaction/interaction";
 export type { Item } from "./core/item/item";
 export { ItemSlot, ItemType, Rarity } from "./core/item/item";

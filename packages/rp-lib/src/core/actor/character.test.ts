@@ -13,7 +13,7 @@ describe("Character", () => {
       const characterB = generateId();
 
       const world = new World({ name: "World", characterResourceTypes: [] });
-      const campaign = new Campaign({ name: "Campaign", world });
+      const campaign = new Campaign({ name: "Campaign" }, world);
 
       campaign.nextRound();
       campaign.createCharacter(characterA, "Character A");
@@ -27,7 +27,7 @@ describe("Character", () => {
       const characterId = generateId();
 
       const world = new World({ name: "World" });
-      const campaign = new Campaign({ name: "Campaign", world });
+      const campaign = new Campaign({ name: "Campaign" }, world);
 
       campaign.nextRound();
       campaign.createCharacter(characterId, "Character");
@@ -60,7 +60,7 @@ describe("Character", () => {
         name: "World",
         characterResourceTypes: [movementResource],
       });
-      const campaign = new Campaign({ name: "Campaign", world });
+      const campaign = new Campaign({ name: "Campaign" }, world);
 
       campaign.nextRound();
       campaign.createCharacter(characterId, "Character");
@@ -115,7 +115,7 @@ describe("Character", () => {
         name: "World",
         characterResourceTypes: [movementResource],
       });
-      const campaign = new Campaign({ name: "Campaign", world });
+      const campaign = new Campaign({ name: "Campaign" }, world);
 
       const characterId = generateId();
       const character = new Character(world);
@@ -166,7 +166,7 @@ describe("Character", () => {
     it("should apply temporary health change events", () => {
       const characterId = generateId();
       const world = new World({ name: "World" });
-      const campaign = new Campaign({ name: "Campaign", world });
+      const campaign = new Campaign({ name: "Campaign" }, world);
       campaign.nextRound();
       campaign.createCharacter(characterId, "Character");
 
@@ -219,7 +219,7 @@ describe("Character", () => {
           },
         ],
       });
-      const campaign = new Campaign({ name: "Campaign", world });
+      const campaign = new Campaign({ name: "Campaign" }, world);
       campaign.nextRound();
 
       campaign.createCharacter(characterId, "Character");
@@ -250,7 +250,7 @@ describe("Character", () => {
     it("should apply reject character events if character doesn't exist", () => {
       const characterId = generateId();
       const world = new World({ name: "World" });
-      const campaign = new Campaign({ name: "Campaign", world });
+      const campaign = new Campaign({ name: "Campaign" }, world);
       campaign.nextRound();
 
       const events: CampaignEvent[] = [
@@ -273,7 +273,7 @@ describe("Character", () => {
 
     it("should handle unhandled events gracefully", () => {
       const world = new World({ name: "World" });
-      const campaign = new Campaign({ name: "New campaign", world });
+      const campaign = new Campaign({ name: "New campaign" }, world);
       const events: CampaignEvent[] = [
         {
           type: "Unknown",

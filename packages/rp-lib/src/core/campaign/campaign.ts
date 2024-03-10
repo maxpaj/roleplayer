@@ -2,7 +2,6 @@ import {
   Battle,
   Character,
   CharacterStat,
-  Id,
   Interaction,
   Item,
   Round,
@@ -11,24 +10,28 @@ import {
   CampaignEventWithRound,
   generateId,
   Monster,
-  BattleEntity,
+  Actor,
+  Id,
 } from "../..";
 import { AugmentedRequired } from "../../types/with-required";
-import { CharacterClass, isCharacterEvent } from "../character/character";
+import { CharacterClass, isCharacterEvent } from "../actor/character";
 import { EquipmentSlotDefinition } from "../item/item";
 import { CampaignState } from "./campaign-state";
 
 export class Campaign {
   id!: Id;
   name!: string;
-  world?: World;
-  worldId!: World["id"];
+  world!: World;
   adventurers!: Character[];
   events: CampaignEventWithRound[] = [];
 
-  constructor(c: AugmentedRequired<Partial<Campaign>, "name">) {
+  constructor(
+    c: AugmentedRequired<Partial<Omit<Campaign, "world">>, "name">,
+    world: World
+  ) {
     Object.assign(this, c);
 
+    this.world = world;
     this.events = c.events || [
       {
         type: "RoundStarted",
@@ -293,7 +296,7 @@ export class Campaign {
     this.events.push(...events);
   }
 
-  getCharacter(characterId: Id) {
+  getCharacter(characterId: Character["id"]) {
     const character = this.applyEvents().characters.find(
       (c) => c.id === characterId
     );
@@ -349,7 +352,7 @@ export class Campaign {
     return round;
   }
 
-  getItem(itemId: Id) {
+  getItem(itemId: Item["id"]) {
     const item = this.world!.items.find((i) => i.id === itemId);
 
     if (!item) {
@@ -460,18 +463,18 @@ export class Campaign {
     return events;
   }
 
-  getCharacterRoundEvents(round: Round, characterId: Id) {
+  getCharacterRoundEvents(round: Round, characterId: Character["id"]) {
     const roundEvents = this.getRoundEvents(round);
     return roundEvents.filter(
       (re) => isCharacterEvent(re) && re.characterId === characterId
     );
   }
 
-  endCharacterTurn(entity: BattleEntity) {
+  endCharacterTurn(actor: Actor) {
     this.publishCampaignEvent({
       type: "CharacterEndRound",
       id: generateId(),
-      characterId: entity.actor.id,
+      characterId: actor.id,
     });
   }
 
@@ -510,7 +513,7 @@ export class Campaign {
           (m) => m.id === event.monsterId
         );
 
-        battle.addEntity(
+        battle.addActor(
           new Monster(this.world!, {
             id: generateId(),
             definition: monsterDefinition,
@@ -614,7 +617,7 @@ export class Campaign {
           throw new Error("Cannot find character");
         }
 
-        battle.addEntity(character);
+        battle.addActor(character);
 
         break;
       }

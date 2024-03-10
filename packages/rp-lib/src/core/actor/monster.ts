@@ -1,17 +1,17 @@
 import { Id } from "../../lib/generate-id";
 import { CharacterResource, Position } from "./character";
 import { Status } from "../interaction/status";
-import { Actor } from "./actor";
+import { Actor, ActorType } from "./actor";
 import { World } from "../world/world";
 import { Interaction } from "../interaction/interaction";
 import { D20, roll } from "../dice/dice";
 import { CampaignEventWithRound } from "../campaign/campaign-events";
 
-export class Monster implements Actor {
+export class MonsterInstance implements Actor {
   id!: Id;
   name!: string;
 
-  definition!: MonsterDefinition;
+  definition!: Monster;
   party!: Id;
 
   armorClass!: number;
@@ -24,8 +24,20 @@ export class Monster implements Actor {
   resourcesCurrent!: CharacterResource[];
   resourcesMax!: CharacterResource[];
 
-  constructor(world: World, init?: Partial<Monster>) {
+  constructor(world: World, init?: Partial<MonsterInstance>) {
     Object.assign(this, init);
+  }
+
+  getAbilityModifier(): number {
+    return 0;
+  }
+
+  getType(): ActorType {
+    return ActorType.Monster;
+  }
+
+  getEligibleTargets(action: Interaction): Actor[] {
+    throw new Error("Method not implemented.");
   }
 
   getAvailableActions(): Interaction[] {
@@ -45,7 +57,7 @@ export class Monster implements Actor {
   }
 }
 
-export class MonsterDefinition {
+export class Monster {
   id!: Id;
   name!: string;
   challengeRating!: number;
@@ -53,7 +65,7 @@ export class MonsterDefinition {
   maximumHealth!: number;
   actions!: Interaction[];
 
-  constructor(world: World, init?: Partial<MonsterDefinition>) {
+  constructor(world: World, init?: Partial<Monster>) {
     Object.assign(this, init);
   }
 }

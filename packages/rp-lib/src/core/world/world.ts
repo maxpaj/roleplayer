@@ -13,7 +13,7 @@ import {
   CharacterStatType,
   Clazz,
   LevelExperience,
-} from "../character/character";
+} from "../actor/character";
 import { Interaction } from "../interaction/interaction";
 import { Status } from "../interaction/status";
 import {
@@ -21,7 +21,7 @@ import {
   Item,
 } from "../item/item";
 import { WorldMap } from "../map/map";
-import { MonsterDefinition } from "../character/monster";
+import { Monster } from "../actor/monster";
 
 type Version = `${string}.${string}.${string}`;
 
@@ -30,11 +30,11 @@ type Version = `${string}.${string}.${string}`;
  * Holds information about items, spells, statuses, classes, etc. that exists in the world.
  */
 export class World {
-  id: Id;
-  name: string;
+  id!: Id;
+  name!: string;
   libVersion: Version;
 
-  monsters: MonsterDefinition[] = [];
+  monsters: Monster[] = [];
   maps: WorldMap[] = [];
   items: Item[] = [];
   characters: Character[] = [];
@@ -53,8 +53,6 @@ export class World {
 
   constructor(w: AugmentedRequired<Partial<World>, "name">) {
     Object.assign(this, w);
-    this.id = w.id || generateId();
-    this.name = w.name;
     this.libVersion = w.libVersion || "0.0.0"; // TODO: Should be injected at build time, should throw if the version of the world isn't supported by the lib
   }
 

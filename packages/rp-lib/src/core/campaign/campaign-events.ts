@@ -6,8 +6,8 @@ import {
   CharacterStatType,
   Clazz,
   Position,
-} from "../character/character";
-import { Monster } from "../character/monster";
+} from "../actor/character";
+import { Monster } from "../actor/monster";
 import { Interaction } from "../interaction/interaction";
 import { Item } from "../item/item";
 

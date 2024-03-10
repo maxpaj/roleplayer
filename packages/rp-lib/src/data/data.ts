@@ -1,4 +1,4 @@
-import { CharacterStatType } from "../core/character/character";
+import { CharacterStatType } from "../core/actor/character";
 import { ItemEquipmentType } from "../core/item/item";
 import { generateId } from "../lib/generate-id";
 

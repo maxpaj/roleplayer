@@ -10,13 +10,7 @@ import {
   CampaignEventWithRound,
 } from "../campaign/campaign-events";
 import { World } from "../world/world";
-import { Actor } from "./actor";
-
-export function isCharacterEvent(
-  event: CampaignEvent
-): event is Extract<CampaignEvent, { characterId: Character["id"] }> {
-  return (event as any).characterId !== undefined;
-}
+import { Actor, ActorType } from "./actor";
 
 export type Position = {
   x: number;
@@ -111,6 +105,12 @@ export type CharacterStat = {
   amount: number;
 };
 
+export function isCharacterEvent(
+  event: CampaignEvent
+): event is Extract<CampaignEvent, { characterId: Character["id"] }> {
+  return (event as any).characterId !== undefined;
+}
+
 export class Character implements Actor {
   id!: Id;
   party!: Id;
@@ -130,11 +130,11 @@ export class Character implements Actor {
   armorClass!: number;
   stats: CharacterStat[] = [];
 
+  actions: Interaction[] = [];
   classes: CharacterClass[] = [];
   statuses: Status[] = [];
   inventory: Item[] = [];
   equipment: CharacterEquipmentSlot[] = [];
-  actions: Interaction[] = [];
   position!: Position;
 
   maximumHealth!: number;
@@ -164,6 +164,14 @@ export class Character implements Actor {
     }));
 
     Object.assign(this, init);
+  }
+
+  getType(): ActorType {
+    return ActorType.Character;
+  }
+
+  getEligibleTargets(action: Interaction): Actor[] {
+    throw new Error("Method not implemented.");
   }
 
   performAction(): CampaignEventWithRound[] {

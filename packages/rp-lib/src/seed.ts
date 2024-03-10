@@ -1,4 +1,4 @@
-import { Clazz, Race } from "./core/character/character";
+import { Clazz, Race } from "./core/actor/character";
 import { generateId } from "./lib/generate-id";
 
 export function randomEnum<T extends object>(anEnum: T): T[keyof T] {

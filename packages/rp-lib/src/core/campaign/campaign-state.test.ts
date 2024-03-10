@@ -1,4 +1,7 @@
-import { Campaign, CampaignEventWithRound, World, generateId } from "../..";
+import { generateId } from "../../lib/generate-id";
+import { World } from "../world/world";
+import { Campaign } from "./campaign";
+import { CampaignEventWithRound } from "./campaign-events";
 
 describe("Campaign state", () => {
   it("applies events", () => {

@@ -1,17 +1,16 @@
 import { Id } from "../../lib/generate-id";
-import { Character, isCharacterEvent } from "../character/character";
+import { isCharacterEvent } from "../actor/character";
 import { CampaignEvent } from "../campaign/campaign-events";
 import { D20 } from "../dice/dice";
 import { roll } from "../dice/dice";
 import { AugmentedRequired } from "../../types/with-required";
-import { Monster } from "../character/monster";
-import { Actor } from "../character/actor";
+import { Actor } from "../actor/actor";
 
 export type Round = {
   id: Id;
 };
 
-export class BattleEntity {
+export class BattleActor {
   initiative: number;
   actor: Actor;
 
@@ -21,19 +20,15 @@ export class BattleEntity {
   }
 }
 
-export function getCharacterInitiative(c: Character) {
+export function getActorInitiative(c: Actor) {
   return roll(D20) + c.getAbilityModifier();
-}
-
-export function getMonsterInitiative(c: Monster) {
-  return roll(D20);
 }
 
 export class Battle {
   id!: Id;
   name!: string;
   finished!: boolean;
-  entities: BattleEntity[] = [];
+  entities: BattleActor[] = [];
 
   constructor(b: AugmentedRequired<Partial<Battle>, "name">) {
     Object.assign(this, b);
@@ -44,13 +39,13 @@ export class Battle {
     return this.entities.every((c) => c.initiative != 0);
   }
 
-  addEntity(entity: Actor) {
-    const added = new BattleEntity(entity, entity.getInitiative());
+  addActor(entity: Actor) {
+    const added = new BattleActor(entity, entity.getInitiative());
     this.entities.push(added);
     return added;
   }
 
-  currentCharacterTurn(events: CampaignEvent[]) {
+  currentActorTurn(events: CampaignEvent[]) {
     const charactersNotActedCurrentRound = this.entities.filter(
       (battleChar) => {
         const hasActed = events.some(

@@ -1,7 +1,4 @@
-import { Effect, ElementType } from "../interaction/effect";
-import { Interaction } from "../interaction/interaction";
-import { Item } from "../item/item";
-import { Status } from "../interaction/status";
+import { Interaction } from "../world/interaction/interaction";
 import { D20, roll } from "../dice/dice";
 import { Id } from "../../lib/generate-id";
 import {
@@ -9,8 +6,10 @@ import {
   CampaignEventType,
   CampaignEventWithRound,
 } from "../campaign/campaign-events";
-import { World } from "../world/world";
 import { Actor, ActorType } from "./actor";
+import { EquipmentSlotDefinition, Item } from "../world/item/item";
+import { Status } from "../world/interaction/status";
+import { Effect, ElementType } from "../world/interaction/effect";
 
 export type Position = {
   x: number;
@@ -59,6 +58,8 @@ export type CharacterResourceType = {
 export type CharacterResource = {
   resourceId: CharacterResourceType["id"];
   amount: number;
+  max: number;
+  min: number;
 };
 
 export type CharacterResourceGeneration = CharacterResource & {
@@ -74,7 +75,7 @@ export type LevelExperience = number;
 
 export type CharacterEquipmentSlot = {
   item?: Item;
-  slotId: string;
+  slotId: EquipmentSlotDefinition["id"];
 };
 
 export type Reaction = {
@@ -91,8 +92,8 @@ export enum ReactionEventType {
 }
 
 export type ReactionResource = {
-  reactionId: Id;
-  targetId: Id;
+  reactionId: Reaction["id"];
+  targetId: Actor["id"];
 };
 
 export type CharacterStatType = {
@@ -118,7 +119,7 @@ export class Character implements Actor {
   isPlayerControlled!: boolean;
 
   name!: string;
-  description!: string;
+  description?: string;
   playerName!: string;
   alignment!: Alignment;
 
@@ -143,26 +144,14 @@ export class Character implements Actor {
   spellCastingAbilityStatId!: CharacterStatType["id"];
   abilityModifierStatId!: CharacterStatType["id"];
 
-  // Temporary resources
-  resourcesCurrent: CharacterResource[] = [];
-  resourcesMax: CharacterResource[] = [];
+  resources: CharacterResource[] = [];
 
   currentHealth!: number;
   temporaryHealth!: number;
   reactionsRemaining: ReactionResource[] = [];
   reactions: Reaction[] = [];
 
-  constructor(world: World, init?: Partial<Character>) {
-    this.reactionsRemaining = [];
-    this.resourcesCurrent = world.characterResourceTypes.map((cr) => ({
-      amount: cr.defaultMax || 0,
-      resourceId: cr.id,
-    }));
-    this.resourcesMax = world.characterResourceTypes.map((cr) => ({
-      amount: cr.defaultMax || 0,
-      resourceId: cr.id,
-    }));
-
+  constructor(init?: Partial<Character>) {
     Object.assign(this, init);
   }
 
@@ -195,7 +184,7 @@ export class Character implements Actor {
   }
 
   resetResources() {
-    this.resourcesCurrent = this.resourcesMax;
+    this.resources = this.resources.map((r) => ({ ...r, amount: r.max }));
   }
 
   getDamageRoll(effect: Effect) {

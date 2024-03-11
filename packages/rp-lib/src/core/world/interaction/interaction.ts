@@ -1,5 +1,5 @@
-import { Id } from "../../lib/generate-id";
-import { CharacterResourceType } from "../actor/character";
+import { Id } from "../../../lib/generate-id";
+import { CharacterResourceType } from "../../actor/character";
 import { Effect } from "./effect";
 
 export enum TargetType {
@@ -11,7 +11,7 @@ export enum TargetType {
 }
 
 /**
- * Represents an interaction.
+ * Represents an interaction, with targets, and some effect that will be applied
  */
 export type Interaction = {
   id: Id;

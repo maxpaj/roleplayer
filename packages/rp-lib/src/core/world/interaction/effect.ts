@@ -1,5 +1,5 @@
-import { Id } from "../../lib/generate-id";
-import { Dice } from "../dice/dice";
+import { Id } from "../../../lib/generate-id";
+import { Dice } from "../../dice/dice";
 
 export enum ElementType {
   Slashing = "Slashing",

@@ -1,19 +1,19 @@
-import { generateId } from "../../lib/generate-id";
-import { Interaction, TargetType } from "../interaction/interaction";
-import { Item, ItemSlot, ItemType, Rarity } from "../item/item";
+import { dangerousGenerateId } from "../../lib/generate-id";
+import { Interaction, TargetType } from "../world/interaction/interaction";
 import { Campaign } from "../campaign/campaign";
 import { CampaignEvent } from "../campaign/campaign-events";
 import { Character, CharacterResourceType } from "./character";
 import { World } from "../world/world";
+import { Item, ItemSlot, ItemType, Rarity } from "../world/item/item";
 
 describe("Character", () => {
   describe("Create character events", () => {
     it("should handle create character events", () => {
-      const characterA = generateId();
-      const characterB = generateId();
+      const characterA = dangerousGenerateId();
+      const characterB = dangerousGenerateId();
 
       const world = new World({ name: "World", characterResourceTypes: [] });
-      const campaign = new Campaign({ name: "Campaign" }, world);
+      const campaign = new Campaign({ name: "Campaign", world });
 
       campaign.nextRound();
       campaign.createCharacter(characterA, "Character A");
@@ -24,10 +24,10 @@ describe("Character", () => {
     });
 
     it("should apply maximum health change events", () => {
-      const characterId = generateId();
+      const characterId = dangerousGenerateId();
 
       const world = new World({ name: "World" });
-      const campaign = new Campaign({ name: "Campaign" }, world);
+      const campaign = new Campaign({ name: "Campaign", world });
 
       campaign.nextRound();
       campaign.createCharacter(characterId, "Character");
@@ -36,7 +36,7 @@ describe("Character", () => {
         {
           type: "CharacterMaximumHealthSet",
           maximumHealth: 12,
-          id: generateId(),
+          id: dangerousGenerateId(),
           characterId: characterId,
         },
       ];
@@ -51,16 +51,16 @@ describe("Character", () => {
     });
 
     it("should apply movement events", () => {
-      const characterId = generateId();
+      const characterId = dangerousGenerateId();
       const movementResource: CharacterResourceType = {
-        id: generateId(),
+        id: dangerousGenerateId(),
         name: "Movement speed",
       };
       const world = new World({
         name: "World",
         characterResourceTypes: [movementResource],
       });
-      const campaign = new Campaign({ name: "Campaign" }, world);
+      const campaign = new Campaign({ name: "Campaign", world });
 
       campaign.nextRound();
       campaign.createCharacter(characterId, "Character");
@@ -68,14 +68,14 @@ describe("Character", () => {
       const events: CampaignEvent[] = [
         {
           type: "CharacterResourceCurrentChange",
-          id: generateId(),
+          id: dangerousGenerateId(),
           resourceId: movementResource.id,
           amount: 35,
           characterId: characterId,
         },
         {
           type: "CharacterPositionSet",
-          id: generateId(),
+          id: dangerousGenerateId(),
           targetPosition: {
             x: 10,
             y: 0,
@@ -90,7 +90,7 @@ describe("Character", () => {
             y: 20,
             z: 0,
           },
-          id: generateId(),
+          id: dangerousGenerateId(),
           characterId: characterId,
         },
       ];
@@ -107,7 +107,7 @@ describe("Character", () => {
 
     it("should reject movement event when movement exceeds remaining movement", () => {
       const movementResource: CharacterResourceType = {
-        id: generateId(),
+        id: dangerousGenerateId(),
         name: "Movement speed",
       };
 
@@ -115,10 +115,19 @@ describe("Character", () => {
         name: "World",
         characterResourceTypes: [movementResource],
       });
-      const campaign = new Campaign({ name: "Campaign" }, world);
+      const campaign = new Campaign({ name: "Campaign", world });
 
-      const characterId = generateId();
-      const character = new Character(world);
+      const characterId = dangerousGenerateId();
+      const character = new Character({
+        resources: [
+          {
+            amount: 35,
+            max: 35,
+            min: 0,
+            resourceId: movementResource.id,
+          },
+        ],
+      });
       character.id = characterId;
 
       campaign.nextRound();
@@ -127,14 +136,14 @@ describe("Character", () => {
       const events: CampaignEvent[] = [
         {
           type: "CharacterResourceCurrentChange",
-          id: generateId(),
+          id: dangerousGenerateId(),
           amount: 35,
           characterId: characterId,
           resourceId: movementResource.id,
         },
         {
           type: "CharacterPositionSet",
-          id: generateId(),
+          id: dangerousGenerateId(),
           targetPosition: {
             x: 10,
             y: 0,
@@ -144,7 +153,7 @@ describe("Character", () => {
         },
         {
           type: "RoundStarted",
-          id: generateId(),
+          id: dangerousGenerateId(),
         },
         {
           type: "CharacterMovement",
@@ -153,7 +162,7 @@ describe("Character", () => {
             y: 50,
             z: 0,
           },
-          id: generateId(),
+          id: dangerousGenerateId(),
           characterId: characterId,
         },
       ];
@@ -164,9 +173,9 @@ describe("Character", () => {
     });
 
     it("should apply temporary health change events", () => {
-      const characterId = generateId();
+      const characterId = dangerousGenerateId();
       const world = new World({ name: "World" });
-      const campaign = new Campaign({ name: "Campaign" }, world);
+      const campaign = new Campaign({ name: "Campaign", world });
       campaign.nextRound();
       campaign.createCharacter(characterId, "Character");
 
@@ -174,21 +183,21 @@ describe("Character", () => {
         {
           type: "CharacterMaximumHealthSet",
           maximumHealth: 12,
-          id: generateId(),
+          id: dangerousGenerateId(),
           characterId: characterId,
         },
         {
           type: "CharacterHealthSet",
           healthChange: 12,
-          id: generateId(),
+          id: dangerousGenerateId(),
           characterId: characterId,
         },
         {
           type: "CharacterHealthLoss",
           healthLoss: 4,
-          id: generateId(),
+          id: dangerousGenerateId(),
           characterId: characterId,
-          interactionId: generateId(),
+          interactionId: dangerousGenerateId(),
         },
       ];
 
@@ -202,8 +211,8 @@ describe("Character", () => {
     });
 
     it("should apply item gain events", () => {
-      const characterId = generateId();
-      const itemId = generateId();
+      const characterId = dangerousGenerateId();
+      const itemId = dangerousGenerateId();
       const world = new World({
         name: "World",
         items: [
@@ -219,7 +228,7 @@ describe("Character", () => {
           },
         ],
       });
-      const campaign = new Campaign({ name: "Campaign" }, world);
+      const campaign = new Campaign({ name: "Campaign", world });
       campaign.nextRound();
 
       campaign.createCharacter(characterId, "Character");
@@ -227,12 +236,12 @@ describe("Character", () => {
       const events: CampaignEvent[] = [
         {
           type: "CharacterSpawned",
-          id: generateId(),
+          id: dangerousGenerateId(),
           characterId: characterId,
         },
         {
           type: "CharacterItemGain",
-          id: generateId(),
+          id: dangerousGenerateId(),
           characterId: characterId,
           itemId: itemId,
         },
@@ -248,16 +257,16 @@ describe("Character", () => {
     });
 
     it("should apply reject character events if character doesn't exist", () => {
-      const characterId = generateId();
+      const characterId = dangerousGenerateId();
       const world = new World({ name: "World" });
-      const campaign = new Campaign({ name: "Campaign" }, world);
+      const campaign = new Campaign({ name: "Campaign", world });
       campaign.nextRound();
 
       const events: CampaignEvent[] = [
         {
           type: "CharacterMaximumHealthSet",
           maximumHealth: 12,
-          id: generateId(),
+          id: dangerousGenerateId(),
           characterId: characterId,
         },
       ];
@@ -273,11 +282,11 @@ describe("Character", () => {
 
     it("should handle unhandled events gracefully", () => {
       const world = new World({ name: "World" });
-      const campaign = new Campaign({ name: "New campaign" }, world);
+      const campaign = new Campaign({ name: "New campaign", world });
       const events: CampaignEvent[] = [
         {
           type: "Unknown",
-          id: generateId(),
+          id: dangerousGenerateId(),
         },
       ];
 
@@ -293,11 +302,11 @@ describe("Character", () => {
   describe("Character actions", () => {
     it("should return a list of possible interactions based on the character class abilities, spells and inventory", () => {
       const sword: Item = {
-        id: generateId(),
+        id: dangerousGenerateId(),
         rarity: Rarity.Common,
         actions: [
           {
-            id: generateId(),
+            id: dangerousGenerateId(),
             appliesEffects: [],
             eligibleTargets: [TargetType.Hostile],
             name: "Slash",
@@ -311,7 +320,7 @@ describe("Character", () => {
       };
 
       const healingWord: Interaction = {
-        id: generateId(),
+        id: dangerousGenerateId(),
         name: "Healing Word (Level 1)",
         appliesEffects: [],
         eligibleTargets: [TargetType.Friendly],
@@ -320,24 +329,23 @@ describe("Character", () => {
       };
 
       const firebolt: Interaction = {
-        id: generateId(),
+        id: dangerousGenerateId(),
         appliesEffects: [],
         eligibleTargets: [TargetType.Hostile],
         name: "Firebolt",
         rangeDistanceMeters: 35,
         requiresResources: [
           {
-            resourceId: "spell-slot-level-1",
+            resourceId: 0,
             amount: 1,
           },
         ],
       };
 
-      const world = new World({ name: "World" });
-      const char = new Character(world);
+      const char = new Character();
       char.equipment = [
         {
-          slotId: "main-hand",
+          slotId: 0,
           item: sword,
         },
       ];

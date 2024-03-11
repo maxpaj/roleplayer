@@ -1,6 +1,6 @@
 import { Id } from "../../lib/generate-id";
 import { CampaignEventWithRound } from "../campaign/campaign-events";
-import { Interaction } from "../interaction/interaction";
+import { Interaction } from "../world/interaction/interaction";
 
 export enum ActorType {
   Monster = "Monster",
@@ -19,8 +19,8 @@ export interface Actor {
   getActions(): Interaction[];
   getAvailableActions(): Interaction[];
   performAction(
-    targets: Actor["id"][],
-    actionId: Interaction
+    targetIds: Actor["id"][],
+    actionId: Interaction["id"]
   ): CampaignEventWithRound[];
   getInitiative(): number;
   getEligibleTargets(action: Interaction): Actor[];

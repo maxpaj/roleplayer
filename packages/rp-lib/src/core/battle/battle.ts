@@ -6,10 +6,6 @@ import { roll } from "../dice/dice";
 import { AugmentedRequired } from "../../types/with-required";
 import { Actor } from "../actor/actor";
 
-export type Round = {
-  id: Id;
-};
-
 export class BattleActor {
   initiative: number;
   actor: Actor;
@@ -63,6 +59,6 @@ export class Battle {
       (a, b) => b.initiative - a.initiative
     );
 
-    return sorted[0];
+    return sorted[0] as BattleActor;
   }
 }

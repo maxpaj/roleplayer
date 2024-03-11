@@ -1,30 +1,30 @@
-import { generateId } from "../../lib/generate-id";
+import { dangerousGenerateId } from "../../lib/generate-id";
 import { World } from "../world/world";
 import { Campaign } from "./campaign";
 import { CampaignEventWithRound } from "./campaign-events";
 
 describe("Campaign state", () => {
   it("applies events", () => {
-    const characterId = generateId();
+    const characterId = dangerousGenerateId();
     const events: CampaignEventWithRound[] = [
       {
         type: "CharacterSpawned",
         characterId,
-        id: generateId(),
-        roundId: generateId(),
+        id: dangerousGenerateId(),
+        roundId: dangerousGenerateId(),
       },
       {
         type: "CharacterNameSet",
         characterId,
-        id: generateId(),
+        id: dangerousGenerateId(),
         name: "Some name",
-        roundId: generateId(),
+        roundId: dangerousGenerateId(),
       },
       {
         type: "CharacterMaximumHealthSet",
         characterId,
-        id: generateId(),
-        roundId: generateId(),
+        id: dangerousGenerateId(),
+        roundId: dangerousGenerateId(),
         maximumHealth: 10,
       },
     ];

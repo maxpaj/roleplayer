@@ -1,5 +1,6 @@
-import { generateId } from "../../lib/generate-id";
-import { World } from "../world/world";
+import { dangerousGenerateId } from "../../../lib/generate-id";
+import { Campaign } from "../../campaign/campaign";
+import { CampaignEvent } from "../../campaign/campaign-events";
 import {
   Item,
   ItemEquipmentType,
@@ -7,6 +8,7 @@ import {
   ItemType,
   Rarity,
 } from "../item/item";
+import { World } from "../world";
 import { EffectType, ElementType } from "./effect";
 import { Interaction, TargetType } from "./interaction";
 import {
@@ -15,12 +17,10 @@ import {
   StatusDurationType,
   StatusType,
 } from "./status";
-import { CampaignEvent } from "../campaign/campaign-events";
-import { Campaign } from "../..";
 
 describe("interactions", () => {
   const frozenStatus: Status = {
-    id: generateId(),
+    id: dangerousGenerateId(),
     name: "Chill",
     durationRounds: 2,
     durationType: StatusDurationType.NumberOfRounds,
@@ -39,11 +39,11 @@ describe("interactions", () => {
   };
 
   const frostSword: Item = {
-    id: generateId(),
+    id: dangerousGenerateId(),
     rarity: Rarity.Rare,
     actions: [
       {
-        id: generateId(),
+        id: dangerousGenerateId(),
         appliesEffects: [
           {
             element: ElementType.Slashing,
@@ -75,14 +75,14 @@ describe("interactions", () => {
 
     const equipmentSlot = {
       eligibleEquipmentTypes: [ItemEquipmentType.OneHandSword],
-      id: generateId(),
+      id: dangerousGenerateId(),
       name: "Main hand",
     };
 
     world.characterEquipmentSlots = [equipmentSlot];
 
     const action: Interaction = {
-      id: generateId(),
+      id: dangerousGenerateId(),
       appliesEffects: [
         {
           element: ElementType.Slashing,
@@ -103,8 +103,8 @@ describe("interactions", () => {
     const campaign = new Campaign({ name: "test", world });
     campaign.nextRound();
 
-    const attackerId = generateId();
-    const defenderId = generateId();
+    const attackerId = dangerousGenerateId();
+    const defenderId = dangerousGenerateId();
 
     campaign.createCharacter(attackerId, "Attacker");
     campaign.addCharacterEquipmentSlot(attackerId, equipmentSlot.id);
@@ -115,7 +115,7 @@ describe("interactions", () => {
 
     const events: CampaignEvent[] = [
       {
-        id: generateId(),
+        id: dangerousGenerateId(),
         type: "CharacterHealthSet",
         healthChange: 10,
         characterId: defenderId,

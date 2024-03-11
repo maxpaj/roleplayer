@@ -1,4 +1,4 @@
-import { Id } from "../../lib/generate-id";
+import { Id } from "../../../lib/generate-id";
 import { Interaction } from "../interaction/interaction";
 
 export enum ItemType {

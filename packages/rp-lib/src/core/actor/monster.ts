@@ -1,11 +1,10 @@
 import { Id } from "../../lib/generate-id";
 import { CharacterResource, Position } from "./character";
-import { Status } from "../interaction/status";
 import { Actor, ActorType } from "./actor";
-import { World } from "../world/world";
-import { Interaction } from "../interaction/interaction";
+import { Interaction } from "../world/interaction/interaction";
 import { D20, roll } from "../dice/dice";
 import { CampaignEventWithRound } from "../campaign/campaign-events";
+import { Status } from "../world/interaction/status";
 
 export class MonsterInstance implements Actor {
   id!: Id;
@@ -24,7 +23,7 @@ export class MonsterInstance implements Actor {
   resourcesCurrent!: CharacterResource[];
   resourcesMax!: CharacterResource[];
 
-  constructor(world: World, init?: Partial<MonsterInstance>) {
+  constructor(init?: Partial<MonsterInstance>) {
     Object.assign(this, init);
   }
 
@@ -65,7 +64,7 @@ export class Monster {
   maximumHealth!: number;
   actions!: Interaction[];
 
-  constructor(world: World, init?: Partial<Monster>) {
+  constructor(init?: Partial<Monster>) {
     Object.assign(this, init);
   }
 }

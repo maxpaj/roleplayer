@@ -1,22 +1,20 @@
-import {
-  Battle,
-  Character,
-  CharacterStat,
-  Interaction,
-  Item,
-  Round,
-  World,
-  CampaignEvent,
-  CampaignEventWithRound,
-  generateId,
-  Monster,
-  Actor,
-  Id,
-} from "../..";
+import { Id, dangerousGenerateId } from "../../lib/generate-id";
 import { AugmentedRequired } from "../../types/with-required";
-import { CharacterClass, isCharacterEvent } from "../actor/character";
-import { EquipmentSlotDefinition } from "../item/item";
+import {
+  Character,
+  CharacterClass,
+  CharacterStat,
+  isCharacterEvent,
+} from "../actor/character";
+import { Monster, MonsterInstance } from "../actor/monster";
+import { Battle } from "../battle/battle";
+import { Round } from "./round";
+import { Interaction } from "../world/interaction/interaction";
+import { World } from "../world/world";
+import { CampaignEvent, CampaignEventWithRound } from "./campaign-events";
 import { CampaignState } from "./campaign-state";
+import { Actor } from "../actor/actor";
+import { EquipmentSlotDefinition, Item } from "../world/item/item";
 
 export class Campaign {
   id!: Id;
@@ -25,18 +23,14 @@ export class Campaign {
   adventurers!: Character[];
   events: CampaignEventWithRound[] = [];
 
-  constructor(
-    c: AugmentedRequired<Partial<Omit<Campaign, "world">>, "name">,
-    world: World
-  ) {
+  constructor(c: AugmentedRequired<Partial<Campaign>, "name">) {
     Object.assign(this, c);
 
-    this.world = world;
     this.events = c.events || [
       {
         type: "RoundStarted",
-        id: generateId(),
-        roundId: generateId(),
+        id: dangerousGenerateId(),
+        roundId: dangerousGenerateId(),
       },
     ];
   }
@@ -45,7 +39,7 @@ export class Campaign {
     const actionGain: CampaignEventWithRound = {
       characterId,
       itemId,
-      id: generateId(),
+      id: dangerousGenerateId(),
       type: "CharacterItemGain",
       roundId: this.getCurrentRound().id,
     };
@@ -60,7 +54,7 @@ export class Campaign {
     const equipEvent: CampaignEventWithRound = {
       characterId,
       equipmentSlotId,
-      id: generateId(),
+      id: dangerousGenerateId(),
       type: "CharacterEquipmentSlotGain",
       roundId: this.getCurrentRound().id,
     };
@@ -72,8 +66,8 @@ export class Campaign {
     const equipEvent: CampaignEventWithRound = {
       characterId,
       itemId,
-      equipmentSlotId: "",
-      id: generateId(),
+      equipmentSlotId: 0,
+      id: dangerousGenerateId(),
       type: "CharacterItemEquip",
       roundId: this.getCurrentRound().id,
     };
@@ -88,7 +82,7 @@ export class Campaign {
     const actionGain: CampaignEventWithRound = {
       characterId,
       actionId,
-      id: generateId(),
+      id: dangerousGenerateId(),
       type: "CharacterActionGain",
       roundId: this.getCurrentRound().id,
     };
@@ -112,7 +106,7 @@ export class Campaign {
       amount: st.amount,
       characterId,
       statId: st.statId,
-      id: generateId(),
+      id: dangerousGenerateId(),
       roundId: this.getCurrentRound().id,
       battleId: this.getCurrentBattle()?.id,
     }));
@@ -123,14 +117,14 @@ export class Campaign {
   setCharacterClasses(characterId: Character["id"], classes: CharacterClass[]) {
     const classResetEvent: CampaignEventWithRound = {
       characterId,
-      id: generateId(),
+      id: dangerousGenerateId(),
       type: "CharacterClassReset",
       roundId: this.getCurrentRound().id,
     };
 
     const classUpdates: CampaignEventWithRound[] = classes.map((c) => ({
       characterId,
-      id: generateId(),
+      id: dangerousGenerateId(),
       type: "CharacterClassLevelGain",
       roundId: this.getCurrentRound().id,
       classId: c.classId,
@@ -142,7 +136,7 @@ export class Campaign {
   setCharacterName(characterId: Character["id"], name: string) {
     const characterUpdate: CampaignEventWithRound = {
       characterId,
-      id: generateId(),
+      id: dangerousGenerateId(),
       type: "CharacterNameSet",
       name,
       roundId: this.getCurrentRound().id,
@@ -154,7 +148,7 @@ export class Campaign {
   setCharacterBaseDefense(characterId: Character["id"], defense: number) {
     const characterUpdate: CampaignEventWithRound = {
       characterId,
-      id: generateId(),
+      id: dangerousGenerateId(),
       type: "CharacterBaseDefenseSet",
       defense,
       roundId: this.getCurrentRound().id,
@@ -166,7 +160,7 @@ export class Campaign {
   characterGainExperience(characterId: Character["id"], experience: number) {
     const characterUpdate: CampaignEventWithRound = {
       characterId,
-      id: generateId(),
+      id: dangerousGenerateId(),
       type: "CharacterExperienceChanged",
       experience,
       roundId: this.getCurrentRound().id,
@@ -183,7 +177,7 @@ export class Campaign {
 
     const monsterUpdate: CampaignEventWithRound = {
       monsterId,
-      id: generateId(),
+      id: dangerousGenerateId(),
       type: "MonsterEnterBattle",
       battleId: battle.id,
       roundId: this.getCurrentRound().id,
@@ -200,7 +194,7 @@ export class Campaign {
 
     const characterUpdate: CampaignEventWithRound = {
       characterId,
-      id: generateId(),
+      id: dangerousGenerateId(),
       type: "CharacterEnterBattle",
       battleId: battle.id,
       roundId: this.getCurrentRound().id,
@@ -216,7 +210,7 @@ export class Campaign {
         max: 10,
         characterId,
         resourceId: cr.id,
-        id: generateId(),
+        id: dangerousGenerateId(),
         roundId: this.getCurrentRound().id,
         battleId: this.getCurrentBattle()?.id,
       }));
@@ -227,7 +221,7 @@ export class Campaign {
         amount: 0,
         characterId,
         statId: st.id,
-        id: generateId(),
+        id: dangerousGenerateId(),
         roundId: this.getCurrentRound().id,
         battleId: this.getCurrentBattle()?.id,
       }));
@@ -236,7 +230,7 @@ export class Campaign {
       {
         type: "CharacterSpawned",
         characterId,
-        id: generateId(),
+        id: dangerousGenerateId(),
         roundId: this.getCurrentRound().id,
         battleId: this.getCurrentBattle()?.id,
       },
@@ -244,7 +238,7 @@ export class Campaign {
         type: "CharacterNameSet",
         name: name,
         characterId,
-        id: generateId(),
+        id: dangerousGenerateId(),
         roundId: this.getCurrentRound().id,
         battleId: this.getCurrentBattle()?.id,
       },
@@ -252,7 +246,7 @@ export class Campaign {
         type: "CharacterExperienceSet",
         experience: 0,
         characterId,
-        id: generateId(),
+        id: dangerousGenerateId(),
         roundId: this.getCurrentRound().id,
         battleId: this.getCurrentBattle()?.id,
       },
@@ -260,7 +254,7 @@ export class Campaign {
         type: "CharacterBaseDefenseSet",
         defense: 10,
         characterId,
-        id: generateId(),
+        id: dangerousGenerateId(),
         roundId: this.getCurrentRound().id,
         battleId: this.getCurrentBattle()?.id,
       },
@@ -275,8 +269,8 @@ export class Campaign {
     const events: CampaignEventWithRound[] = [
       {
         type: "RoundStarted",
-        id: generateId(),
-        roundId: generateId(),
+        id: dangerousGenerateId(),
+        roundId: dangerousGenerateId(),
         battleId,
       },
     ];
@@ -288,7 +282,7 @@ export class Campaign {
     const events: CampaignEventWithRound[] = [
       {
         type: "RoundEnded",
-        id: generateId(),
+        id: dangerousGenerateId(),
         roundId: this.getCurrentRound().id,
       },
     ];
@@ -324,13 +318,13 @@ export class Campaign {
   }
 
   startBattle() {
-    const battleId = generateId();
+    const battleId = dangerousGenerateId();
 
     this.events.push({
-      id: generateId(),
+      id: dangerousGenerateId(),
       type: "BattleStarted",
       battleId,
-      roundId: generateId(),
+      roundId: dangerousGenerateId(),
     });
 
     return battleId;
@@ -374,14 +368,14 @@ export class Campaign {
       defender.armorClass < diceAttackHitRoll + characterHitModifier;
     const hitDodgeEvent: CampaignEvent = defenderWasHit
       ? {
-          id: generateId(),
+          id: dangerousGenerateId(),
           characterId: defender.id,
           interactionId: interaction.id,
           attackerId: attacker.id,
           type: "CharacterAttackDefenderHit",
         }
       : {
-          id: generateId(),
+          id: dangerousGenerateId(),
           characterId: defender.id,
           interactionId: interaction.id,
           attackerId: attacker.id,
@@ -398,7 +392,7 @@ export class Campaign {
 
           return [
             {
-              id: generateId(),
+              id: dangerousGenerateId(),
               characterId: defender.id,
               interactionId: interaction.id,
               type: "CharacterHealthLoss",
@@ -422,7 +416,7 @@ export class Campaign {
             );
 
             return {
-              id: generateId(),
+              id: dangerousGenerateId(),
               characterId: defender.id,
               interactionId: interaction.id,
               type: "CharacterStatusGain",
@@ -432,7 +426,7 @@ export class Campaign {
       : [];
 
     const attackerPrimaryAction = {
-      id: generateId(),
+      id: dangerousGenerateId(),
       characterId: attacker.id,
       interactionId: interaction.id,
       type: "CharacterPrimaryAction",
@@ -473,7 +467,7 @@ export class Campaign {
   endCharacterTurn(actor: Actor) {
     this.publishCampaignEvent({
       type: "CharacterEndRound",
-      id: generateId(),
+      id: dangerousGenerateId(),
       characterId: actor.id,
     });
   }
@@ -484,18 +478,22 @@ export class Campaign {
     );
   }
 
+  isValidEvent(event: CampaignEventWithRound) {
+    return true;
+  }
+
   applyEvents() {
     const worldState = new CampaignState(this, [], [], []);
-    this.events.forEach((e) => this.applyEvent(e, worldState));
+    this.events
+      .filter(this.isValidEvent)
+      .forEach((e) => this.applyEvent(e, worldState));
     return worldState;
   }
 
   applyEvent(event: CampaignEventWithRound, campaignState: CampaignState) {
     switch (event.type) {
       case "CharacterSpawned":
-        campaignState.characters.push(
-          new Character(this.world!, { id: event.characterId })
-        );
+        campaignState.characters.push(new Character({ id: event.characterId }));
         break;
 
       case "RoundEnded":
@@ -505,6 +503,7 @@ export class Campaign {
         const battle = campaignState.battles.find(
           (b) => b.id === event.battleId
         );
+
         if (!battle) {
           throw new Error("Cannot find battle");
         }
@@ -514,8 +513,8 @@ export class Campaign {
         );
 
         battle.addActor(
-          new Monster(this.world!, {
-            id: generateId(),
+          new MonsterInstance({
+            id: dangerousGenerateId(),
             definition: monsterDefinition,
           })
         );
@@ -638,15 +637,22 @@ export class Campaign {
       }
 
       case "CharacterResourceMaxSet": {
-        const resource = character.resourcesMax.find(
+        const resource = character.resources.find(
           (r) => r.resourceId === event.resourceId
         );
 
         if (!resource) {
-          throw new Error("Cannot find max resource");
+          character.resources.push({
+            amount: event.max,
+            max: event.max,
+            min: 0,
+            resourceId: event.resourceId,
+          });
+          break;
         }
 
         resource.amount = event.max;
+
         break;
       }
 
@@ -686,12 +692,12 @@ export class Campaign {
       }
 
       case "CharacterResourceCurrentChange": {
-        const resource = character.resourcesCurrent.find(
+        const resource = character.resources.find(
           (r) => r.resourceId === event.resourceId
         );
 
         if (!resource) {
-          throw new Error("Cannot find resource");
+          throw new Error(`Cannot find resource ${event.resourceId}`);
         }
 
         resource.amount = event.amount;
@@ -895,7 +901,7 @@ export class Campaign {
           throw new Error("Movement resource not defined in world");
         }
 
-        const characterMovementResource = character.resourcesCurrent.find(
+        const characterMovementResource = character.resources.find(
           (r) => r.resourceId === resourceType.id
         );
 

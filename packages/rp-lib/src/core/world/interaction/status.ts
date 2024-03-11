@@ -1,4 +1,4 @@
-import { Id } from "../../lib/generate-id";
+import { Id } from "../../../lib/generate-id";
 import { Effect } from "./effect";
 
 export enum StatusApplicationTrigger {

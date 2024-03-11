@@ -1,5 +1,5 @@
 import { Clazz, Race } from "./core/actor/character";
-import { generateId } from "./lib/generate-id";
+import { dangerousGenerateId } from "./lib/generate-id";
 
 export function randomEnum<T extends object>(anEnum: T): T[keyof T] {
   const enumValues = Object.keys(anEnum) as T[keyof T][];
@@ -13,7 +13,7 @@ export function randomEnum<T extends object>(anEnum: T): T[keyof T] {
 
 export function randomClass(): Clazz {
   return {
-    id: generateId(),
+    id: dangerousGenerateId(),
     levelProgression: [],
     name: "Random class",
   };

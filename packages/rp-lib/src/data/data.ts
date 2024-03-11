@@ -1,12 +1,12 @@
 import { CharacterStatType } from "../core/actor/character";
-import { ItemEquipmentType } from "../core/item/item";
-import { generateId } from "../lib/generate-id";
+import { ItemEquipmentType } from "../core/world/item/item";
+import { dangerousGenerateId } from "../lib/generate-id";
 
 export const DefaultLevelProgression = [0, 50, 100, 200, 400];
 
 export const DefaultEquipmentSlotDefinitions = [
   {
-    id: generateId(),
+    id: dangerousGenerateId(),
     name: "Main hand",
     eligibleEquipmentTypes: [ItemEquipmentType.OneHandSword],
   },
@@ -14,7 +14,7 @@ export const DefaultEquipmentSlotDefinitions = [
 
 export const DefaultCharacterResourceTypes = [
   {
-    id: generateId(),
+    id: dangerousGenerateId(),
     name: "Movement Speed",
     defaultMax: 35,
   },
@@ -22,27 +22,27 @@ export const DefaultCharacterResourceTypes = [
 
 export const DefaultCharacterStatTypes: CharacterStatType[] = [
   {
-    id: generateId(),
+    id: dangerousGenerateId(),
     name: "Strength",
   },
   {
-    id: generateId(),
+    id: dangerousGenerateId(),
     name: "Intelligence",
   },
   {
-    id: generateId(),
+    id: dangerousGenerateId(),
     name: "Wisdom",
   },
   {
-    id: generateId(),
+    id: dangerousGenerateId(),
     name: "Charisma",
   },
   {
-    id: generateId(),
+    id: dangerousGenerateId(),
     name: "Dexterity",
   },
   {
-    id: generateId(),
+    id: dangerousGenerateId(),
     name: "Constitution",
   },
 ];

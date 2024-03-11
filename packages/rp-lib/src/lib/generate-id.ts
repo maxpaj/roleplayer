@@ -1,7 +1,5 @@
-import { v4 } from "uuid";
+export type Id = number;
 
-export type Id = string;
-
-export function generateId() {
-  return v4();
+export function dangerousGenerateId() {
+  return Math.floor(Math.random() * 100_000_000);
 }

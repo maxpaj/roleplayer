@@ -1,6 +1,7 @@
 import { dangerousGenerateId } from "../../../lib/generate-id";
 import { Campaign } from "../../campaign/campaign";
 import { CampaignEvent } from "../../campaign/campaign-events";
+import { Ruleset } from "../../ruleset/ruleset";
 import {
   Item,
   ItemEquipmentType,
@@ -69,17 +70,18 @@ describe("interactions", () => {
   };
 
   it("should apply effects from being hit", () => {
-    const world = new World({ name: "test" });
-    world.statuses = [frozenStatus];
-    world.items = [frostSword];
-
     const equipmentSlot = {
       eligibleEquipmentTypes: [ItemEquipmentType.OneHandSword],
       id: dangerousGenerateId(),
       name: "Main hand",
     };
 
-    world.characterEquipmentSlots = [equipmentSlot];
+    const ruleset = new Ruleset();
+    ruleset.characterEquipmentSlots = [equipmentSlot];
+
+    const world = new World({ name: "test", ruleset });
+    world.statuses = [frozenStatus];
+    world.items = [frostSword];
 
     const action: Interaction = {
       id: dangerousGenerateId(),
@@ -100,7 +102,7 @@ describe("interactions", () => {
 
     world.actions = [action];
 
-    const campaign = new Campaign({ name: "test", world });
+    const campaign = new Campaign({ id: 0, name: "test", world });
     campaign.nextRound();
 
     const attackerId = dangerousGenerateId();

@@ -17,14 +17,20 @@ import { Actor } from "../actor/actor";
 import { EquipmentSlotDefinition, Item } from "../world/item/item";
 
 export class Campaign {
-  id!: Id;
-  name!: string;
-  world!: World;
+  id: Id;
+  name: string;
+  world: World;
   adventurers!: Character[];
   events: CampaignEventWithRound[] = [];
 
-  constructor(c: AugmentedRequired<Partial<Campaign>, "name">) {
+  constructor(
+    c: AugmentedRequired<Partial<Campaign>, "id" | "name" | "world">
+  ) {
     Object.assign(this, c);
+
+    this.id = c.id;
+    this.name = c.name;
+    this.world = c.world;
 
     this.events = c.events || [
       {
@@ -205,7 +211,7 @@ export class Campaign {
 
   createCharacter(characterId: Character["id"], name: string) {
     const defaultResourcesEvents: CampaignEventWithRound[] =
-      this.world!.characterResourceTypes.map((cr) => ({
+      this.world!.ruleset.characterResourceTypes.map((cr) => ({
         type: "CharacterResourceMaxSet",
         max: 10,
         characterId,
@@ -216,7 +222,7 @@ export class Campaign {
       }));
 
     const defaultStatsEvents: CampaignEventWithRound[] =
-      this.world!.characterStatTypes.map((st) => ({
+      this.world!.ruleset.characterStatTypes.map((st) => ({
         type: "CharacterStatChange",
         amount: 0,
         characterId,
@@ -473,7 +479,7 @@ export class Campaign {
   }
 
   getCharacterLevel(character: Character) {
-    return this.world!.levelProgression.sort((a, b) => a - b).findIndex(
+    return this.world!.ruleset.levelProgression.sort((a, b) => a - b).findIndex(
       (l) => l > character.xp
     );
   }
@@ -847,7 +853,7 @@ export class Campaign {
       }
 
       case "CharacterEquipmentSlotGain": {
-        const characterSlot = this.world!.characterEquipmentSlots.find(
+        const characterSlot = this.world!.ruleset.characterEquipmentSlots.find(
           (slot) => slot.id === event.equipmentSlotId
         );
 
@@ -894,9 +900,10 @@ export class Campaign {
       }
 
       case "CharacterMovement": {
-        const resourceType = this.world!.characterResourceTypes.find(
+        const resourceType = this.world!.ruleset.characterResourceTypes.find(
           (r) => r.name === "Movement speed"
         );
+
         if (!resourceType) {
           throw new Error("Movement resource not defined in world");
         }

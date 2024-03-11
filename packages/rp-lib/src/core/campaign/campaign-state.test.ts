@@ -1,3 +1,4 @@
+import { DefaultRuleSet } from "../../data/data";
 import { dangerousGenerateId } from "../../lib/generate-id";
 import { World } from "../world/world";
 import { Campaign } from "./campaign";
@@ -29,8 +30,8 @@ describe("Campaign state", () => {
       },
     ];
 
-    const world = new World({ name: "World" });
-    const campaign = new Campaign({ name: "Campaign", world, events });
+    const world = new World({ name: "World", ruleset: DefaultRuleSet });
+    const campaign = new Campaign({ id: 0, name: "Campaign", world, events });
     campaign.applyEvents();
 
     const characters = campaign.getCharacters();

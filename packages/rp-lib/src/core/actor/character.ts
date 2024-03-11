@@ -71,7 +71,7 @@ export type CharacterClass = {
   classId: Clazz["id"];
 };
 
-export type LevelExperience = number;
+export type LevelProgression = number;
 
 export type CharacterEquipmentSlot = {
   item?: Item;

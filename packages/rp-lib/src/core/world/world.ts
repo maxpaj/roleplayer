@@ -1,26 +1,12 @@
-import {
-  DefaultCharacterResourceTypes,
-  DefaultCharacterStatTypes,
-  DefaultEquipmentSlotDefinitions,
-  DefaultLevelProgression,
-} from "../../data/data";
 import { Id } from "../../lib/generate-id";
 import { AugmentedRequired } from "../../types/with-required";
-import {
-  Character,
-  CharacterClass,
-  CharacterResourceType,
-  CharacterStatType,
-  Clazz,
-  LevelExperience,
-} from "../actor/character";
+import { Character, CharacterClass, Clazz } from "../actor/character";
 import { Interaction } from "../world/interaction/interaction";
 import { Monster } from "../actor/monster";
-import { EquipmentSlotDefinition, Item } from "./item/item";
+import { Item } from "./item/item";
 import { Status } from "./interaction/status";
 import { Version } from "../..";
-
-type Version = `${string}.${string}.${string}`;
+import { Ruleset } from "../ruleset/ruleset";
 
 /**
  * Container for all world related things.
@@ -29,7 +15,7 @@ type Version = `${string}.${string}.${string}`;
 export class World {
   id!: Id;
   name!: string;
-  libVersion: Version;
+  libVersion: typeof Version;
 
   monsters: Monster[] = [];
   items: Item[] = [];
@@ -37,17 +23,9 @@ export class World {
   actions: Interaction[] = [];
   statuses: Status[] = [];
   classes: Clazz[] = [];
+  ruleset!: Ruleset;
 
-  levelProgression: LevelExperience[] = DefaultLevelProgression;
-  characterStatTypes: CharacterStatType[] = DefaultCharacterStatTypes;
-
-  characterResourceTypes: CharacterResourceType[] =
-    DefaultCharacterResourceTypes;
-
-  characterEquipmentSlots: EquipmentSlotDefinition[] =
-    DefaultEquipmentSlotDefinitions;
-
-  constructor(w: AugmentedRequired<Partial<World>, "name">) {
+  constructor(w: AugmentedRequired<Partial<World>, "name" | "ruleset">) {
     Object.assign(this, w);
     this.libVersion = w.libVersion || Version; // TODO: Should throw if the version of this world isn't supported by the lib
   }

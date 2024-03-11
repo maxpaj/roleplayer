@@ -1,10 +1,16 @@
-import { CharacterStatType } from "../core/actor/character";
-import { ItemEquipmentType } from "../core/world/item/item";
+import { CharacterStatType, LevelProgression } from "../core/actor/character";
+import { Ruleset } from "../core/ruleset/ruleset";
+import {
+  EquipmentSlotDefinition,
+  ItemEquipmentType,
+} from "../core/world/item/item";
 import { dangerousGenerateId } from "../lib/generate-id";
 
-export const DefaultLevelProgression = [0, 50, 100, 200, 400];
+export const DefaultLevelProgression: LevelProgression[] = [
+  0, 50, 100, 200, 400,
+];
 
-export const DefaultEquipmentSlotDefinitions = [
+export const DefaultEquipmentSlotDefinitions: EquipmentSlotDefinition[] = [
   {
     id: dangerousGenerateId(),
     name: "Main hand",
@@ -15,7 +21,7 @@ export const DefaultEquipmentSlotDefinitions = [
 export const DefaultCharacterResourceTypes = [
   {
     id: dangerousGenerateId(),
-    name: "Movement Speed",
+    name: "Movement speed",
     defaultMax: 35,
   },
 ];
@@ -46,3 +52,10 @@ export const DefaultCharacterStatTypes: CharacterStatType[] = [
     name: "Constitution",
   },
 ];
+
+export const DefaultRuleSet: Ruleset = {
+  characterEquipmentSlots: DefaultEquipmentSlotDefinitions,
+  characterResourceTypes: DefaultCharacterResourceTypes,
+  characterStatTypes: DefaultCharacterStatTypes,
+  levelProgression: DefaultLevelProgression,
+};

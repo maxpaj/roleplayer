@@ -5,6 +5,7 @@ import { CampaignEvent } from "../campaign/campaign-events";
 import { Character, CharacterResourceType } from "./character";
 import { World } from "../world/world";
 import { Item, ItemSlot, ItemType, Rarity } from "../world/item/item";
+import { DefaultRuleSet } from "../../data/data";
 
 describe("Character", () => {
   describe("Create character events", () => {
@@ -12,8 +13,8 @@ describe("Character", () => {
       const characterA = dangerousGenerateId();
       const characterB = dangerousGenerateId();
 
-      const world = new World({ name: "World", characterResourceTypes: [] });
-      const campaign = new Campaign({ name: "Campaign", world });
+      const world = new World({ name: "World", ruleset: DefaultRuleSet });
+      const campaign = new Campaign({ id: 0, name: "Campaign", world });
 
       campaign.nextRound();
       campaign.createCharacter(characterA, "Character A");
@@ -26,8 +27,8 @@ describe("Character", () => {
     it("should apply maximum health change events", () => {
       const characterId = dangerousGenerateId();
 
-      const world = new World({ name: "World" });
-      const campaign = new Campaign({ name: "Campaign", world });
+      const world = new World({ name: "World", ruleset: DefaultRuleSet });
+      const campaign = new Campaign({ id: 0, name: "Campaign", world });
 
       campaign.nextRound();
       campaign.createCharacter(characterId, "Character");
@@ -52,24 +53,24 @@ describe("Character", () => {
 
     it("should apply movement events", () => {
       const characterId = dangerousGenerateId();
-      const movementResource: CharacterResourceType = {
-        id: dangerousGenerateId(),
-        name: "Movement speed",
-      };
       const world = new World({
         name: "World",
-        characterResourceTypes: [movementResource],
+        ruleset: DefaultRuleSet,
       });
-      const campaign = new Campaign({ name: "Campaign", world });
+      const campaign = new Campaign({ id: 0, name: "Campaign", world });
 
       campaign.nextRound();
       campaign.createCharacter(characterId, "Character");
+
+      const movementSpeedResource = DefaultRuleSet.characterResourceTypes.find(
+        (r) => r.name === "Movement speed"
+      );
 
       const events: CampaignEvent[] = [
         {
           type: "CharacterResourceCurrentChange",
           id: dangerousGenerateId(),
-          resourceId: movementResource.id,
+          resourceId: movementSpeedResource!.id,
           amount: 35,
           characterId: characterId,
         },
@@ -113,9 +114,9 @@ describe("Character", () => {
 
       const world = new World({
         name: "World",
-        characterResourceTypes: [movementResource],
+        ruleset: DefaultRuleSet,
       });
-      const campaign = new Campaign({ name: "Campaign", world });
+      const campaign = new Campaign({ id: 0, name: "Campaign", world });
 
       const characterId = dangerousGenerateId();
       const character = new Character({
@@ -174,8 +175,8 @@ describe("Character", () => {
 
     it("should apply temporary health change events", () => {
       const characterId = dangerousGenerateId();
-      const world = new World({ name: "World" });
-      const campaign = new Campaign({ name: "Campaign", world });
+      const world = new World({ name: "World", ruleset: DefaultRuleSet });
+      const campaign = new Campaign({ id: 0, name: "Campaign", world });
       campaign.nextRound();
       campaign.createCharacter(characterId, "Character");
 
@@ -215,6 +216,7 @@ describe("Character", () => {
       const itemId = dangerousGenerateId();
       const world = new World({
         name: "World",
+        ruleset: DefaultRuleSet,
         items: [
           {
             id: itemId,
@@ -228,7 +230,7 @@ describe("Character", () => {
           },
         ],
       });
-      const campaign = new Campaign({ name: "Campaign", world });
+      const campaign = new Campaign({ id: 0, name: "Campaign", world });
       campaign.nextRound();
 
       campaign.createCharacter(characterId, "Character");
@@ -258,8 +260,8 @@ describe("Character", () => {
 
     it("should apply reject character events if character doesn't exist", () => {
       const characterId = dangerousGenerateId();
-      const world = new World({ name: "World" });
-      const campaign = new Campaign({ name: "Campaign", world });
+      const world = new World({ name: "World", ruleset: DefaultRuleSet });
+      const campaign = new Campaign({ id: 0, name: "Campaign", world });
       campaign.nextRound();
 
       const events: CampaignEvent[] = [
@@ -281,8 +283,8 @@ describe("Character", () => {
     });
 
     it("should handle unhandled events gracefully", () => {
-      const world = new World({ name: "World" });
-      const campaign = new Campaign({ name: "New campaign", world });
+      const world = new World({ name: "World", ruleset: DefaultRuleSet });
+      const campaign = new Campaign({ id: 0, name: "New campaign", world });
       const events: CampaignEvent[] = [
         {
           type: "Unknown",

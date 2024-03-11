@@ -1,0 +1,25 @@
+import { date, integer, pgTable, serial, varchar } from "drizzle-orm/pg-core";
+import { worldsSchema } from "./worlds";
+import { actionsSchema } from "./actions";
+
+export const monstersSchema = pgTable("monster", {
+  id: serial("id").primaryKey(),
+  name: varchar("name", { length: 256 }).notNull(),
+  createdUtc: date("createdUtc").notNull(),
+  worldId: integer("worldId")
+    .references(() => worldsSchema.id)
+    .notNull(),
+});
+
+export const monstersToActionsSchema = pgTable("monsterToActions", {
+  monsterId: integer("userId")
+    .notNull()
+    .references(() => monstersSchema.id),
+
+  actionId: integer("actionId")
+    .notNull()
+    .references(() => actionsSchema.id),
+});
+
+export type MonsterRecord = typeof monstersSchema.$inferSelect;
+export type NewMonsterRecord = typeof monstersSchema.$inferInsert;

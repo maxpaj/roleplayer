@@ -7,7 +7,7 @@ import {
 } from "drizzle-orm/pg-core";
 
 export const usersSchema = pgTable(
-  "users",
+  "user",
   {
     id: serial("id").primaryKey(),
     name: varchar("name", { length: 256 }).notNull(),
@@ -19,3 +19,6 @@ export const usersSchema = pgTable(
     };
   }
 );
+
+export type UserRecord = typeof usersSchema.$inferSelect;
+export type NewUserRecord = typeof usersSchema.$inferInsert;

@@ -8,7 +8,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { campaignsSchema } from "./campaigns";
 
-export const eventsSchema = pgTable("events", {
+export const eventsSchema = pgTable("event", {
   id: serial("id").primaryKey(),
   type: varchar("type", { length: 256 }).notNull(),
   eventData: json("eventData").notNull(),
@@ -17,3 +17,6 @@ export const eventsSchema = pgTable("events", {
     .references(() => campaignsSchema.id)
     .notNull(),
 });
+
+export type EventRecord = typeof eventsSchema.$inferSelect;
+export type NewEventRecord = typeof eventsSchema.$inferInsert;

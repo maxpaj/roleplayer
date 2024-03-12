@@ -16,8 +16,8 @@ export default async function NewCampaignPage({
   return (
     <>
       <Muted className="my-3">
-        A new campaign marks the beginning of an adventure. But without
-        adventurers, there is no adventure.
+        A new campaign marks the beginning of an adventure, who knows where the
+        world might take you.
       </Muted>
 
       <StartCampaignForm worldId={parseInt(id)} />

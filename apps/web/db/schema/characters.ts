@@ -14,9 +14,7 @@ export const charactersSchema = pgTable("characters", {
   createdUtc: timestamp("createdUtc").defaultNow(),
   imageUrl: varchar("imageUrl", { length: 2048 }),
   description: varchar("description", { length: 8192 }),
-  userId: integer("userId")
-    .references(() => usersSchema.id)
-    .notNull(),
+  userId: integer("userId").references(() => usersSchema.id),
   worldId: integer("worldId")
     .references(() => worldsSchema.id)
     .notNull(),

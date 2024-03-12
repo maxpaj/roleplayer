@@ -4,6 +4,7 @@ import { H3, H5, Muted } from "@/components/ui/typography";
 import { getWorldData } from "../actions";
 import { ItemCard } from "@/components/item-card";
 import { ItemType, Rarity } from "roleplayer";
+import { CreateItemForm } from "./components/create-item-form";
 
 export default async function ItemsPage({
   params,
@@ -17,7 +18,7 @@ export default async function ItemsPage({
     return <>World not found</>;
   }
 
-  const { items, world } = worldData;
+  const { items } = worldData;
 
   const itemsMapped = items.map((item) => ({
     id: item.id,
@@ -43,13 +44,7 @@ export default async function ItemsPage({
       <H3>Items</H3>
       <Separator className="my-3" />
 
-      <ButtonLink
-        className="my-2"
-        variant="outline"
-        href={`/worlds/${world.id}/items`}
-      >
-        Create item
-      </ButtonLink>
+      <CreateItemForm worldId={worldId} />
 
       {items.length === 0 && (
         <Muted className="my-4">It's empty! No items added yet.</Muted>

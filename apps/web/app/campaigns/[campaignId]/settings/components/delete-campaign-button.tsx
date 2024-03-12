@@ -12,17 +12,17 @@ import {
 } from "@/components/ui/dialog";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
-import { deleteWorld } from "../actions";
 import { useRouter } from "next/navigation";
 import { Paragraph } from "@/components/ui/typography";
-import { WorldRecord } from "@/db/schema/worlds";
+import { CampaignRecord } from "@/db/schema/campaigns";
+import { deleteCampaign } from "app/campaigns/actions";
 
-export function DeleteWorldButton({
-  worldId,
-  worldName,
+export function DeleteCampaignButton({
+  campaignId,
+  campaignName,
 }: {
-  worldId: WorldRecord["id"];
-  worldName: WorldRecord["name"];
+  campaignId: CampaignRecord["id"];
+  campaignName: CampaignRecord["name"];
 }) {
   const [confirm, setConfirm] = useState("");
   const router = useRouter();
@@ -30,28 +30,28 @@ export function DeleteWorldButton({
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="destructive-outlined">Delete world</Button>
+        <Button variant="destructive-outlined">Delete campaign</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Delete world</DialogTitle>
+          <DialogTitle>Delete campaign</DialogTitle>
           <DialogDescription>
-            Are you sure you want to permanently delete {worldName}?
+            Are you sure you want to permanently delete {campaignName}?
           </DialogDescription>
         </DialogHeader>
-        <Paragraph>Type the name of the world below</Paragraph>
+        <Paragraph>Type the name of the campaign below</Paragraph>
         <Input
-          placeholder={worldName}
+          placeholder={campaignName}
           value={confirm}
           onChange={(e) => setConfirm(e.target.value)}
         />
         <DialogFooter>
           <Button
-            disabled={confirm !== worldName}
+            disabled={confirm !== campaignName}
             variant="destructive"
             onClick={async () => {
-              await deleteWorld(worldId);
-              router.push("/worlds");
+              await deleteCampaign(campaignId);
+              router.push("/campaigns");
             }}
           >
             Confirm

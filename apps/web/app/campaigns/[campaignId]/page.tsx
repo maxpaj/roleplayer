@@ -1,6 +1,16 @@
-import { H2, H3, H4, Paragraph } from "@/components/ui/typography";
+import { H3, H4, Paragraph } from "@/components/ui/typography";
 import { getCampaign } from "../actions";
 import { Separator } from "@/components/ui/separator";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 export default async function CampaignPage({
   params,
@@ -14,7 +24,7 @@ export default async function CampaignPage({
     return <>Not found!</>;
   }
 
-  const { campaign } = campaignData;
+  const { campaign, world } = campaignData;
 
   return (
     <>
@@ -22,8 +32,15 @@ export default async function CampaignPage({
       <Separator className="my-3" />
       <Paragraph>{campaign.description}</Paragraph>
 
-      <H4>World</H4>
-      <Paragraph>{campaign.name}</Paragraph>
+      <Table>
+        <TableCaption>Your campaign stats.</TableCaption>
+        <TableBody>
+          <TableRow>
+            <TableCell className="font-medium">World</TableCell>
+            <TableCell>{world.name}</TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
     </>
   );
 }

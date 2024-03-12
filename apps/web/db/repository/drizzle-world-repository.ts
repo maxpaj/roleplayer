@@ -2,7 +2,11 @@ import { db } from "..";
 import { eq } from "drizzle-orm";
 import { CampaignRecord, campaignsSchema } from "../schema/campaigns";
 import { NewWorldRecord, WorldRecord, worldsSchema } from "../schema/worlds";
-import { CharacterRecord, charactersSchema } from "../schema/characters";
+import {
+  CharacterRecord,
+  NewCharacterRecord,
+  charactersSchema,
+} from "../schema/characters";
 import { UserRecord, usersSchema } from "../schema/users";
 import {
   MonsterRecord,
@@ -98,6 +102,13 @@ export class WorldRepository {
     isPublic: boolean
   ) {
     throw new Error("Method not implemented.");
+  }
+
+  async createWorldCharacter(character: NewCharacterRecord) {
+    return db
+      .insert(charactersSchema)
+      .values(character)
+      .returning({ id: charactersSchema.id });
   }
 
   async createMonster(monster: NewMonsterRecord) {

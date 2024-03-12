@@ -70,8 +70,7 @@ export async function getWorldData(
 }
 
 export async function getWorldCampaigns(id: World["id"]) {
-  const campaigns = await new CampaignRepository().getWorldCampaigns(id);
-  return campaigns;
+  return await new CampaignRepository().getWorldCampaigns(id);
 }
 
 export async function deleteWorld(id: World["id"]) {

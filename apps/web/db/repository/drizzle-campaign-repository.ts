@@ -19,19 +19,21 @@ export class CampaignRepository {
     const rows = await db
       .select()
       .from(campaignsSchema)
-      .innerJoin(worldsSchema, eq(worldsSchema.id, campaignsSchema.worldId))
-      .innerJoin(monstersSchema, eq(monstersSchema.worldId, worldsSchema.id))
-      .innerJoin(
-        charactersSchema,
-        eq(charactersSchema.worldId, worldsSchema.id)
-      )
-      .innerJoin(eventsSchema, eq(eventsSchema.campaignId, campaignsSchema.id))
+      .leftJoin(worldsSchema, eq(worldsSchema.id, campaignsSchema.worldId))
+      .leftJoin(monstersSchema, eq(monstersSchema.worldId, worldsSchema.id))
+      .leftJoin(charactersSchema, eq(charactersSchema.worldId, worldsSchema.id))
+      .leftJoin(eventsSchema, eq(eventsSchema.campaignId, campaignsSchema.id))
       .where(eq(campaignsSchema.userId, userId));
 
     const result = rows.reduce<
       Record<number, { campaign: CampaignRecord; events: EventRecord[] }>
     >((acc, row) => {
       const campaign = row.campaigns;
+
+      if (!campaign) {
+        return acc;
+      }
+
       if (!acc[campaign.id]) {
         acc[campaign.id] = { campaign, events: [] };
       }
@@ -51,18 +53,19 @@ export class CampaignRepository {
     const rows = await db
       .select()
       .from(campaignsSchema)
-      .innerJoin(worldsSchema, eq(worldsSchema.id, campaignsSchema.worldId))
-      .innerJoin(monstersSchema, eq(monstersSchema.worldId, worldsSchema.id))
-      .innerJoin(
-        charactersSchema,
-        eq(charactersSchema.worldId, worldsSchema.id)
-      )
-      .innerJoin(eventsSchema, eq(eventsSchema.campaignId, campaignsSchema.id));
+      .leftJoin(worldsSchema, eq(worldsSchema.id, campaignsSchema.worldId))
+      .leftJoin(monstersSchema, eq(monstersSchema.worldId, worldsSchema.id))
+      .leftJoin(charactersSchema, eq(charactersSchema.worldId, worldsSchema.id))
+      .leftJoin(eventsSchema, eq(eventsSchema.campaignId, campaignsSchema.id));
 
     const result = rows.reduce<
       Record<number, { campaign: CampaignRecord; events: EventRecord[] }>
     >((acc, row) => {
       const campaign = row.campaigns;
+      if (!campaign) {
+        return acc;
+      }
+
       if (!acc[campaign.id]) {
         acc[campaign.id] = { campaign, events: [] };
       }
@@ -83,7 +86,7 @@ export class CampaignRepository {
   }
 
   async deleteCampaign(campaignId: CampaignRecord["id"]): Promise<void> {
-    throw new Error("Method not implemented.");
+    await db.delete(campaignsSchema).where(eq(campaignsSchema.id, campaignId));
   }
 
   async createCampaign(

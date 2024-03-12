@@ -12,6 +12,10 @@ export async function createBattle(campaignId: CampaignRecord["id"]) {
   redirect(`/campaigns/${campaignId}/battles/${battleId}`);
 }
 
+export async function deleteCampaign(id: CampaignRecord["id"]) {
+  await new CampaignRepository().deleteCampaign(id);
+}
+
 export async function createCampaign(
   userId: UserRecord["id"],
   worldId: WorldRecord["id"],

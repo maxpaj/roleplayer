@@ -17,9 +17,11 @@ export default async function CampaignsPage({
       <Muted>List of campaigns started from this world</Muted>
       <Separator className="my-3" />
 
-      {campaigns.map((c) => (
-        <CampaignCard key={c.campaign.id} campaign={c.campaign} />
-      ))}
+      <div className="flex gap-2">
+        {campaigns.map((c) => (
+          <CampaignCard key={c.campaign.id} campaign={c.campaign} />
+        ))}
+      </div>
 
       {campaigns.length === 0 && <Muted>No campaigns started yet.</Muted>}
     </>

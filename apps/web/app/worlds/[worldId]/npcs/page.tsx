@@ -3,6 +3,7 @@ import { H3, Muted } from "@/components/ui/typography";
 import { CharacterCard } from "@/components/character-card";
 import { Separator } from "@/components/ui/separator";
 import { getWorldData } from "../actions";
+import { CreateCharacterForm } from "../characters/components/create-character-form";
 
 export default async function NpcPage({
   params,
@@ -10,7 +11,8 @@ export default async function NpcPage({
   params: { worldId: string };
 }) {
   const { worldId: id } = params;
-  const worldData = await getWorldData(parseInt(id));
+  const worldId = parseInt(id);
+  const worldData = await getWorldData(worldId);
   if (!worldData) {
     return <>World not found!</>;
   }
@@ -24,6 +26,8 @@ export default async function NpcPage({
         player
       </Muted>
       <Separator className="my-3" />
+
+      <CreateCharacterForm worldId={worldId} />
 
       {characters.length === 0 && (
         <Muted className="my-4">It's empty! No characters added yet.</Muted>

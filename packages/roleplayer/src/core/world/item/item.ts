@@ -1,5 +1,6 @@
 import { Id } from "../../../lib/generate-id";
 import { Interaction } from "../interaction/interaction";
+import { Rarity } from "../rarity";
 
 export enum ItemType {
   Equipment = "Equipment",
@@ -22,15 +23,6 @@ export enum ItemSlot {
   Head = "Head",
   Feet = "Feet",
   Chest = "Chest",
-}
-
-export enum Rarity {
-  Common = "Common",
-  Uncommon = "Uncommon",
-  Rare = "Rare",
-  VeryRare = "VeryRare",
-  Legendary = "Legendary",
-  Artifact = "Artifact",
 }
 
 export type EquipmentSlotDefinition = {

@@ -4,7 +4,8 @@ import { Campaign } from "../campaign/campaign";
 import { CampaignEvent } from "../campaign/campaign-events";
 import { Character, CharacterResourceType } from "./character";
 import { World } from "../world/world";
-import { Item, ItemSlot, ItemType, Rarity } from "../world/item/item";
+import { Item, ItemSlot, ItemType } from "../world/item/item";
+import { Rarity } from "../world/rarity";
 import { DefaultRuleSet } from "../../data/data";
 
 describe("Character", () => {

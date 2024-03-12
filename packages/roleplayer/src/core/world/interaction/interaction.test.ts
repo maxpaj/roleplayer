@@ -2,13 +2,8 @@ import { dangerousGenerateId } from "../../../lib/generate-id";
 import { Campaign } from "../../campaign/campaign";
 import { CampaignEvent } from "../../campaign/campaign-events";
 import { Ruleset } from "../../ruleset/ruleset";
-import {
-  Item,
-  ItemEquipmentType,
-  ItemSlot,
-  ItemType,
-  Rarity,
-} from "../item/item";
+import { Item, ItemEquipmentType, ItemSlot, ItemType } from "../item/item";
+import { Rarity } from "../rarity";
 import { World } from "../world";
 import { EffectType, ElementType } from "./effect";
 import { Interaction, TargetType } from "./interaction";

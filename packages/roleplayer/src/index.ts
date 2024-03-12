@@ -10,6 +10,7 @@ export * from "./core/dice/dice";
 export * from "./core/ruleset/ruleset";
 export * from "./core/world/interaction/interaction";
 export * from "./core/world/item/item";
+export * from "./core/world/rarity";
 export * from "./core/world/world";
 export * from "./lib/generate-id";
 export * from "./data/data";

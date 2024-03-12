@@ -12,6 +12,7 @@ export * from "./core/world/interaction/interaction";
 export * from "./core/world/item/item";
 export * from "./core/world/world";
 export * from "./lib/generate-id";
+export * from "./data/data";
 
 // TODO: Should be injected at build time
 export const Version = "0.0.0";

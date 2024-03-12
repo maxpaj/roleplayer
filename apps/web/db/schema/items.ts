@@ -9,6 +9,13 @@ import {
 import { worldsSchema } from "./worlds";
 
 export const itemTypeEnum = pgEnum("itemType", ["Consumable", "Equipment"]);
+export const rarityEnum = pgEnum("rarity", [
+  "Common",
+  "Uncommon",
+  "Rare",
+  "Epic",
+  "Legendary",
+]);
 
 export const itemsSchema = pgTable("items", {
   id: serial("id").primaryKey(),
@@ -16,6 +23,7 @@ export const itemsSchema = pgTable("items", {
   description: varchar("description", { length: 8192 }),
   type: itemTypeEnum("itemType").notNull(),
   createdUtc: date("createdUtc").notNull(),
+  rarity: rarityEnum("rarity").notNull(),
   worldId: integer("worldId")
     .references(() => worldsSchema.id)
     .notNull(),

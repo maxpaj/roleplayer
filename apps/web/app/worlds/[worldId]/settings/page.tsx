@@ -11,7 +11,13 @@ export default async function SettingsPage({
   params: { worldId: string };
 }) {
   const { worldId: id } = params;
-  const { entity: world, metadata } = await getWorldData(parseInt(id));
+  const worldId = parseInt(id);
+  const worldData = await getWorldData(worldId);
+  if (!worldData) {
+    return <>World not found!</>;
+  }
+
+  const { world } = worldData;
 
   return (
     <>
@@ -24,11 +30,15 @@ export default async function SettingsPage({
         your world
       </Muted>
 
-      {!metadata.isPublicTemplate && <PublishWorldButton worldId={world.id} />}
-      {metadata.isPublicTemplate && <UnpublishWorldButton worldId={world.id} />}
+      {!world.isTemplate && (
+        <PublishWorldButton worldName={world.name} worldId={world.id} />
+      )}
+      {world.isTemplate && (
+        <UnpublishWorldButton worldName={world.name} worldId={world.id} />
+      )}
 
       <H5 className="my-2">Delete world</H5>
-      <DeleteWorldButton worldId={world.id} />
+      <DeleteWorldButton worldName={world.name} worldId={world.id} />
     </>
   );
 }

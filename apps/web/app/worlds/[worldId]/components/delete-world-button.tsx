@@ -15,8 +15,15 @@ import { Input } from "@/components/ui/input";
 import { deleteWorld } from "../actions";
 import { useRouter } from "next/navigation";
 import { Paragraph } from "@/components/ui/typography";
+import { WorldRecord } from "@/db/schema/worlds";
 
-export function DeleteWorldButton({ worldId }: { worldId: string }) {
+export function DeleteWorldButton({
+  worldId,
+  worldName,
+}: {
+  worldId: WorldRecord["id"];
+  worldName: WorldRecord["name"];
+}) {
   const [confirm, setConfirm] = useState("");
   const router = useRouter();
 
@@ -29,18 +36,18 @@ export function DeleteWorldButton({ worldId }: { worldId: string }) {
         <DialogHeader>
           <DialogTitle>Delete world</DialogTitle>
           <DialogDescription>
-            Are you sure you want to permanently delete {worldId}?
+            Are you sure you want to permanently delete {worldName}?
           </DialogDescription>
         </DialogHeader>
         <Paragraph>Type the name of the world below</Paragraph>
         <Input
-          placeholder={worldId}
+          placeholder={worldName}
           value={confirm}
           onChange={(e) => setConfirm(e.target.value)}
         />
         <DialogFooter>
           <Button
-            disabled={confirm !== worldId}
+            disabled={confirm !== worldName}
             variant="destructive"
             onClick={async () => {
               await deleteWorld(worldId);

@@ -24,7 +24,9 @@ export function CharacterEditor({
   character,
 }: CharacterEditorProps) {
   const [update, setUpdate] = useState(character);
-  const characterLevel = world.levelProgression.findIndex((l) => l > update.xp);
+  const characterLevel = world.ruleset.levelProgression.findIndex(
+    (l) => l > update.xp
+  );
 
   return (
     <>

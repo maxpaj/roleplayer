@@ -5,13 +5,14 @@ import { Input } from "@/components/ui/input";
 import { H4 } from "@/components/ui/typography";
 import { Separator } from "@/components/ui/separator";
 import { CampaignRepository } from "@/db/repository/drizzle-campaign-repository";
+import { CampaignRecord } from "@/db/schema/campaigns";
 
 const validateBattleFormSchema = z.object({
   name: z.string().min(1),
 });
 
 type CreateBattleFormProps = {
-  campaignId: string;
+  campaignId: CampaignRecord["id"];
 };
 
 export function CreateBattleForm({ campaignId }: CreateBattleFormProps) {

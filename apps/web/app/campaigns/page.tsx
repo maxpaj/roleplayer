@@ -15,7 +15,7 @@ export default async function CampaignPage() {
 
       <div className="flex gap-2">
         {campaigns.map((c) => (
-          <CampaignCard key={c.id} campaign={c.entity} />
+          <CampaignCard key={c.campaign.id} campaign={c.campaign} />
         ))}
       </div>
     </div>

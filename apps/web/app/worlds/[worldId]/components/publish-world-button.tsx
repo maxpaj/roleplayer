@@ -14,9 +14,16 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { publishWorld } from "../actions";
 import { Paragraph } from "@/components/ui/typography";
+import { WorldRecord } from "@/db/schema/worlds";
 
-export function PublishWorldButton({ worldId }: { worldId: string }) {
-  const [confirm, setConfirm] = useState("");
+export function PublishWorldButton({
+  worldId,
+  worldName,
+}: {
+  worldId: WorldRecord["id"];
+  worldName: WorldRecord["name"];
+}) {
+  const [confirm, setConfirm] = useState<WorldRecord["name"]>("");
   const [open, setOpen] = useState(false);
 
   return (
@@ -30,20 +37,20 @@ export function PublishWorldButton({ worldId }: { worldId: string }) {
         <DialogHeader>
           <DialogTitle>Publish world</DialogTitle>
           <DialogDescription>
-            Are you sure you want to share {worldId} with the public?
+            Are you sure you want to share {worldName} with the public?
           </DialogDescription>
         </DialogHeader>
 
         <Paragraph>Type the name of the world below</Paragraph>
         <Input
-          placeholder={worldId}
+          placeholder={worldName}
           value={confirm}
           onChange={(e) => setConfirm(e.target.value)}
         />
 
         <DialogFooter>
           <Button
-            disabled={confirm !== worldId}
+            disabled={confirm !== worldName}
             onClick={async () => {
               await publishWorld(worldId);
               setOpen(false);

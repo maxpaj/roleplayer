@@ -47,7 +47,7 @@ export class WorldRepository {
     return data;
   }
 
-  deleteWorld(worldId: WorldRecord["id"]): Promise<void> {
+  async deleteWorld(worldId: WorldRecord["id"]): Promise<void> {
     throw new Error("Method not implemented.");
   }
 
@@ -73,7 +73,10 @@ export class WorldRepository {
     throw new Error("No rows inserted");
   }
 
-  createCharacter(worldId: WorldRecord["id"], name: string): Promise<number> {
+  async createCharacter(
+    worldId: WorldRecord["id"],
+    name: string
+  ): Promise<number> {
     throw new Error("Method not implemented.");
   }
 
@@ -84,5 +87,9 @@ export class WorldRepository {
       .where(eq(worldsSchema.isTemplate, true));
 
     return query;
+  }
+
+  async setWorldPublicVisibility(id: number, arg1: boolean) {
+    throw new Error("Method not implemented.");
   }
 }

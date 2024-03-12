@@ -31,6 +31,6 @@ export async function getCampaign(campaignId: CampaignRecord["id"]) {
   return await new CampaignRepository().getCampaign(campaignId);
 }
 
-export async function getCampaigns(userId: UserRecord["id"]) {
+export async function getCampaigns(userId: UserRecord["id"] = 2) {
   return await new CampaignRepository().getAll(userId);
 }

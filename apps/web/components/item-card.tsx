@@ -6,11 +6,12 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import Link from "next/link";
-import { ItemRecord } from "@/db/schema/items";
+import { WorldRecord } from "@/db/schema/worlds";
+import { Item } from "roleplayer";
 
 type ItemCardProps = {
-  item: ItemRecord;
-  worldId: string;
+  item: Partial<Item>;
+  worldId: WorldRecord["id"];
 };
 
 export function ItemCard({ worldId, item }: ItemCardProps) {

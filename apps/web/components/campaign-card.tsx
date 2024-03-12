@@ -2,9 +2,10 @@ import { Campaign } from "roleplayer";
 import Link from "next/link";
 import { Card, CardHeader, CardTitle } from "./ui/card";
 import { RemoveFunctions } from "types/without-functions";
+import { CampaignRecord } from "@/db/schema/campaigns";
 
 type CampaignCardProps = {
-  campaign: RemoveFunctions<Campaign>;
+  campaign: RemoveFunctions<CampaignRecord>;
 };
 
 export function CampaignCard({ campaign }: CampaignCardProps) {

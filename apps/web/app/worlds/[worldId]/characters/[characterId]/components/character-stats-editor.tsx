@@ -23,7 +23,9 @@ export function CharacterStatsEditor({
     <>
       {stats
         .map((s) => ({
-          statType: world.characterStatTypes.find((st) => st.id === s.statId),
+          statType: world.ruleset.characterStatTypes.find(
+            (st) => st.id === s.statId
+          ),
           characterStat: s,
         }))
         .sort((a, b) => (a.statType!.name > b.statType!.name ? 1 : -1))

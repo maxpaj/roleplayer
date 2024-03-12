@@ -3,7 +3,7 @@ import { Separator } from "@/components/ui/separator";
 import { H3, H5, Muted } from "@/components/ui/typography";
 import { getWorldData } from "../actions";
 import { ItemCard } from "@/components/item-card";
-import { ItemType } from "roleplayer";
+import { ItemType, Rarity } from "roleplayer";
 
 export default async function ItemsPage({
   params,
@@ -11,16 +11,29 @@ export default async function ItemsPage({
   params: { worldId: string };
 }) {
   const { worldId: id } = params;
-  const worldData = await getWorldData(parseInt(id));
+  const worldId = parseInt(id);
+  const worldData = await getWorldData(worldId);
   if (!worldData) {
     return <>World not found</>;
   }
 
   const { items, world } = worldData;
 
-  const equipment = items.filter((item) => item.type === ItemType.Equipment);
-  const consumables = items.filter((item) => item.type === ItemType.Consumable);
-  const other = items.filter(
+  const itemsMapped = items.map((item) => ({
+    id: item.id,
+    name: item.name,
+    description: item.description || "",
+    type: ItemType[item.type],
+    rarity: Rarity[item.rarity],
+  }));
+
+  const equipment = itemsMapped.filter(
+    (item) => item.type === ItemType.Equipment
+  );
+  const consumables = itemsMapped.filter(
+    (item) => item.type === ItemType.Consumable
+  );
+  const other = itemsMapped.filter(
     (item) =>
       ![ItemType.Consumable, ItemType.Equipment].includes(ItemType[item.type])
   );
@@ -41,7 +54,7 @@ export default async function ItemsPage({
 
       <div className="flex gap-2 flex-wrap">
         {equipment.map((item) => (
-          <ItemCard key={item.id} worldId={id} item={item} />
+          <ItemCard key={item.id} worldId={worldId} item={item} />
         ))}
       </div>
 
@@ -52,7 +65,7 @@ export default async function ItemsPage({
 
       <div className="flex gap-2 flex-wrap">
         {consumables.map((item) => (
-          <ItemCard key={item.id} worldId={id} item={item} />
+          <ItemCard key={item.id} worldId={worldId} item={item} />
         ))}
       </div>
 
@@ -63,7 +76,7 @@ export default async function ItemsPage({
 
       <div className="flex gap-2 flex-wrap">
         {other.map((item) => (
-          <ItemCard key={item.id} worldId={id} item={item} />
+          <ItemCard key={item.id} worldId={worldId} item={item} />
         ))}
       </div>
 

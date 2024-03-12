@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { Character, Clazz } from "roleplayer";
+import { ClazzRecord } from "@/db/schema/classes";
 import { RemoveFunctions } from "types/without-functions";
 
 type ClassDropdownProps = {
@@ -16,7 +17,7 @@ type ClassDropdownProps = {
   character: RemoveFunctions<Character>;
   availableClasses: Clazz[];
   placeholder?: ReactNode;
-  onChange: (classes: { classId: string; level: number }[]) => void;
+  onChange: (classes: { classId: ClazzRecord["id"]; level: number }[]) => void;
 };
 
 export function ClassSelector({
@@ -24,19 +25,19 @@ export function ClassSelector({
   availableClasses,
   onChange,
   character,
-  characterLevel: characterLevels,
+  characterLevel,
 }: ClassDropdownProps) {
   const [selectedItems, setSelectedItems] = useState<
-    { classId: string; level: number }[]
+    { classId: ClazzRecord["id"]; level: number }[]
   >(character.classes);
 
-  const onAdd = (value: string) => {
-    const item = selectedItems.find((s) => s.classId === value);
+  const onAdd = (classId: ClazzRecord["id"]) => {
+    const item = selectedItems.find((s) => s.classId === classId);
     if (!item) {
       const classes = [
         ...selectedItems,
         {
-          classId: value,
+          classId: classId,
           level: 1,
         },
       ];
@@ -47,29 +48,29 @@ export function ClassSelector({
     }
 
     const classes = [
-      ...selectedItems.filter((s) => s.classId !== value),
-      { classId: value, level: item?.level + 1 },
+      ...selectedItems.filter((s) => s.classId !== classId),
+      { classId: classId, level: item?.level + 1 },
     ];
 
     setSelectedItems(classes);
     onChange(classes);
   };
 
-  const onRemove = (value: string) => {
-    const item = selectedItems.find((s) => s.classId === value);
+  const onRemove = (classId: ClazzRecord["id"]) => {
+    const item = selectedItems.find((s) => s.classId === classId);
     if (!item) {
       throw new Error("Item doesnt exist while removing");
     }
 
     if (item.level === 1) {
-      setSelectedItems(selectedItems.filter((s) => s.classId !== value));
-      onChange(selectedItems.filter((s) => s.classId !== value));
+      setSelectedItems(selectedItems.filter((s) => s.classId !== classId));
+      onChange(selectedItems.filter((s) => s.classId !== classId));
       return;
     }
 
     const classes = [
-      ...selectedItems.filter((s) => s.classId !== value),
-      { classId: value, level: item?.level - 1 },
+      ...selectedItems.filter((s) => s.classId !== classId),
+      { classId: classId, level: item?.level - 1 },
     ];
 
     setSelectedItems(classes);
@@ -92,10 +93,12 @@ export function ClassSelector({
       >
         {availableClasses.map(
           (
-            option: ClassDropdownProps["availableClasses"][0],
+            classOption: ClassDropdownProps["availableClasses"][0],
             index: number
           ) => {
-            const current = selectedItems.find((i) => i.classId === option.id);
+            const current = selectedItems.find(
+              (i) => i.classId === classOption.id
+            );
 
             return (
               <DropdownMenuItem
@@ -103,19 +106,19 @@ export function ClassSelector({
                 key={index}
                 className="flex justify-between"
               >
-                {option.name} {current ? <>({current.level})</> : <></>}
+                {classOption.name} {current ? <>({current.level})</> : <></>}
                 <div>
                   <Button
-                    disabled={levelsSelected === characterLevels}
+                    disabled={levelsSelected === characterLevel}
                     variant="outline"
-                    onClick={() => onAdd(option.id)}
+                    onClick={() => onAdd(classOption.id)}
                   >
                     +
                   </Button>
                   <Button
                     disabled={!current}
                     variant="outline"
-                    onClick={() => onRemove(option.id)}
+                    onClick={() => onRemove(classOption.id)}
                   >
                     -
                   </Button>

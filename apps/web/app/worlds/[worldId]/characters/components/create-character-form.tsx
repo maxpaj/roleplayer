@@ -4,9 +4,10 @@ import { redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { WorldRepository } from "@/db/repository/drizzle-world-repository";
+import { WorldRecord } from "@/db/schema/worlds";
 
 type NewCharacterProps = {
-  worldId: string;
+  worldId: WorldRecord["id"];
 };
 
 const validateCharacterFormSchema = z.object({

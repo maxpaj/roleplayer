@@ -41,10 +41,10 @@ export function AddBattleMonsterButton({
 
         {campaign.world!.monsters.length > 0 && (
           <Combobox
-            onChange={(monsterId) => setSelectedMonster(monsterId)}
+            onChange={(monsterId) => setSelectedMonster(parseInt(monsterId))}
             options={campaign.world!.monsters.map((c) => ({
               label: c.name,
-              value: c.id,
+              value: c.id.toString(),
             }))}
           />
         )}

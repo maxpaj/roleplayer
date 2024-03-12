@@ -8,9 +8,9 @@ import {
   CampaignEvent,
   CampaignEventType,
   CampaignState,
-  BattleEntity,
   Character,
   MonsterInstance,
+  BattleActor,
 } from "roleplayer";
 import { D20, roll } from "roleplayer";
 import { Interaction } from "roleplayer";
@@ -197,7 +197,7 @@ export function BattleSimulator({
   }
 
   function getBattleEntityRecord(
-    battleCharacter: BattleEntity
+    battleCharacter: BattleActor
   ): BattleEntityRecord {
     const record = campaignActorRecords.find(
       (c) => c.actor.id === battleCharacter.actor.id
@@ -210,11 +210,11 @@ export function BattleSimulator({
     return record;
   }
 
-  function getActorImageURL(battleCharacter: BattleEntity): string {
+  function getActorImageURL(battleCharacter: BattleActor): string {
     return "https://image.jpg";
   }
 
-  function getActor(battleCharacter: BattleEntity): ActorRecord {
+  function getActor(battleCharacter: BattleActor): ActorRecord {
     const battleEntityRecord = getBattleEntityRecord(battleCharacter);
     const battleEntityImageUrl = getActorImageURL(battleCharacter);
 

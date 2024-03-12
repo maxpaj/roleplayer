@@ -1,10 +1,10 @@
-import { Actor, BattleEntity } from "roleplayer";
+import { Actor, BattleActor } from "roleplayer";
 import { ReactNode } from "react";
 
 export type ActorRecord = Actor & {
   renderPortrait(): ReactNode;
 };
 
-export type BattleEntityRecord = BattleEntity & {
+export type BattleEntityRecord = BattleActor & {
   getImageUrl(): string;
 };

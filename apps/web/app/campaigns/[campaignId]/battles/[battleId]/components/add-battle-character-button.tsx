@@ -40,10 +40,12 @@ export function AddBattleCharacterButton({
 
         {campaign.adventurers.length > 0 && (
           <Combobox
-            onChange={(characterId) => setSelectedCharacter(characterId)}
+            onChange={(characterId) =>
+              setSelectedCharacter(parseInt(characterId))
+            }
             options={campaign.adventurers.map((c) => ({
               label: c.name,
-              value: c.id,
+              value: c.id.toString(),
             }))}
           />
         )}

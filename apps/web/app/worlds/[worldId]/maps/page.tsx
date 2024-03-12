@@ -1,15 +1,20 @@
 import { ButtonLink } from "@/components/ui/button-link";
-import { H3, Muted } from "@/components/ui/typography";
+import { H3 } from "@/components/ui/typography";
 import { getWorldData } from "../actions";
 import { Separator } from "@/components/ui/separator";
 
 export default async function MapsPage({
   params,
 }: {
-  params: { worldId: number };
+  params: { worldId: string };
 }) {
   const { worldId: id } = params;
   const worldData = await getWorldData(parseInt(id));
+  if (!worldData) {
+    return <>World not found</>;
+  }
+
+  const { world } = worldData;
 
   return (
     <>

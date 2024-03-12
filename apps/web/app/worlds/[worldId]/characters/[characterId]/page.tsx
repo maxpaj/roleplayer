@@ -1,40 +1,60 @@
-import { Character } from "roleplayer";
+import { Campaign, Character, DefaultRuleSet, World } from "roleplayer";
 import { CharacterEditor } from "./components/character-editor";
 import { classToPlain } from "@/lib/class-to-plain";
 import { redirect } from "next/navigation";
 import { CampaignRepository } from "@/db/repository/drizzle-campaign-repository";
+import { CampaignRecord } from "@/db/schema/campaigns";
+import { CharacterRecord } from "@/db/schema/characters";
 
-async function getCampaign(campaignId: string) {
-  const campaign = await new CampaignRepository().getCampaign(campaignId);
-  return campaign;
+async function getCampaign(campaignId: CampaignRecord["id"]) {
+  return await new CampaignRepository().getCampaign(campaignId);
 }
 
 export default async function CharacterPage({
-  params,
+  params: { campaignId: id, characterId: cid },
 }: {
   params: { campaignId: string; characterId: string };
 }) {
+  const campaignId = parseInt(id);
+  const characterId = parseInt(cid);
+
   async function updateCharacter(
-    campaignId: string,
-    characterId: string,
+    campaignId: CampaignRecord["id"],
+    characterId: CharacterRecord["id"],
     characterUpdate: Partial<Character>
   ) {
     "use server";
-    const { entity: campaign } = await new CampaignRepository().getCampaign(
-      campaignId
-    );
+    const campaignData = await new CampaignRepository().getCampaign(campaignId);
+    if (!campaignData) {
+      throw new Error("Cannot find campaign");
+    }
+
+    const campaign = new Campaign({
+      ...campaignData.campaign,
+      world: new World({ ...campaignData.world, ruleset: DefaultRuleSet }),
+    });
+
     campaign.setCharacterClasses(characterId, characterUpdate.classes!);
     campaign.setCharacterStats(characterId, characterUpdate.stats!);
-    await new CampaignRepository().saveCampaign(campaign);
+
+    await new CampaignRepository().saveCampaignEvents(
+      campaignId,
+      campaign.events
+    );
   }
 
-  const { characterId, campaignId } = params;
-  const { entity: campaign } = await getCampaign(campaignId);
-  if (!campaign) {
+  const campaignData = await getCampaign(campaignId);
+  if (!campaignData) {
     throw new Error("Could not find campaign");
   }
 
-  const data = campaign.applyEvents();
+  const { campaign, world } = campaignData;
+  const campaignInstance = new Campaign({
+    ...campaign,
+    world: new World({ ...world, ruleset: DefaultRuleSet }),
+  });
+
+  const data = campaignInstance.applyEvents();
   const character = data.characters.find((c) => c.id === characterId);
 
   if (!character) {
@@ -43,7 +63,7 @@ export default async function CharacterPage({
 
   return (
     <CharacterEditor
-      world={classToPlain(campaign.world)}
+      world={classToPlain(campaignInstance.world)}
       character={classToPlain(character)}
       onSave={async (update) => {
         "use server";

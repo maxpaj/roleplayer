@@ -8,6 +8,7 @@ export default async function CharactersPage({
   params: { worldId: string };
 }) {
   const { worldId: id } = params;
+  const worldId = parseInt(id);
   const worldData = await getWorldData(parseInt(id));
   if (!worldData) {
     return <>World not found!</>;
@@ -16,7 +17,7 @@ export default async function CharactersPage({
   return (
     <div>
       <H2 className="mb-3">Create a new character</H2>
-      <CreateCharacterForm worldId={params.worldId} />
+      <CreateCharacterForm worldId={worldId} />
     </div>
   );
 }

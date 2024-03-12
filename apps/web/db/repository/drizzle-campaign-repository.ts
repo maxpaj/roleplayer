@@ -1,4 +1,3 @@
-import { EntityRecord } from "models/entity";
 import { db } from "..";
 import { eq } from "drizzle-orm";
 import {
@@ -11,7 +10,7 @@ import { monstersSchema } from "../schema/monster";
 import { charactersSchema } from "../schema/characters";
 import { UserRecord } from "../schema/users";
 import { EventRecord, eventsSchema } from "../schema/events";
-import { Campaign } from "roleplayer";
+import { CampaignEventWithRound } from "roleplayer";
 
 export class CampaignRepository {
   async getAll(
@@ -79,7 +78,7 @@ export class CampaignRepository {
     return Object.values(result);
   }
 
-  async createBattle(campaignId: number) {
+  async createBattle(campaignId: CampaignRecord["id"]) {
     throw new Error("Method not implemented.");
   }
 
@@ -152,7 +151,16 @@ export class CampaignRepository {
     throw new Error("Method not implemented.");
   }
 
-  async getDemoCampaigns(): Promise<EntityRecord<CampaignRecord>[]> {
+  async getDemoCampaigns(): Promise<CampaignRecord[]> {
+    throw new Error("Method not implemented.");
+  }
+
+  async saveCampaign(campaign: CampaignRecord) {}
+
+  async saveCampaignEvents(
+    campaignId: CampaignRecord["id"],
+    events: CampaignEventWithRound[]
+  ) {
     throw new Error("Method not implemented.");
   }
 }

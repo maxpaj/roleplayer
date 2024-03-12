@@ -8,6 +8,5 @@ export async function getCampaign(campaignId: Campaign["id"]) {
 }
 
 export async function getDemoCampaigns() {
-  const campaigns = await new CampaignRepository().getDemoCampaigns();
-  return campaigns;
+  return await new CampaignRepository().getDemoCampaigns();
 }

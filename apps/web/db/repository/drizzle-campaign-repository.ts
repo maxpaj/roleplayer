@@ -152,7 +152,10 @@ export class CampaignRepository {
   }
 
   async getDemoCampaigns(): Promise<CampaignRecord[]> {
-    throw new Error("Method not implemented.");
+    return db
+      .select()
+      .from(campaignsSchema)
+      .where((c) => eq(c.isDemo, true));
   }
 
   async saveCampaign(campaign: CampaignRecord) {}

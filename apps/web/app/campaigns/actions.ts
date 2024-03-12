@@ -1,6 +1,6 @@
 "use server";
 
-import { CampaignRepository } from "db/drizzle-campaign-repository";
+import { CampaignRepository } from "@/db/repository/drizzle-campaign-repository";
 import { CampaignRecord } from "db/schema/campaigns";
 import { CharacterRecord } from "db/schema/characters";
 import { UserRecord } from "db/schema/users";
@@ -27,10 +27,7 @@ export async function createCampaign(
   redirect(`/campaigns/${created.id}`);
 }
 
-export async function getCampaign(
-  userId: UserRecord["id"],
-  campaignId: CampaignRecord["id"]
-) {
+export async function getCampaign(campaignId: CampaignRecord["id"]) {
   return await new CampaignRepository().getCampaign(campaignId);
 }
 

@@ -1,7 +1,7 @@
 import { ButtonLink } from "@/components/ui/button-link";
 import { Separator } from "@/components/ui/separator";
 import { H3, H5, Muted } from "@/components/ui/typography";
-import { getWorld } from "../actions";
+import { getWorldData } from "../actions";
 import { ItemCard } from "@/components/item-card";
 import { ItemType } from "roleplayer";
 
@@ -11,15 +11,18 @@ export default async function ItemsPage({
   params: { worldId: string };
 }) {
   const { worldId: id } = params;
-  const { entity: world } = await getWorld(id);
-  const equipment = world.items.filter(
-    (item) => item.type === ItemType.Equipment
-  );
-  const consumables = world.items.filter(
-    (item) => item.type === ItemType.Potion
-  );
-  const other = world.items.filter(
-    (item) => ![ItemType.Potion, ItemType.Equipment].includes(item.type)
+  const worldData = await getWorldData(parseInt(id));
+  if (!worldData) {
+    return <>World not found</>;
+  }
+
+  const { items, world } = worldData;
+
+  const equipment = items.filter((item) => item.type === ItemType.Equipment);
+  const consumables = items.filter((item) => item.type === ItemType.Consumable);
+  const other = items.filter(
+    (item) =>
+      ![ItemType.Consumable, ItemType.Equipment].includes(ItemType[item.type])
   );
 
   return (
@@ -27,7 +30,7 @@ export default async function ItemsPage({
       <H3>Items</H3>
       <Separator className="my-3" />
 
-      {world.items.length === 0 && (
+      {items.length === 0 && (
         <Muted className="my-4">It's empty! No items added yet.</Muted>
       )}
 

@@ -1,6 +1,6 @@
 import { Muted } from "@/components/ui/typography";
 import { StartCampaignForm } from "./components/start-campaign-form";
-import { getWorld } from "../../actions";
+import { getWorldData } from "../../actions";
 
 export default async function NewCampaignPage({
   params,
@@ -8,7 +8,10 @@ export default async function NewCampaignPage({
   params: { worldId: string };
 }) {
   const { worldId: id } = params;
-  const { entity: world } = await getWorld(id);
+  const worldData = await getWorldData(parseInt(id));
+  if (!worldData) {
+    return <>World not found!</>;
+  }
 
   return (
     <>
@@ -17,7 +20,7 @@ export default async function NewCampaignPage({
         adventurers, there is no adventure.
       </Muted>
 
-      <StartCampaignForm worldId={id} />
+      <StartCampaignForm worldId={parseInt(id)} />
     </>
   );
 }

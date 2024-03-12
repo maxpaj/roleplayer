@@ -1,16 +1,11 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Character } from "roleplayer";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
+import { CharacterRecord } from "@/db/schema/characters";
+import { WorldRecord } from "@/db/schema/worlds";
 
 type CharacterCardProps = {
-  worldId: string;
-  character: Character;
+  worldId: WorldRecord["id"];
+  character: CharacterRecord;
 };
 
 export function CharacterCard({ worldId, character }: CharacterCardProps) {
@@ -19,9 +14,6 @@ export function CharacterCard({ worldId, character }: CharacterCardProps) {
       <Card className="w-[100px] h-[100px]">
         <CardHeader className="p-2">
           <CardTitle className={"text-md"}>{character.name}</CardTitle>
-          <CardDescription>
-            {character.classes.map((c) => c.level)}
-          </CardDescription>
         </CardHeader>
         <CardContent>{character.description}</CardContent>
       </Card>

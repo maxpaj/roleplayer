@@ -1,6 +1,5 @@
 import { H2, H3, H4, Paragraph } from "@/components/ui/typography";
 import { getCampaign } from "../actions";
-import { ButtonLink } from "@/components/ui/button-link";
 import { Separator } from "@/components/ui/separator";
 
 export default async function CampaignPage({
@@ -8,19 +7,23 @@ export default async function CampaignPage({
 }: {
   params: { campaignId: string };
 }) {
-  const campaign = await getCampaign(params.campaignId);
-  if (!campaign) {
-    return <H2>Not found!</H2>;
+  const { campaignId: id } = params;
+  const campaignData = await getCampaign(parseInt(id));
+
+  if (!campaignData) {
+    return <>Not found!</>;
   }
+
+  const { campaign } = campaignData;
 
   return (
     <>
       <H3>Campaign</H3>
       <Separator className="my-3" />
-      <Paragraph>{campaign.metadata.description}</Paragraph>
+      <Paragraph>{campaign.description}</Paragraph>
 
       <H4>World</H4>
-      <Paragraph>{campaign.world?.name}</Paragraph>
+      <Paragraph>{campaign.name}</Paragraph>
     </>
   );
 }

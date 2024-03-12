@@ -1,4 +1,4 @@
-import { getWorld } from "./actions";
+import { getWorldData } from "./actions";
 import { H2 } from "@/components/ui/typography";
 import { BadgeLink, ButtonLink } from "@/components/ui/button-link";
 import { GitForkIcon } from "lucide-react";
@@ -8,14 +8,17 @@ export default async function WorldLayout({
   children,
 }: {
   children: React.ReactNode;
-  params: { worldId: number };
+  params: { worldId: string };
 }) {
   const { worldId: id } = params;
-  const { entity: world } = await getWorld(id);
 
-  if (!world) {
+  const data = await getWorldData(parseInt(id));
+
+  if (!data) {
     return <>Not found!</>;
   }
+
+  const world = data.world;
 
   return (
     <div>

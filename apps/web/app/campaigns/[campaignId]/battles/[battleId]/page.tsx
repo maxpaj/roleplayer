@@ -1,7 +1,7 @@
 import { Battle, Campaign } from "roleplayer";
 import { BattleSimulator } from "./components/battle-simulator";
 import { H3 } from "@/components/ui/typography";
-import { CampaignRepository } from "@/db/drizzle-campaign-repository";
+import { CampaignRepository } from "@/db/repository/drizzle-campaign-repository";
 import { classToPlain } from "@/lib/class-to-plain";
 
 async function getData(campaignId: Campaign["id"], battleId: Battle["id"]) {

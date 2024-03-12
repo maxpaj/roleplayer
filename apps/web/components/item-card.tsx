@@ -1,5 +1,4 @@
 import * as React from "react";
-import { Item } from "roleplayer";
 import {
   Card,
   CardDescription,
@@ -7,9 +6,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import Link from "next/link";
+import { ItemRecord } from "@/db/schema/items";
 
 type ItemCardProps = {
-  item: Item;
+  item: ItemRecord;
   worldId: string;
 };
 

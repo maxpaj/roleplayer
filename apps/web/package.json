@@ -7,7 +7,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint . --max-warnings 0",
-    "test": "jest --watch"
+    "test": "jest --watch",
+    "db-push": "drizzle-kit push:pg",
+    "migrate": "npx tsx ./db/migrate.ts",
+    "generate-migrations": "drizzle-kit generate:pg"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.4",

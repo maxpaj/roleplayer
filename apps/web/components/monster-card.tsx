@@ -1,9 +1,9 @@
-import { Monster } from "roleplayer";
 import { Card, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import Link from "next/link";
+import { MonsterRecord } from "@/db/schema/monster";
 
 type MonsterCardProps = {
-  monster: Monster;
+  monster: MonsterRecord;
   worldId: string;
 };
 

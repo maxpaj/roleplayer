@@ -9,7 +9,7 @@ export default async function CampaignsPage({
   params: { worldId: string };
 }) {
   const { worldId: id } = params;
-  const campaigns = await getWorldCampaigns(id);
+  const campaigns = await getWorldCampaigns(parseInt(id));
 
   return (
     <>

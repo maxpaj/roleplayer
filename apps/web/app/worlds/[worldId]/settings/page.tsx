@@ -1,5 +1,5 @@
 import { H3, H5, Muted } from "@/components/ui/typography";
-import { getWorld } from "../actions";
+import { getWorldData } from "../actions";
 import { DeleteWorldButton } from "../components/delete-world-button";
 import { PublishWorldButton } from "../components/publish-world-button";
 import { UnpublishWorldButton } from "../components/unpublish-world-button";
@@ -11,7 +11,7 @@ export default async function SettingsPage({
   params: { worldId: string };
 }) {
   const { worldId: id } = params;
-  const { entity: world, metadata } = await getWorld(id);
+  const { entity: world, metadata } = await getWorldData(parseInt(id));
 
   return (
     <>

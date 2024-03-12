@@ -1,13 +1,13 @@
 import { H3, Muted } from "@/components/ui/typography";
-import { CampaignRepository } from "@/db/drizzle-campaign-repository";
 import { BattleCard } from "./components/battle-card";
 import { StartBattleButton } from "./components/start-battle-button";
-
-async function getData(campaignId: string) {
-  const campaign = await new CampaignRepository().getCampaign(campaignId);
-  const campaignData = campaign.applyEvents();
-  return campaignData.battles;
-}
+import { getCampaign } from "app/campaigns/actions";
+import {
+  Campaign,
+  CampaignEventWithRound,
+  DefaultRuleSet,
+  World,
+} from "roleplayer";
 
 export default async function BattlesPage({
   params,
@@ -15,7 +15,21 @@ export default async function BattlesPage({
   params: { campaignId: string };
 }) {
   const { campaignId } = params;
-  const battles = await getData(campaignId);
+  const campaignData = await getCampaign(parseInt(campaignId));
+
+  if (!campaignData) {
+    return <>Campaign not found</>;
+  }
+
+  const campaign = new Campaign({
+    ...campaignData.campaign,
+    world: new World({ ...campaignData.world, ruleset: DefaultRuleSet }),
+    events: campaignData.events.map(
+      (e) => e.eventData as CampaignEventWithRound
+    ),
+  });
+
+  const { battles } = campaign.applyEvents();
 
   return (
     <div>
@@ -35,7 +49,7 @@ export default async function BattlesPage({
           ))}
       </div>
 
-      <StartBattleButton campaignId={campaignId} />
+      <StartBattleButton campaignId={parseInt(campaignId)} />
 
       <H3 className="mt-4">Previous battles</H3>
 

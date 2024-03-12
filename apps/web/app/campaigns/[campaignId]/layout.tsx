@@ -10,13 +10,13 @@ export default async function CampaignLayout({
   params: { campaignId: string };
 }) {
   const { campaignId: id } = params;
-  const record = await getCampaign(id);
+  const campaignData = await getCampaign(parseInt(id));
 
-  if (!record) {
+  if (!campaignData) {
     return <>Not found!</>;
   }
 
-  const { entity: campaign } = record;
+  const { campaign } = campaignData;
 
   return (
     <div>

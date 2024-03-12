@@ -7,7 +7,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { usersSchema } from "./users";
 
-export const worldsSchema = pgTable("world", {
+export const worldsSchema = pgTable("worlds", {
   id: serial("id").primaryKey(),
   name: varchar("name", { length: 256 }).notNull(),
   description: varchar("description", { length: 8192 }),

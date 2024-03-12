@@ -3,7 +3,7 @@ import z from "zod";
 import { redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { WorldRepository } from "@/db/drizzle-world-repository";
+import { WorldRepository } from "@/db/repository/drizzle-world-repository";
 
 type NewCharacterProps = {
   worldId: string;

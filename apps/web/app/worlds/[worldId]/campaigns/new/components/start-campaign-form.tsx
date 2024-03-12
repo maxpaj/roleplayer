@@ -6,12 +6,11 @@ import { H5 } from "@/components/ui/typography";
 import { Separator } from "@radix-ui/react-dropdown-menu";
 import { AlertTriangle } from "lucide-react";
 import { useState } from "react";
-import { World } from "roleplayer";
 import { createCampaign } from "app/worlds/[worldId]/actions";
-import { redirect } from "next/navigation";
+import { WorldRecord } from "@/db/schema/worlds";
 
 type StartCampaignFormProps = {
-  worldId: World["id"];
+  worldId: WorldRecord["id"];
 };
 
 export function StartCampaignForm({ worldId }: StartCampaignFormProps) {
@@ -39,7 +38,12 @@ export function StartCampaignForm({ worldId }: StartCampaignFormProps) {
       <Button
         className="mb-2 mt-5"
         onClick={async () => {
-          await createCampaign(worldId, adventurers);
+          await createCampaign(worldId, {
+            name: "My world new campaign",
+            isDemo: false,
+            worldId,
+            userId: 2,
+          });
         }}
       >
         Start campaign

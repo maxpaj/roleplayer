@@ -2,7 +2,7 @@ import { ButtonLink } from "@/components/ui/button-link";
 import { H3, Muted } from "@/components/ui/typography";
 import { CharacterCard } from "@/components/character-card";
 import { Separator } from "@/components/ui/separator";
-import { getWorld } from "../actions";
+import { getWorldData } from "../actions";
 
 export default async function NpcPage({
   params,
@@ -10,7 +10,11 @@ export default async function NpcPage({
   params: { worldId: string };
 }) {
   const { worldId: id } = params;
-  const { entity: world } = await getWorld(id);
+  const worldData = await getWorldData(parseInt(id));
+  if (!worldData) {
+    return <>World not found!</>;
+  }
+  const { world, characters } = worldData;
 
   return (
     <>
@@ -21,12 +25,12 @@ export default async function NpcPage({
       </Muted>
       <Separator className="my-3" />
 
-      {world.characters.length === 0 && (
+      {characters.length === 0 && (
         <Muted className="my-4">It's empty! No characters added yet.</Muted>
       )}
 
       <div className="flex gap-2">
-        {world.characters.map((character) => (
+        {characters.map((character) => (
           <CharacterCard
             key={character.id}
             worldId={world.id}

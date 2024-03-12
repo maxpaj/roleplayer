@@ -8,7 +8,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { campaignsSchema } from "./campaigns";
 
-export const eventsSchema = pgTable("event", {
+export const eventsSchema = pgTable("events", {
   id: serial("id").primaryKey(),
   type: varchar("type", { length: 256 }).notNull(),
   eventData: json("eventData").notNull(),

@@ -2,7 +2,7 @@ import { Character } from "roleplayer";
 import { CharacterEditor } from "./components/character-editor";
 import { classToPlain } from "@/lib/class-to-plain";
 import { redirect } from "next/navigation";
-import { CampaignRepository } from "@/db/drizzle-campaign-repository";
+import { CampaignRepository } from "@/db/repository/drizzle-campaign-repository";
 
 async function getCampaign(campaignId: string) {
   const campaign = await new CampaignRepository().getCampaign(campaignId);

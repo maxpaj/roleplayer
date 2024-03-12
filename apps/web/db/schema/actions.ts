@@ -1,7 +1,7 @@
 import { date, integer, pgTable, serial, varchar } from "drizzle-orm/pg-core";
 import { worldsSchema } from "./worlds";
 
-export const actionsSchema = pgTable("action", {
+export const actionsSchema = pgTable("actions", {
   id: serial("id").primaryKey(),
   name: varchar("name", { length: 256 }).notNull(),
   createdUtc: date("createdUtc").notNull(),

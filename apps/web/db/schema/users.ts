@@ -2,16 +2,17 @@ import {
   date,
   pgTable,
   serial,
+  timestamp,
   uniqueIndex,
   varchar,
 } from "drizzle-orm/pg-core";
 
 export const usersSchema = pgTable(
-  "user",
+  "users",
   {
     id: serial("id").primaryKey(),
     name: varchar("name", { length: 256 }).notNull(),
-    createdUtc: date("createdUtc").notNull(),
+    createdUtc: timestamp("createdUtc").defaultNow(),
   },
   (users) => {
     return {

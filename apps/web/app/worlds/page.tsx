@@ -2,10 +2,10 @@ import { CreateWorldForm } from "./components/create-world-form";
 import { WorldCard } from "../../components/world-card";
 import { H2, Muted } from "@/components/ui/typography";
 import { Separator } from "@/components/ui/separator";
-import { WorldRepository } from "db/drizzle-world-repository";
+import { WorldRepository } from "@/db/repository/drizzle-world-repository";
 
-async function getData() {
-  const worlds = await new WorldRepository().getAll(1);
+async function getData(userId: number = 0) {
+  const worlds = await new WorldRepository().getAll(userId);
   return worlds;
 }
 

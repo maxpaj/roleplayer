@@ -9,7 +9,7 @@ import {
 import { worldsSchema } from "./worlds";
 import { usersSchema } from "./users";
 
-export const campaignsSchema = pgTable("campaign", {
+export const campaignsSchema = pgTable("campaigns", {
   id: serial("id").primaryKey(),
   name: varchar("name", { length: 256 }).notNull(),
   isDemo: boolean("isDemo").notNull(),

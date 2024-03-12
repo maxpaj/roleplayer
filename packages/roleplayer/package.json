@@ -14,9 +14,6 @@
     "test-watch": "jest-watch",
     "lint": "eslint . --max-warnings 0"
   },
-  "publishConfig": {
-    "@maxpaj:registry": "https://npm.pkg.github.com"
-  },
   "devDependencies": {
     "@repo/eslint-config": "*",
     "@repo/typescript-config": "*",

@@ -1,4 +1,4 @@
-name: roleplayer release
+name: Package release
 
 on:
   release:
@@ -16,6 +16,25 @@ jobs:
         working-directory: ./packages/roleplayer
       - run: npm test
         working-directory: ./packages/roleplayer
+
+  publish-npm:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 16
+          registry-url: https://registry.npmjs.org/
+      - run: npm ci
+        working-directory: ./packages/roleplayer
+      - run: npm publish
+        working-directory: ./packages/roleplayer
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
   publish-gpr:
     needs: build

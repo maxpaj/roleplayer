@@ -3,7 +3,7 @@ import { Interaction } from "../interaction/interaction";
 
 export enum ItemType {
   Equipment = "Equipment",
-  Potion = "Potion",
+  Consumable = "Consumable",
 }
 
 export enum ItemEquipmentType {

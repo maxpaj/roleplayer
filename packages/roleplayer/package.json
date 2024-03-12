@@ -1,6 +1,6 @@
 {
-  "name": "@maxpaj/roleplayer",
-  "version": "0.0.1",
+  "name": "roleplayer",
+  "version": "0.0.1-alpha",
   "private": false,
   "repository": {
     "type": "git",

@@ -1,0 +1,37 @@
+name: rp-lib release
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 16
+      - run: npm ci
+        working-directory: ./packages/rp-lib
+      - run: npm test
+        working-directory: ./packages/rp-lib
+
+  publish-gpr:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 16
+          registry-url: https://npm.pkg.github.com/
+      - run: npm ci
+        working-directory: ./packages/rp-lib
+      - run: npm publish
+        working-directory: ./packages/rp-lib
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}

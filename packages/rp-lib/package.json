@@ -1,7 +1,11 @@
 {
-  "name": "@repo/rp-lib",
+  "name": "rp-lib",
   "version": "0.0.1",
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maxpaj/roleplayer.git"
+  },
   "exports": {
     ".": "./src/index.ts"
   },

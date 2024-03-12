@@ -1,7 +1,7 @@
 import { Id } from "../../lib/generate-id";
 import { AugmentedRequired } from "../../types/with-required";
 import { Character, CharacterClass, Clazz } from "../actor/character";
-import { Interaction } from "../world/interaction/interaction";
+import { Interaction } from "./interaction/interaction";
 import { Monster } from "../actor/monster";
 import { Item } from "./item/item";
 import { Status } from "./interaction/status";

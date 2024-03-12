@@ -1,4 +1,4 @@
-name: rp-lib release
+name: roleplayer release
 
 on:
   release:
@@ -13,9 +13,9 @@ jobs:
         with:
           node-version: 16
       - run: npm ci
-        working-directory: ./packages/rp-lib
+        working-directory: ./packages/roleplayer
       - run: npm test
-        working-directory: ./packages/rp-lib
+        working-directory: ./packages/roleplayer
 
   publish-gpr:
     needs: build
@@ -30,8 +30,8 @@ jobs:
           node-version: 16
           registry-url: https://npm.pkg.github.com/
       - run: npm ci
-        working-directory: ./packages/rp-lib
+        working-directory: ./packages/roleplayer
       - run: npm publish
-        working-directory: ./packages/rp-lib
+        working-directory: ./packages/roleplayer
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}

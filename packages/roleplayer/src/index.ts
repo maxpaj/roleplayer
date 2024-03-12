@@ -7,6 +7,7 @@ export * from "./core/campaign/campaign-events";
 export * from "./core/campaign/campaign-state";
 export * from "./core/campaign/round";
 export * from "./core/dice/dice";
+export * from "./core/ruleset/ruleset";
 export * from "./core/world/interaction/interaction";
 export * from "./core/world/item/item";
 export * from "./core/world/world";

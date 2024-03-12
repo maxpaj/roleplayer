@@ -1,5 +1,5 @@
 {
-  "name": "roleplayer",
+  "name": "@maxpaj/roleplayer",
   "version": "0.0.1",
   "private": false,
   "repository": {
@@ -12,6 +12,9 @@
   "scripts": {
     "test": "jest --watch",
     "lint": "eslint . --max-warnings 0"
+  },
+  "publishConfig": {
+    "@maxpaj:registry": "https://npm.pkg.github.com"
   },
   "devDependencies": {
     "@repo/eslint-config": "*",

@@ -42,10 +42,10 @@ export default async function DemosPage() {
                   <Card>
                     <CardContent className="flex flex-col gap-4 justify-between p-4">
                       <div>
-                        <H3 className="my-3">{demo.entity.name}</H3>
+                        <H3 className="my-3">{demo.name}</H3>
                         <Muted>{demo.metadata.description}</Muted>
                       </div>
-                      <ButtonLink href={`/campaigns/${demo.entity.id}`}>
+                      <ButtonLink href={`/campaigns/${demo.id}`}>
                         Play
                       </ButtonLink>
                     </CardContent>

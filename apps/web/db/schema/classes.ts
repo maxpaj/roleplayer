@@ -1,7 +1,7 @@
 import { date, integer, pgTable, serial, varchar } from "drizzle-orm/pg-core";
 import { worldsSchema } from "./worlds";
 
-export const classessSchema = pgTable("classes", {
+export const classesSchema = pgTable("classes", {
   id: serial("id").primaryKey(),
   name: varchar("name", { length: 256 }).notNull(),
   createdUtc: date("createdUtc").notNull(),
@@ -10,5 +10,5 @@ export const classessSchema = pgTable("classes", {
     .notNull(),
 });
 
-export type ClazzRecord = typeof classessSchema.$inferSelect;
-export type NewClazzRecord = typeof classessSchema.$inferInsert;
+export type ClazzRecord = typeof classesSchema.$inferSelect;
+export type NewClazzRecord = typeof classesSchema.$inferInsert;

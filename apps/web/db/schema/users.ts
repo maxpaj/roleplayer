@@ -15,7 +15,7 @@ export const usersSchema = pgTable(
   },
   (users) => {
     return {
-      nameIndex: uniqueIndex("name_idx").on(users.name),
+      nameIndex: uniqueIndex("user_name_idx").on(users.name),
     };
   }
 );

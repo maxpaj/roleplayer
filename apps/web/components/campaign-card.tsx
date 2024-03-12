@@ -1,4 +1,4 @@
-import { Campaign } from "@repo/rp-lib";
+import { Campaign } from "roleplayer";
 import Link from "next/link";
 import { Card, CardHeader, CardTitle } from "./ui/card";
 import { RemoveFunctions } from "types/without-functions";

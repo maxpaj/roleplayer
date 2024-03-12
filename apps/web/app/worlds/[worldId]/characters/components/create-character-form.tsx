@@ -1,9 +1,9 @@
 import z from "zod";
 
-import { jsonWorldRepository } from "db/json/json-world-repository";
 import { redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { WorldRepository } from "@/db/drizzle-world-repository";
 
 type NewCharacterProps = {
   worldId: string;
@@ -25,7 +25,7 @@ export function CreateCharacterForm({ worldId }: NewCharacterProps) {
       throw new Error("Character 'name' missing");
     }
 
-    const characterId = await jsonWorldRepository.createCharacter(
+    const characterId = await new WorldRepository().createCharacter(
       worldId,
       validationResult.data.name
     );

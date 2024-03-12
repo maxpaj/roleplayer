@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Item } from "@repo/rp-lib";
+import { Item } from "roleplayer";
 import {
   Card,
   CardDescription,

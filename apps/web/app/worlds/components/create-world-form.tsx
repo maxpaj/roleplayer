@@ -3,14 +3,14 @@ import { redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Combobox } from "@/components/ui/combobox";
-import { jsonWorldRepository } from "db/json/json-world-repository";
+import { WorldRepository } from "db/drizzle-world-repository";
 
 const validateWorldFormSchema = z.object({
   name: z.string().min(1),
 });
 
 async function getTemplateWorlds() {
-  return jsonWorldRepository.getTemplateWorlds();
+  return new WorldRepository().getTemplateWorlds();
 }
 
 export async function CreateWorldForm() {
@@ -24,9 +24,10 @@ export async function CreateWorldForm() {
       throw new Error("World name missing");
     }
 
-    const stored = await jsonWorldRepository.createWorld(
-      validationResult.data.name
-    );
+    const stored = await new WorldRepository().createWorld({
+      name: worldInput.name!.toString(),
+      isTemplate: false,
+    });
 
     return redirect(`/worlds/${stored.id}`);
   }
@@ -39,7 +40,7 @@ export async function CreateWorldForm() {
       <Combobox
         options={templates.map((t) => ({
           label: t.name,
-          value: t.id,
+          value: t.id.toString(),
         }))}
         placeholder="Use template"
       />

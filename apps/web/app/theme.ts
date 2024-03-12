@@ -6,7 +6,7 @@ import secondaryActionIcon from "../assets/icons/skoll/rank-2.svg";
 import dodgeEvent from "../assets/icons/felbrigg/dodge.svg";
 import characterLostHealthEventIcon from "../assets/icons/zeromancer/heart-minus.svg";
 import characterGainHealthEventIcon from "../assets/icons/zeromancer/heart-plus.svg";
-import { CampaignEventType } from "@repo/rp-lib";
+import { CampaignEventType } from "roleplayer";
 
 type ClassColors = {
   [key: string]: string;
@@ -195,6 +195,6 @@ export const EventIconMap: {
   },
   MonsterEnterBattle: {
     alt: "",
-    icon: defaultIcon,
+    icon: undefined,
   },
 };

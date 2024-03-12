@@ -1,12 +1,12 @@
-import { Battle, Campaign } from "@repo/rp-lib";
+import { Battle, Campaign } from "roleplayer";
 import { BattleSimulator } from "./components/battle-simulator";
 import { H3 } from "@/components/ui/typography";
-import { jsonCampaignRepository } from "db/json/json-campaign-repository";
+import { CampaignRepository } from "@/db/drizzle-campaign-repository";
 import { classToPlain } from "@/lib/class-to-plain";
 
 async function getData(campaignId: Campaign["id"], battleId: Battle["id"]) {
-  const campaignRecord = await jsonCampaignRepository.getCampaign(campaignId);
-  const campaignData = campaignRecord.entity.applyEvents();
+  const campaignRecord = await new CampaignRepository().getCampaign(campaignId);
+  const campaignData = campaignRecord.applyEvents();
   const battle = campaignData.battles.find((b) => b.id === battleId);
   return { battle, campaign: campaignRecord };
 }
@@ -25,7 +25,11 @@ export default async function BattlePage({
 
   return (
     <>
-      <BattleSimulator campaign={classToPlain(campaign)} battleId={battleId} />
+      <BattleSimulator
+        campaignActorRecords={[]}
+        campaign={classToPlain(campaign)}
+        battleId={battleId}
+      />
     </>
   );
 }

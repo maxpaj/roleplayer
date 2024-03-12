@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/tailwind-utils";
 import { HTMLProps } from "react";
 
 export function H1({

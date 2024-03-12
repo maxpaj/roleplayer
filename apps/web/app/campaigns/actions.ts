@@ -1,33 +1,39 @@
 "use server";
 
-import { Campaign, Character, World } from "@repo/rp-lib";
+import { CampaignRepository } from "db/drizzle-campaign-repository";
+import { CampaignRecord } from "db/schema/campaigns";
+import { CharacterRecord } from "db/schema/characters";
+import { UserRecord } from "db/schema/users";
+import { WorldRecord } from "db/schema/worlds";
 import { redirect } from "next/navigation";
-import { jsonCampaignRepository } from "db/json/json-campaign-repository";
-import { jsonWorldRepository } from "db/json/json-world-repository";
 
-export async function createBattle(campaignId: Campaign["id"]) {
-  const battleId = await jsonCampaignRepository.createBattle(campaignId);
+export async function createBattle(campaignId: CampaignRecord["id"]) {
+  const battleId = new CampaignRepository().createBattle(campaignId);
   redirect(`/campaigns/${campaignId}/battles/${battleId}`);
 }
 
 export async function createCampaign(
-  worldId: World["id"],
-  characters: Character[]
+  userId: UserRecord["id"],
+  worldId: WorldRecord["id"],
+  characters: CharacterRecord[]
 ) {
-  const world = await jsonWorldRepository.getWorld(worldId);
-  const created = await jsonCampaignRepository.createCampaign(
-    "",
-    world.entity.id,
-    characters
-  );
+  const created = await new CampaignRepository().createCampaign({
+    isDemo: false,
+    userId,
+    worldId,
+    name: "My new campaign",
+  });
+
   redirect(`/campaigns/${created.id}`);
 }
 
-export async function getCampaign(campaignId: Campaign["id"]) {
-  const all = await jsonCampaignRepository.getAll();
-  return all.find((c) => c.entity.id === campaignId);
+export async function getCampaign(
+  userId: UserRecord["id"],
+  campaignId: CampaignRecord["id"]
+) {
+  return await new CampaignRepository().getCampaign(campaignId);
 }
 
-export async function getCampaigns() {
-  return await jsonCampaignRepository.getAll();
+export async function getCampaigns(userId: UserRecord["id"]) {
+  return await new CampaignRepository().getAll(userId);
 }

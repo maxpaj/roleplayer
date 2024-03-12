@@ -1,11 +1,11 @@
-import { Character } from "@repo/rp-lib";
+import { Character } from "roleplayer";
 import { CharacterEditor } from "./components/character-editor";
 import { classToPlain } from "@/lib/class-to-plain";
 import { redirect } from "next/navigation";
-import { jsonCampaignRepository } from "db/json/json-campaign-repository";
+import { CampaignRepository } from "@/db/drizzle-campaign-repository";
 
 async function getCampaign(campaignId: string) {
-  const campaign = await jsonCampaignRepository.getCampaign(campaignId);
+  const campaign = await new CampaignRepository().getCampaign(campaignId);
   return campaign;
 }
 
@@ -20,11 +20,12 @@ export default async function CharacterPage({
     characterUpdate: Partial<Character>
   ) {
     "use server";
-    const { entity: campaign } =
-      await jsonCampaignRepository.getCampaign(campaignId);
+    const { entity: campaign } = await new CampaignRepository().getCampaign(
+      campaignId
+    );
     campaign.setCharacterClasses(characterId, characterUpdate.classes!);
     campaign.setCharacterStats(characterId, characterUpdate.stats!);
-    await jsonCampaignRepository.saveCampaign(campaign);
+    await new CampaignRepository().saveCampaign(campaign);
   }
 
   const { characterId, campaignId } = params;

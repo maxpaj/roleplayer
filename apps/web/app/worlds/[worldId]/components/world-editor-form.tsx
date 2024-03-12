@@ -3,7 +3,7 @@
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Muted } from "@/components/ui/typography";
-import { World } from "@repo/rp-lib";
+import { World } from "roleplayer";
 import { Info } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
@@ -21,7 +21,7 @@ export function WorldEditorForm({ world, metadata }: WorldEditorFormProps) {
   return (
     <div className="flex flex-col gap-2">
       <Input
-        value={update.entity.name}
+        value={update.name}
         onChange={(e) =>
           setUpdate({
             ...update,

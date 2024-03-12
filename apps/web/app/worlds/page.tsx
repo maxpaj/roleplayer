@@ -2,10 +2,10 @@ import { CreateWorldForm } from "./components/create-world-form";
 import { WorldCard } from "../../components/world-card";
 import { H2, Muted } from "@/components/ui/typography";
 import { Separator } from "@/components/ui/separator";
-import { jsonWorldRepository } from "db/json/json-world-repository";
+import { WorldRepository } from "db/drizzle-world-repository";
 
 async function getData() {
-  const worlds = await jsonWorldRepository.getAll();
+  const worlds = await new WorldRepository().getAll(1);
   return worlds;
 }
 
@@ -26,11 +26,7 @@ export default async function WorldsPage({}) {
 
       <div className="my-2 flex gap-2">
         {worlds.map((world) => (
-          <WorldCard
-            key={world.entity.id}
-            world={world.entity}
-            metadata={world.metadata}
-          />
+          <WorldCard key={world.id} world={world} />
         ))}
       </div>
     </div>

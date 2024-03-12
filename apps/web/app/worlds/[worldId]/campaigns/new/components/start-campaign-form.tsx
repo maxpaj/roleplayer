@@ -6,7 +6,7 @@ import { H5 } from "@/components/ui/typography";
 import { Separator } from "@radix-ui/react-dropdown-menu";
 import { AlertTriangle } from "lucide-react";
 import { useState } from "react";
-import { World } from "@repo/rp-lib";
+import { World } from "roleplayer";
 import { createCampaign } from "app/worlds/[worldId]/actions";
 import { redirect } from "next/navigation";
 

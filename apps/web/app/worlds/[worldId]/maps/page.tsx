@@ -6,7 +6,7 @@ import { Separator } from "@/components/ui/separator";
 export default async function MapsPage({
   params,
 }: {
-  params: { worldId: string };
+  params: { worldId: number };
 }) {
   const { worldId: id } = params;
   const { entity: world } = await getWorld(id);
@@ -15,10 +15,6 @@ export default async function MapsPage({
     <>
       <H3>Maps</H3>
       <Separator className="my-3" />
-
-      {world.maps.length === 0 && (
-        <Muted className="my-4">It's empty! No maps added yet.</Muted>
-      )}
 
       <ButtonLink variant="outline" href={`/worlds/${world.id}/maps`}>
         Create a new map

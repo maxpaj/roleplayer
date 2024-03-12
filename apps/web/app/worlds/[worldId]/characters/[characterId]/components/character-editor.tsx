@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ClassSelector } from "./class-selector";
-import { Character, World } from "@repo/rp-lib";
+import { Character, World } from "roleplayer";
 import { useState } from "react";
 import { RemoveFunctions } from "types/without-functions";
 import { CharacterClassEditor } from "./class-editor";

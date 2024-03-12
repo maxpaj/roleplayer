@@ -5,7 +5,7 @@ import { buttonVariants } from "./button";
 import { ReactNode } from "react";
 import { badgeVariants } from "./badge";
 import { usePathname } from "next/navigation";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/tailwind-utils";
 
 type ButtonLinkProps = {
   children: ReactNode;

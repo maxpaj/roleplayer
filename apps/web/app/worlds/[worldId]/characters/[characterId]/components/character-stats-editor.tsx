@@ -1,8 +1,8 @@
 "use client";
 
 import { Input } from "@/components/ui/input";
-import { Character, World } from "@repo/rp-lib";
-import { CharacterStat } from "@repo/rp-lib";
+import { Character, World } from "roleplayer";
+import { CharacterStat } from "roleplayer";
 import { useState } from "react";
 import { RemoveFunctions } from "types/without-functions";
 

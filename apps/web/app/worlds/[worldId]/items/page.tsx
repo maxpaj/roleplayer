@@ -3,7 +3,7 @@ import { Separator } from "@/components/ui/separator";
 import { H3, H5, Muted } from "@/components/ui/typography";
 import { getWorld } from "../actions";
 import { ItemCard } from "@/components/item-card";
-import { ItemType } from "@repo/rp-lib";
+import { ItemType } from "roleplayer";
 
 export default async function ItemsPage({
   params,

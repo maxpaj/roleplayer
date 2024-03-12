@@ -1,5 +1,5 @@
 import { Card, CardHeader } from "@/components/ui/card";
-import { Battle } from "@repo/rp-lib";
+import { Battle } from "roleplayer";
 import Link from "next/link";
 
 type BattleCardProps = {

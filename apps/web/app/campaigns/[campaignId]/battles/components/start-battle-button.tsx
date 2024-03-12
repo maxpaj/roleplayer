@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Campaign } from "@repo/rp-lib";
+import { Campaign } from "roleplayer";
 import { createBattle } from "app/campaigns/actions";
 
 export function StartBattleButton({

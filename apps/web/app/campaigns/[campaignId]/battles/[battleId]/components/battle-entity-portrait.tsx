@@ -1,16 +1,5 @@
-import { BattleEntity } from "@repo/rp-lib";
-import { ReactNode } from "react";
+import { ActorRecord } from "models/actor";
 
-export type BattleEntityRecord = {
-  entity: BattleEntity;
-  imageUrl: string;
-  renderPortrait(): ReactNode;
-};
-
-export function BattleEntityPortrait({
-  entity,
-}: {
-  entity: BattleEntityRecord;
-}) {
+export function BattleEntityPortrait({ entity }: { entity: ActorRecord }) {
   return <></>;
 }

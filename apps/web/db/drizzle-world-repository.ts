@@ -7,7 +7,7 @@ import { UserRecord } from "./schema/users";
 import { monstersSchema } from "./schema/monster";
 import { statusesSchema } from "./schema/statuses";
 import { actionsSchema } from "./schema/actions";
-import { classessSchema } from "./schema/classes";
+import { classesSchema } from "./schema/classes";
 
 export class WorldRepository {
   async getAll(userId: UserRecord["id"]): Promise<WorldRecord[]> {
@@ -26,11 +26,11 @@ export class WorldRepository {
       .innerJoin(campaignsSchema, eq(worldsSchema.id, campaignsSchema.worldId))
       .innerJoin(monstersSchema, eq(monstersSchema.worldId, worldsSchema.id))
       .innerJoin(statusesSchema, eq(statusesSchema.worldId, worldsSchema.id))
-      .innerJoin(classessSchema, eq(classessSchema.worldId, worldsSchema.id))
+      .innerJoin(classesSchema, eq(classesSchema.worldId, worldsSchema.id))
       .innerJoin(actionsSchema, eq(actionsSchema.worldId, worldsSchema.id))
       .innerJoin(
         charactersSchema,
-        eq(charactersSchema.campaignId, campaignsSchema.id)
+        eq(charactersSchema.worldId, worldsSchema.id)
       )
       .where(
         and(eq(worldsSchema.userId, userId), eq(worldsSchema.id, worldId))

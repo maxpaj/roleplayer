@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { H4 } from "@/components/ui/typography";
 import { Separator } from "@/components/ui/separator";
-import { jsonCampaignRepository } from "db/json/json-campaign-repository";
+import { CampaignRepository } from "@/db/drizzle-campaign-repository";
 
 const validateBattleFormSchema = z.object({
   name: z.string().min(1),
@@ -25,7 +25,7 @@ export function CreateBattleForm({ campaignId }: CreateBattleFormProps) {
       throw new Error("Battle 'name' missing");
     }
 
-    const battleId = await jsonCampaignRepository.createBattle(campaignId);
+    const battleId = await new CampaignRepository().createBattle(campaignId);
 
     return redirect(`/campaign/${campaignId}/battles/${battleId}`);
   }

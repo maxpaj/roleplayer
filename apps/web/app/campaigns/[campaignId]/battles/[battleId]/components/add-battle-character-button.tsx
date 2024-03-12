@@ -9,7 +9,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Muted, Paragraph } from "@/components/ui/typography";
-import { Campaign, Character } from "@repo/rp-lib";
+import { Campaign, Character } from "roleplayer";
 import { useState } from "react";
 import { RemoveFunctions } from "types/without-functions";
 

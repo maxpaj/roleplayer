@@ -1,40 +1,40 @@
 "use server";
 
-import { Character, World } from "@repo/rp-lib";
+import { Character, World } from "roleplayer";
+import { CampaignRepository } from "db/drizzle-campaign-repository";
+import { WorldRepository } from "db/drizzle-world-repository";
 import { redirect } from "next/navigation";
-import { jsonCampaignRepository } from "db/json/json-campaign-repository";
-import { jsonWorldRepository } from "db/json/json-world-repository";
 
 export async function getWorld(id: World["id"]) {
-  const world = await jsonWorldRepository.getWorld(id);
+  const world = await new WorldRepository().getWorld(id);
   return world;
 }
 
 export async function getWorldCampaigns(id: World["id"]) {
-  const campaigns = await jsonCampaignRepository.getWorldCampaigns(id);
+  const campaigns = await new CampaignRepository().getWorldCampaigns(id);
   return campaigns;
 }
 
 export async function deleteWorld(id: World["id"]) {
-  await jsonWorldRepository.deleteWorld(id);
+  await new WorldRepository().deleteWorld(id);
 }
 
 export async function unpublishWorld(id: World["id"]) {
-  await jsonWorldRepository.setWorldPublicVisibility(id, false);
+  await new WorldRepository().setWorldPublicVisibility(id, false);
 }
 
 export async function publishWorld(id: World["id"]) {
-  await jsonWorldRepository.setWorldPublicVisibility(id, true);
+  await new WorldRepository().setWorldPublicVisibility(id, true);
 }
 
 export async function createCampaign(
   worldId: World["id"],
   characters: Character[]
 ) {
-  const world = await jsonWorldRepository.getWorld(worldId);
-  const created = await jsonCampaignRepository.createCampaign(
+  const world = await new WorldRepository().getWorld(worldId);
+  const created = await new CampaignRepository().createCampaign(
     "",
-    world.entity.id,
+    world.id,
     characters
   );
   redirect(`/campaigns/${created.id}`);

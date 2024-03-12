@@ -8,28 +8,35 @@ import {
   CampaignEvent,
   CampaignEventType,
   CampaignState,
-} from "@repo/rp-lib";
-import { D20, roll } from "@repo/rp-lib";
-import { Interaction } from "@repo/rp-lib";
-import { Campaign } from "@repo/rp-lib";
-import { Id } from "@repo/rp-lib";
+  BattleEntity,
+  Character,
+  MonsterInstance,
+} from "roleplayer";
+import { D20, roll } from "roleplayer";
+import { Interaction } from "roleplayer";
+import { Campaign } from "roleplayer";
+import { Id } from "roleplayer";
 import { EventIconMap } from "../../../../../theme";
 import { Button } from "@/components/ui/button";
 import { H3, Muted } from "@/components/ui/typography";
 import { RemoveFunctions } from "types/without-functions";
 import { AddBattleCharacterButton } from "./add-battle-character-button";
 import { AddBattleMonsterButton } from "./add-battle-monster-button";
-import { BattleEntityRecord } from "./battle-entity-portrait";
+import { ActorRecord, BattleEntityRecord } from "models/actor";
 
 const EventIconSize = 32;
+
+type BattleSimulatorProps = {
+  campaign: RemoveFunctions<Campaign>;
+  battleId: Battle["id"];
+  campaignActorRecords: BattleEntityRecord[];
+};
 
 export function BattleSimulator({
   campaign,
   battleId,
-}: {
-  campaign: RemoveFunctions<Campaign>;
-  battleId: string;
-}) {
+  campaignActorRecords,
+}: BattleSimulatorProps) {
   const [tempCampaign, setTempCampaignReact] = useState<Campaign>(
     new Campaign(campaign)
   );
@@ -48,12 +55,12 @@ export function BattleSimulator({
     forceUpdate();
   }
 
-  function addCharacter(characterId: string) {
+  function addCharacter(characterId: Character["id"]) {
     tempCampaign.addCharacterToCurrentBattle(characterId);
     setCampaign(tempCampaign);
   }
 
-  function addMonster(monsterId: string) {
+  function addMonster(monsterId: MonsterInstance["id"]) {
     tempCampaign.addMonsterToCurrentBattle(monsterId);
     setCampaign(tempCampaign);
   }
@@ -95,35 +102,32 @@ export function BattleSimulator({
 
   function renderCharacter(
     battle: Battle,
-    battleCharacter: BattleEntityRecord,
+    battleCharacter: ActorRecord,
     currentRound: Round,
-    characterToAct?: BattleEntityRecord
+    characterToAct?: ActorRecord
   ) {
     const c = tempCampaign.applyEvents();
-    const { entity } = battleCharacter;
-    const { actor } = entity;
 
     const hasSpentAction = c.characterHasRoundEvent(
       currentRound,
-      actor.id,
+      battleCharacter.id,
       "CharacterPrimaryAction"
     );
 
     const hasSpentBonus = c.characterHasRoundEvent(
       currentRound,
-      actor.id,
+      battleCharacter.id,
       "CharacterSecondaryAction"
     );
 
     const hasFinished = c.characterHasRoundEvent(
       currentRound,
-      actor.id,
+      battleCharacter.id,
       "CharacterEndRound"
     );
 
     const currentCharacterAction =
-      actor.id ===
-      (characterToAct ? characterToAct.entity.actor.id : undefined);
+      battleCharacter.id === (characterToAct ? characterToAct.id : undefined);
 
     const currentActionClass = currentCharacterAction
       ? "shadow-[0_0px_40px_0px_rgba(0,0,0,0.3)] shadow-red-600"
@@ -131,39 +135,29 @@ export function BattleSimulator({
 
     return (
       <div
-        key={actor.id}
+        key={battleCharacter.id}
         className={`flex justify-between border border-slate-700 w-full overflow-hidden shadow-md relative ${
           currentActionClass || ""
         }`}
       >
         <div className="w-full">
-          <div
-            className="absolute w-full h-full z-0"
-            style={{
-              backgroundImage: `linear-gradient(90deg, rgba(0, 0, 0, 1) 200px, rgba(0, 0, 0, 0) 150%), url(${battleCharacter.imageUrl})`,
-              backgroundSize: `cover, cover`,
-              backgroundPositionX: `0, 200px`,
-              color: "#000",
-            }}
-          ></div>
+          {battleCharacter.renderPortrait()}
 
           <div className="flex justify-between w-full relative p-4">
-            {battleCharacter.renderPortrait()}
-
             {currentCharacterAction && (
               <div className="flex gap-x-2">
                 <select
                   disabled={hasSpentAction || hasFinished}
                   className="border bg-transparent"
                   onChange={(e) => {
-                    const a = actor
+                    const a = battleCharacter
                       .getAvailableActions()
                       .find((a) => a.name === e.target.value);
                     setSelectedAction(a);
                   }}
                 >
                   <option>Select action</option>
-                  {actor.getAvailableActions().map((c) => (
+                  {battleCharacter.getAvailableActions().map((c) => (
                     <option key={c.name}>{c.name}</option>
                   ))}
                 </select>
@@ -172,21 +166,23 @@ export function BattleSimulator({
                   disabled={hasSpentAction || hasFinished}
                   className="border bg-transparent"
                   onChange={(e) =>
-                    actor.performAction([e.target.value], selectedAction!)
+                    battleCharacter.performAction(
+                      [parseInt(e.target.value)],
+                      selectedAction!.id
+                    )
                   }
                 >
                   <option>Select target</option>
-                  {battle.entities
-                    .filter((c) => c.actor.id != actor.id)
-                    .map((c) => (
-                      <option key={c.actor.id}>{c.actor.id}</option>
-                    ))}
+                  {selectedAction &&
+                    battleCharacter
+                      .getEligibleTargets(selectedAction)
+                      .map((target) => <option>{target.id}</option>)}
                 </select>
 
                 <Button
                   disabled={hasFinished}
                   onClick={() => {
-                    tempCampaign.endCharacterTurn(battleCharacter.entity);
+                    tempCampaign.endCharacterTurn(battleCharacter);
                     setCampaign(tempCampaign);
                   }}
                 >
@@ -198,6 +194,48 @@ export function BattleSimulator({
         </div>
       </div>
     );
+  }
+
+  function getBattleEntityRecord(
+    battleCharacter: BattleEntity
+  ): BattleEntityRecord {
+    const record = campaignActorRecords.find(
+      (c) => c.actor.id === battleCharacter.actor.id
+    );
+
+    if (!record) {
+      throw new Error("Battle entity record not found");
+    }
+
+    return record;
+  }
+
+  function getActorImageURL(battleCharacter: BattleEntity): string {
+    return "https://image.jpg";
+  }
+
+  function getActor(battleCharacter: BattleEntity): ActorRecord {
+    const battleEntityRecord = getBattleEntityRecord(battleCharacter);
+    const battleEntityImageUrl = getActorImageURL(battleCharacter);
+
+    return {
+      ...battleEntityRecord.actor,
+      renderPortrait: () => (
+        <>
+          {battleEntityRecord.actor.getType()}
+
+          <div
+            className="absolute w-full h-full z-0"
+            style={{
+              backgroundImage: `linear-gradient(90deg, rgba(0, 0, 0, 1) 200px, rgba(0, 0, 0, 0) 150%), url(${battleEntityImageUrl})`,
+              backgroundSize: `cover, cover`,
+              backgroundPositionX: `0, 200px`,
+              color: "#000",
+            }}
+          ></div>
+        </>
+      ),
+    };
   }
 
   function renderBattleEvents() {
@@ -239,7 +277,7 @@ export function BattleSimulator({
 
   const battleState = tempCampaignState.battles.find((b) => b.id === battleId);
   if (!battleState) {
-    return <>Battle not found</>;
+    return <>Battle state not found</>;
   }
 
   const currentRound = tempCampaign.getCurrentRound();
@@ -249,7 +287,7 @@ export function BattleSimulator({
 
   const battleEvents = tempCampaign.getCurrentBattleEvents();
   const roundEvents = battleEvents.filter((e) => e.roundId === currentRound.id);
-  const currentCharacter = battleState.currentCharacterTurn(roundEvents);
+  const currentCharacter = battleState.currentActorTurn(roundEvents);
   const campaignState = tempCampaign.applyEvents();
   const canEndTurn = campaignState.allCharactersHaveActed(battleEvents);
 
@@ -289,9 +327,9 @@ export function BattleSimulator({
                 .map((battleChar) => {
                   return renderCharacter(
                     battleState,
-                    battleChar,
+                    getActor(battleChar),
                     currentRound,
-                    currentCharacter
+                    getActor(currentCharacter)
                   );
                 })}
             </div>

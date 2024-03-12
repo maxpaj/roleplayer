@@ -5,7 +5,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Character } from "@repo/rp-lib";
+import { Character } from "roleplayer";
 import Link from "next/link";
 
 type CharacterCardProps = {

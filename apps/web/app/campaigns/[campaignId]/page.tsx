@@ -20,7 +20,7 @@ export default async function CampaignPage({
       <Paragraph>{campaign.metadata.description}</Paragraph>
 
       <H4>World</H4>
-      <Paragraph>{campaign.entity.world?.name}</Paragraph>
+      <Paragraph>{campaign.world?.name}</Paragraph>
     </>
   );
 }

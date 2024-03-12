@@ -8,7 +8,7 @@ export default async function WorldLayout({
   children,
 }: {
   children: React.ReactNode;
-  params: { worldId: string };
+  params: { worldId: number };
 }) {
   const { worldId: id } = params;
   const { entity: world } = await getWorld(id);
@@ -39,7 +39,6 @@ export default async function WorldLayout({
           <BadgeLink href={`/worlds/${world.id}/monsters`}>Monsters</BadgeLink>
           <BadgeLink href={`/worlds/${world.id}/items`}>Items</BadgeLink>
           <BadgeLink href={`/worlds/${world.id}/npcs`}>NPCs</BadgeLink>
-          <BadgeLink href={`/worlds/${world.id}/maps`}>Maps</BadgeLink>
           <BadgeLink href={`/worlds/${world.id}/campaigns`}>
             Campaigns
           </BadgeLink>

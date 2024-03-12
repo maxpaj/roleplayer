@@ -1,17 +1,16 @@
 import Link from "next/link";
-import { World } from "@repo/rp-lib";
-import { WorldMetadata } from "repository/world-repository";
 import { Card, CardDescription, CardHeader, CardTitle } from "./ui/card";
+import { WorldRecord } from "db/schema/worlds";
 
-type WorldCardProps = { world: World; metadata: WorldMetadata };
+type WorldCardProps = { world: WorldRecord };
 
-export function WorldCard({ world, metadata }: WorldCardProps) {
+export function WorldCard({ world }: WorldCardProps) {
   return (
     <Link href={`/worlds/${world.id}`}>
       <Card className="w-[200px] h-[150px] overflow-hidden">
         <CardHeader className="p-2">
           <CardTitle className={"text-md"}>{world.name}</CardTitle>
-          <CardDescription>{metadata.description}</CardDescription>
+          <CardDescription>{world.description}</CardDescription>
         </CardHeader>
       </Card>
     </Link>

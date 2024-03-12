@@ -1,4 +1,4 @@
-import { Monster } from "@repo/rp-lib";
+import { Monster } from "roleplayer";
 import { Card, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import Link from "next/link";
 

@@ -1,11 +1,11 @@
 import { H3, Muted } from "@/components/ui/typography";
-import { jsonCampaignRepository } from "db/json/json-campaign-repository";
+import { CampaignRepository } from "@/db/drizzle-campaign-repository";
 import { BattleCard } from "./components/battle-card";
 import { StartBattleButton } from "./components/start-battle-button";
 
 async function getData(campaignId: string) {
-  const campaign = await jsonCampaignRepository.getCampaign(campaignId);
-  const campaignData = campaign.entity.applyEvents();
+  const campaign = await new CampaignRepository().getCampaign(campaignId);
+  const campaignData = campaign.applyEvents();
   return campaignData.battles;
 }
 

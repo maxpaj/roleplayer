@@ -18,7 +18,7 @@ export default async function CampaignsPage({
       <Separator className="my-3" />
 
       {campaigns.map((c) => (
-        <CampaignCard key={c.entity.id} campaign={c.entity} />
+        <CampaignCard key={c.id} campaign={c.entity} />
       ))}
 
       {campaigns.length === 0 && <Muted>No campaigns started yet.</Muted>}

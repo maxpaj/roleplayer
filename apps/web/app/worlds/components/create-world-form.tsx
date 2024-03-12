@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Combobox } from "@/components/ui/combobox";
 import { WorldRepository } from "@/db/repository/drizzle-world-repository";
 
-const validateWorldFormSchema = z.object({
+const validateName = z.object({
   name: z.string().min(1),
 });
 
@@ -13,25 +13,26 @@ async function getTemplateWorlds() {
   return new WorldRepository().getTemplateWorlds();
 }
 
-export async function CreateWorldForm() {
-  async function createWorld(formData: FormData) {
-    "use server";
+async function createWorld(formData: FormData) {
+  "use server";
 
-    const worldInput = Object.fromEntries(formData.entries());
+  const worldInput = Object.fromEntries(formData.entries());
 
-    const validationResult = validateWorldFormSchema.safeParse(worldInput);
-    if (!validationResult.success) {
-      throw new Error("World name missing");
-    }
-
-    const stored = await new WorldRepository().createWorld({
-      name: worldInput.name!.toString(),
-      isTemplate: false,
-    });
-
-    return redirect(`/worlds/${stored.id}`);
+  const validationResult = validateName.safeParse(worldInput);
+  if (!validationResult.success) {
+    throw new Error("World name missing");
   }
 
+  const stored = await new WorldRepository().createWorld({
+    name: worldInput.name!.toString(),
+    isTemplate: false,
+    isPublic: false,
+  });
+
+  return redirect(`/worlds/${stored.id}`);
+}
+
+export async function CreateWorldForm() {
   const templates = await getTemplateWorlds();
 
   return (

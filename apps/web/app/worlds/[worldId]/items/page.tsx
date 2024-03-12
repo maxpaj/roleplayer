@@ -43,6 +43,14 @@ export default async function ItemsPage({
       <H3>Items</H3>
       <Separator className="my-3" />
 
+      <ButtonLink
+        className="my-2"
+        variant="outline"
+        href={`/worlds/${world.id}/items`}
+      >
+        Create item
+      </ButtonLink>
+
       {items.length === 0 && (
         <Muted className="my-4">It's empty! No items added yet.</Muted>
       )}
@@ -79,14 +87,6 @@ export default async function ItemsPage({
           <ItemCard key={item.id} worldId={worldId} item={item} />
         ))}
       </div>
-
-      <ButtonLink
-        className="my-2"
-        variant="outline"
-        href={`/worlds/${world.id}/monsters`}
-      >
-        Create item
-      </ButtonLink>
     </>
   );
 }

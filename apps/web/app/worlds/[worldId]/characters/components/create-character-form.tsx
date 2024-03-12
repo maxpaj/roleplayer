@@ -10,7 +10,7 @@ type NewCharacterProps = {
   worldId: WorldRecord["id"];
 };
 
-const validateCharacterFormSchema = z.object({
+const validateName = z.object({
   name: z.string().min(1),
 });
 
@@ -20,8 +20,7 @@ export function CreateCharacterForm({ worldId }: NewCharacterProps) {
 
     const characterInput = Object.fromEntries(formData.entries());
 
-    const validationResult =
-      validateCharacterFormSchema.safeParse(characterInput);
+    const validationResult = validateName.safeParse(characterInput);
     if (!validationResult.success) {
       throw new Error("Character 'name' missing");
     }

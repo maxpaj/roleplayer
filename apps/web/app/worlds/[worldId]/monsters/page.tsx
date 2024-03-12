@@ -3,6 +3,7 @@ import { H3, Muted } from "@/components/ui/typography";
 import { MonsterCard } from "@/components/monster-card";
 import { ButtonLink } from "@/components/ui/button-link";
 import { getWorldData } from "../actions";
+import { CreateMonsterForm } from "./components/create-monster-form";
 
 export default async function MonstersPage({
   params,
@@ -10,7 +11,8 @@ export default async function MonstersPage({
   params: { worldId: string };
 }) {
   const { worldId: id } = params;
-  const worldData = await getWorldData(parseInt(id));
+  const worldId = parseInt(id);
+  const worldData = await getWorldData(worldId);
   if (!worldData) {
     return <>World not found!</>;
   }
@@ -25,6 +27,8 @@ export default async function MonstersPage({
       </Muted>
       <Separator className="my-3" />
 
+      <CreateMonsterForm worldId={worldId} />
+
       {monsters.length === 0 && (
         <Muted className="my-4">It's empty! No monsters added yet.</Muted>
       )}
@@ -34,14 +38,6 @@ export default async function MonstersPage({
           <MonsterCard key={m.id} worldId={id} monster={m} />
         ))}
       </div>
-
-      <ButtonLink
-        className="my-2"
-        variant="outline"
-        href={`/worlds/${world.id}/monsters`}
-      >
-        Create monster
-      </ButtonLink>
     </>
   );
 }

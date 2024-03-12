@@ -1,9 +1,9 @@
 import {
-  date,
   integer,
   pgEnum,
   pgTable,
   serial,
+  timestamp,
   varchar,
 } from "drizzle-orm/pg-core";
 import { worldsSchema } from "./worlds";
@@ -21,9 +21,9 @@ export const itemsSchema = pgTable("items", {
   id: serial("id").primaryKey(),
   name: varchar("name", { length: 256 }).notNull(),
   description: varchar("description", { length: 8192 }),
-  type: itemTypeEnum("itemType").notNull(),
-  createdUtc: date("createdUtc").notNull(),
-  rarity: rarityEnum("rarity").notNull(),
+  type: itemTypeEnum("itemType").default("Consumable"),
+  createdUtc: timestamp("createdUtc").defaultNow(),
+  rarity: rarityEnum("rarity").default("Common"),
   worldId: integer("worldId")
     .references(() => worldsSchema.id)
     .notNull(),

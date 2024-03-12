@@ -1,4 +1,10 @@
-import { date, integer, pgTable, serial, varchar } from "drizzle-orm/pg-core";
+import {
+  integer,
+  pgTable,
+  serial,
+  timestamp,
+  varchar,
+} from "drizzle-orm/pg-core";
 import { worldsSchema } from "./worlds";
 import { actionsSchema } from "./actions";
 
@@ -6,7 +12,7 @@ export const monstersSchema = pgTable("monsters", {
   id: serial("id").primaryKey(),
   name: varchar("name", { length: 256 }).notNull(),
   description: varchar("description", { length: 8192 }),
-  createdUtc: date("createdUtc").notNull(),
+  createdUtc: timestamp("createdUtc").defaultNow(),
   worldId: integer("worldId")
     .references(() => worldsSchema.id)
     .notNull(),

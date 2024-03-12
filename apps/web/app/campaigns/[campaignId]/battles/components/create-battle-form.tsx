@@ -7,7 +7,7 @@ import { Separator } from "@/components/ui/separator";
 import { CampaignRepository } from "@/db/repository/drizzle-campaign-repository";
 import { CampaignRecord } from "@/db/schema/campaigns";
 
-const validateBattleFormSchema = z.object({
+const validateName = z.object({
   name: z.string().min(1),
 });
 
@@ -21,7 +21,7 @@ export function CreateBattleForm({ campaignId }: CreateBattleFormProps) {
 
     const battleInput = Object.fromEntries(formData.entries());
 
-    const validationResult = validateBattleFormSchema.safeParse(battleInput);
+    const validationResult = validateName.safeParse(battleInput);
     if (!validationResult.success) {
       throw new Error("Battle 'name' missing");
     }

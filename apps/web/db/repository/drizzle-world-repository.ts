@@ -4,11 +4,15 @@ import { CampaignRecord, campaignsSchema } from "../schema/campaigns";
 import { NewWorldRecord, WorldRecord, worldsSchema } from "../schema/worlds";
 import { CharacterRecord, charactersSchema } from "../schema/characters";
 import { UserRecord, usersSchema } from "../schema/users";
-import { MonsterRecord, monstersSchema } from "../schema/monster";
+import {
+  MonsterRecord,
+  NewMonsterRecord,
+  monstersSchema,
+} from "../schema/monster";
 import { StatusRecord, statusesSchema } from "../schema/statuses";
 import { ActionRecord, actionsSchema } from "../schema/actions";
 import { ClazzRecord, classesSchema } from "../schema/classes";
-import { ItemRecord, itemsSchema } from "../schema/items";
+import { ItemRecord, NewItemRecord, itemsSchema } from "../schema/items";
 
 export class WorldRepository {
   async getAll(userId: UserRecord["id"] = 2): Promise<WorldRecord[]> {
@@ -89,7 +93,24 @@ export class WorldRepository {
     return query;
   }
 
-  async setWorldPublicVisibility(id: number, arg1: boolean) {
+  async setWorldPublicVisibility(
+    worldId: WorldRecord["id"],
+    isPublic: boolean
+  ) {
     throw new Error("Method not implemented.");
+  }
+
+  async createMonster(monster: NewMonsterRecord) {
+    return db
+      .insert(monstersSchema)
+      .values(monster)
+      .returning({ id: monstersSchema.id });
+  }
+
+  async createItem(item: NewItemRecord) {
+    return db
+      .insert(itemsSchema)
+      .values(item)
+      .returning({ id: itemsSchema.id });
   }
 }

@@ -1,9 +1,8 @@
-import { ButtonLink } from "@/components/ui/button-link";
 import { H3, Muted } from "@/components/ui/typography";
-import { CharacterCard } from "@/components/character-card";
 import { Separator } from "@/components/ui/separator";
 import { getWorldData } from "../actions";
 import { CreateCharacterForm } from "../../../characters/components/create-character-form";
+import { CharacterCard } from "@/components/character-card";
 
 export default async function NpcPage({
   params,

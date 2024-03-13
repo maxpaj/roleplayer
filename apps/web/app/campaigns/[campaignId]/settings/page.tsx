@@ -1,5 +1,5 @@
 import { Separator } from "@/components/ui/separator";
-import { H3, H5 } from "@/components/ui/typography";
+import { H3, H4, H5 } from "@/components/ui/typography";
 import { getCampaign } from "app/campaigns/actions";
 import { DeleteCampaignButton } from "./components/delete-campaign-button";
 
@@ -22,7 +22,7 @@ export default async function CampaignSettingsPage({
       <H3>Settings</H3>
       <Separator className="my-3" />
 
-      <H5 className="my-2">Delete campaign</H5>
+      <H4 className="my-2">Delete campaign</H4>
       <DeleteCampaignButton
         campaignName={campaign.name}
         campaignId={campaign.id}

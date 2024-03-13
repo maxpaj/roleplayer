@@ -1,9 +1,7 @@
-import { Character, DefaultRuleSet, World } from "roleplayer";
-import { CharacterEditor } from "../../../../characters/components/character-editor";
-import { classToPlain } from "@/lib/class-to-plain";
-import { redirect } from "next/navigation";
 import { WorldService } from "services/world-service";
 import { DEFAULT_USER_ID } from "@/db/index";
+import { H3, Paragraph } from "@/components/ui/typography";
+import { Separator } from "@/components/ui/separator";
 
 export default async function CharacterPage({
   params: { worldId: id, characterId: cid },
@@ -19,34 +17,18 @@ export default async function CharacterPage({
     return <>World not found</>;
   }
 
-  const { world, characters } = worldData;
-
-  const worldRpLib = new World({ ...world, ruleset: DefaultRuleSet });
+  const { characters } = worldData;
   const character = characters.find((c) => c.id === characterId);
 
   if (!character) {
     return <>Character not found</>;
   }
 
-  const characterRpLib = new Character({
-    ...character,
-    description: character.description || "",
-  });
-
-  if (!character) {
-    return <>Character not found</>;
-  }
-
   return (
-    <CharacterEditor
-      world={classToPlain(worldRpLib)}
-      characterFromEvents={classToPlain(characterRpLib)}
-      onSave={async (update) => {
-        "use server";
-        console.log(update);
-        throw new Error("Not implemented");
-        redirect("../");
-      }}
-    />
+    <>
+      <H3>{character.name}</H3>
+      <Separator className="my-3" />
+      <Paragraph>{character.description}</Paragraph>
+    </>
   );
 }

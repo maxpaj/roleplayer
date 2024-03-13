@@ -9,7 +9,7 @@ const validateName = z.object({
   name: z.string().min(1),
 });
 
-export async function CreateWorldCharacterForm({
+export async function CreateNPCForm({
   worldId,
 }: {
   worldId: WorldRecord["id"];

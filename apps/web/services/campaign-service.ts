@@ -149,16 +149,7 @@ export class CampaignService {
       world: new World({ ...campaignData.world, ruleset: DefaultRuleSet }),
     });
 
-    await db.insert(eventsSchema).values(
-      campaign.events.map((e: any) => ({
-        campaignId: created.id,
-        characterId: e.characterId,
-        roundId: e.roundId,
-        battleId: e.battleId,
-        eventData: JSON.stringify(e),
-        type: e.type,
-      }))
-    );
+    await this.saveCampaignEvents(campaign.id, campaign.events);
 
     return { id: created.id };
   }
@@ -243,8 +234,15 @@ export class CampaignService {
     campaignId: CampaignRecord["id"],
     events: CampaignEventWithRound[]
   ) {
+    const eventExists = (event: CampaignEventWithRound) => {
+      throw new Error("Not implemented");
+      return false;
+    };
+
+    const eventsDiff = events.filter(eventExists);
+
     await db.insert(eventsSchema).values(
-      events.map((e: any) => ({
+      eventsDiff.map((e: any) => ({
         campaignId,
         characterId: e.characterId,
         roundId: e.roundId,

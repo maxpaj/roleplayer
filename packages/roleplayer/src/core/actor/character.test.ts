@@ -227,7 +227,6 @@ describe("Character", () => {
             occupiesSlots: [ItemSlot.Inventory],
             type: ItemType.Equipment,
             description: "",
-            imageUrl: "",
           },
         ],
       });

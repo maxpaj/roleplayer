@@ -4,7 +4,6 @@ import {
   EquipmentSlotDefinition,
   ItemEquipmentType,
 } from "../core/world/item/item";
-import { dangerousGenerateId } from "../lib/generate-id";
 
 export const DefaultLevelProgression: LevelProgression[] = [
   0, 50, 100, 200, 400,
@@ -12,7 +11,7 @@ export const DefaultLevelProgression: LevelProgression[] = [
 
 export const DefaultEquipmentSlotDefinitions: EquipmentSlotDefinition[] = [
   {
-    id: dangerousGenerateId(),
+    id: 0,
     name: "Main hand",
     eligibleEquipmentTypes: [ItemEquipmentType.OneHandSword],
   },
@@ -20,7 +19,7 @@ export const DefaultEquipmentSlotDefinitions: EquipmentSlotDefinition[] = [
 
 export const DefaultCharacterResourceTypes = [
   {
-    id: dangerousGenerateId(),
+    id: 0,
     name: "Movement speed",
     defaultMax: 35,
   },
@@ -28,27 +27,27 @@ export const DefaultCharacterResourceTypes = [
 
 export const DefaultCharacterStatTypes: CharacterStatType[] = [
   {
-    id: dangerousGenerateId(),
+    id: 0,
     name: "Strength",
   },
   {
-    id: dangerousGenerateId(),
+    id: 1,
     name: "Intelligence",
   },
   {
-    id: dangerousGenerateId(),
+    id: 2,
     name: "Wisdom",
   },
   {
-    id: dangerousGenerateId(),
+    id: 3,
     name: "Charisma",
   },
   {
-    id: dangerousGenerateId(),
+    id: 4,
     name: "Dexterity",
   },
   {
-    id: dangerousGenerateId(),
+    id: 5,
     name: "Constitution",
   },
 ];

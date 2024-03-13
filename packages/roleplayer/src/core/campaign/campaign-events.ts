@@ -23,6 +23,7 @@ export type CampaignEventWithRound = CampaignEvent & {
 
 export type CampaignEventType =
   | { type: "Unknown" }
+  | { type: "CampaignStarted" }
   | { type: "RoundStarted" }
   | { type: "RoundEnded" }
   | { type: "BattleStarted" }

@@ -34,6 +34,11 @@ export class Campaign {
 
     this.events = c.events || [
       {
+        id: dangerousGenerateId(),
+        type: "CampaignStarted",
+        roundId: 0,
+      },
+      {
         type: "RoundStarted",
         id: dangerousGenerateId(),
         roundId: dangerousGenerateId(),
@@ -337,14 +342,13 @@ export class Campaign {
   }
 
   getCurrentBattle(): Battle | undefined {
-    const worldData = this.applyEvents();
-
-    return worldData.battles[worldData.battles.length - 1];
+    const campaignState = this.applyEvents();
+    return campaignState.battles[campaignState.battles.length - 1];
   }
 
   getCurrentRound(): Round {
-    const worldData = this.applyEvents();
-    const round = worldData.rounds[worldData.rounds.length - 1];
+    const campaignState = this.applyEvents();
+    const round = campaignState.rounds[campaignState.rounds.length - 1];
     if (!round) {
       throw new Error("No current round");
     }
@@ -498,12 +502,37 @@ export class Campaign {
 
   applyEvent(event: CampaignEventWithRound, campaignState: CampaignState) {
     switch (event.type) {
-      case "CharacterSpawned":
+      case "CampaignStarted": {
+        break;
+      }
+
+      case "RoundStarted": {
+        campaignState.rounds.push({
+          id: event.roundId,
+        });
+        campaignState.characters.forEach((c) => c.resetResources());
+        break;
+      }
+
+      case "BattleStarted": {
+        campaignState.battles.push(
+          new Battle({
+            id: event.battleId,
+            name: "Battle",
+          })
+        );
+
+        break;
+      }
+
+      case "CharacterSpawned": {
         campaignState.characters.push(new Character({ id: event.characterId }));
         break;
+      }
 
-      case "RoundEnded":
+      case "RoundEnded": {
         break;
+      }
 
       case "MonsterEnterBattle": {
         const battle = campaignState.battles.find(
@@ -524,24 +553,6 @@ export class Campaign {
             definition: monsterDefinition,
           })
         );
-        break;
-      }
-
-      case "RoundStarted":
-        campaignState.rounds.push({
-          id: event.roundId,
-        });
-        campaignState.characters.forEach((c) => c.resetResources());
-        break;
-
-      case "BattleStarted": {
-        campaignState.battles.push(
-          new Battle({
-            id: event.battleId,
-            name: "Battle",
-          })
-        );
-
         break;
       }
 

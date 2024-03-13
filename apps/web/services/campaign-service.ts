@@ -14,7 +14,12 @@ import {
 } from "../db/schema/characters";
 import { UserRecord } from "../db/schema/users";
 import { EventRecord, eventsSchema } from "../db/schema/events";
-import { CampaignEventWithRound } from "roleplayer";
+import {
+  Campaign,
+  CampaignEventWithRound,
+  DefaultRuleSet,
+  World,
+} from "roleplayer";
 import {
   NewFriendInviteRecord,
   friendInvitesSchema,
@@ -90,7 +95,31 @@ export class CampaignService {
   }
 
   async createBattle(campaignId: CampaignRecord["id"]) {
-    throw new Error("Method not implemented.");
+    const campaignData = await this.getCampaign(campaignId);
+    if (!campaignData) {
+      throw new Error("No such campaign");
+    }
+
+    const world = new World({
+      ...campaignData.world,
+      ruleset: DefaultRuleSet,
+    });
+
+    const campaign = new Campaign({
+      ...campaignData.campaign,
+      world,
+      events: campaignData.events.map(
+        (e) => e.eventData
+      ) as CampaignEventWithRound[],
+    });
+
+    campaign.startBattle();
+
+    await this.saveCampaignEvents(campaign.id, campaign.events);
+
+    const battle = campaign.getCurrentBattle();
+
+    return { id: battle?.id };
   }
 
   async deleteCampaign(campaignId: CampaignRecord["id"]): Promise<void> {
@@ -103,13 +132,35 @@ export class CampaignService {
     const rows = await db
       .insert(campaignsSchema)
       .values(newCampaign)
-      .returning({ id: campaignsSchema.id });
+      .returning();
 
-    if (rows[0]) {
-      return rows[0];
+    const created = rows[0];
+    if (!created) {
+      throw new Error("Nothing inserted");
     }
 
-    throw new Error("No rows inserted");
+    const campaignData = await this.getCampaign(created.id);
+    if (!campaignData) {
+      throw new Error("Cannot find campaign");
+    }
+
+    const campaign = new Campaign({
+      ...campaignData.campaign,
+      world: new World({ ...campaignData.world, ruleset: DefaultRuleSet }),
+    });
+
+    await db.insert(eventsSchema).values(
+      campaign.events.map((e: any) => ({
+        campaignId: created.id,
+        characterId: e.characterId,
+        roundId: e.roundId,
+        battleId: e.battleId,
+        eventData: JSON.stringify(e),
+        type: e.type,
+      }))
+    );
+
+    return { id: created.id };
   }
 
   async getCampaign(campaignId: CampaignRecord["id"]) {
@@ -151,24 +202,25 @@ export class CampaignService {
       }
 
       if (row.events) {
-        acc[campaign.id]!.events.push(row.events);
+        acc[campaign.id]!.events = [
+          ...acc[campaign.id]!.events.filter((c) => c.id !== row.events!.id),
+          row.events,
+        ];
       }
 
       if (row.characters) {
-        acc[campaign.id]!.characters.push(row.characters);
+        acc[campaign.id]!.characters = [
+          ...acc[campaign.id]!.characters.filter(
+            (c) => c.id !== row.characters!.id
+          ),
+          row.characters,
+        ];
       }
 
       return acc;
     }, {});
 
     return result[campaignId];
-  }
-
-  async createCharacter(
-    campaignId: CampaignRecord["id"],
-    name: string
-  ): Promise<number> {
-    throw new Error("Method not implemented.");
   }
 
   async publishEvent(
@@ -191,7 +243,16 @@ export class CampaignService {
     campaignId: CampaignRecord["id"],
     events: CampaignEventWithRound[]
   ) {
-    throw new Error("Method not implemented.");
+    await db.insert(eventsSchema).values(
+      events.map((e: any) => ({
+        campaignId,
+        characterId: e.characterId,
+        roundId: e.roundId,
+        battleId: e.battleId,
+        eventData: JSON.stringify(e),
+        type: e.type,
+      }))
+    );
   }
 
   async createFriendInvite(invite: NewFriendInviteRecord) {
@@ -199,5 +260,34 @@ export class CampaignService {
       .insert(friendInvitesSchema)
       .values(invite)
       .returning({ id: friendInvitesSchema.id });
+  }
+
+  async addCharacter(campaignId: number, character: CharacterRecord) {
+    await db
+      .insert(charactersToCampaignsSchema)
+      .values({ campaignId, characterId: character.id });
+
+    const campaignData = await this.getCampaign(campaignId);
+    if (!campaignData) {
+      throw new Error("No such campaign");
+    }
+
+    const { campaign, events } = campaignData;
+
+    // Roleplayer-lib realm start
+    const world = new World({
+      ...campaignData.world,
+      ruleset: DefaultRuleSet,
+    });
+
+    const c = new Campaign({
+      ...campaign,
+      world,
+      events: events.map((e) => e.eventData) as CampaignEventWithRound[],
+    });
+
+    c.createCharacter(character.id, character.name);
+
+    await this.saveCampaignEvents(campaign.id, c.events);
   }
 }

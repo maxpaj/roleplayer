@@ -10,7 +10,7 @@ import { CharacterClassEditor } from "./class-editor";
 import { CharacterStatsEditor } from "./character-stats-editor";
 import { CharacterInventoryEditor } from "./character-inventory-editor";
 import { Separator } from "@/components/ui/separator";
-import { H3, Muted } from "@/components/ui/typography";
+import { H3, H4, Muted, Paragraph } from "@/components/ui/typography";
 
 type CharacterEditorProps = {
   onSave: (character: RemoveFunctions<Character>) => void;
@@ -56,62 +56,64 @@ export function CharacterEditor({
       </H3>
       <Separator className="my-3" />
 
-      <div className="flex flex-col gap-2">
+      <Paragraph>
         Level {characterLevel} ({characterFromEvents.xp} XP)
-        <H3>Classes</H3>
-        {update.classes.length === 0 && (
-          <Muted>Choose your character class</Muted>
-        )}
-        <ClassSelector
-          placeholder={
-            <>
-              Select classes (
-              {update.classes.reduce((sum, curr) => sum + curr.level, 0)}/
-              {characterLevel})
-            </>
-          }
-          characterLevel={characterLevel}
-          availableClasses={world.classes}
-          character={update}
-          onChange={(classes) => {
-            setUpdate((prev) => ({ ...prev, classes }));
-          }}
-        />
-        {update.classes.map((characterClass) => {
-          return (
-            <div key={characterClass.classId}>
-              <CharacterClassEditor
-                classId={characterClass.classId}
-                world={world}
-                character={update}
-              />
-              <Separator className="my-3" />
-            </div>
-          );
-        })}
-        <H3>Stats</H3>
-        <Muted>
-          Stats determine the strengths and weaknesses of your character
-        </Muted>
-        <CharacterStatsEditor
-          character={update}
-          world={world}
-          onChange={(stats) => {
-            setUpdate((prev) => ({ ...prev, stats }));
-          }}
-        />
-        <H3>Equipment/inventory</H3>
-        <Muted>
-          Stuff your character with swords, axes, armors, potions, and more
-        </Muted>
-        <CharacterInventoryEditor
-          character={update}
-          world={world}
-          onChange={(inventory) => {
-            setUpdate((prev) => ({ ...prev, inventory }));
-          }}
-        />
-      </div>
+      </Paragraph>
+
+      <H4 className="my-2">Classes</H4>
+      {update.classes.length === 0 && (
+        <Muted>Choose your character class</Muted>
+      )}
+
+      <ClassSelector
+        placeholder={
+          <>
+            Select classes (
+            {update.classes.reduce((sum, curr) => sum + curr.level, 0)}/
+            {characterLevel})
+          </>
+        }
+        characterLevel={characterLevel}
+        availableClasses={world.classes}
+        character={update}
+        onChange={(classes) => {
+          setUpdate((prev) => ({ ...prev, classes }));
+        }}
+      />
+      {update.classes.map((characterClass) => {
+        return (
+          <div key={characterClass.classId}>
+            <CharacterClassEditor
+              classId={characterClass.classId}
+              world={world}
+              character={update}
+            />
+            <Separator className="my-3" />
+          </div>
+        );
+      })}
+      <H4 className="my-2">Stats</H4>
+      <Muted>
+        Stats determine the strengths and weaknesses of your character
+      </Muted>
+      <CharacterStatsEditor
+        character={update}
+        world={world}
+        onChange={(stats) => {
+          setUpdate((prev) => ({ ...prev, stats }));
+        }}
+      />
+      <H4 className="my-2">Equipment/inventory</H4>
+      <Muted>
+        Stuff your character with swords, axes, armors, potions, and more
+      </Muted>
+      <CharacterInventoryEditor
+        character={update}
+        world={world}
+        onChange={(inventory) => {
+          setUpdate((prev) => ({ ...prev, inventory }));
+        }}
+      />
     </>
   );
 }

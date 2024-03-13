@@ -12,6 +12,8 @@ import { charactersSchema } from "./characters";
 export const eventsSchema = pgTable("events", {
   id: serial("id").primaryKey(),
   type: varchar("type", { length: 256 }).notNull(),
+  roundId: integer("roundId"),
+  battleId: integer("battleId"),
   eventData: json("eventData").notNull(),
   createdUtc: timestamp("createdUtc").defaultNow(),
   characterId: integer("characterId").references(() => charactersSchema.id),

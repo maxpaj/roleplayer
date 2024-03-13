@@ -24,7 +24,7 @@ export const charactersSchema = pgTable("characters", {
 });
 
 export const charactersToActionsSchema = pgTable("characterToActions", {
-  characterId: integer("userId")
+  characterId: integer("characterId")
     .notNull()
     .references(() => charactersSchema.id),
 
@@ -34,7 +34,7 @@ export const charactersToActionsSchema = pgTable("characterToActions", {
 });
 
 export const charactersToItemsSchema = pgTable("characterToItems", {
-  characterId: integer("userId")
+  characterId: integer("characterId")
     .notNull()
     .references(() => charactersSchema.id),
 
@@ -44,7 +44,7 @@ export const charactersToItemsSchema = pgTable("characterToItems", {
 });
 
 export const charactersToCampaignsSchema = pgTable("characterToCampaigns", {
-  characterId: integer("userId")
+  characterId: integer("characterId")
     .notNull()
     .references(() => charactersSchema.id),
 

@@ -39,6 +39,9 @@ export default async function CampaignLayout({
           <BadgeLink href={`/campaigns/${campaign.id}/characters`}>
             Characters
           </BadgeLink>
+          <BadgeLink href={`/campaigns/${campaign.id}/events`}>
+            Events
+          </BadgeLink>
         </div>
         <BadgeLink href={`/campaigns/${campaign.id}/settings`}>
           Settings

@@ -1,5 +1,4 @@
-import { Separator } from "@/components/ui/separator";
-import { H3, Muted } from "@/components/ui/typography";
+import { H4, Muted } from "@/components/ui/typography";
 import { CampaignService } from "services/campaign-service";
 import { CampaignRecord } from "@/db/schema/campaigns";
 import { CharacterRecord } from "@/db/schema/characters";
@@ -7,7 +6,14 @@ import { classToPlain } from "@/lib/class-to-plain";
 import { getCampaign } from "app/campaigns/actions";
 import { CharacterEditor } from "app/characters/components/character-editor";
 import { redirect } from "next/navigation";
-import { Campaign, Character, DefaultRuleSet, World } from "roleplayer";
+import {
+  Campaign,
+  CampaignEventWithRound,
+  Character,
+  DefaultRuleSet,
+  World,
+} from "roleplayer";
+import { EventCard } from "@/components/event-card";
 
 export default async function CampaignCharacterPage({
   params: { campaignId: id, characterId: cid },
@@ -47,6 +53,7 @@ export default async function CampaignCharacterPage({
   const { campaign, world, characters, events } = campaignData;
   const campaignInstance = new Campaign({
     ...campaign,
+    events: events.map((e) => e.eventData) as CampaignEventWithRound[],
     world: new World({ ...world, ruleset: DefaultRuleSet }),
   });
 
@@ -55,7 +62,7 @@ export default async function CampaignCharacterPage({
   const character = characters.find((c) => c.id === characterId);
   const characterEvents = events.filter((e) => e.characterId === characterId);
 
-  if (!character) {
+  if (!character || !characterFromEvents) {
     return <>Character not found in campaign</>;
   }
 
@@ -63,9 +70,7 @@ export default async function CampaignCharacterPage({
     <>
       <CharacterEditor
         world={classToPlain(campaignInstance.world)}
-        characterFromEvents={classToPlain(
-          characterFromEvents || new Character({ name: character.name })
-        )}
+        characterFromEvents={classToPlain(characterFromEvents)}
         onSave={async (update) => {
           "use server";
           await updateCharacter(campaignId, characterId, update);
@@ -73,10 +78,13 @@ export default async function CampaignCharacterPage({
         }}
       />
 
-      <H3>Events</H3>
-      {characterEvents.map((e) => (
-        <>{e.type}</>
-      ))}
+      <H4 className="my-2">Events</H4>
+      <div className="flex gap-2 flex-wrap">
+        {characterEvents.map((e) => (
+          <EventCard key={e.id} event={e} campaignId={campaignId} />
+        ))}
+      </div>
+
       {characterEvents.length === 0 && (
         <Muted>No events yet for this character</Muted>
       )}

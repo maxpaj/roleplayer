@@ -34,13 +34,15 @@ export default async function NpcPage({
       )}
 
       <div className="flex gap-2 my-2">
-        {characters.map((character) => (
-          <CharacterCard
-            key={character.id}
-            worldId={world.id}
-            character={character}
-          />
-        ))}
+        {characters
+          .sort((a, b) => (a.name < b.name ? -1 : 1))
+          .map((character) => (
+            <CharacterCard
+              key={character.id}
+              worldId={world.id}
+              character={character}
+            />
+          ))}
       </div>
     </>
   );

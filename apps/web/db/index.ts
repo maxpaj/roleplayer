@@ -11,6 +11,7 @@ import { classesSchema } from "./schema/classes";
 import { itemsSchema } from "./schema/items";
 import { statusesSchema } from "./schema/statuses";
 import { rulesSchema } from "./schema/rules";
+import { effectsSchema } from "./schema/effects";
 
 export const DEFAULT_USER_ID = 2;
 
@@ -20,6 +21,7 @@ export const db = drizzle(sql, {
     campaigns: campaignsSchema,
     characters: charactersSchema,
     classes: classesSchema,
+    effects: effectsSchema,
     events: eventsSchema,
     items: itemsSchema,
     monsters: monstersSchema,

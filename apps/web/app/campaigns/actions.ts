@@ -8,8 +8,8 @@ import { WorldRecord } from "db/schema/worlds";
 import { redirect } from "next/navigation";
 
 export async function createBattle(campaignId: CampaignRecord["id"]) {
-  const battleId = new CampaignService().createBattle(campaignId);
-  redirect(`/campaigns/${campaignId}/battles/${battleId}`);
+  const battle = await new CampaignService().createBattle(campaignId);
+  redirect(`/campaigns/${campaignId}/battles/${battle.id}`);
 }
 
 export async function deleteCampaign(id: CampaignRecord["id"]) {

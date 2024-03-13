@@ -19,7 +19,7 @@ export const monstersSchema = pgTable("monsters", {
 });
 
 export const monstersToActionsSchema = pgTable("monsterToActions", {
-  monsterId: integer("userId")
+  monsterId: integer("monsterId")
     .notNull()
     .references(() => monstersSchema.id),
 

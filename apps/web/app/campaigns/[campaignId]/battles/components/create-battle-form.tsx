@@ -24,9 +24,8 @@ export function CreateBattleForm({ campaignId }: CreateBattleFormProps) {
       throw new Error("Battle 'name' missing");
     }
 
-    const battleId = await new CampaignService().createBattle(campaignId);
-
-    return redirect(`/campaign/${campaignId}/battles/${battleId}`);
+    const battle = await new CampaignService().createBattle(campaignId);
+    return redirect(`/campaign/${campaignId}/battles/${battle.id}`);
   }
 
   return (

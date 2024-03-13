@@ -1,4 +1,4 @@
-import { H3, Muted } from "@/components/ui/typography";
+import { H3, H4, Muted } from "@/components/ui/typography";
 import { BattleCard } from "./components/battle-card";
 import { StartBattleButton } from "./components/start-battle-button";
 import { getCampaign } from "app/campaigns/actions";
@@ -33,11 +33,14 @@ export default async function BattlesPage({
 
   return (
     <div>
+      <StartBattleButton campaignId={parseInt(campaignId)} />
+
+      <H4 className="mt-4">Ongoing battle</H4>
       {battles.filter((b) => !b.finished).length === 0 && (
-        <Muted>No ongoing battles.</Muted>
+        <Muted>No ongoing battles</Muted>
       )}
 
-      <div className="flex gap-2 my-3">
+      <div className="flex gap-2">
         {battles
           .filter((b) => !b.finished)
           .map((battle) => (
@@ -49,12 +52,10 @@ export default async function BattlesPage({
           ))}
       </div>
 
-      <StartBattleButton campaignId={parseInt(campaignId)} />
-
-      <H3 className="mt-4">Previous battles</H3>
+      <H4 className="mt-4">Previous battles</H4>
 
       {battles.filter((b) => b.finished).length === 0 && (
-        <Muted>No previous battles fought.</Muted>
+        <Muted>No previous battles fought</Muted>
       )}
 
       <div className="flex gap-2">

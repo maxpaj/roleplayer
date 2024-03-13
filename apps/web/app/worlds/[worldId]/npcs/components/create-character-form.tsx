@@ -2,7 +2,7 @@ import z from "zod";
 import { redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { WorldRepository } from "@/db/repository/drizzle-world-repository";
+import { WorldService } from "services/world-service";
 import { WorldRecord } from "@/db/schema/worlds";
 
 const validateName = z.object({
@@ -24,7 +24,7 @@ export async function CreateWorldCharacterForm({
       throw new Error("WorldCharacter name missing");
     }
 
-    const stored = await new WorldRepository().createWorldCharacter({
+    const stored = await new WorldService().createWorldCharacter({
       name: itemInput.name!.toString(),
       worldId,
     });

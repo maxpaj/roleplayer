@@ -1,9 +1,9 @@
-import { db } from "..";
+import { db } from "../db";
 import { eq } from "drizzle-orm";
-import { CharacterRecord, charactersSchema } from "../schema/characters";
-import { classesSchema } from "../schema/classes";
+import { CharacterRecord, charactersSchema } from "../db/schema/characters";
+import { classesSchema } from "../db/schema/classes";
 
-export class CharacterRepository {
+export class CharacterService {
   async getCharacter(characterId: CharacterRecord["id"]) {
     const data = await db
       .select()

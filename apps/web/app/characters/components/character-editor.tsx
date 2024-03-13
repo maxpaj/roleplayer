@@ -10,32 +10,32 @@ import { CharacterClassEditor } from "./class-editor";
 import { CharacterStatsEditor } from "./character-stats-editor";
 import { CharacterInventoryEditor } from "./character-inventory-editor";
 import { Separator } from "@/components/ui/separator";
-import { H2, H3, Muted } from "@/components/ui/typography";
+import { H3, Muted } from "@/components/ui/typography";
 
 type CharacterEditorProps = {
   onSave: (character: RemoveFunctions<Character>) => void;
-  character: RemoveFunctions<Character>;
+  characterFromEvents: RemoveFunctions<Character>;
   world: RemoveFunctions<World>;
 };
 
 export function CharacterEditor({
   onSave,
   world,
-  character,
+  characterFromEvents,
 }: CharacterEditorProps) {
-  const [update, setUpdate] = useState(character);
+  const [update, setUpdate] = useState(characterFromEvents);
   const characterLevel = world.ruleset.levelProgression.findIndex(
     (l) => l > update.xp
   );
 
   return (
     <>
-      <H2>
+      <H3>
         <div className="flex items-center gap-2">
           <Input
             type="name"
             id="name"
-            className="scroll-m-20 focus-visible:ring-offset-0 focus-visible:ring-0 text-3xl font-semibold tracking-tight border-none px-0"
+            className="scroll-m-20 focus-visible:ring-offset-0 focus-visible:ring-0 text-2xl font-semibold tracking-tight border-none px-0"
             name="name"
             placeholder="Name"
             value={update.name}
@@ -53,10 +53,11 @@ export function CharacterEditor({
             Save
           </Button>
         </div>
-      </H2>
+      </H3>
+      <Separator className="my-3" />
 
       <div className="flex flex-col gap-2">
-        Level {characterLevel} ({character.xp} XP)
+        Level {characterLevel} ({characterFromEvents.xp} XP)
         <H3>Classes</H3>
         {update.classes.length === 0 && (
           <Muted>Choose your character class</Muted>
@@ -84,7 +85,7 @@ export function CharacterEditor({
                 world={world}
                 character={update}
               />
-              <Separator className="my-4" />
+              <Separator className="my-3" />
             </div>
           );
         })}

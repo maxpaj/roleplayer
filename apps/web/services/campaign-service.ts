@@ -1,18 +1,26 @@
-import { db } from "..";
+import { db } from "../db";
 import { eq } from "drizzle-orm";
 import {
   CampaignRecord,
   NewCampaignRecord,
   campaignsSchema,
-} from "../schema/campaigns";
-import { WorldRecord, worldsSchema } from "../schema/worlds";
-import { monstersSchema } from "../schema/monster";
-import { charactersSchema } from "../schema/characters";
-import { UserRecord } from "../schema/users";
-import { EventRecord, eventsSchema } from "../schema/events";
+} from "../db/schema/campaigns";
+import { WorldRecord, worldsSchema } from "../db/schema/worlds";
+import { monstersSchema } from "../db/schema/monster";
+import {
+  CharacterRecord,
+  charactersSchema,
+  charactersToCampaignsSchema,
+} from "../db/schema/characters";
+import { UserRecord } from "../db/schema/users";
+import { EventRecord, eventsSchema } from "../db/schema/events";
 import { CampaignEventWithRound } from "roleplayer";
+import {
+  NewFriendInviteRecord,
+  friendInvitesSchema,
+} from "../db/schema/friend-invite";
 
-export class CampaignRepository {
+export class CampaignService {
   async getAll(
     userId: UserRecord["id"]
   ): Promise<{ campaign: CampaignRecord; events: EventRecord[] }[]> {
@@ -49,7 +57,7 @@ export class CampaignRepository {
     return Object.values(result);
   }
 
-  async getWorldCampaigns(id: number) {
+  async getWorldCampaigns(worldId: WorldRecord["id"]) {
     const rows = await db
       .select()
       .from(campaignsSchema)
@@ -104,34 +112,50 @@ export class CampaignRepository {
     throw new Error("No rows inserted");
   }
 
-  async getCampaign(
-    campaignId: CampaignRecord["id"]
-  ): Promise<
-    | { campaign: CampaignRecord; events: EventRecord[]; world: WorldRecord }
-    | undefined
-  > {
+  async getCampaign(campaignId: CampaignRecord["id"]) {
     const rows = await db
       .select()
       .from(campaignsSchema)
       .innerJoin(worldsSchema, eq(worldsSchema.id, campaignsSchema.worldId))
       .leftJoin(monstersSchema, eq(monstersSchema.worldId, worldsSchema.id))
-      .leftJoin(charactersSchema, eq(charactersSchema.worldId, worldsSchema.id))
+      .leftJoin(
+        charactersToCampaignsSchema,
+        eq(charactersToCampaignsSchema.campaignId, campaignsSchema.id)
+      )
+      .leftJoin(
+        charactersSchema,
+        eq(charactersToCampaignsSchema.characterId, charactersSchema.id)
+      )
       .leftJoin(eventsSchema, eq(eventsSchema.campaignId, campaignsSchema.id))
       .where(eq(campaignsSchema.id, campaignId));
 
     const result = rows.reduce<
       Record<
         number,
-        { campaign: CampaignRecord; events: EventRecord[]; world: WorldRecord }
+        {
+          campaign: CampaignRecord;
+          events: EventRecord[];
+          characters: CharacterRecord[];
+          world: WorldRecord;
+        }
       >
     >((acc, row) => {
       const campaign = row.campaigns;
       if (!acc[campaign.id]) {
-        acc[campaign.id] = { campaign, events: [], world: row.worlds };
+        acc[campaign.id] = {
+          world: row.worlds,
+          campaign,
+          events: [],
+          characters: [],
+        };
       }
 
       if (row.events) {
         acc[campaign.id]!.events.push(row.events);
+      }
+
+      if (row.characters) {
+        acc[campaign.id]!.characters.push(row.characters);
       }
 
       return acc;
@@ -168,5 +192,12 @@ export class CampaignRepository {
     events: CampaignEventWithRound[]
   ) {
     throw new Error("Method not implemented.");
+  }
+
+  async createFriendInvite(invite: NewFriendInviteRecord) {
+    return await db
+      .insert(friendInvitesSchema)
+      .values(invite)
+      .returning({ id: friendInvitesSchema.id });
   }
 }

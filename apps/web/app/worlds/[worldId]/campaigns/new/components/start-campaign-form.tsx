@@ -25,7 +25,7 @@ export function StartCampaignForm({ worldId }: StartCampaignFormProps) {
       <Button
         className="mb-2 mt-5"
         onClick={async () => {
-          await createCampaign(worldId, {
+          await createCampaign({
             name: "My world new campaign",
             isDemo: false,
             worldId,

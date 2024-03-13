@@ -2,10 +2,10 @@ import { CreateWorldForm } from "./components/create-world-form";
 import { WorldCard } from "../../components/world-card";
 import { H2, Muted } from "@/components/ui/typography";
 import { Separator } from "@/components/ui/separator";
-import { WorldRepository } from "@/db/repository/drizzle-world-repository";
+import { WorldService } from "services/world-service";
 
 async function getData(userId: number = 0) {
-  const worlds = await new WorldRepository().getAll(userId);
+  const worlds = await new WorldService().getAll(userId);
   return worlds;
 }
 
@@ -22,7 +22,7 @@ export default async function WorldsPage({}) {
 
       <CreateWorldForm />
 
-      <Separator className="my-4" />
+      <Separator className="my-3" />
 
       <div className="my-2 flex gap-2">
         {worlds.map((world) => (

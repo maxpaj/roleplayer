@@ -1,6 +1,7 @@
 import { getWorldData } from "../actions";
-import { CreateCharacterForm } from "./components/create-character-form";
-import { H2 } from "@/components/ui/typography";
+import { CreateCharacterForm } from "../../../characters/components/create-character-form";
+import { H2, H3 } from "@/components/ui/typography";
+import { Separator } from "@/components/ui/separator";
 
 export default async function CharactersPage({
   params,
@@ -16,7 +17,9 @@ export default async function CharactersPage({
 
   return (
     <div>
-      <H2 className="mb-3">Create a new character</H2>
+      <H3>Characters</H3>
+      <Separator className="my-3" />
+
       <CreateCharacterForm worldId={worldId} />
     </div>
   );

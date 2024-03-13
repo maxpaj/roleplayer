@@ -1,14 +1,10 @@
 import { Battle, Campaign, DefaultRuleSet, World } from "roleplayer";
 import { BattleSimulator } from "./components/battle-simulator";
-import { H3 } from "@/components/ui/typography";
-import { CampaignRepository } from "@/db/repository/drizzle-campaign-repository";
+import { CampaignService } from "services/campaign-service";
 import { classToPlain } from "@/lib/class-to-plain";
 
-async function getCampaignData(
-  campaignId: Campaign["id"],
-  battleId: Battle["id"]
-) {
-  return await new CampaignRepository().getCampaign(campaignId);
+async function getCampaignData(campaignId: Campaign["id"]) {
+  return await new CampaignService().getCampaign(campaignId);
 }
 
 export default async function BattlePage({
@@ -17,20 +13,20 @@ export default async function BattlePage({
   params: { campaignId: Campaign["id"]; battleId: Battle["id"] };
 }) {
   const { battleId, campaignId } = params;
-  const campaignData = await getCampaignData(campaignId, battleId);
+  const campaignData = await getCampaignData(campaignId);
   if (!campaignData) {
-    throw new Error("");
+    return <>No campaign found</>;
   }
+
   const { campaign } = campaignData;
 
   const world = new World({ ...campaignData.world, ruleset: DefaultRuleSet });
   const campaignRpLib = new Campaign({ ...campaign, world });
-
   const campaignReduced = campaignRpLib.applyEvents();
   const battle = campaignReduced.battles.find((b) => b.id === battleId);
 
   if (!battle) {
-    return <H3>Battle not found!</H3>;
+    return <>Battle not found!</>;
   }
 
   return (

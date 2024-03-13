@@ -3,14 +3,14 @@ import { redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Combobox } from "@/components/ui/combobox";
-import { WorldRepository } from "@/db/repository/drizzle-world-repository";
+import { WorldService } from "services/world-service";
 
 const validateName = z.object({
   name: z.string().min(1),
 });
 
 async function getTemplateWorlds() {
-  return new WorldRepository().getTemplateWorlds();
+  return new WorldService().getTemplateWorlds();
 }
 
 async function createWorld(formData: FormData) {
@@ -23,7 +23,7 @@ async function createWorld(formData: FormData) {
     throw new Error("World name missing");
   }
 
-  const stored = await new WorldRepository().createWorld({
+  const stored = await new WorldService().createWorld({
     name: worldInput.name!.toString(),
     isTemplate: false,
     isPublic: false,

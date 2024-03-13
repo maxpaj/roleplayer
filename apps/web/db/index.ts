@@ -10,6 +10,9 @@ import { actionsSchema } from "./schema/actions";
 import { classesSchema } from "./schema/classes";
 import { itemsSchema } from "./schema/items";
 import { statusesSchema } from "./schema/statuses";
+import { rulesSchema } from "./schema/rules";
+
+export const DEFAULT_USER_ID = 2;
 
 export const db = drizzle(sql, {
   schema: {
@@ -22,6 +25,7 @@ export const db = drizzle(sql, {
     monsters: monstersSchema,
     statuses: statusesSchema,
     users: usersSchema,
+    rules: rulesSchema,
     worlds: worldsSchema,
   },
 });

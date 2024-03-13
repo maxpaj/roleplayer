@@ -1,12 +1,7 @@
 "use server";
 
-import { Campaign } from "roleplayer";
-import { CampaignRepository } from "@/db/repository/drizzle-campaign-repository";
-
-export async function getCampaign(campaignId: Campaign["id"]) {
-  return await new CampaignRepository().getAll(2);
-}
+import { CampaignService } from "services/campaign-service";
 
 export async function getDemoCampaigns() {
-  return await new CampaignRepository().getDemoCampaigns();
+  return await new CampaignService().getDemoCampaigns();
 }

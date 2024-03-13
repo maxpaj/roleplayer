@@ -3,7 +3,7 @@ import { H3, Muted } from "@/components/ui/typography";
 import { CharacterCard } from "@/components/character-card";
 import { Separator } from "@/components/ui/separator";
 import { getWorldData } from "../actions";
-import { CreateCharacterForm } from "../characters/components/create-character-form";
+import { CreateCharacterForm } from "../../../characters/components/create-character-form";
 
 export default async function NpcPage({
   params,
@@ -33,7 +33,7 @@ export default async function NpcPage({
         <Muted className="my-4">It's empty! No characters added yet.</Muted>
       )}
 
-      <div className="flex gap-2">
+      <div className="flex gap-2 my-2">
         {characters.map((character) => (
           <CharacterCard
             key={character.id}
@@ -42,14 +42,6 @@ export default async function NpcPage({
           />
         ))}
       </div>
-
-      <ButtonLink
-        className="my-2"
-        variant="outline"
-        href={`/worlds/${world.id}/characters`}
-      >
-        Create character
-      </ButtonLink>
     </>
   );
 }

@@ -2,9 +2,7 @@ import { redirect } from "next/navigation";
 import z from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { H4 } from "@/components/ui/typography";
-import { Separator } from "@/components/ui/separator";
-import { CampaignRepository } from "@/db/repository/drizzle-campaign-repository";
+import { CampaignService } from "services/campaign-service";
 import { CampaignRecord } from "@/db/schema/campaigns";
 
 const validateName = z.object({
@@ -26,16 +24,13 @@ export function CreateBattleForm({ campaignId }: CreateBattleFormProps) {
       throw new Error("Battle 'name' missing");
     }
 
-    const battleId = await new CampaignRepository().createBattle(campaignId);
+    const battleId = await new CampaignService().createBattle(campaignId);
 
     return redirect(`/campaign/${campaignId}/battles/${battleId}`);
   }
 
   return (
     <>
-      <H4>New battle</H4>
-      <Separator />
-
       <form action={createNewBattle}>
         <Input
           type="name"

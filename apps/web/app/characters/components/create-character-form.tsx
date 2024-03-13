@@ -3,18 +3,24 @@ import z from "zod";
 import { redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { WorldRepository } from "@/db/repository/drizzle-world-repository";
+import { WorldService } from "services/world-service";
 import { WorldRecord } from "@/db/schema/worlds";
+import { DEFAULT_USER_ID } from "@/db/index";
+import { CampaignRecord } from "@/db/schema/campaigns";
 
 type NewCharacterProps = {
   worldId: WorldRecord["id"];
+  campaignId?: CampaignRecord["id"];
 };
 
 const validateName = z.object({
   name: z.string().min(1),
 });
 
-export function CreateCharacterForm({ worldId }: NewCharacterProps) {
+export function CreateCharacterForm({
+  worldId,
+  campaignId,
+}: NewCharacterProps) {
   async function createNewCharacter(formData: FormData) {
     "use server";
 
@@ -25,12 +31,18 @@ export function CreateCharacterForm({ worldId }: NewCharacterProps) {
       throw new Error("Character 'name' missing");
     }
 
-    const characterId = await new WorldRepository().createCharacter(
-      worldId,
-      validationResult.data.name
+    const characterId = await new WorldService().createCharacter(
+      {
+        name: validationResult.data.name,
+        worldId: worldId,
+        userId: DEFAULT_USER_ID,
+      },
+      campaignId
     );
 
-    return redirect(`/worlds/${worldId}/characters/${characterId}`);
+    return campaignId
+      ? redirect(`/campaigns/${campaignId}/characters/${characterId.id}`)
+      : redirect(`/worlds/${worldId}/characters/${characterId.id}`);
   }
 
   return (

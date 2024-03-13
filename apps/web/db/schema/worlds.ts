@@ -6,6 +6,7 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 import { usersSchema } from "./users";
+import { rulesSchema } from "./rules";
 
 export const worldsSchema = pgTable("worlds", {
   id: serial("id").primaryKey(),
@@ -13,6 +14,9 @@ export const worldsSchema = pgTable("worlds", {
   description: varchar("description", { length: 8192 }),
   isTemplate: boolean("isTemplate").default(false),
   isPublic: boolean("isPublic").default(false),
+  rulesetId: integer("rulesetId")
+    .references(() => rulesSchema.id)
+    .default(1),
   userId: integer("userId").references(() => usersSchema.id),
 });
 

@@ -13,7 +13,7 @@ export default async function CampaignLayout({
   const campaignData = await getCampaign(parseInt(id));
 
   if (!campaignData) {
-    return <>Not found!</>;
+    return <>Campaign not found</>;
   }
 
   const { campaign } = campaignData;
@@ -32,7 +32,7 @@ export default async function CampaignLayout({
 
       <div className="flex mb-8 justify-between flex-wrap">
         <div className="flex gap-1">
-          <BadgeLink href={`/campaigns/${campaign.id}`}>Campaign</BadgeLink>
+          <BadgeLink href={`/campaigns/${campaign.id}`}>Overview</BadgeLink>
           <BadgeLink href={`/campaigns/${campaign.id}/battles`}>
             Battles
           </BadgeLink>

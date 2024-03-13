@@ -21,7 +21,7 @@ export default async function CampaignPage({
   const campaignData = await getCampaign(parseInt(id));
 
   if (!campaignData) {
-    return <>Not found!</>;
+    return <>Campaign not found</>;
   }
 
   const { campaign, world } = campaignData;

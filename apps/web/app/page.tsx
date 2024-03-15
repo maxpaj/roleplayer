@@ -11,15 +11,15 @@ export default function Home() {
           opacity: 0.3,
           backgroundImage: `radial-gradient(circle at center, transparent 0, transparent, hsl(var(--background)) 55%), url(${bg.src})`,
           backgroundRepeat: "no-repeat",
-          width: "816px",
-          height: "1456px",
+          height: "816px",
+          width: "1456px",
         }}
       />
 
       <section className="relative z-1 space-y-6 pb-8 pt-6 md:pb-12 md:pt-10 lg:py-32">
         <div className="container flex max-w-[64rem] flex-col items-center gap-4 text-center">
           <h1 className="text-3xl font-semibold sm:text-5xl md:text-6xl lg:text-7xl">
-            Roleplaying campaign manager
+            A world builder and campaign
           </h1>
           <Lead>
             Build a world, create characters, bring them into battle. Toggle

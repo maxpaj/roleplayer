@@ -30,7 +30,7 @@ export function DeleteWorldButton({
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="destructive-outlined">Delete world</Button>
+        <Button variant="destructive-outline">Delete world</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>

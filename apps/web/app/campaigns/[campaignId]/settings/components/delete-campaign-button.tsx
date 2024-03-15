@@ -30,7 +30,7 @@ export function DeleteCampaignButton({
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="destructive-outlined">Delete campaign</Button>
+        <Button variant="destructive-outline">Delete campaign</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>

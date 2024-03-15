@@ -6,22 +6,26 @@ import { ReactNode } from "react";
 import { badgeVariants } from "./badge";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/tailwind-utils";
+import { VariantProps } from "class-variance-authority";
 
 type ButtonLinkProps = {
   children: ReactNode;
   href: string;
-  variant?: "outline" | "default";
   className?: string;
-};
+} & VariantProps<typeof buttonVariants>;
 
 export function ButtonLink({
   className = "",
   children,
   variant = "default",
+  size = "default",
   href,
 }: ButtonLinkProps) {
   return (
-    <Link className={cn(buttonVariants({ variant }), className)} href={href}>
+    <Link
+      className={cn(buttonVariants({ variant, size }), className)}
+      href={href}
+    >
       {children}
     </Link>
   );

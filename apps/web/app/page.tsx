@@ -1,6 +1,13 @@
 import { ButtonLink } from "@/components/ui/button-link";
 import { H1, Lead } from "@/components/ui/typography";
 import bg from "assets/bg.webp";
+import {
+  ArrowRight,
+  Play,
+  PlayCircle,
+  PlayIcon,
+  PlaySquare,
+} from "lucide-react";
 
 export default function Home() {
   return (
@@ -27,10 +34,14 @@ export default function Home() {
             the level of support you want
           </Lead>
           <div className="flex gap-2">
-            <ButtonLink href={"/demos"} className="w-40">
-              Play demo
+            <ButtonLink variant="front-page" href={"/demos"} size="front-page">
+              Play demo <ArrowRight className="ml-2" />
             </ButtonLink>
-            <ButtonLink variant="outline" href={"/worlds"} className="w-40">
+            <ButtonLink
+              variant="front-page-outline"
+              href={"/worlds"}
+              size="front-page"
+            >
               Create your world
             </ButtonLink>
           </div>

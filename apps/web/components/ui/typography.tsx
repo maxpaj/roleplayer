@@ -99,7 +99,7 @@ export function Lead({
   children,
 }: HTMLProps<HTMLParagraphElement>) {
   return (
-    <p className={cn(`text-xl text-muted-foreground`, className)}>{children}</p>
+    <p className={cn(`text-xl text-foreground/80`, className)}>{children}</p>
   );
 }
 

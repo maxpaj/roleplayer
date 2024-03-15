@@ -21,7 +21,7 @@ export default function Home() {
           <H1 className="text-3xl font-semibold sm:text-5xl md:text-6xl lg:text-7xl">
             Your world builder and campaign manager
           </H1>
-          <Lead>
+          <Lead className="my-4">
             Build a world, invite your friends, create characters and start your
             adventure. Toggle help features on and off at a whim, depending on
             the level of support you want

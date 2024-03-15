@@ -6,13 +6,13 @@ export default function Home() {
   return (
     <>
       <div
-        className="fixed w-100 h-100 -z-10 top-0"
+        className="fixed -z-10 top-0"
         style={{
           opacity: 0.3,
-          backgroundImage: `radial-gradient(circle at center, transparent 0, transparent, hsl(var(--background)) 100%), url(${bg.src})`,
+          backgroundImage: `radial-gradient(circle at center, transparent 0, transparent, hsl(var(--background)) 55%), url(${bg.src})`,
           backgroundRepeat: "no-repeat",
-          width: "100%",
-          height: "100%",
+          width: "816px",
+          height: "1456px",
         }}
       />
 

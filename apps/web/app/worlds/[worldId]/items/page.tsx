@@ -1,4 +1,3 @@
-import { ButtonLink } from "@/components/ui/button-link";
 import { Separator } from "@/components/ui/separator";
 import { H3, H5, Muted } from "@/components/ui/typography";
 import { getWorldData } from "../actions";

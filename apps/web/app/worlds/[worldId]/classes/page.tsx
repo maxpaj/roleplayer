@@ -26,13 +26,13 @@ export default async function ClassesPage({
         <Muted className="my-2">No classes added yet</Muted>
       )}
 
+      <CreateClassForm worldId={worldId} />
+
       <div className="flex flex-wrap gap-2 my-2">
         {worldData.classes.map((clazz) => (
           <ClassCard worldId={worldId} clazz={clazz} />
         ))}
       </div>
-
-      <CreateClassForm worldId={worldId} />
     </div>
   );
 }

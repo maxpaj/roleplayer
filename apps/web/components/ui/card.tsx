@@ -1,5 +1,5 @@
 import * as React from "react";
-
+import Image from "next/image";
 import { cn } from "@/lib/tailwind-utils";
 
 const Card = React.forwardRef<
@@ -9,7 +9,7 @@ const Card = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      "rounded-lg border bg-card text-card-foreground shadow-sm transition-all hover:bg-foreground/10 hover:border-foreground/50",
+      "relative rounded-lg border bg-card text-card-foreground shadow-sm transition-all hover:bg-foreground/10 hover:border-foreground/50",
       className
     )}
     {...props}
@@ -18,13 +18,30 @@ const Card = React.forwardRef<
 
 Card.displayName = "Card";
 
+const CardBackground = React.forwardRef<
+  HTMLDivElement,
+  { src: string; alt: string } & React.HTMLAttributes<HTMLDivElement>
+>(({ className, alt, src }, ref) => (
+  <div
+    ref={ref}
+    className={cn(
+      "absolute opacity-35 hover:opacity-100 w-full h-full -z-0 top-0",
+      className
+    )}
+  >
+    <Image fill={true} objectFit="cover" alt={alt} src={src} />
+  </div>
+));
+
+CardBackground.displayName = "CardBackground";
+
 const CardHeader = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("flex flex-col space-y-1.5 p-6", className)}
+    className={cn("relative z-1 flex flex-col space-y-1.5 p-6", className)}
     {...props}
   />
 ));
@@ -89,4 +106,5 @@ export {
   CardTitle,
   CardDescription,
   CardContent,
+  CardBackground,
 };

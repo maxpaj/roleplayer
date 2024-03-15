@@ -12,6 +12,7 @@ export const worldsSchema = pgTable("worlds", {
   id: serial("id").primaryKey(),
   name: varchar("name", { length: 256 }).notNull(),
   description: varchar("description", { length: 8192 }),
+  imageUrl: varchar("imageUrl", { length: 2048 }),
   isTemplate: boolean("isTemplate").default(false),
   isPublic: boolean("isPublic").default(false),
   rulesetId: integer("rulesetId")

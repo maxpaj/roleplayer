@@ -8,8 +8,8 @@ export default async function CharacterPage({
 }: {
   params: { worldId: string; characterId: string };
 }) {
-  const worldId = parseInt(id);
-  const characterId = parseInt(cid);
+  const worldId = id;
+  const characterId = cid;
 
   const worldData = await new WorldService().getWorld(DEFAULT_USER_ID, worldId);
 

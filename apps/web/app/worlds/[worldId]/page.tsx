@@ -7,7 +7,7 @@ export default async function WorldPage({
   params: { worldId: string };
 }) {
   const { worldId: id } = params;
-  const data = await getWorldData(parseInt(id));
+  const data = await getWorldData(id);
 
   if (!data) {
     return <>Not found!</>;

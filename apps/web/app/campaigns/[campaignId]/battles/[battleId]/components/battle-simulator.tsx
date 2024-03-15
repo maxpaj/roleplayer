@@ -177,7 +177,7 @@ export function BattleSimulator({ campaign, battleId }: BattleSimulatorProps) {
                   className="border bg-transparent"
                   onChange={(e) =>
                     battleCharacter.actor.performAction(
-                      [parseInt(e.target.value)],
+                      [e.target.value],
                       selectedAction!.id
                     )
                   }

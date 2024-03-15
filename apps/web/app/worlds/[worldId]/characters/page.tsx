@@ -9,8 +9,8 @@ export default async function CharactersPage({
   params: { worldId: string };
 }) {
   const { worldId: id } = params;
-  const worldId = parseInt(id);
-  const worldData = await getWorldData(parseInt(id));
+  const worldId = id;
+  const worldData = await getWorldData(id);
   if (!worldData) {
     return <>World not found!</>;
   }

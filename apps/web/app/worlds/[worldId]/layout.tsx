@@ -14,7 +14,7 @@ export default async function WorldLayout({
 }) {
   const { worldId: id } = params;
 
-  const data = await getWorldData(parseInt(id));
+  const data = await getWorldData(id);
 
   if (!data) {
     return <>Not found!</>;

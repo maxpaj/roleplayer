@@ -44,7 +44,7 @@ export function CharacterStatsEditor({
                 placeholder={s.statType.name}
                 value={s.characterStat.amount}
                 onChange={(e) => {
-                  const n = e.target.value ? parseInt(e.target.value) : 0;
+                  const n = e.target.value ? e.target.value : 0;
                   const newStats = [
                     ...stats.filter((p) => p.statId !== s.statType!.id),
                     {

@@ -17,7 +17,7 @@ export default async function InviteAFriendPage({
 }: {
   params: { campaignId: string };
 }) {
-  const campaignId = parseInt(id);
+  const campaignId = id;
   const friendInvites = await new UserService().getFriendInvites(
     DEFAULT_USER_ID
   );

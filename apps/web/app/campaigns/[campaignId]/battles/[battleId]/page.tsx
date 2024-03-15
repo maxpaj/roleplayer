@@ -14,8 +14,8 @@ export default async function BattlePage({
   params: { campaignId: string; battleId: string };
 }) {
   const { battleId: bid, campaignId: cid } = params;
-  const battleId = parseInt(bid);
-  const campaignId = parseInt(cid);
+  const battleId = bid;
+  const campaignId = cid;
 
   const campaignData = await getCampaign(campaignId);
   if (!campaignData) {

@@ -8,14 +8,14 @@ export default async function ClassPage({
   params: { worldId: string; classId: string };
 }) {
   const { worldId: id, classId } = params;
-  const worldId = parseInt(id);
+  const worldId = id;
   const worldData = await getWorldData(worldId);
 
   if (!worldData) {
     return <>World not found!</>;
   }
 
-  const clazz = worldData.classes.find((c) => c.id === parseInt(classId));
+  const clazz = worldData.classes.find((c) => c.id === classId);
 
   return (
     <div>

@@ -2,7 +2,6 @@ import { H2 } from "@/components/ui/typography";
 import { BadgeLink } from "@/components/ui/button-link";
 import { getCampaign } from "../actions";
 import Image from "next/image";
-import { Separator } from "@/components/ui/separator";
 
 export default async function CampaignLayout({
   params,
@@ -12,7 +11,7 @@ export default async function CampaignLayout({
   params: { campaignId: string };
 }) {
   const { campaignId: id } = params;
-  const campaignData = await getCampaign(parseInt(id));
+  const campaignData = await getCampaign(id);
 
   if (!campaignData) {
     return <>Campaign not found</>;

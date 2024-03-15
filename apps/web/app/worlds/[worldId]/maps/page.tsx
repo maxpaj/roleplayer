@@ -9,7 +9,7 @@ export default async function MapsPage({
   params: { worldId: string };
 }) {
   const { worldId: id } = params;
-  const worldData = await getWorldData(parseInt(id));
+  const worldData = await getWorldData(id);
   if (!worldData) {
     return <>World not found</>;
   }

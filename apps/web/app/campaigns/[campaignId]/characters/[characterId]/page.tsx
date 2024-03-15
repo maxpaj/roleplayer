@@ -20,8 +20,8 @@ export default async function CampaignCharacterPage({
 }: {
   params: { campaignId: string; characterId: string };
 }) {
-  const campaignId = parseInt(id);
-  const characterId = parseInt(cid);
+  const campaignId = id;
+  const characterId = cid;
 
   async function updateCharacter(
     campaignId: CampaignRecord["id"],

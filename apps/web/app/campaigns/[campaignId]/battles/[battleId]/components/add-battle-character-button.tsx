@@ -45,9 +45,7 @@ export function AddBattleCharacterButton({
         {availableCharacters.length > 0 && (
           <Combobox
             placeholder="Select character to add"
-            onChange={(characterId) =>
-              setSelectedCharacter(parseInt(characterId))
-            }
+            onChange={(characterId) => setSelectedCharacter(characterId)}
             options={characterOptions}
           />
         )}

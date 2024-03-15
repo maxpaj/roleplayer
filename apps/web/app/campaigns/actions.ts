@@ -7,6 +7,7 @@ import { UserRecord } from "db/schema/users";
 import { WorldRecord } from "db/schema/worlds";
 import { redirect } from "next/navigation";
 import { CampaignEventWithRound } from "roleplayer";
+import { DEFAULT_USER_ID } from "@/db/index";
 
 export async function createBattle(campaignId: CampaignRecord["id"]) {
   const battle = await new CampaignService().createBattle(campaignId);
@@ -43,6 +44,6 @@ export async function getCampaign(campaignId: CampaignRecord["id"]) {
   return await new CampaignService().getCampaign(campaignId);
 }
 
-export async function getCampaigns(userId: UserRecord["id"] = 2) {
+export async function getCampaigns(userId: UserRecord["id"] = DEFAULT_USER_ID) {
   return await new CampaignService().getAll(userId);
 }

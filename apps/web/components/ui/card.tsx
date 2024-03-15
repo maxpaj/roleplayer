@@ -28,12 +28,33 @@ const CardBackground = React.forwardRef<
       "absolute opacity-35 hover:opacity-100 w-full h-full -z-0 top-0 blur-sm hover:blur-none transition-all",
       className
     )}
+    style={{
+      background: "linear-gradient(45deg, black, #fff)",
+    }}
   >
     <Image fill={true} objectFit="cover" alt={alt} src={src} />
   </div>
 ));
 
 CardBackground.displayName = "CardBackground";
+
+const CardBackgroundGradient = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className }, ref) => (
+  <div
+    ref={ref}
+    className={cn(
+      "absolute opacity-35 hover:opacity-100 w-full h-full -z-0",
+      className
+    )}
+    style={{
+      background: "linear-gradient(45deg, black 25%, hsl(var(--primary)) 200%)",
+    }}
+  ></div>
+));
+
+CardBackgroundGradient.displayName = "CardBackgroundGradient";
 
 const CardHeader = React.forwardRef<
   HTMLDivElement,
@@ -107,4 +128,5 @@ export {
   CardDescription,
   CardContent,
   CardBackground,
+  CardBackgroundGradient,
 };

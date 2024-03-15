@@ -1,9 +1,8 @@
 import { ButtonLink } from "@/components/ui/button-link";
 import { Separator } from "@/components/ui/separator";
-import { H3, H4, H5, Muted } from "@/components/ui/typography";
+import { H3, H4, Muted } from "@/components/ui/typography";
 import { getCampaign } from "app/campaigns/actions";
 import { CreateCharacterForm } from "app/characters/components/create-character-form";
-import Link from "next/link";
 import { CampaignCharacterCard } from "./components/campaign-character-card";
 
 export default async function CampaignCharactersPage({
@@ -40,7 +39,11 @@ export default async function CampaignCharactersPage({
       <H4 className="mt-4">Added characters</H4>
       <div className="flex gap-2">
         {campaignData.characters.map((c) => (
-          <CampaignCharacterCard character={c} campaignId={campaignId} />
+          <CampaignCharacterCard
+            key={c.id}
+            character={c}
+            campaignId={campaignId}
+          />
         ))}
       </div>
 

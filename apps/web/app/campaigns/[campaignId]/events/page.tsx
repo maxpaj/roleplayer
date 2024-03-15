@@ -42,7 +42,7 @@ export default async function CampaignEventsPage({
           {campaignData.events
             .sort((a, b) => a.id - b.id)
             .map((e) => (
-              <TableRow>
+              <TableRow key={e.id}>
                 <TableCell>{e.id}</TableCell>
                 <TableCell>{e.type}</TableCell>
                 <TableCell>{e.characterId}</TableCell>

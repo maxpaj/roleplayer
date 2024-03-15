@@ -6,10 +6,10 @@ export default function Home() {
   return (
     <>
       <div
-        className="fixed -z-10 top-0"
+        className="fixed -z-10 top-30"
         style={{
           opacity: 0.45,
-          backgroundImage: `radial-gradient(circle at center, transparent 0, transparent, hsl(var(--background)) 55%), url(${bg.src})`,
+          backgroundImage: `radial-gradient(circle at center, transparent 0, transparent, hsl(var(--background)) 50%), url(${bg.src})`,
           backgroundRepeat: "no-repeat",
           height: "816px",
           width: "1456px",

@@ -10,6 +10,7 @@ export default function Home() {
         style={{
           opacity: 0.3,
           backgroundImage: `radial-gradient(circle at center, transparent 0, transparent, hsl(var(--background)) 100%), url(${bg.src})`,
+          backgroundRepeat: "no-repeat",
           width: "100%",
           height: "100%",
         }}

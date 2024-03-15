@@ -22,9 +22,9 @@ export default function Home() {
             Your world builder and campaign manager
           </H1>
           <Lead>
-            Build a world, create characters, bring them into battle. Toggle
-            help features on and off at a whim, depending on the level of
-            support you want
+            Build a world, invite your friends, create characters and start your
+            adventure. Toggle help features on and off at a whim, depending on
+            the level of support you want
           </Lead>
           <div className="flex gap-2">
             <ButtonLink href={"/demos"} className="w-40">

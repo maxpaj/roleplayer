@@ -24,7 +24,7 @@ export default async function BattlesPage({
 
   const campaign = new Campaign({
     ...campaignData.campaign,
-    world: new World({ ...campaignData.world, ruleset: DefaultRuleSet }),
+    world: new World({ ...campaignData.world.world, ruleset: DefaultRuleSet }),
     events: campaignData.events.map(
       (e) => e.eventData as CampaignEventWithRound
     ),

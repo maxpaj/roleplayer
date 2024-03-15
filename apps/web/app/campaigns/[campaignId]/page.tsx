@@ -6,9 +6,6 @@ import {
   TableBody,
   TableCaption,
   TableCell,
-  TableFooter,
-  TableHead,
-  TableHeader,
   TableRow,
 } from "@/components/ui/table";
 
@@ -37,7 +34,7 @@ export default async function CampaignPage({
         <TableBody>
           <TableRow>
             <TableCell className="font-medium">World</TableCell>
-            <TableCell>{world.name}</TableCell>
+            <TableCell>{world.world.name}</TableCell>
           </TableRow>
         </TableBody>
       </Table>

@@ -21,7 +21,7 @@ export default async function NewCampaignPage({
         world might take you.
       </Muted>
 
-      <StartCampaignForm worldId={worldId} />
+      <StartCampaignForm worldId={worldId} worldName={worldData.world.name} />
     </>
   );
 }

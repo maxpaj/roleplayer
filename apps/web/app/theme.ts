@@ -197,4 +197,8 @@ export const EventIconMap: {
     alt: "",
     icon: undefined,
   },
+  CampaignStarted: {
+    alt: "",
+    icon: undefined,
+  },
 };

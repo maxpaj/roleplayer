@@ -20,7 +20,10 @@ export default async function BattlePage({
 
   const { campaign } = campaignData;
 
-  const world = new World({ ...campaignData.world, ruleset: DefaultRuleSet });
+  const world = new World({
+    ...campaignData.world.world,
+    ruleset: DefaultRuleSet,
+  });
   const campaignRpLib = new Campaign({ ...campaign, world });
   const campaignReduced = campaignRpLib.applyEvents();
   const battle = campaignReduced.battles.find((b) => b.id === battleId);

@@ -29,7 +29,7 @@ export class Campaign {
       {
         id: dangerousGenerateId(),
         type: 'CampaignStarted',
-        roundId: 0,
+        roundId: '00000000-0000-0000-0000-000000000000',
       },
       {
         type: 'RoundStarted',
@@ -63,11 +63,11 @@ export class Campaign {
     this.events.push(equipEvent)
   }
 
-  characterEquipItem(characterId: Character['id'], itemId: Item['id']) {
+  characterEquipItem(characterId: Character['id'], itemId: Item['id'], equipmentSlotId: EquipmentSlotDefinition['id']) {
     const equipEvent: CampaignEventWithRound = {
       characterId,
       itemId,
-      equipmentSlotId: 0,
+      equipmentSlotId,
       id: dangerousGenerateId(),
       type: 'CharacterItemEquip',
       roundId: this.getCurrentRound().id,

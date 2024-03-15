@@ -1,19 +1,20 @@
 import { sql } from "@vercel/postgres";
 import { drizzle } from "drizzle-orm/vercel-postgres";
-import { campaignsSchema } from "./schema/campaigns";
-import { monstersSchema } from "./schema/monster";
-import { worldsSchema } from "./schema/worlds";
-import { usersSchema } from "./schema/users";
-import { charactersSchema } from "./schema/characters";
-import { eventsSchema } from "./schema/events";
+import { dangerousGenerateId } from "roleplayer";
 import { actionsSchema } from "./schema/actions";
+import { campaignsSchema } from "./schema/campaigns";
+import { charactersSchema } from "./schema/characters";
 import { classesSchema } from "./schema/classes";
-import { itemsSchema } from "./schema/items";
-import { statusesSchema } from "./schema/statuses";
-import { rulesSchema } from "./schema/rules";
 import { effectsSchema } from "./schema/effects";
+import { eventsSchema } from "./schema/events";
+import { itemsSchema } from "./schema/items";
+import { monstersSchema } from "./schema/monster";
+import { rulesSchema } from "./schema/rules";
+import { statusesSchema } from "./schema/statuses";
+import { usersSchema } from "./schema/users";
+import { worldsSchema } from "./schema/worlds";
 
-export const DEFAULT_USER_ID = 2;
+export const DEFAULT_USER_ID = dangerousGenerateId();
 
 export const db = drizzle(sql, {
   schema: {

@@ -97,7 +97,7 @@ describe("interactions", () => {
 
     world.actions = [action];
 
-    const campaign = new Campaign({ id: 0, name: "test", world });
+    const campaign = new Campaign({ id: '0000000-0000-0000-0000-000000000000' as const, name: "test", world });
     campaign.nextRound();
 
     const attackerId = dangerousGenerateId();

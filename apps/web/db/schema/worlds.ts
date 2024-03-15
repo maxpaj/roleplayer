@@ -1,24 +1,22 @@
 import {
   boolean,
-  integer,
   pgTable,
-  serial,
-  varchar,
+  uuid,
+  varchar
 } from "drizzle-orm/pg-core";
-import { usersSchema } from "./users";
 import { rulesSchema } from "./rules";
+import { usersSchema } from "./users";
 
 export const worldsSchema = pgTable("worlds", {
-  id: serial("id").primaryKey(),
+  id: uuid("id").defaultRandom().primaryKey(),
   name: varchar("name", { length: 256 }).notNull(),
   description: varchar("description", { length: 8192 }),
   imageUrl: varchar("imageUrl", { length: 2048 }),
   isTemplate: boolean("isTemplate").default(false),
   isPublic: boolean("isPublic").default(false),
-  rulesetId: integer("rulesetId")
-    .references(() => rulesSchema.id)
-    .default(1),
-  userId: integer("userId").references(() => usersSchema.id),
+  rulesetId: uuid("rulesetId")
+    .references(() => rulesSchema.id),
+  userId: uuid("userId").references(() => usersSchema.id),
 });
 
 export type WorldRecord = typeof worldsSchema.$inferSelect;

@@ -1,18 +1,17 @@
 import {
-  integer,
   pgTable,
-  serial,
   timestamp,
-  varchar,
+  uuid,
+  varchar
 } from "drizzle-orm/pg-core";
 import { worldsSchema } from "./worlds";
 
 export const classesSchema = pgTable("classes", {
-  id: serial("id").primaryKey(),
+  id: uuid("id").defaultRandom().primaryKey(),
   name: varchar("name", { length: 256 }).notNull(),
   description: varchar("description", { length: 8192 }),
   createdUtc: timestamp("createdUtc").defaultNow(),
-  worldId: integer("worldId")
+  worldId: uuid("worldId")
     .references(() => worldsSchema.id)
     .notNull(),
 });

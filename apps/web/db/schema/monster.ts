@@ -1,29 +1,28 @@
 import {
-  integer,
   pgTable,
-  serial,
   timestamp,
-  varchar,
+  uuid,
+  varchar
 } from "drizzle-orm/pg-core";
-import { worldsSchema } from "./worlds";
 import { actionsSchema } from "./actions";
+import { worldsSchema } from "./worlds";
 
 export const monstersSchema = pgTable("monsters", {
-  id: serial("id").primaryKey(),
+  id: uuid("id").defaultRandom().primaryKey(),
   name: varchar("name", { length: 256 }).notNull(),
   description: varchar("description", { length: 8192 }),
   createdUtc: timestamp("createdUtc").defaultNow(),
-  worldId: integer("worldId")
+  worldId: uuid("worldId")
     .references(() => worldsSchema.id)
     .notNull(),
 });
 
 export const monstersToActionsSchema = pgTable("monsterToActions", {
-  monsterId: integer("monsterId")
+  monsterId: uuid("monsterId")
     .notNull()
     .references(() => monstersSchema.id),
 
-  actionId: integer("actionId")
+  actionId: uuid("actionId")
     .notNull()
     .references(() => actionsSchema.id),
 });

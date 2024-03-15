@@ -1,30 +1,30 @@
-import { db } from "../db";
+import { classesSchema } from "@/db/schema/classes";
 import { eq } from "drizzle-orm";
-import {
-  CampaignRecord,
-  NewCampaignRecord,
-  campaignsSchema,
-} from "../db/schema/campaigns";
-import { WorldRecord, worldsSchema } from "../db/schema/worlds";
-import { monstersSchema } from "../db/schema/monster";
-import {
-  CharacterRecord,
-  charactersSchema,
-  charactersToCampaignsSchema,
-} from "../db/schema/characters";
-import { UserRecord } from "../db/schema/users";
-import { EventRecord, eventsSchema } from "../db/schema/events";
 import {
   Campaign,
   CampaignEventWithRound,
   DefaultRuleSet,
   World,
 } from "roleplayer";
+import { db } from "../db";
+import {
+  CampaignRecord,
+  NewCampaignRecord,
+  campaignsSchema,
+} from "../db/schema/campaigns";
+import {
+  CharacterRecord,
+  charactersSchema,
+  charactersToCampaignsSchema,
+} from "../db/schema/characters";
+import { EventRecord, eventsSchema } from "../db/schema/events";
 import {
   NewFriendInviteRecord,
   friendInvitesSchema,
 } from "../db/schema/friend-invite";
-import { classesSchema } from "@/db/schema/classes";
+import { monstersSchema } from "../db/schema/monster";
+import { UserRecord } from "../db/schema/users";
+import { WorldRecord, worldsSchema } from "../db/schema/worlds";
 import { WorldAggregated } from "./world-service";
 
 export class CampaignService {
@@ -41,7 +41,7 @@ export class CampaignService {
       .where(eq(campaignsSchema.userId, userId));
 
     const result = rows.reduce<
-      Record<number, { campaign: CampaignRecord; events: EventRecord[] }>
+      Record<CampaignRecord['id'], { campaign: CampaignRecord; events: EventRecord[] }>
     >((acc, row) => {
       const campaign = row.campaigns;
 
@@ -74,7 +74,7 @@ export class CampaignService {
       .leftJoin(eventsSchema, eq(eventsSchema.campaignId, campaignsSchema.id));
 
     const result = rows.reduce<
-      Record<number, { campaign: CampaignRecord; events: EventRecord[] }>
+      Record<CampaignRecord['id'], { campaign: CampaignRecord; events: EventRecord[] }>
     >((acc, row) => {
       const campaign = row.campaigns;
       if (!campaign) {
@@ -130,7 +130,7 @@ export class CampaignService {
 
   async createCampaign(
     newCampaign: NewCampaignRecord
-  ): Promise<{ id: number }> {
+  ): Promise<{ id: CampaignRecord['id'] }> {
     const rows = await db
       .insert(campaignsSchema)
       .values(newCampaign)
@@ -179,7 +179,7 @@ export class CampaignService {
 
     const result = rows.reduce<
       Record<
-        number,
+        CampaignRecord['id'],
         {
           campaign: CampaignRecord;
           events: EventRecord[];
@@ -293,7 +293,7 @@ export class CampaignService {
       .returning({ id: friendInvitesSchema.id });
   }
 
-  async addCharacter(campaignId: number, character: CharacterRecord) {
+  async addCharacter(campaignId: CampaignRecord["id"], character: CharacterRecord) {
     await db
       .insert(charactersToCampaignsSchema)
       .values({ campaignId, characterId: character.id });

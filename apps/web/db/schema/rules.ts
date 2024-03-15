@@ -1,9 +1,9 @@
-import { integer, pgTable, serial, varchar } from "drizzle-orm/pg-core";
+import { pgTable, uuid, varchar } from "drizzle-orm/pg-core";
 import { usersSchema } from "./users";
 
 export const rulesSchema = pgTable("rules", {
-  id: serial("id").primaryKey(),
+  id: uuid("id").defaultRandom().primaryKey(),
   name: varchar("name", { length: 256 }).notNull(),
   description: varchar("description", { length: 8192 }),
-  userId: integer("userId").references(() => usersSchema.id),
+  userId: uuid("userId").references(() => usersSchema.id),
 });

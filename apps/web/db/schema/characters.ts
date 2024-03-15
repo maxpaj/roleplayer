@@ -1,54 +1,53 @@
 import {
-  integer,
   pgTable,
-  serial,
   timestamp,
-  varchar,
+  uuid,
+  varchar
 } from "drizzle-orm/pg-core";
+import { actionsSchema } from "./actions";
+import { campaignsSchema } from "./campaigns";
+import { itemsSchema } from "./items";
 import { usersSchema } from "./users";
 import { worldsSchema } from "./worlds";
-import { campaignsSchema } from "./campaigns";
-import { actionsSchema } from "./actions";
-import { itemsSchema } from "./items";
 
 export const charactersSchema = pgTable("characters", {
-  id: serial("id").primaryKey(),
+  id: uuid("id").defaultRandom().primaryKey(),
   name: varchar("name", { length: 256 }).notNull(),
   createdUtc: timestamp("createdUtc").defaultNow(),
   imageUrl: varchar("imageUrl", { length: 2048 }),
   description: varchar("description", { length: 8192 }),
-  userId: integer("userId").references(() => usersSchema.id),
-  worldId: integer("worldId")
+  userId: uuid("userId").references(() => usersSchema.id),
+  worldId: uuid("worldId")
     .references(() => worldsSchema.id)
     .notNull(),
 });
 
 export const charactersToActionsSchema = pgTable("characterToActions", {
-  characterId: integer("characterId")
+  characterId: uuid("characterId")
     .notNull()
     .references(() => charactersSchema.id),
 
-  actionId: integer("actionId")
+  actionId: uuid("actionId")
     .notNull()
     .references(() => actionsSchema.id),
 });
 
 export const charactersToItemsSchema = pgTable("characterToItems", {
-  characterId: integer("characterId")
+  characterId: uuid("characterId")
     .notNull()
     .references(() => charactersSchema.id),
 
-  itemId: integer("itemId")
+  itemId: uuid("itemId")
     .notNull()
     .references(() => itemsSchema.id),
 });
 
 export const charactersToCampaignsSchema = pgTable("characterToCampaigns", {
-  characterId: integer("characterId")
+  characterId: uuid("characterId")
     .notNull()
     .references(() => charactersSchema.id),
 
-  campaignId: integer("campaignId")
+  campaignId: uuid("campaignId")
     .notNull()
     .references(() => campaignsSchema.id),
 });

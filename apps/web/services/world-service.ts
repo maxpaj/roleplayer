@@ -1,26 +1,26 @@
-import { db } from "../db";
 import { eq } from "drizzle-orm";
+import { DEFAULT_USER_ID, db } from "../db";
+import { ActionRecord, actionsSchema } from "../db/schema/actions";
 import { CampaignRecord, campaignsSchema } from "../db/schema/campaigns";
-import { NewWorldRecord, WorldRecord, worldsSchema } from "../db/schema/worlds";
 import {
   CharacterRecord,
   NewCharacterRecord,
   charactersSchema,
 } from "../db/schema/characters";
-import { UserRecord, usersSchema } from "../db/schema/users";
-import {
-  MonsterRecord,
-  NewMonsterRecord,
-  monstersSchema,
-} from "../db/schema/monster";
-import { StatusRecord, statusesSchema } from "../db/schema/statuses";
-import { ActionRecord, actionsSchema } from "../db/schema/actions";
 import {
   ClazzRecord,
   NewClazzRecord,
   classesSchema,
 } from "../db/schema/classes";
 import { ItemRecord, NewItemRecord, itemsSchema } from "../db/schema/items";
+import {
+  MonsterRecord,
+  NewMonsterRecord,
+  monstersSchema,
+} from "../db/schema/monster";
+import { StatusRecord, statusesSchema } from "../db/schema/statuses";
+import { UserRecord } from "../db/schema/users";
+import { NewWorldRecord, WorldRecord, worldsSchema } from "../db/schema/worlds";
 import { CampaignService } from "./campaign-service";
 
 export type WorldAggregated = {
@@ -35,7 +35,7 @@ export type WorldAggregated = {
 };
 
 export class WorldService {
-  async getAll(userId: UserRecord["id"] = 2): Promise<WorldRecord[]> {
+  async getAll(userId: UserRecord["id"] = DEFAULT_USER_ID): Promise<WorldRecord[]> {
     const query = db.select().from(worldsSchema);
 
     return query;
@@ -54,7 +54,7 @@ export class WorldService {
       .leftJoin(statusesSchema, eq(statusesSchema.worldId, worldsSchema.id))
       .where(eq(worldsSchema.id, worldId));
 
-    const aggregated = rows.reduce<Record<number, WorldAggregated>>(
+    const aggregated = rows.reduce<Record<WorldRecord["id"], WorldAggregated>>(
       (acc, row) => {
         const world = row.worlds;
 
@@ -138,7 +138,7 @@ export class WorldService {
     throw new Error("Method not implemented.");
   }
 
-  async createWorld(newWorldRecord: NewWorldRecord): Promise<{ id: number }> {
+  async createWorld(newWorldRecord: NewWorldRecord): Promise<{ id: WorldRecord['id'] }> {
     const rows = await db
       .insert(worldsSchema)
       .values(newWorldRecord)
@@ -154,7 +154,7 @@ export class WorldService {
   async createCharacter(
     character: NewCharacterRecord,
     campaignId?: CampaignRecord["id"]
-  ): Promise<{ id: number }> {
+  ): Promise<{ id: CampaignRecord["id"] }> {
     const rows = await db
       .insert(charactersSchema)
       .values(character)

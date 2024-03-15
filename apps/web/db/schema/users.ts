@@ -1,15 +1,15 @@
 import {
   pgTable,
-  serial,
   timestamp,
   uniqueIndex,
-  varchar,
+  uuid,
+  varchar
 } from "drizzle-orm/pg-core";
 
 export const usersSchema = pgTable(
   "users",
   {
-    id: serial("id").primaryKey(),
+    id: uuid("id").defaultRandom().primaryKey(),
     name: varchar("name", { length: 256 }).notNull(),
     createdUtc: timestamp("createdUtc").defaultNow(),
   },

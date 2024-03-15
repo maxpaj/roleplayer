@@ -1,25 +1,24 @@
 import {
-  serial,
-  varchar,
   boolean,
-  pgTable,
   date,
-  integer,
+  pgTable,
+  uuid,
+  varchar
 } from "drizzle-orm/pg-core";
-import { worldsSchema } from "./worlds";
 import { usersSchema } from "./users";
+import { worldsSchema } from "./worlds";
 
 export const campaignsSchema = pgTable("campaigns", {
-  id: serial("id").primaryKey(),
+  id: uuid("id").defaultRandom().primaryKey(),
   name: varchar("name", { length: 256 }).notNull(),
   isDemo: boolean("isDemo").notNull(),
   createdUtc: date("createdUtc"),
   imageUrl: varchar("imageUrl", { length: 2048 }),
   description: varchar("description", { length: 8192 }),
-  worldId: integer("worldId")
+  worldId: uuid("worldId")
     .references(() => worldsSchema.id)
     .notNull(),
-  userId: integer("userId")
+  userId: uuid("userId")
     .references(() => usersSchema.id)
     .notNull(),
 });

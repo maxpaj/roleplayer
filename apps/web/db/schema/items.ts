@@ -1,13 +1,12 @@
 import {
-  integer,
   pgEnum,
   pgTable,
-  serial,
   timestamp,
-  varchar,
+  uuid,
+  varchar
 } from "drizzle-orm/pg-core";
-import { worldsSchema } from "./worlds";
 import { actionsSchema } from "./actions";
+import { worldsSchema } from "./worlds";
 
 export const itemTypeEnum = pgEnum("itemType", ["Consumable", "Equipment"]);
 export const rarityEnum = pgEnum("rarity", [
@@ -19,23 +18,23 @@ export const rarityEnum = pgEnum("rarity", [
 ]);
 
 export const itemsSchema = pgTable("items", {
-  id: serial("id").primaryKey(),
+  id: uuid("id").defaultRandom().primaryKey(),
   name: varchar("name", { length: 256 }).notNull(),
   description: varchar("description", { length: 8192 }),
   type: itemTypeEnum("itemType").default("Consumable").notNull(),
   createdUtc: timestamp("createdUtc").defaultNow(),
   rarity: rarityEnum("rarity").default("Common").notNull(),
-  worldId: integer("worldId")
+  worldId: uuid("worldId")
     .references(() => worldsSchema.id)
     .notNull(),
 });
 
 export const itemsToActionsSchema = pgTable("itemsToActions", {
-  itemId: integer("itemId")
+  itemId: uuid("itemId")
     .notNull()
     .references(() => itemsSchema.id),
 
-  actionId: integer("actionId")
+  actionId: uuid("actionId")
     .notNull()
     .references(() => actionsSchema.id),
 });

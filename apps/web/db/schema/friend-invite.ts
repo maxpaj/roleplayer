@@ -1,19 +1,18 @@
 import {
-  integer,
   pgTable,
-  serial,
   timestamp,
-  varchar,
+  uuid,
+  varchar
 } from "drizzle-orm/pg-core";
 import { usersSchema } from "./users";
 
 export const friendInvitesSchema = pgTable("friendInvites", {
-  id: serial("id").primaryKey(),
+  id: uuid("id").defaultRandom().primaryKey(),
   email: varchar("email", { length: 256 }).notNull(),
   createdUtc: timestamp("createdUtc").defaultNow(),
   acceptedUtc: timestamp("acceptedUtc"),
   expiredUtc: timestamp("expiredUtc"),
-  userId: integer("userId")
+  userId: uuid("userId")
     .references(() => usersSchema.id)
     .notNull(),
 });

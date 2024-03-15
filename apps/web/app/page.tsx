@@ -1,5 +1,5 @@
 import { ButtonLink } from "@/components/ui/button-link";
-import { Lead } from "@/components/ui/typography";
+import { H1, Lead } from "@/components/ui/typography";
 import bg from "assets/bg.webp";
 
 export default function Home() {
@@ -18,9 +18,9 @@ export default function Home() {
 
       <section className="relative z-1 space-y-6 pb-8 pt-6 md:pb-12 md:pt-10 lg:py-32">
         <div className="container flex max-w-[64rem] flex-col items-center gap-4 text-center">
-          <h1 className="text-3xl font-semibold sm:text-5xl md:text-6xl lg:text-7xl">
-            A world builder and campaign
-          </h1>
+          <H1 className="text-3xl font-semibold sm:text-5xl md:text-6xl lg:text-7xl">
+            Your world builder and campaign manager
+          </H1>
           <Lead>
             Build a world, create characters, bring them into battle. Toggle
             help features on and off at a whim, depending on the level of

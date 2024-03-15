@@ -25,7 +25,7 @@ const CardBackground = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      "absolute opacity-35 hover:opacity-100 w-full h-full -z-0 top-0",
+      "absolute opacity-35 hover:opacity-100 w-full h-full -z-0 top-0 blur-sm hover:blur-none transition-all",
       className
     )}
   >

@@ -144,15 +144,6 @@ export class WorldService {
       .values(newWorldRecord)
       .returning({ id: worldsSchema.id });
 
-    await db
-      .insert(usersSchema)
-      .values([
-        {
-          name: "Max",
-        },
-      ])
-      .returning({ id: worldsSchema.id });
-
     if (rows[0]) {
       return rows[0];
     }

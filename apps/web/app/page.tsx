@@ -26,8 +26,10 @@ export default function Home() {
             support you want
           </Lead>
           <div className="flex gap-2">
-            <ButtonLink href={"/demos"}>Play demo</ButtonLink>
-            <ButtonLink variant="outline" href={"/worlds"}>
+            <ButtonLink href={"/demos"} className="w-40">
+              Play demo
+            </ButtonLink>
+            <ButtonLink variant="outline" href={"/worlds"} className="w-40">
               Create your world
             </ButtonLink>
           </div>

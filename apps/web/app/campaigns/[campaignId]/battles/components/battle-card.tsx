@@ -1,10 +1,11 @@
 import { Card, CardHeader } from "@/components/ui/card";
 import { Battle } from "roleplayer";
 import Link from "next/link";
+import { CampaignRecord } from "@/db/schema/campaigns";
 
 type BattleCardProps = {
   battle: Battle;
-  campaignId: number;
+  campaignId: CampaignRecord["id"];
 };
 
 export function BattleCard({ campaignId, battle }: BattleCardProps) {

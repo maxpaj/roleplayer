@@ -1,6 +1,5 @@
 import { sql } from "@vercel/postgres";
 import { drizzle } from "drizzle-orm/vercel-postgres";
-import { dangerousGenerateId } from "roleplayer";
 import { actionsSchema } from "./schema/actions";
 import { campaignsSchema } from "./schema/campaigns";
 import { charactersSchema } from "./schema/characters";
@@ -14,8 +13,8 @@ import { statusesSchema } from "./schema/statuses";
 import { usersSchema } from "./schema/users";
 import { worldsSchema } from "./schema/worlds";
 
-export const DEFAULT_USER_ID = dangerousGenerateId();
-export const EMPTY_GUID = dangerousGenerateId();
+export const DEFAULT_USER_ID = "00000000-1111-1111-1111-100000000000";
+export const EMPTY_GUID = "00000000-0000-0000-0000-000000000000";
 
 export const db = drizzle(sql, {
   schema: {

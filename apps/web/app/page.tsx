@@ -20,16 +20,15 @@ export default function Home() {
       <section className="relative z-1 space-y-6 pb-8 pt-6 md:pb-12 md:pt-10 lg:py-32">
         <div className="container flex flex-col items-center gap-4 text-center">
           <H1 className="text-3xl font-semibold sm:text-5xl md:text-6xl lg:text-7xl">
-            Role-playing world builder and campaign manager
+            Create a journey to remember
           </H1>
           <Lead className="my-4">
-            Build a world, invite your friends, create characters and start your
-            adventure. Toggle help features on and off at a whim, depending on
-            the level of support you want
+            Build a role-playing world, invite your friends, create characters
+            and the adventure may begin
           </Lead>
           <div className="flex gap-4 flex-wrap justify-center">
             <ButtonLink variant="front-page" href={"/demos"} size="front-page">
-              Play demo campaign <ArrowRight className="ml-2" />
+              Play the demo <ArrowRight className="ml-2" />
             </ButtonLink>
             <ButtonLink
               variant="front-page-outline"

@@ -2,6 +2,7 @@ import { getWorldData } from "./actions";
 import { H2 } from "@/components/ui/typography";
 import { BadgeLink, ButtonLink } from "@/components/ui/button-link";
 import { GitForkIcon } from "lucide-react";
+import Image from "next/image";
 
 export default async function WorldLayout({
   params,
@@ -22,6 +23,12 @@ export default async function WorldLayout({
 
   return (
     <div>
+      {world.imageUrl && (
+        <div
+          className="-z-10 opacity-15 fixed top-0 left-0 w-full h-full"
+          style={{ background: `url(${world.imageUrl})` }}
+        />
+      )}
       <div className="flex justify-between gap-x-4 flex-wrap mb-4">
         <H2>{world.name}</H2>
 

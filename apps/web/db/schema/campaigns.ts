@@ -1,4 +1,4 @@
-import { boolean, date, pgTable, uuid, varchar } from "drizzle-orm/pg-core";
+import { boolean, pgTable, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
 import { usersSchema } from "./users";
 import { worldsSchema } from "./worlds";
 
@@ -6,8 +6,8 @@ export const campaignsSchema = pgTable("campaigns", {
   id: uuid("id").defaultRandom().primaryKey(),
   name: varchar("name", { length: 256 }).notNull(),
   isDemo: boolean("isDemo").notNull(),
-  createdUtc: date("createdUtc"),
-  updatedUtc: date("updatedUtc"),
+  createdUtc: timestamp("createdUtc"),
+  updatedUtc: timestamp("updatedUtc"),
   imageUrl: varchar("imageUrl", { length: 2048 }),
   description: varchar("description", { length: 8192 }),
   worldId: uuid("worldId")

@@ -1,4 +1,4 @@
-import { H3, H4, Paragraph } from "@/components/ui/typography";
+import { H3, Paragraph } from "@/components/ui/typography";
 import { getCampaign } from "../actions";
 import { Separator } from "@/components/ui/separator";
 import { Table, TableBody, TableCaption, TableCell, TableRow } from "@/components/ui/table";

@@ -1,5 +1,5 @@
 {
-  "name": "rp-turbo",
+  "name": "roleplayer-turbo",
   "private": true,
   "scripts": {
     "build": "turbo build",

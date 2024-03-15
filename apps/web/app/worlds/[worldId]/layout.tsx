@@ -36,8 +36,8 @@ export default async function WorldLayout({
         </div>
       </div>
 
-      <div className="flex mb-8 justify-between flex-wrap">
-        <div className="flex gap-1">
+      <div className="flex mb-8 justify-between flex-wrap gap-1">
+        <div className="flex gap-1 flex-wrap">
           <BadgeLink href={`/worlds/${world.id}`}>Overview</BadgeLink>
           <BadgeLink href={`/worlds/${world.id}/monsters`}>Monsters</BadgeLink>
           <BadgeLink href={`/worlds/${world.id}/items`}>Items</BadgeLink>

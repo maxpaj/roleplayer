@@ -30,8 +30,8 @@ export default async function CampaignLayout({
         </div>
       </div>
 
-      <div className="flex mb-8 justify-between flex-wrap">
-        <div className="flex gap-1">
+      <div className="flex mb-8 justify-between flex-wrap gap-1">
+        <div className="flex gap-1 flex-wrap">
           <BadgeLink href={`/campaigns/${campaign.id}`}>Overview</BadgeLink>
           <BadgeLink href={`/campaigns/${campaign.id}/battles`}>
             Battles

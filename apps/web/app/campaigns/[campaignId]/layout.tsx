@@ -22,12 +22,6 @@ export default async function CampaignLayout({
     <div>
       <div className="flex justify-between gap-x-4 flex-wrap mb-4">
         <H2>{campaign.name}</H2>
-
-        <div className="flex gap-x-2">
-          <ButtonLink href={`/campaigns/${campaign.id}/battles`}>
-            Start battle
-          </ButtonLink>
-        </div>
       </div>
 
       <div className="flex mb-8 justify-between flex-wrap gap-1">

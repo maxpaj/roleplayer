@@ -1,13 +1,7 @@
 import { ButtonLink } from "@/components/ui/button-link";
 import { H1, Lead } from "@/components/ui/typography";
 import bg from "assets/bg.webp";
-import {
-  ArrowRight,
-  Play,
-  PlayCircle,
-  PlayIcon,
-  PlaySquare,
-} from "lucide-react";
+import { ArrowRight, HammerIcon } from "lucide-react";
 
 export default function Home() {
   return (
@@ -24,7 +18,7 @@ export default function Home() {
       />
 
       <section className="relative z-1 space-y-6 pb-8 pt-6 md:pb-12 md:pt-10 lg:py-32">
-        <div className="container flex max-w-[64rem] flex-col items-center gap-4 text-center">
+        <div className="container flex flex-col items-center gap-4 text-center">
           <H1 className="text-3xl font-semibold sm:text-5xl md:text-6xl lg:text-7xl">
             Role-playing world builder and campaign manager
           </H1>
@@ -33,16 +27,16 @@ export default function Home() {
             adventure. Toggle help features on and off at a whim, depending on
             the level of support you want
           </Lead>
-          <div className="flex gap-2">
+          <div className="flex gap-4 flex-wrap justify-center">
             <ButtonLink variant="front-page" href={"/demos"} size="front-page">
-              Play demo <ArrowRight className="ml-2" />
+              Play demo campaign <ArrowRight className="ml-2" />
             </ButtonLink>
             <ButtonLink
               variant="front-page-outline"
               href={"/worlds"}
               size="front-page"
             >
-              Create your world
+              Build your world <HammerIcon className="ml-2" />
             </ButtonLink>
           </div>
         </div>

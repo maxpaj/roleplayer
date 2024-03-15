@@ -1,6 +1,7 @@
 import { H2, Muted } from "@/components/ui/typography";
 import { getCampaigns } from "./actions";
 import { CampaignCard } from "@/components/campaign-card";
+import { Separator } from "@/components/ui/separator";
 
 export default async function CampaignPage() {
   const campaigns = await getCampaigns();
@@ -12,6 +13,8 @@ export default async function CampaignPage() {
         Create a new campaign from a selection of worlds, or continue the
         adventure from where you left off!
       </Muted>
+
+      <Separator className="my-3" />
 
       <div className="flex gap-2">
         {campaigns.map((c) => (

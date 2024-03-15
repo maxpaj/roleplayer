@@ -13,7 +13,7 @@ export function CampaignCharacterCard({
 }: CampaignCharacterCardProps) {
   return (
     <Link href={`/campaigns/${campaignId}/characters/${character.id}`}>
-      <Card className="w-[100px] h-[100px]">
+      <Card className="w-[150px] h-[100px]">
         <CardHeader className="p-2">{character.name || "Current"}</CardHeader>
       </Card>
     </Link>

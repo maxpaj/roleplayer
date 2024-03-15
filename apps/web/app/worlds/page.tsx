@@ -20,11 +20,11 @@ export default async function WorldsPage({}) {
         as a template, or customize everything from the start.
       </Muted>
 
-      <CreateWorldForm />
-
       <Separator className="my-3" />
 
-      <div className="my-2 flex gap-2">
+      <CreateWorldForm />
+
+      <div className="my-3 flex gap-2">
         {worlds.map((world) => (
           <WorldCard key={world.id} world={world} />
         ))}

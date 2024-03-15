@@ -14,7 +14,7 @@ type WorldCardProps = { world: WorldRecord };
 export function WorldCard({ world }: WorldCardProps) {
   return (
     <Link href={`/worlds/${world.id}`}>
-      <Card className="w-[200px] h-[150px] overflow-hidden">
+      <Card className="w-[150px] h-[100px] overflow-hidden">
         {world.imageUrl ? (
           <CardBackground alt={world.name} src={world.imageUrl} />
         ) : (

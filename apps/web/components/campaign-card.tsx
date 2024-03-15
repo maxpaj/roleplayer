@@ -1,4 +1,3 @@
-import { Campaign } from "roleplayer";
 import Link from "next/link";
 import { Card, CardHeader, CardTitle } from "./ui/card";
 import { RemoveFunctions } from "types/without-functions";
@@ -11,7 +10,7 @@ type CampaignCardProps = {
 export function CampaignCard({ campaign }: CampaignCardProps) {
   return (
     <Link href={`/campaigns/${campaign.id}`}>
-      <Card className="w-[100px] h-[100px]">
+      <Card className="w-[150px] h-[100px]">
         <CardHeader className="p-2">
           <CardTitle className={"text-md"}>{campaign.name}</CardTitle>
         </CardHeader>

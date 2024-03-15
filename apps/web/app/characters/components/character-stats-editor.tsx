@@ -5,6 +5,7 @@ import { Character, World } from "roleplayer";
 import { CharacterStat } from "roleplayer";
 import { useState } from "react";
 import { RemoveFunctions } from "types/without-functions";
+import { H5 } from "@/components/ui/typography";
 
 type CharacterStatsEditorProps = {
   character: RemoveFunctions<Character>;
@@ -30,7 +31,7 @@ export function CharacterStatsEditor({ world, character, onChange }: CharacterSt
 
           return (
             <div key={s.characterStat.statId}>
-              <h2>{s.statType.name}</h2>
+              <H5>{s.statType.name}</H5>
               <Input
                 type="number"
                 id={s.statType.name}
@@ -38,7 +39,7 @@ export function CharacterStatsEditor({ world, character, onChange }: CharacterSt
                 placeholder={s.statType.name}
                 value={s.characterStat.amount}
                 onChange={(e) => {
-                  const n = e.target.value ? e.target.value : 0;
+                  const n = e.target.value ? parseInt(e.target.value) : 0;
                   const newStats = [
                     ...stats.filter((p) => p.statId !== s.statType!.id),
                     {

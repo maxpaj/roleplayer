@@ -1,4 +1,3 @@
-import { EventCard } from "@/components/event-card";
 import { Separator } from "@/components/ui/separator";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { H3 } from "@/components/ui/typography";
@@ -29,7 +28,7 @@ export default async function CampaignEventsPage({ params }: { params: { campaig
         </TableHeader>
         <TableBody>
           {campaignData.events
-            .sort((a, b) => a.id - b.id)
+            .sort((a, b) => a.id < b.id ? -1 : 1)
             .map((e) => (
               <TableRow key={e.id}>
                 <TableCell>{e.id}</TableCell>

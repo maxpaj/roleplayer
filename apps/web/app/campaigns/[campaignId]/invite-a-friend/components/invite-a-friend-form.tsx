@@ -1,9 +1,9 @@
 import { Button } from "@/components/ui/button";
-import { Combobox } from "@/components/ui/combobox";
 import { Input } from "@/components/ui/input";
 import { CampaignService } from "services/campaign-service";
 import { CampaignRecord } from "@/db/schema/campaigns";
 import { redirect } from "next/navigation";
+import { DEFAULT_USER_ID } from "@/db/index";
 
 export async function InviteAFriendForm({ campaignId }: { campaignId: CampaignRecord["id"] }) {
   async function sendFriendInvite(formData: FormData) {
@@ -13,7 +13,7 @@ export async function InviteAFriendForm({ campaignId }: { campaignId: CampaignRe
 
     await new CampaignService().createFriendInvite({
       email: friendInput.email!.toString(),
-      userId: 2,
+      userId: DEFAULT_USER_ID,
     });
 
     return redirect(`/campaigns/${campaignId}/invite-a-friend`);

@@ -1,4 +1,4 @@
-import { H3, H4, Muted } from "@/components/ui/typography";
+import { H4, Muted } from "@/components/ui/typography";
 import { BattleCard } from "./components/battle-card";
 import { StartBattleButton } from "./components/start-battle-button";
 import { getCampaign } from "app/campaigns/actions";

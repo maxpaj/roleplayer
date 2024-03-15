@@ -9,19 +9,24 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Muted, Paragraph } from "@/components/ui/typography";
-import { Campaign, Character } from "roleplayer";
+import { Character } from "roleplayer";
 import { useState } from "react";
-import { RemoveFunctions } from "types/without-functions";
 
 export function AddBattleCharacterButton({
-  campaign,
+  availableCharacters,
   onAddCharacter,
 }: {
   onAddCharacter: (characterId: Character["id"]) => void;
-  campaign: RemoveFunctions<Campaign>;
+  availableCharacters: Character[];
 }) {
-  const [selectedCharacter, setSelectedCharacter] = useState<Character["id"]>();
+  const [selectedCharacter, setSelectedCharacter] =
+    useState<Character["id"]>(-1);
   const [open, setOpen] = useState<boolean>(false);
+
+  const characterOptions = availableCharacters.map((c) => ({
+    label: c.name,
+    value: c.id.toString(),
+  }));
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -32,21 +37,18 @@ export function AddBattleCharacterButton({
         <DialogHeader>
           <DialogTitle>Add character</DialogTitle>
         </DialogHeader>
-        <Paragraph>Select character to add</Paragraph>
-
-        {campaign.adventurers.length === 0 && (
-          <Muted>No adventurers added to the campaign.</Muted>
+        <Paragraph>Select character to add to the battle</Paragraph>
+        {availableCharacters.length === 0 && (
+          <Muted>No characters added to the availableCharacters.</Muted>
         )}
 
-        {campaign.adventurers.length > 0 && (
+        {availableCharacters.length > 0 && (
           <Combobox
+            placeholder="Select character to add"
             onChange={(characterId) =>
               setSelectedCharacter(parseInt(characterId))
             }
-            options={campaign.adventurers.map((c) => ({
-              label: c.name,
-              value: c.id.toString(),
-            }))}
+            options={characterOptions}
           />
         )}
 

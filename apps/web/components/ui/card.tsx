@@ -32,7 +32,7 @@ const CardBackground = React.forwardRef<
       background: "linear-gradient(45deg, black, #fff)",
     }}
   >
-    <Image fill={true} objectFit="cover" alt={alt} src={src} />
+    <Image fill={true} style={{ objectFit: "cover" }} alt={alt} src={src} />
   </div>
 ));
 

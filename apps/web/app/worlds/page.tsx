@@ -20,8 +20,6 @@ export default async function WorldsPage({}) {
         as a template, or customize everything from the start.
       </Muted>
 
-      <Separator className="my-3" />
-
       <CreateWorldForm />
 
       <div className="my-3 flex gap-2">

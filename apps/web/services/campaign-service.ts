@@ -3,6 +3,7 @@ import { eq } from "drizzle-orm";
 import {
   Campaign,
   CampaignEventWithRound,
+  CampaignState,
   DefaultRuleSet,
   World,
 } from "roleplayer";
@@ -125,6 +126,12 @@ export class CampaignService {
   }
 
   async deleteCampaign(campaignId: CampaignRecord["id"]): Promise<void> {
+    await db
+      .delete(charactersToCampaignsSchema)
+      .where(eq(charactersToCampaignsSchema.campaignId, campaignId));
+    await db
+      .delete(eventsSchema)
+      .where(eq(eventsSchema.campaignId, campaignId));
     await db.delete(campaignsSchema).where(eq(campaignsSchema.id, campaignId));
   }
 
@@ -267,23 +274,25 @@ export class CampaignService {
     campaignId: CampaignRecord["id"],
     events: CampaignEventWithRound[]
   ) {
-    const eventExists = (event: CampaignEventWithRound) => {
-      throw new Error("Not implemented");
-      return false;
-    };
-
-    const eventsDiff = events.filter(eventExists);
-
-    await db.insert(eventsSchema).values(
-      eventsDiff.map((e: any) => ({
-        campaignId,
-        characterId: e.characterId,
-        roundId: e.roundId,
-        battleId: e.battleId,
-        eventData: JSON.stringify(e),
-        type: e.type,
-      }))
-    );
+    await db
+      .insert(eventsSchema)
+      .values(
+        events.map((e: any) => ({
+          eventId: e.id,
+          campaignId,
+          characterId: e.characterId,
+          roundId: e.roundId,
+          battleId: e.battleId,
+          eventData: JSON.stringify(e),
+          type: e.type,
+        }))
+      )
+      .onConflictDoUpdate({
+        target: eventsSchema.eventId,
+        set: {
+          updatedUtc: new Date(),
+        },
+      });
   }
 
   async createFriendInvite(invite: NewFriendInviteRecord) {

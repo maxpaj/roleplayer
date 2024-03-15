@@ -165,7 +165,7 @@ export const EventIconMap: {
     alt: "",
     icon: defaultIcon,
   },
-  CharacterEnterBattle: {
+  CharacterBattleEnter: {
     alt: "",
     icon: defaultIcon,
   },
@@ -193,11 +193,15 @@ export const EventIconMap: {
     alt: "",
     icon: defaultIcon,
   },
-  MonsterEnterBattle: {
+  MonsterBattleEnter: {
     alt: "",
     icon: undefined,
   },
   CampaignStarted: {
+    alt: "",
+    icon: undefined,
+  },
+  CharacterBattleInitiativeSet: {
     alt: "",
     icon: undefined,
   },

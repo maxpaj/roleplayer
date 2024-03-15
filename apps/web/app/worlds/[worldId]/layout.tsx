@@ -3,6 +3,7 @@ import { H2 } from "@/components/ui/typography";
 import { BadgeLink, ButtonLink } from "@/components/ui/button-link";
 import { GitForkIcon } from "lucide-react";
 import Image from "next/image";
+import { Separator } from "@/components/ui/separator";
 
 export default async function WorldLayout({
   params,
@@ -24,10 +25,22 @@ export default async function WorldLayout({
   return (
     <div>
       {world.imageUrl && (
-        <div
-          className="-z-10 opacity-15 fixed top-0 left-0 w-full h-full"
-          style={{ background: `url(${world.imageUrl})` }}
-        />
+        <div className="fixed w-full h-[800px] -z-10 opacity-15 top-0 left-0">
+          <div
+            className="relative w-full h-full z-10"
+            style={{
+              backgroundImage: `linear-gradient(transparent 75%, hsl(var(--background)) 100%)`,
+            }}
+          />
+
+          <Image
+            className="relative z-0"
+            src={world.imageUrl}
+            fill={true}
+            style={{ objectFit: "cover" }}
+            alt={"World background"}
+          />
+        </div>
       )}
       <div className="flex justify-between gap-x-4 flex-wrap mb-4">
         <H2>{world.name}</H2>

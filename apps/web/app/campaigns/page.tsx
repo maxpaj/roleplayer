@@ -14,8 +14,6 @@ export default async function CampaignPage() {
         adventure from where you left off!
       </Muted>
 
-      <Separator className="my-3" />
-
       <div className="flex gap-2">
         {campaigns.map((c) => (
           <CampaignCard key={c.campaign.id} campaign={c.campaign} />

@@ -13,6 +13,7 @@ export const campaignsSchema = pgTable("campaigns", {
   name: varchar("name", { length: 256 }).notNull(),
   isDemo: boolean("isDemo").notNull(),
   createdUtc: date("createdUtc"),
+  updatedUtc: date("updatedUtc"),
   imageUrl: varchar("imageUrl", { length: 2048 }),
   description: varchar("description", { length: 8192 }),
   worldId: uuid("worldId")

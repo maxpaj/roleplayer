@@ -36,7 +36,8 @@ export function DeleteCampaignButton({
         <DialogHeader>
           <DialogTitle>Delete campaign</DialogTitle>
           <DialogDescription>
-            Are you sure you want to permanently delete {campaignName}?
+            This is an irreversible action. Are you sure you want to permanently
+            delete {campaignName}?
           </DialogDescription>
         </DialogHeader>
         <Paragraph>Type the name of the campaign below</Paragraph>

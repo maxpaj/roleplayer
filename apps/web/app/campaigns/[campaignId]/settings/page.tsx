@@ -1,5 +1,5 @@
 import { Separator } from "@/components/ui/separator";
-import { H3, H4, H5 } from "@/components/ui/typography";
+import { H3, H4, Muted } from "@/components/ui/typography";
 import { getCampaign } from "app/campaigns/actions";
 import { DeleteCampaignButton } from "./components/delete-campaign-button";
 
@@ -22,7 +22,11 @@ export default async function CampaignSettingsPage({
       <H3>Settings</H3>
       <Separator className="my-3" />
 
-      <H4 className="my-2">Delete campaign</H4>
+      <H4>Delete campaign</H4>
+      <Muted className="mb-2">
+        Once you delete a campaign, there is no going back. Please be certain.
+      </Muted>
+
       <DeleteCampaignButton
         campaignName={campaign.name}
         campaignId={campaign.id}

@@ -30,7 +30,7 @@ export default async function ClassesPage({
 
       <div className="flex flex-wrap gap-2 my-2">
         {worldData.classes.map((clazz) => (
-          <ClassCard worldId={worldId} clazz={clazz} />
+          <ClassCard key={clazz.id} worldId={worldId} clazz={clazz} />
         ))}
       </div>
     </div>

@@ -6,6 +6,7 @@ import { CharacterRecord } from "db/schema/characters";
 import { UserRecord } from "db/schema/users";
 import { WorldRecord } from "db/schema/worlds";
 import { redirect } from "next/navigation";
+import { CampaignEventWithRound } from "roleplayer";
 
 export async function createBattle(campaignId: CampaignRecord["id"]) {
   const battle = await new CampaignService().createBattle(campaignId);
@@ -29,6 +30,13 @@ export async function createCampaign(
   });
 
   redirect(`/campaigns/${created.id}`);
+}
+
+export async function saveCampaignEvents(
+  campaignId: CampaignRecord["id"],
+  events: CampaignEventWithRound[]
+) {
+  return await new CampaignService().saveCampaignEvents(campaignId, events);
 }
 
 export async function getCampaign(campaignId: CampaignRecord["id"]) {

@@ -36,7 +36,8 @@ export function DeleteWorldButton({
         <DialogHeader>
           <DialogTitle>Delete world</DialogTitle>
           <DialogDescription>
-            Are you sure you want to permanently delete {worldName}?
+            This is an irreversible action. Are you sure you want to permanently
+            delete {worldName}?
           </DialogDescription>
         </DialogHeader>
         <Paragraph>Type the name of the world below</Paragraph>

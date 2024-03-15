@@ -19,7 +19,7 @@ export default async function NpcPage({
 
   return (
     <>
-      <H3>World characters</H3>
+      <H3>Non-player characters</H3>
       <Muted>
         These are characters that live in the world, but are not controlled by a
         player

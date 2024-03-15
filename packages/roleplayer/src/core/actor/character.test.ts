@@ -1,82 +1,78 @@
-import { dangerousGenerateId } from "../../lib/generate-id";
-import { Interaction, TargetType } from "../world/interaction/interaction";
-import { Campaign } from "../campaign/campaign";
-import { CampaignEvent } from "../campaign/campaign-events";
-import { Character, CharacterResourceType } from "./character";
-import { World } from "../world/world";
-import { Item, ItemSlot, ItemType } from "../world/item/item";
-import { Rarity } from "../world/rarity";
-import { DefaultRuleSet } from "../../data/data";
+import { DefaultRuleSet } from '../../data/data'
+import { dangerousGenerateId } from '../../lib/generate-id'
+import { Campaign } from '../campaign/campaign'
+import { CampaignEvent } from '../campaign/campaign-events'
+import { Interaction, TargetType } from '../world/interaction/interaction'
+import { Item, ItemSlot, ItemType } from '../world/item/item'
+import { Rarity } from '../world/rarity'
+import { World } from '../world/world'
+import { Character, CharacterResourceType } from './character'
 
-describe("Character", () => {
-  describe("Create character events", () => {
-    it("should handle create character events", () => {
-      const characterA = dangerousGenerateId();
-      const characterB = dangerousGenerateId();
+describe('Character', () => {
+  describe('Create character events', () => {
+    it('should handle create character events', () => {
+      const characterA = dangerousGenerateId()
+      const characterB = dangerousGenerateId()
 
-      const world = new World({ name: "World", ruleset: DefaultRuleSet });
-      const campaign = new Campaign({ id: 0, name: "Campaign", world });
+      const world = new World({ name: 'World', ruleset: DefaultRuleSet })
+      const campaign = new Campaign({ id: 0, name: 'Campaign', world })
 
-      campaign.nextRound();
-      campaign.createCharacter(characterA, "Character A");
-      campaign.createCharacter(characterB, "Character B");
+      campaign.nextRound()
+      campaign.createCharacter(characterA, 'Character A')
+      campaign.createCharacter(characterB, 'Character B')
 
-      const data = campaign.applyEvents();
-      expect(data.characters.length).toBe(2);
-    });
+      const data = campaign.applyEvents()
+      expect(data.characters.length).toBe(2)
+    })
 
-    it("should apply maximum health change events", () => {
-      const characterId = dangerousGenerateId();
+    it('should apply maximum health change events', () => {
+      const characterId = dangerousGenerateId()
 
-      const world = new World({ name: "World", ruleset: DefaultRuleSet });
-      const campaign = new Campaign({ id: 0, name: "Campaign", world });
+      const world = new World({ name: 'World', ruleset: DefaultRuleSet })
+      const campaign = new Campaign({ id: 0, name: 'Campaign', world })
 
-      campaign.nextRound();
-      campaign.createCharacter(characterId, "Character");
+      campaign.nextRound()
+      campaign.createCharacter(characterId, 'Character')
 
       const events: CampaignEvent[] = [
         {
-          type: "CharacterMaximumHealthSet",
+          type: 'CharacterMaximumHealthSet',
           maximumHealth: 12,
           id: dangerousGenerateId(),
           characterId: characterId,
         },
-      ];
+      ]
 
-      campaign.publishCampaignEvent(...events);
+      campaign.publishCampaignEvent(...events)
 
-      const data = campaign.applyEvents();
-      const characterFromEvents = data.characters.find(
-        (c) => c.id === characterId
-      );
-      expect(characterFromEvents!.maximumHealth).toBe(12);
-    });
+      const data = campaign.applyEvents()
+      const characterFromEvents = data.characters.find((c) => c.id === characterId)
+      expect(characterFromEvents!.maximumHealth).toBe(12)
+    })
 
-    it("should apply movement events", () => {
-      const characterId = dangerousGenerateId();
+    it('should apply movement events', () => {
+      const characterId = dangerousGenerateId()
       const world = new World({
-        name: "World",
+        name: 'World',
         ruleset: DefaultRuleSet,
-      });
-      const campaign = new Campaign({ id: 0, name: "Campaign", world });
+      })
+      const campaign = new Campaign({ id: 0, name: 'Campaign', world })
 
-      campaign.nextRound();
-      campaign.createCharacter(characterId, "Character");
+      campaign.nextRound()
+      campaign.createCharacter(characterId, 'Character')
 
-      const movementSpeedResource = DefaultRuleSet.characterResourceTypes.find(
-        (r) => r.name === "Movement speed"
-      );
+      const movementSpeedResource = DefaultRuleSet.characterResourceTypes.find((r) => r.name === 'Movement speed')
 
       const events: CampaignEvent[] = [
         {
-          type: "CharacterResourceCurrentChange",
+          type: 'CharacterResourceCurrentChange',
           id: dangerousGenerateId(),
-          resourceId: movementSpeedResource!.id,
+          resourceTypeId: movementSpeedResource!.id,
           amount: 35,
           characterId: characterId,
         },
         {
-          type: "CharacterPositionSet",
+          type: 'CharacterPositionSet',
           id: dangerousGenerateId(),
           targetPosition: {
             x: 10,
@@ -86,7 +82,7 @@ describe("Character", () => {
           characterId: characterId,
         },
         {
-          type: "CharacterMovement",
+          type: 'CharacterMovement',
           targetPosition: {
             x: 10,
             y: 20,
@@ -95,56 +91,54 @@ describe("Character", () => {
           id: dangerousGenerateId(),
           characterId: characterId,
         },
-      ];
+      ]
 
-      campaign.publishCampaignEvent(...events);
+      campaign.publishCampaignEvent(...events)
 
-      const data = campaign.applyEvents();
-      const characterFromEvents = data.characters.find(
-        (c) => c.id === characterId
-      );
-      expect(characterFromEvents!.position.x).toBe(10);
-      expect(characterFromEvents!.position.y).toBe(20);
-    });
+      const data = campaign.applyEvents()
+      const characterFromEvents = data.characters.find((c) => c.id === characterId)
+      expect(characterFromEvents!.position.x).toBe(10)
+      expect(characterFromEvents!.position.y).toBe(20)
+    })
 
-    it("should reject movement event when movement exceeds remaining movement", () => {
+    it('should reject movement event when movement exceeds remaining movement', () => {
       const movementResource: CharacterResourceType = {
         id: dangerousGenerateId(),
-        name: "Movement speed",
-      };
+        name: 'Movement speed',
+      }
 
       const world = new World({
-        name: "World",
+        name: 'World',
         ruleset: DefaultRuleSet,
-      });
-      const campaign = new Campaign({ id: 0, name: "Campaign", world });
+      })
+      const campaign = new Campaign({ id: 0, name: 'Campaign', world })
 
-      const characterId = dangerousGenerateId();
+      const characterId = dangerousGenerateId()
       const character = new Character({
         resources: [
           {
             amount: 35,
             max: 35,
             min: 0,
-            resourceId: movementResource.id,
+            resourceTypeId: movementResource.id,
           },
         ],
-      });
-      character.id = characterId;
+      })
+      character.id = characterId
 
-      campaign.nextRound();
-      campaign.createCharacter(characterId, "Character");
+      campaign.nextRound()
+      campaign.createCharacter(characterId, 'Character')
 
       const events: CampaignEvent[] = [
         {
-          type: "CharacterResourceCurrentChange",
+          type: 'CharacterResourceCurrentChange',
           id: dangerousGenerateId(),
           amount: 35,
           characterId: characterId,
-          resourceId: movementResource.id,
+          resourceTypeId: movementResource.id,
         },
         {
-          type: "CharacterPositionSet",
+          type: 'CharacterPositionSet',
           id: dangerousGenerateId(),
           targetPosition: {
             x: 10,
@@ -154,11 +148,11 @@ describe("Character", () => {
           characterId: characterId,
         },
         {
-          type: "RoundStarted",
+          type: 'RoundStarted',
           id: dangerousGenerateId(),
         },
         {
-          type: "CharacterMovement",
+          type: 'CharacterMovement',
           targetPosition: {
             x: 10,
             y: 50,
@@ -167,142 +161,138 @@ describe("Character", () => {
           id: dangerousGenerateId(),
           characterId: characterId,
         },
-      ];
+      ]
 
-      campaign.publishCampaignEvent(...events);
+      campaign.publishCampaignEvent(...events)
 
-      expect(campaign.applyEvents).toThrow();
-    });
+      expect(campaign.applyEvents).toThrow()
+    })
 
-    it("should apply temporary health change events", () => {
-      const characterId = dangerousGenerateId();
-      const world = new World({ name: "World", ruleset: DefaultRuleSet });
-      const campaign = new Campaign({ id: 0, name: "Campaign", world });
-      campaign.nextRound();
-      campaign.createCharacter(characterId, "Character");
+    it('should apply temporary health change events', () => {
+      const characterId = dangerousGenerateId()
+      const world = new World({ name: 'World', ruleset: DefaultRuleSet })
+      const campaign = new Campaign({ id: 0, name: 'Campaign', world })
+      campaign.nextRound()
+      campaign.createCharacter(characterId, 'Character')
 
       const events: CampaignEvent[] = [
         {
-          type: "CharacterMaximumHealthSet",
+          type: 'CharacterMaximumHealthSet',
           maximumHealth: 12,
           id: dangerousGenerateId(),
           characterId: characterId,
         },
         {
-          type: "CharacterHealthSet",
+          type: 'CharacterHealthSet',
           healthChange: 12,
           id: dangerousGenerateId(),
           characterId: characterId,
         },
         {
-          type: "CharacterHealthLoss",
+          type: 'CharacterHealthLoss',
           healthLoss: 4,
           id: dangerousGenerateId(),
           characterId: characterId,
           interactionId: dangerousGenerateId(),
         },
-      ];
+      ]
 
-      campaign.publishCampaignEvent(...events);
+      campaign.publishCampaignEvent(...events)
 
-      const data = campaign.applyEvents();
-      const characterFromEvents = data.characters.find(
-        (c) => c.id === characterId
-      );
-      expect(characterFromEvents!.currentHealth).toBe(8);
-    });
+      const data = campaign.applyEvents()
+      const characterFromEvents = data.characters.find((c) => c.id === characterId)
+      expect(characterFromEvents!.currentHealth).toBe(8)
+    })
 
-    it("should apply item gain events", () => {
-      const characterId = dangerousGenerateId();
-      const itemId = dangerousGenerateId();
+    it('should apply item gain events', () => {
+      const characterId = dangerousGenerateId()
+      const itemId = dangerousGenerateId()
       const world = new World({
-        name: "World",
+        name: 'World',
         ruleset: DefaultRuleSet,
         items: [
           {
             id: itemId,
             rarity: Rarity.Common,
             actions: [],
-            name: "Item",
+            name: 'Item',
             occupiesSlots: [ItemSlot.Inventory],
             type: ItemType.Equipment,
-            description: "",
+            description: '',
           },
         ],
-      });
-      const campaign = new Campaign({ id: 0, name: "Campaign", world });
-      campaign.nextRound();
+      })
+      const campaign = new Campaign({ id: 0, name: 'Campaign', world })
+      campaign.nextRound()
 
-      campaign.createCharacter(characterId, "Character");
+      campaign.createCharacter(characterId, 'Character')
 
       const events: CampaignEvent[] = [
         {
-          type: "CharacterSpawned",
+          type: 'CharacterSpawned',
           id: dangerousGenerateId(),
           characterId: characterId,
         },
         {
-          type: "CharacterItemGain",
+          type: 'CharacterItemGain',
           id: dangerousGenerateId(),
           characterId: characterId,
           itemId: itemId,
         },
-      ];
+      ]
 
-      campaign.publishCampaignEvent(...events);
+      campaign.publishCampaignEvent(...events)
 
-      const data = campaign.applyEvents();
-      const characterFromEvents = data.characters.find(
-        (c) => c.id === characterId
-      );
-      expect(characterFromEvents!.inventory.length).toBe(1);
-    });
+      const data = campaign.applyEvents()
+      const characterFromEvents = data.characters.find((c) => c.id === characterId)
+      expect(characterFromEvents!.inventory.length).toBe(1)
+    })
 
     it("should apply reject character events if character doesn't exist", () => {
-      const characterId = dangerousGenerateId();
-      const world = new World({ name: "World", ruleset: DefaultRuleSet });
-      const campaign = new Campaign({ id: 0, name: "Campaign", world });
-      campaign.nextRound();
+      const characterId = dangerousGenerateId()
+      const world = new World({ name: 'World', ruleset: DefaultRuleSet })
+      const campaign = new Campaign({ id: 0, name: 'Campaign', world })
+      campaign.nextRound()
 
       const events: CampaignEvent[] = [
         {
-          type: "CharacterMaximumHealthSet",
+          type: 'CharacterMaximumHealthSet',
           maximumHealth: 12,
           id: dangerousGenerateId(),
           characterId: characterId,
         },
-      ];
+      ]
 
-      campaign.publishCampaignEvent(...events);
+      campaign.publishCampaignEvent(...events)
 
       try {
-        campaign.applyEvents();
+        campaign.applyEvents()
       } catch (e) {
         // Success
       }
-    });
+    })
 
-    it("should handle unhandled events gracefully", () => {
-      const world = new World({ name: "World", ruleset: DefaultRuleSet });
-      const campaign = new Campaign({ id: 0, name: "New campaign", world });
+    it('should handle unhandled events gracefully', () => {
+      const world = new World({ name: 'World', ruleset: DefaultRuleSet })
+      const campaign = new Campaign({ id: 0, name: 'New campaign', world })
       const events: CampaignEvent[] = [
         {
-          type: "Unknown",
+          type: 'Unknown',
           id: dangerousGenerateId(),
         },
-      ];
+      ]
 
-      campaign.nextRound();
-      campaign.publishCampaignEvent(...events);
+      campaign.nextRound()
+      campaign.publishCampaignEvent(...events)
 
-      const data = campaign.applyEvents();
+      const data = campaign.applyEvents()
 
-      expect(data).toBeDefined();
-    });
-  });
+      expect(data).toBeDefined()
+    })
+  })
 
-  describe("Character actions", () => {
-    it("should return a list of possible interactions based on the character class abilities, spells and inventory", () => {
+  describe('Character actions', () => {
+    it('should return a list of possible interactions based on the character class abilities, spells and inventory', () => {
       const sword: Item = {
         id: dangerousGenerateId(),
         rarity: Rarity.Common,
@@ -311,51 +301,51 @@ describe("Character", () => {
             id: dangerousGenerateId(),
             appliesEffects: [],
             eligibleTargets: [TargetType.Hostile],
-            name: "Slash",
+            name: 'Slash',
             rangeDistanceMeters: 5,
             requiresResources: [],
           },
         ],
-        name: "Sword",
+        name: 'Sword',
         occupiesSlots: [ItemSlot.MainHand],
         type: ItemType.Equipment,
-      };
+      }
 
       const healingWord: Interaction = {
         id: dangerousGenerateId(),
-        name: "Healing Word (Level 1)",
+        name: 'Healing Word (Level 1)',
         appliesEffects: [],
         eligibleTargets: [TargetType.Friendly],
         rangeDistanceMeters: 30,
         requiresResources: [],
-      };
+      }
 
       const firebolt: Interaction = {
         id: dangerousGenerateId(),
         appliesEffects: [],
         eligibleTargets: [TargetType.Hostile],
-        name: "Firebolt",
+        name: 'Firebolt',
         rangeDistanceMeters: 35,
         requiresResources: [
           {
-            resourceId: 0,
+            resourceTypeId: 0,
             amount: 1,
           },
         ],
-      };
+      }
 
-      const char = new Character();
+      const char = new Character()
       char.equipment = [
         {
           slotId: 0,
           item: sword,
         },
-      ];
+      ]
 
-      char.actions = [healingWord, firebolt];
+      char.actions = [healingWord, firebolt]
 
-      const actions = char.getAvailableActions();
-      expect(actions.length).toBe(3);
-    });
-  });
-});
+      const actions = char.getAvailableActions()
+      expect(actions.length).toBe(3)
+    })
+  })
+})

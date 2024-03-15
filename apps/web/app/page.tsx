@@ -19,7 +19,7 @@ export default function Home() {
       <section className="relative z-1 space-y-6 pb-8 pt-6 md:pb-12 md:pt-10 lg:py-32">
         <div className="container flex max-w-[64rem] flex-col items-center gap-4 text-center">
           <H1 className="text-3xl font-semibold sm:text-5xl md:text-6xl lg:text-7xl">
-            Your world builder and campaign manager
+            Role-playing world builder and campaign manager
           </H1>
           <Lead className="my-4">
             Build a world, invite your friends, create characters and start your

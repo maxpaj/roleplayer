@@ -1,11 +1,11 @@
-import { db } from "../db";
+import { DEFAULT_USER_ID, db } from "../db";
 import { eq } from "drizzle-orm";
 import { NewUserRecord, UserRecord, usersSchema } from "../db/schema/users";
 import { NewCharacterRecord, charactersSchema } from "../db/schema/characters";
 import { friendInvitesSchema } from "../db/schema/friend-invite";
 
 export class UserService {
-  async getAll(userId: UserRecord["id"] = 2): Promise<UserRecord[]> {
+  async getAll(userId: UserRecord["id"] = DEFAULT_USER_ID): Promise<UserRecord[]> {
     const query = db.select().from(usersSchema);
     return query;
   }
@@ -24,7 +24,7 @@ export class UserService {
     throw new Error("Method not implemented.");
   }
 
-  async createUser(newUserRecord: NewUserRecord): Promise<{ id: number }> {
+  async createUser(newUserRecord: NewUserRecord): Promise<{ id: UserRecord["id"] }> {
     const rows = await db.insert(usersSchema).values(newUserRecord).returning({ id: usersSchema.id });
 
     await db

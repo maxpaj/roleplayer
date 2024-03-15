@@ -15,6 +15,7 @@ import { usersSchema } from "./schema/users";
 import { worldsSchema } from "./schema/worlds";
 
 export const DEFAULT_USER_ID = dangerousGenerateId();
+export const EMPTY_GUID = dangerousGenerateId();
 
 export const db = drizzle(sql, {
   schema: {

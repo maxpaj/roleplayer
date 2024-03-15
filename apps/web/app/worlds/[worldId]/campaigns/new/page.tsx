@@ -13,7 +13,6 @@ export default async function NewCampaignPage({ params }: { params: { worldId: s
   return (
     <>
       <Muted className="my-3">A new campaign marks the beginning of an adventure, who knows where the world might take you.</Muted>
-
       <StartCampaignForm worldId={worldId} worldName={worldData.world.name} />
     </>
   );

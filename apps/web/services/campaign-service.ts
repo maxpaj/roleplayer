@@ -107,6 +107,7 @@ export class CampaignService {
   }
 
   async createCampaign(newCampaign: NewCampaignRecord): Promise<{ id: CampaignRecord["id"] }> {
+    console.log(newCampaign);
     const rows = await db.insert(campaignsSchema).values(newCampaign).returning();
 
     const created = rows[0];

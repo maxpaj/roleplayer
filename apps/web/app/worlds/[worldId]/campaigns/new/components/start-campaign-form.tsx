@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { AlertTriangle } from "lucide-react";
 import { createCampaign } from "app/worlds/[worldId]/actions";
 import { WorldRecord } from "@/db/schema/worlds";
+import { DEFAULT_USER_ID } from "@/db/index";
 
 type StartCampaignFormProps = {
   worldId: WorldRecord["id"];
@@ -27,7 +28,7 @@ export function StartCampaignForm({ worldName, worldId }: StartCampaignFormProps
             name: `${worldName}: New campaign`,
             isDemo: false,
             worldId,
-            userId: 2,
+            userId: DEFAULT_USER_ID
           });
         }}
       >

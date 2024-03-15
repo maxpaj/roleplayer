@@ -4,6 +4,7 @@ import { DialogHeader, DialogFooter, Dialog, DialogContent, DialogTitle, DialogT
 import { Muted, Paragraph } from "@/components/ui/typography";
 import { Character } from "roleplayer";
 import { useState } from "react";
+import { EMPTY_GUID } from "@/db/index";
 
 export function AddBattleCharacterButton({
   availableCharacters,
@@ -12,7 +13,7 @@ export function AddBattleCharacterButton({
   onAddCharacter: (characterId: Character["id"]) => void;
   availableCharacters: Character[];
 }) {
-  const [selectedCharacter, setSelectedCharacter] = useState<Character["id"]>(-1);
+  const [selectedCharacter, setSelectedCharacter] = useState<Character["id"]>(EMPTY_GUID);
   const [open, setOpen] = useState<boolean>(false);
 
   const characterOptions = availableCharacters.map((c) => ({

@@ -10,11 +10,7 @@ type ClassEditorProps = {
   classId: Clazz["id"];
 };
 
-export function CharacterClassEditor({
-  classId,
-  world,
-  character,
-}: ClassEditorProps) {
+export function CharacterClassEditor({ classId, world, character }: ClassEditorProps) {
   const clazz = world.classes.find((c) => c.id === classId);
 
   if (!clazz) {
@@ -42,11 +38,7 @@ export function CharacterClassEditor({
 
         return (
           <div key={lp.abilityId}>
-            <AbilityCard
-              key={lp.abilityId}
-              ability={ability}
-              levelProgression={lp}
-            />
+            <AbilityCard key={lp.abilityId} ability={ability} levelProgression={lp} />
           </div>
         );
       })}

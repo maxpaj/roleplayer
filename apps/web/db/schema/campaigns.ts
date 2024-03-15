@@ -1,10 +1,4 @@
-import {
-  boolean,
-  date,
-  pgTable,
-  uuid,
-  varchar
-} from "drizzle-orm/pg-core";
+import { boolean, date, pgTable, uuid, varchar } from "drizzle-orm/pg-core";
 import { usersSchema } from "./users";
 import { worldsSchema } from "./worlds";
 

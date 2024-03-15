@@ -5,10 +5,7 @@ import { classesSchema } from "../db/schema/classes";
 
 export class CharacterService {
   async getCharacter(characterId: CharacterRecord["id"]) {
-    const data = await db
-      .select()
-      .from(charactersSchema)
-      .where(eq(classesSchema.id, characterId));
+    const data = await db.select().from(charactersSchema).where(eq(classesSchema.id, characterId));
 
     return data;
   }

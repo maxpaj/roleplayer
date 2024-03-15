@@ -1,10 +1,4 @@
-import {
-  pgTable,
-  timestamp,
-  uniqueIndex,
-  uuid,
-  varchar
-} from "drizzle-orm/pg-core";
+import { pgTable, timestamp, uniqueIndex, uuid, varchar } from "drizzle-orm/pg-core";
 
 export const usersSchema = pgTable(
   "users",

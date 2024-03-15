@@ -3,11 +3,7 @@ import { H3 } from "@/components/ui/typography";
 import { getWorldData } from "../actions";
 import { Separator } from "@/components/ui/separator";
 
-export default async function MapsPage({
-  params,
-}: {
-  params: { worldId: string };
-}) {
+export default async function MapsPage({ params }: { params: { worldId: string } }) {
   const { worldId: id } = params;
   const worldData = await getWorldData(id);
   if (!worldData) {

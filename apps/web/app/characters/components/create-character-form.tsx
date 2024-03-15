@@ -17,10 +17,7 @@ const validateName = z.object({
   name: z.string().min(1),
 });
 
-export function CreateCharacterForm({
-  worldId,
-  campaignId,
-}: NewCharacterProps) {
+export function CreateCharacterForm({ worldId, campaignId }: NewCharacterProps) {
   async function createNewCharacter(formData: FormData) {
     "use server";
 
@@ -40,20 +37,13 @@ export function CreateCharacterForm({
       campaignId
     );
 
-    return campaignId
-      ? redirect(`/campaigns/${campaignId}/characters/${characterId.id}`)
-      : redirect(`/worlds/${worldId}/characters/${characterId.id}`);
+    return campaignId ? redirect(`/campaigns/${campaignId}/characters/${characterId.id}`) : redirect(`/worlds/${worldId}/characters/${characterId.id}`);
   }
 
   return (
     <>
       <form action={createNewCharacter} className="flex gap-2">
-        <Input
-          type="name"
-          id="name"
-          name="name"
-          placeholder="New character name"
-        />
+        <Input type="name" id="name" name="name" placeholder="New character name" />
 
         <Button type="submit">Create new character</Button>
       </form>

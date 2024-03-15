@@ -1,37 +1,18 @@
 import { classesSchema } from "@/db/schema/classes";
 import { eq } from "drizzle-orm";
-import {
-  Campaign,
-  CampaignEventWithRound,
-  CampaignState,
-  DefaultRuleSet,
-  World,
-} from "roleplayer";
+import { Campaign, CampaignEventWithRound, CampaignState, DefaultRuleSet, World } from "roleplayer";
 import { db } from "../db";
-import {
-  CampaignRecord,
-  NewCampaignRecord,
-  campaignsSchema,
-} from "../db/schema/campaigns";
-import {
-  CharacterRecord,
-  charactersSchema,
-  charactersToCampaignsSchema,
-} from "../db/schema/characters";
+import { CampaignRecord, NewCampaignRecord, campaignsSchema } from "../db/schema/campaigns";
+import { CharacterRecord, charactersSchema, charactersToCampaignsSchema } from "../db/schema/characters";
 import { EventRecord, eventsSchema } from "../db/schema/events";
-import {
-  NewFriendInviteRecord,
-  friendInvitesSchema,
-} from "../db/schema/friend-invite";
+import { NewFriendInviteRecord, friendInvitesSchema } from "../db/schema/friend-invite";
 import { monstersSchema } from "../db/schema/monster";
 import { UserRecord } from "../db/schema/users";
 import { WorldRecord, worldsSchema } from "../db/schema/worlds";
 import { WorldAggregated } from "./world-service";
 
 export class CampaignService {
-  async getAll(
-    userId: UserRecord["id"]
-  ): Promise<{ campaign: CampaignRecord; events: EventRecord[] }[]> {
+  async getAll(userId: UserRecord["id"]): Promise<{ campaign: CampaignRecord; events: EventRecord[] }[]> {
     const rows = await db
       .select()
       .from(campaignsSchema)
@@ -41,9 +22,7 @@ export class CampaignService {
       .leftJoin(eventsSchema, eq(eventsSchema.campaignId, campaignsSchema.id))
       .where(eq(campaignsSchema.userId, userId));
 
-    const result = rows.reduce<
-      Record<CampaignRecord['id'], { campaign: CampaignRecord; events: EventRecord[] }>
-    >((acc, row) => {
+    const result = rows.reduce<Record<CampaignRecord["id"], { campaign: CampaignRecord; events: EventRecord[] }>>((acc, row) => {
       const campaign = row.campaigns;
 
       if (!campaign) {
@@ -74,9 +53,7 @@ export class CampaignService {
       .leftJoin(charactersSchema, eq(charactersSchema.worldId, worldsSchema.id))
       .leftJoin(eventsSchema, eq(eventsSchema.campaignId, campaignsSchema.id));
 
-    const result = rows.reduce<
-      Record<CampaignRecord['id'], { campaign: CampaignRecord; events: EventRecord[] }>
-    >((acc, row) => {
+    const result = rows.reduce<Record<CampaignRecord["id"], { campaign: CampaignRecord; events: EventRecord[] }>>((acc, row) => {
       const campaign = row.campaigns;
       if (!campaign) {
         return acc;
@@ -111,9 +88,7 @@ export class CampaignService {
     const campaign = new Campaign({
       ...campaignData.campaign,
       world,
-      events: campaignData.events.map(
-        (e) => e.eventData
-      ) as CampaignEventWithRound[],
+      events: campaignData.events.map((e) => e.eventData) as CampaignEventWithRound[],
     });
 
     campaign.startBattle();
@@ -126,22 +101,13 @@ export class CampaignService {
   }
 
   async deleteCampaign(campaignId: CampaignRecord["id"]): Promise<void> {
-    await db
-      .delete(charactersToCampaignsSchema)
-      .where(eq(charactersToCampaignsSchema.campaignId, campaignId));
-    await db
-      .delete(eventsSchema)
-      .where(eq(eventsSchema.campaignId, campaignId));
+    await db.delete(charactersToCampaignsSchema).where(eq(charactersToCampaignsSchema.campaignId, campaignId));
+    await db.delete(eventsSchema).where(eq(eventsSchema.campaignId, campaignId));
     await db.delete(campaignsSchema).where(eq(campaignsSchema.id, campaignId));
   }
 
-  async createCampaign(
-    newCampaign: NewCampaignRecord
-  ): Promise<{ id: CampaignRecord['id'] }> {
-    const rows = await db
-      .insert(campaignsSchema)
-      .values(newCampaign)
-      .returning();
+  async createCampaign(newCampaign: NewCampaignRecord): Promise<{ id: CampaignRecord["id"] }> {
+    const rows = await db.insert(campaignsSchema).values(newCampaign).returning();
 
     const created = rows[0];
     if (!created) {
@@ -173,20 +139,14 @@ export class CampaignService {
       .innerJoin(worldsSchema, eq(worldsSchema.id, campaignsSchema.worldId))
       .leftJoin(monstersSchema, eq(monstersSchema.worldId, worldsSchema.id))
       .leftJoin(classesSchema, eq(classesSchema.worldId, worldsSchema.id))
-      .leftJoin(
-        charactersToCampaignsSchema,
-        eq(charactersToCampaignsSchema.campaignId, campaignsSchema.id)
-      )
-      .leftJoin(
-        charactersSchema,
-        eq(charactersToCampaignsSchema.characterId, charactersSchema.id)
-      )
+      .leftJoin(charactersToCampaignsSchema, eq(charactersToCampaignsSchema.campaignId, campaignsSchema.id))
+      .leftJoin(charactersSchema, eq(charactersToCampaignsSchema.characterId, charactersSchema.id))
       .leftJoin(eventsSchema, eq(eventsSchema.campaignId, campaignsSchema.id))
       .where(eq(campaignsSchema.id, campaignId));
 
     const result = rows.reduce<
       Record<
-        CampaignRecord['id'],
+        CampaignRecord["id"],
         {
           campaign: CampaignRecord;
           events: EventRecord[];
@@ -215,37 +175,19 @@ export class CampaignService {
       }
 
       if (row.events) {
-        acc[campaign.id]!.events = [
-          ...acc[campaign.id]!.events.filter((c) => c.id !== row.events!.id),
-          row.events,
-        ];
+        acc[campaign.id]!.events = [...acc[campaign.id]!.events.filter((c) => c.id !== row.events!.id), row.events];
       }
 
       if (row.characters) {
-        acc[campaign.id]!.characters = [
-          ...acc[campaign.id]!.characters.filter(
-            (c) => c.id !== row.characters!.id
-          ),
-          row.characters,
-        ];
+        acc[campaign.id]!.characters = [...acc[campaign.id]!.characters.filter((c) => c.id !== row.characters!.id), row.characters];
       }
 
       if (row.monsters) {
-        acc[campaign.id]!.world.monsters = [
-          ...acc[campaign.id]!.world.monsters.filter(
-            (c) => c.id !== row.monsters!.id
-          ),
-          row.monsters,
-        ];
+        acc[campaign.id]!.world.monsters = [...acc[campaign.id]!.world.monsters.filter((c) => c.id !== row.monsters!.id), row.monsters];
       }
 
       if (row.classes) {
-        acc[campaign.id]!.world.classes = [
-          ...acc[campaign.id]!.world.classes.filter(
-            (c) => c.id !== row.classes!.id
-          ),
-          row.classes,
-        ];
+        acc[campaign.id]!.world.classes = [...acc[campaign.id]!.world.classes.filter((c) => c.id !== row.classes!.id), row.classes];
       }
 
       return acc;
@@ -254,10 +196,7 @@ export class CampaignService {
     return result[campaignId];
   }
 
-  async publishEvent(
-    campaignId: CampaignRecord["id"],
-    event: Event
-  ): Promise<CampaignRecord> {
+  async publishEvent(campaignId: CampaignRecord["id"], event: Event): Promise<CampaignRecord> {
     throw new Error("Method not implemented.");
   }
 
@@ -270,10 +209,7 @@ export class CampaignService {
 
   async saveCampaign(campaign: CampaignRecord) {}
 
-  async saveCampaignEvents(
-    campaignId: CampaignRecord["id"],
-    events: CampaignEventWithRound[]
-  ) {
+  async saveCampaignEvents(campaignId: CampaignRecord["id"], events: CampaignEventWithRound[]) {
     await db
       .insert(eventsSchema)
       .values(
@@ -296,16 +232,11 @@ export class CampaignService {
   }
 
   async createFriendInvite(invite: NewFriendInviteRecord) {
-    return await db
-      .insert(friendInvitesSchema)
-      .values(invite)
-      .returning({ id: friendInvitesSchema.id });
+    return await db.insert(friendInvitesSchema).values(invite).returning({ id: friendInvitesSchema.id });
   }
 
   async addCharacter(campaignId: CampaignRecord["id"], character: CharacterRecord) {
-    await db
-      .insert(charactersToCampaignsSchema)
-      .values({ campaignId, characterId: character.id });
+    await db.insert(charactersToCampaignsSchema).values({ campaignId, characterId: character.id });
 
     const campaignData = await this.getCampaign(campaignId);
     if (!campaignData) {

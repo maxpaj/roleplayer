@@ -5,11 +5,7 @@ import { PublishWorldButton } from "../components/publish-world-button";
 import { UnpublishWorldButton } from "../components/unpublish-world-button";
 import { Separator } from "@/components/ui/separator";
 
-export default async function SettingsPage({
-  params,
-}: {
-  params: { worldId: string };
-}) {
+export default async function SettingsPage({ params }: { params: { worldId: string } }) {
   const { worldId: id } = params;
   const worldId = id;
   const worldData = await getWorldData(worldId);
@@ -25,17 +21,10 @@ export default async function SettingsPage({
       <Separator className="my-3" />
 
       <H5>Publish world</H5>
-      <Muted className="my-2">
-        Sharing your world with others will allow others to play campaigns in
-        your world
-      </Muted>
+      <Muted className="my-2">Sharing your world with others will allow others to play campaigns in your world</Muted>
 
-      {!world.isTemplate && (
-        <PublishWorldButton worldName={world.name} worldId={world.id} />
-      )}
-      {world.isTemplate && (
-        <UnpublishWorldButton worldName={world.name} worldId={world.id} />
-      )}
+      {!world.isTemplate && <PublishWorldButton worldName={world.name} worldId={world.id} />}
+      {world.isTemplate && <UnpublishWorldButton worldName={world.name} worldId={world.id} />}
 
       <H5 className="my-2">Delete world</H5>
       <DeleteWorldButton worldName={world.name} worldId={world.id} />

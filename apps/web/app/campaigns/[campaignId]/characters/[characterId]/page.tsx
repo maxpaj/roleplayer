@@ -6,28 +6,14 @@ import { classToPlain } from "@/lib/class-to-plain";
 import { getCampaign } from "app/campaigns/actions";
 import { CharacterEditor } from "app/characters/components/character-editor";
 import { redirect } from "next/navigation";
-import {
-  Campaign,
-  CampaignEventWithRound,
-  Character,
-  DefaultRuleSet,
-  World,
-} from "roleplayer";
+import { Campaign, CampaignEventWithRound, Character, DefaultRuleSet, World } from "roleplayer";
 import { EventCard } from "@/components/event-card";
 
-export default async function CampaignCharacterPage({
-  params: { campaignId: id, characterId: cid },
-}: {
-  params: { campaignId: string; characterId: string };
-}) {
+export default async function CampaignCharacterPage({ params: { campaignId: id, characterId: cid } }: { params: { campaignId: string; characterId: string } }) {
   const campaignId = id;
   const characterId = cid;
 
-  async function updateCharacter(
-    campaignId: CampaignRecord["id"],
-    characterId: CharacterRecord["id"],
-    characterUpdate: Partial<Character>
-  ) {
+  async function updateCharacter(campaignId: CampaignRecord["id"], characterId: CharacterRecord["id"], characterUpdate: Partial<Character>) {
     "use server";
     const campaignData = await new CampaignService().getCampaign(campaignId);
     if (!campaignData) {
@@ -82,15 +68,13 @@ export default async function CampaignCharacterPage({
       />
 
       <H4 className="my-2">Events</H4>
-      <div className="flex gap-2 flex-wrap">
+      <div className="flex flex-wrap gap-2">
         {characterEvents.map((e) => (
           <EventCard key={e.id} event={e} campaignId={campaignId} />
         ))}
       </div>
 
-      {characterEvents.length === 0 && (
-        <Muted>No events yet for this character</Muted>
-      )}
+      {characterEvents.length === 0 && <Muted>No events yet for this character</Muted>}
     </>
   );
 }

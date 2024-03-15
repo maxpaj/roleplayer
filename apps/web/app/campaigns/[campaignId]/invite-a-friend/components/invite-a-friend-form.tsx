@@ -5,11 +5,7 @@ import { CampaignService } from "services/campaign-service";
 import { CampaignRecord } from "@/db/schema/campaigns";
 import { redirect } from "next/navigation";
 
-export async function InviteAFriendForm({
-  campaignId,
-}: {
-  campaignId: CampaignRecord["id"];
-}) {
+export async function InviteAFriendForm({ campaignId }: { campaignId: CampaignRecord["id"] }) {
   async function sendFriendInvite(formData: FormData) {
     "use server";
 

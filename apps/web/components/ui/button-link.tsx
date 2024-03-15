@@ -14,18 +14,9 @@ type ButtonLinkProps = {
   className?: string;
 } & VariantProps<typeof buttonVariants>;
 
-export function ButtonLink({
-  className = "",
-  children,
-  variant = "default",
-  size = "default",
-  href,
-}: ButtonLinkProps) {
+export function ButtonLink({ className = "", children, variant = "default", size = "default", href }: ButtonLinkProps) {
   return (
-    <Link
-      className={cn(buttonVariants({ variant, size }), className)}
-      href={href}
-    >
+    <Link className={cn(buttonVariants({ variant, size }), className)} href={href}>
       {children}
     </Link>
   );

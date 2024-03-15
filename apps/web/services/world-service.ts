@@ -2,22 +2,10 @@ import { eq } from "drizzle-orm";
 import { DEFAULT_USER_ID, db } from "../db";
 import { ActionRecord, actionsSchema } from "../db/schema/actions";
 import { CampaignRecord, campaignsSchema } from "../db/schema/campaigns";
-import {
-  CharacterRecord,
-  NewCharacterRecord,
-  charactersSchema,
-} from "../db/schema/characters";
-import {
-  ClazzRecord,
-  NewClazzRecord,
-  classesSchema,
-} from "../db/schema/classes";
+import { CharacterRecord, NewCharacterRecord, charactersSchema } from "../db/schema/characters";
+import { ClazzRecord, NewClazzRecord, classesSchema } from "../db/schema/classes";
 import { ItemRecord, NewItemRecord, itemsSchema } from "../db/schema/items";
-import {
-  MonsterRecord,
-  NewMonsterRecord,
-  monstersSchema,
-} from "../db/schema/monster";
+import { MonsterRecord, NewMonsterRecord, monstersSchema } from "../db/schema/monster";
 import { StatusRecord, statusesSchema } from "../db/schema/statuses";
 import { UserRecord } from "../db/schema/users";
 import { NewWorldRecord, WorldRecord, worldsSchema } from "../db/schema/worlds";
@@ -54,80 +42,52 @@ export class WorldService {
       .leftJoin(statusesSchema, eq(statusesSchema.worldId, worldsSchema.id))
       .where(eq(worldsSchema.id, worldId));
 
-    const aggregated = rows.reduce<Record<WorldRecord["id"], WorldAggregated>>(
-      (acc, row) => {
-        const world = row.worlds;
+    const aggregated = rows.reduce<Record<WorldRecord["id"], WorldAggregated>>((acc, row) => {
+      const world = row.worlds;
 
-        if (!acc[world.id]) {
-          acc[world.id] = {
-            world,
-            monsters: [],
-            actions: [],
-            campaigns: [],
-            characters: [],
-            classes: [],
-            items: [],
-            statuses: [],
-          };
-        }
+      if (!acc[world.id]) {
+        acc[world.id] = {
+          world,
+          monsters: [],
+          actions: [],
+          campaigns: [],
+          characters: [],
+          classes: [],
+          items: [],
+          statuses: [],
+        };
+      }
 
-        if (row.characters) {
-          acc[world.id]!.characters = [
-            ...acc[world.id]!.characters.filter(
-              (c) => c.id !== row.characters!.id
-            ),
-            row.characters,
-          ];
-        }
+      if (row.characters) {
+        acc[world.id]!.characters = [...acc[world.id]!.characters.filter((c) => c.id !== row.characters!.id), row.characters];
+      }
 
-        if (row.monsters) {
-          acc[world.id]!.monsters = [
-            ...acc[world.id]!.monsters.filter((c) => c.id !== row.monsters!.id),
-            row.monsters,
-          ];
-        }
+      if (row.monsters) {
+        acc[world.id]!.monsters = [...acc[world.id]!.monsters.filter((c) => c.id !== row.monsters!.id), row.monsters];
+      }
 
-        if (row.campaigns) {
-          acc[world.id]!.campaigns = [
-            ...acc[world.id]!.campaigns.filter(
-              (c) => c.id !== row.campaigns!.id
-            ),
-            row.campaigns,
-          ];
-        }
+      if (row.campaigns) {
+        acc[world.id]!.campaigns = [...acc[world.id]!.campaigns.filter((c) => c.id !== row.campaigns!.id), row.campaigns];
+      }
 
-        if (row.statuses) {
-          acc[world.id]!.statuses = [
-            ...acc[world.id]!.statuses.filter((c) => c.id !== row.statuses!.id),
-            row.statuses,
-          ];
-        }
+      if (row.statuses) {
+        acc[world.id]!.statuses = [...acc[world.id]!.statuses.filter((c) => c.id !== row.statuses!.id), row.statuses];
+      }
 
-        if (row.items) {
-          acc[world.id]!.items = [
-            ...acc[world.id]!.items.filter((c) => c.id !== row.items!.id),
-            row.items,
-          ];
-        }
+      if (row.items) {
+        acc[world.id]!.items = [...acc[world.id]!.items.filter((c) => c.id !== row.items!.id), row.items];
+      }
 
-        if (row.actions) {
-          acc[world.id]!.actions = [
-            ...acc[world.id]!.actions.filter((c) => c.id !== row.actions!.id),
-            row.actions,
-          ];
-        }
+      if (row.actions) {
+        acc[world.id]!.actions = [...acc[world.id]!.actions.filter((c) => c.id !== row.actions!.id), row.actions];
+      }
 
-        if (row.classes) {
-          acc[world.id]!.classes = [
-            ...acc[world.id]!.classes.filter((c) => c.id !== row.classes!.id),
-            row.classes,
-          ];
-        }
+      if (row.classes) {
+        acc[world.id]!.classes = [...acc[world.id]!.classes.filter((c) => c.id !== row.classes!.id), row.classes];
+      }
 
-        return acc;
-      },
-      {}
-    );
+      return acc;
+    }, {});
 
     const result = Object.values(aggregated);
 
@@ -138,11 +98,8 @@ export class WorldService {
     throw new Error("Method not implemented.");
   }
 
-  async createWorld(newWorldRecord: NewWorldRecord): Promise<{ id: WorldRecord['id'] }> {
-    const rows = await db
-      .insert(worldsSchema)
-      .values(newWorldRecord)
-      .returning({ id: worldsSchema.id });
+  async createWorld(newWorldRecord: NewWorldRecord): Promise<{ id: WorldRecord["id"] }> {
+    const rows = await db.insert(worldsSchema).values(newWorldRecord).returning({ id: worldsSchema.id });
 
     if (rows[0]) {
       return rows[0];
@@ -151,14 +108,8 @@ export class WorldService {
     throw new Error("No rows inserted");
   }
 
-  async createCharacter(
-    character: NewCharacterRecord,
-    campaignId?: CampaignRecord["id"]
-  ): Promise<{ id: CampaignRecord["id"] }> {
-    const rows = await db
-      .insert(charactersSchema)
-      .values(character)
-      .returning();
+  async createCharacter(character: NewCharacterRecord, campaignId?: CampaignRecord["id"]): Promise<{ id: CampaignRecord["id"] }> {
+    const rows = await db.insert(charactersSchema).values(character).returning();
 
     const created = rows[0];
 
@@ -174,46 +125,28 @@ export class WorldService {
   }
 
   async getTemplateWorlds(): Promise<WorldRecord[]> {
-    const query = db
-      .select()
-      .from(worldsSchema)
-      .where(eq(worldsSchema.isTemplate, true));
+    const query = db.select().from(worldsSchema).where(eq(worldsSchema.isTemplate, true));
 
     return query;
   }
 
-  async setWorldPublicVisibility(
-    worldId: WorldRecord["id"],
-    isPublic: boolean
-  ) {
+  async setWorldPublicVisibility(worldId: WorldRecord["id"], isPublic: boolean) {
     throw new Error("Method not implemented.");
   }
 
   async createWorldCharacter(character: NewCharacterRecord) {
-    return db
-      .insert(charactersSchema)
-      .values(character)
-      .returning({ id: charactersSchema.id });
+    return db.insert(charactersSchema).values(character).returning({ id: charactersSchema.id });
   }
 
   async createMonster(monster: NewMonsterRecord) {
-    return db
-      .insert(monstersSchema)
-      .values(monster)
-      .returning({ id: monstersSchema.id });
+    return db.insert(monstersSchema).values(monster).returning({ id: monstersSchema.id });
   }
 
   async createItem(item: NewItemRecord) {
-    return db
-      .insert(itemsSchema)
-      .values(item)
-      .returning({ id: itemsSchema.id });
+    return db.insert(itemsSchema).values(item).returning({ id: itemsSchema.id });
   }
 
   async createCharacterClass(clazz: NewClazzRecord) {
-    return db
-      .insert(classesSchema)
-      .values(clazz)
-      .returning({ id: classesSchema.id });
+    return db.insert(classesSchema).values(clazz).returning({ id: classesSchema.id });
   }
 }

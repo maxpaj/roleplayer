@@ -1,26 +1,13 @@
 import { Separator } from "@/components/ui/separator";
 import { H3, Muted } from "@/components/ui/typography";
 import { InviteAFriendForm } from "./components/invite-a-friend-form";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { UserService } from "services/user-service";
 import { DEFAULT_USER_ID } from "@/db/index";
 
-export default async function InviteAFriendPage({
-  params: { campaignId: id },
-}: {
-  params: { campaignId: string };
-}) {
+export default async function InviteAFriendPage({ params: { campaignId: id } }: { params: { campaignId: string } }) {
   const campaignId = id;
-  const friendInvites = await new UserService().getFriendInvites(
-    DEFAULT_USER_ID
-  );
+  const friendInvites = await new UserService().getFriendInvites(DEFAULT_USER_ID);
 
   return (
     <>
@@ -42,23 +29,15 @@ export default async function InviteAFriendPage({
           {friendInvites.map(({ friendInvites }) => (
             <TableRow key={friendInvites.id}>
               <TableCell>{friendInvites.email}</TableCell>
-              <TableCell>
-                {friendInvites.createdUtc?.toLocaleString()}
-              </TableCell>
-              <TableCell>
-                {friendInvites.acceptedUtc?.toLocaleString()}
-              </TableCell>
-              <TableCell>
-                {friendInvites.expiredUtc?.toLocaleString()}
-              </TableCell>
+              <TableCell>{friendInvites.createdUtc?.toLocaleString()}</TableCell>
+              <TableCell>{friendInvites.acceptedUtc?.toLocaleString()}</TableCell>
+              <TableCell>{friendInvites.expiredUtc?.toLocaleString()}</TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
 
-      {friendInvites.length === 0 && (
-        <Muted className="my-4">No invites sent yet, try sending one!</Muted>
-      )}
+      {friendInvites.length === 0 && <Muted className="my-4">No invites sent yet, try sending one!</Muted>}
     </>
   );
 }

@@ -7,12 +7,7 @@ import { Rarity } from "../rarity";
 import { World } from "../world";
 import { EffectType, ElementType } from "./effect";
 import { Interaction, TargetType } from "./interaction";
-import {
-  Status,
-  StatusApplicationTrigger,
-  StatusDurationType,
-  StatusType,
-} from "./status";
+import { Status, StatusApplicationTrigger, StatusDurationType, StatusType } from "./status";
 
 describe("interactions", () => {
   const frozenStatus: Status = {
@@ -97,7 +92,7 @@ describe("interactions", () => {
 
     world.actions = [action];
 
-    const campaign = new Campaign({ id: '0000000-0000-0000-0000-000000000000' as const, name: "test", world });
+    const campaign = new Campaign({ id: "0000000-0000-0000-0000-000000000000" as const, name: "test", world });
     campaign.nextRound();
 
     const attackerId = dangerousGenerateId();
@@ -130,13 +125,9 @@ describe("interactions", () => {
     campaign.performCharacterAttack(attacker!, 15, characterAction!, defender!);
 
     const afterAttack = campaign.applyEvents();
-    const defenderFromEvents = afterAttack.characters.find(
-      (c) => c.id === defenderId
-    );
+    const defenderFromEvents = afterAttack.characters.find((c) => c.id === defenderId);
 
     expect(defenderFromEvents!.currentHealth).toBe(8);
-    expect(
-      defenderFromEvents!.statuses.find((s) => s.name === "Chill")
-    ).toBeDefined();
+    expect(defenderFromEvents!.statuses.find((s) => s.name === "Chill")).toBeDefined();
   });
 });

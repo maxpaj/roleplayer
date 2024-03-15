@@ -1,9 +1,4 @@
-import {
-  pgTable,
-  timestamp,
-  uuid,
-  varchar
-} from "drizzle-orm/pg-core";
+import { pgTable, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
 import { worldsSchema } from "./worlds";
 
 export const statusesSchema = pgTable("statuses", {

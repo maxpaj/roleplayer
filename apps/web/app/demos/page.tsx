@@ -1,12 +1,6 @@
 import { H2, H3, Muted } from "@/components/ui/typography";
 import { Card, CardContent } from "@/components/ui/card";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertTriangle } from "lucide-react";
 import { ButtonLink } from "@/components/ui/button-link";
@@ -18,19 +12,14 @@ export default async function DemosPage() {
   return (
     <div>
       <H2>Play a demo</H2>
-      <Muted>
-        Select one of our demos below and play a few rounds to get a feel for
-        what the product offers.
-      </Muted>
+      <Muted>Select one of our demos below and play a few rounds to get a feel for what the product offers.</Muted>
 
-      <div className="flex justify-center my-8">
+      <div className="my-8 flex justify-center">
         {demos.length === 0 && (
           <Alert>
             <AlertTriangle className="h-4 w-4" />
             <AlertTitle>No demos available</AlertTitle>
-            <AlertDescription>
-              No demos have been added yet, come back later.
-            </AlertDescription>
+            <AlertDescription>No demos have been added yet, come back later.</AlertDescription>
           </Alert>
         )}
 
@@ -40,14 +29,12 @@ export default async function DemosPage() {
               {demos.map((demo, index) => (
                 <CarouselItem key={index}>
                   <Card>
-                    <CardContent className="flex flex-col gap-4 justify-between p-4">
+                    <CardContent className="flex flex-col justify-between gap-4 p-4">
                       <div>
                         <H3 className="my-3">{demo.name}</H3>
                         <Muted>{demo.description}</Muted>
                       </div>
-                      <ButtonLink href={`/campaigns/${demo.id}`}>
-                        Play
-                      </ButtonLink>
+                      <ButtonLink href={`/campaigns/${demo.id}`}>Play</ButtonLink>
                     </CardContent>
                   </Card>
                 </CarouselItem>

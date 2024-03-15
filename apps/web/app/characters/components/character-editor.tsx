@@ -18,15 +18,9 @@ type CharacterEditorProps = {
   world: RemoveFunctions<World>;
 };
 
-export function CharacterEditor({
-  onSave,
-  world,
-  characterFromEvents,
-}: CharacterEditorProps) {
+export function CharacterEditor({ onSave, world, characterFromEvents }: CharacterEditorProps) {
   const [update, setUpdate] = useState(characterFromEvents);
-  const characterLevel = world.ruleset.levelProgression.findIndex(
-    (l) => l > update.xp
-  );
+  const characterLevel = world.ruleset.levelProgression.findIndex((l) => l > update.xp);
 
   return (
     <>
@@ -35,7 +29,7 @@ export function CharacterEditor({
           <Input
             type="name"
             id="name"
-            className="scroll-m-20 focus-visible:ring-offset-0 focus-visible:ring-0 text-2xl font-semibold tracking-tight border-none px-0"
+            className="scroll-m-20 border-none px-0 text-2xl font-semibold tracking-tight focus-visible:ring-0 focus-visible:ring-offset-0"
             name="name"
             placeholder="Name"
             value={update.name}
@@ -45,11 +39,7 @@ export function CharacterEditor({
               });
             }}
           />
-          <Button
-            variant="outline"
-            className="text-xs px-3 py-4 h-4"
-            onClick={() => onSave(update)}
-          >
+          <Button variant="outline" className="h-4 px-3 py-4 text-xs" onClick={() => onSave(update)}>
             Save
           </Button>
         </div>
@@ -61,16 +51,12 @@ export function CharacterEditor({
       </Paragraph>
 
       <H4 className="my-2">Classes</H4>
-      {update.classes.length === 0 && (
-        <Muted>Choose your character class</Muted>
-      )}
+      {update.classes.length === 0 && <Muted>Choose your character class</Muted>}
 
       <ClassSelector
         placeholder={
           <>
-            Select classes (
-            {update.classes.reduce((sum, curr) => sum + curr.level, 0)}/
-            {characterLevel})
+            Select classes ({update.classes.reduce((sum, curr) => sum + curr.level, 0)}/{characterLevel})
           </>
         }
         characterLevel={characterLevel}
@@ -83,19 +69,13 @@ export function CharacterEditor({
       {update.classes.map((characterClass) => {
         return (
           <div key={characterClass.classId}>
-            <CharacterClassEditor
-              classId={characterClass.classId}
-              world={world}
-              character={update}
-            />
+            <CharacterClassEditor classId={characterClass.classId} world={world} character={update} />
             <Separator className="my-3" />
           </div>
         );
       })}
       <H4 className="my-2">Stats</H4>
-      <Muted>
-        Stats determine the strengths and weaknesses of your character
-      </Muted>
+      <Muted>Stats determine the strengths and weaknesses of your character</Muted>
       <CharacterStatsEditor
         character={update}
         world={world}
@@ -104,9 +84,7 @@ export function CharacterEditor({
         }}
       />
       <H4 className="my-2">Equipment/inventory</H4>
-      <Muted>
-        Stuff your character with swords, axes, armors, potions, and more
-      </Muted>
+      <Muted>Stuff your character with swords, axes, armors, potions, and more</Muted>
       <CharacterInventoryEditor
         character={update}
         world={world}

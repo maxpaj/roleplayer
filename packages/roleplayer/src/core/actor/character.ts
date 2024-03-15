@@ -1,9 +1,5 @@
 import { Id } from "../../lib/generate-id";
-import {
-  CampaignEvent,
-  CampaignEventType,
-  CampaignEventWithRound,
-} from "../campaign/campaign-events";
+import { CampaignEvent, CampaignEventType, CampaignEventWithRound } from "../campaign/campaign-events";
 import { D20, roll } from "../dice/dice";
 import { Effect, ElementType } from "../world/interaction/effect";
 import { Interaction } from "../world/interaction/interaction";
@@ -106,9 +102,7 @@ export type CharacterStat = {
   amount: number;
 };
 
-export function isCharacterEvent(
-  event: CampaignEvent
-): event is Extract<CampaignEvent, { characterId: Character["id"] }> {
+export function isCharacterEvent(event: CampaignEvent): event is Extract<CampaignEvent, { characterId: Character["id"] }> {
   return (event as any).characterId !== undefined;
 }
 
@@ -219,11 +213,7 @@ export class Character implements Actor {
   }
 
   getEffectDamageTaken(effect: Effect, damageAmount: number) {
-    return Math.max(
-      damageAmount * this.getResistanceMultiplier(effect.element) -
-        this.getResistanceAbsolute(effect.element),
-      0
-    );
+    return Math.max(damageAmount * this.getResistanceMultiplier(effect.element) - this.getResistanceAbsolute(effect.element), 0);
   }
 
   getCharacterHitModifierWithInteraction(interaction: Interaction) {

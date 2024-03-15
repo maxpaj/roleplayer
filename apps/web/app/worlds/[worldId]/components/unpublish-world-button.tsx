@@ -1,15 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import {
-  DialogHeader,
-  DialogFooter,
-  DialogTrigger,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog";
+import { DialogHeader, DialogFooter, DialogTrigger, Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { unpublishWorld } from "../actions";
@@ -17,13 +9,7 @@ import { useRouter } from "next/navigation";
 import { Paragraph } from "@/components/ui/typography";
 import { WorldRecord } from "@/db/schema/worlds";
 
-export function UnpublishWorldButton({
-  worldId,
-  worldName,
-}: {
-  worldId: WorldRecord["id"];
-  worldName: WorldRecord["name"];
-}) {
+export function UnpublishWorldButton({ worldId, worldName }: { worldId: WorldRecord["id"]; worldName: WorldRecord["name"] }) {
   const [confirm, setConfirm] = useState<WorldRecord["name"]>("");
   const router = useRouter();
 
@@ -36,17 +22,12 @@ export function UnpublishWorldButton({
         <DialogHeader>
           <DialogTitle>Unpublish world</DialogTitle>
           <DialogDescription>
-            Are you sure you want to unpublish {worldName}? This will revoke any
-            access to campaigns currently running within this world.
+            Are you sure you want to unpublish {worldName}? This will revoke any access to campaigns currently running within this world.
           </DialogDescription>
         </DialogHeader>
 
         <Paragraph>Type the name of the world below</Paragraph>
-        <Input
-          placeholder={worldName}
-          value={confirm}
-          onChange={(e) => setConfirm(e.target.value)}
-        />
+        <Input placeholder={worldName} value={confirm} onChange={(e) => setConfirm(e.target.value)} />
         <DialogFooter>
           <Button
             disabled={confirm !== worldName}

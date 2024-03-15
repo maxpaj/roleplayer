@@ -1,9 +1,4 @@
-import {
-  pgTable,
-  timestamp,
-  uuid,
-  varchar
-} from "drizzle-orm/pg-core";
+import { pgTable, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
 import { actionsSchema } from "./actions";
 import { campaignsSchema } from "./campaigns";
 import { itemsSchema } from "./items";

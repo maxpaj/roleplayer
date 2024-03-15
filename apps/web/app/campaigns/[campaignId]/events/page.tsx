@@ -1,21 +1,10 @@
 import { EventCard } from "@/components/event-card";
 import { Separator } from "@/components/ui/separator";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { H3 } from "@/components/ui/typography";
 import { getCampaign } from "app/campaigns/actions";
 
-export default async function CampaignEventsPage({
-  params,
-}: {
-  params: { campaignId: string };
-}) {
+export default async function CampaignEventsPage({ params }: { params: { campaignId: string } }) {
   const { campaignId: id } = params;
   const campaignId = id;
   const campaignData = await getCampaign(campaignId);

@@ -1,18 +1,9 @@
-import {
-  Campaign,
-  CampaignEventWithRound,
-  DefaultRuleSet,
-  World,
-} from "roleplayer";
+import { Campaign, CampaignEventWithRound, DefaultRuleSet, World } from "roleplayer";
 import { BattleSimulator } from "./components/battle-simulator";
 import { classToPlain } from "@/lib/class-to-plain";
 import { getCampaign } from "app/campaigns/actions";
 
-export default async function BattlePage({
-  params,
-}: {
-  params: { campaignId: string; battleId: string };
-}) {
+export default async function BattlePage({ params }: { params: { campaignId: string; battleId: string } }) {
   const { battleId: bid, campaignId: cid } = params;
   const battleId = bid;
   const campaignId = cid;
@@ -37,10 +28,7 @@ export default async function BattlePage({
 
   return (
     <>
-      <BattleSimulator
-        campaign={classToPlain(campaignRpLib)}
-        battleId={battleId}
-      />
+      <BattleSimulator campaign={classToPlain(campaignRpLib)} battleId={battleId} />
     </>
   );
 }

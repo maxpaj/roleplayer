@@ -12,20 +12,14 @@ type CharacterStatsEditorProps = {
   onChange: (stats: CharacterStat[]) => void;
 };
 
-export function CharacterStatsEditor({
-  world,
-  character,
-  onChange,
-}: CharacterStatsEditorProps) {
+export function CharacterStatsEditor({ world, character, onChange }: CharacterStatsEditorProps) {
   const [stats, setStats] = useState<CharacterStat[]>(character.stats);
 
   return (
     <>
       {stats
         .map((s) => ({
-          statType: world.ruleset.characterStatTypes.find(
-            (st) => st.id === s.statId
-          ),
+          statType: world.ruleset.characterStatTypes.find((st) => st.id === s.statId),
           characterStat: s,
         }))
         .sort((a, b) => (a.statType!.name > b.statType!.name ? 1 : -1))

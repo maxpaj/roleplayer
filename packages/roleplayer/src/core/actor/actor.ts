@@ -18,10 +18,7 @@ export interface Actor {
   getType(): ActorType;
   getActions(): Interaction[];
   getAvailableActions(): Interaction[];
-  performAction(
-    targetIds: Actor["id"][],
-    actionId: Interaction["id"]
-  ): CampaignEventWithRound[];
+  performAction(targetIds: Actor["id"][], actionId: Interaction["id"]): CampaignEventWithRound[];
   rollInitiative(): number;
   getEligibleTargets(action: Interaction): Actor[];
   getAbilityModifier(): number;

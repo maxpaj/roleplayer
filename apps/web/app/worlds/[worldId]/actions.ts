@@ -22,9 +22,7 @@ type WorldData = {
   classes: ClazzRecord[];
 };
 
-export async function getWorldData(
-  id: World["id"]
-): Promise<WorldData | undefined> {
+export async function getWorldData(id: World["id"]): Promise<WorldData | undefined> {
   return await new WorldService().getWorld(DEFAULT_USER_ID, id);
 }
 

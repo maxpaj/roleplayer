@@ -4,11 +4,7 @@ import { getWorldData } from "../actions";
 import { CreateClassForm } from "./components/create-class-form";
 import { ClassCard } from "@/components/class-card";
 
-export default async function ClassesPage({
-  params,
-}: {
-  params: { worldId: string };
-}) {
+export default async function ClassesPage({ params }: { params: { worldId: string } }) {
   const { worldId: id } = params;
   const worldId = id;
   const worldData = await getWorldData(worldId);
@@ -22,13 +18,11 @@ export default async function ClassesPage({
       <H3>Classes</H3>
       <Separator className="my-3" />
 
-      {worldData.classes.length === 0 && (
-        <Muted className="my-2">No classes added yet</Muted>
-      )}
+      {worldData.classes.length === 0 && <Muted className="my-2">No classes added yet</Muted>}
 
       <CreateClassForm worldId={worldId} />
 
-      <div className="flex flex-wrap gap-2 my-2">
+      <div className="my-2 flex flex-wrap gap-2">
         {worldData.classes.map((clazz) => (
           <ClassCard key={clazz.id} worldId={worldId} clazz={clazz} />
         ))}

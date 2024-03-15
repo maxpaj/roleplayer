@@ -5,11 +5,8 @@ import { ModeToggle } from "./mode-toggle";
 
 export function Header() {
   return (
-    <header
-      className="flex items-center justify-between p-4 text-sm"
-      style={{ background: "hsla(var(--background) / 50%)" }}
-    >
-      <div className="flex items-center invert w-20 h-8 mr-2">
+    <header className="flex items-center justify-between p-4 text-sm" style={{ background: "hsla(var(--background) / 50%)" }}>
+      <div className="mr-2 flex h-8 w-20 items-center invert">
         <Image src={logo} alt="Icon" priority className="light:invert" />
       </div>
 

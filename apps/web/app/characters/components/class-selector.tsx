@@ -1,12 +1,7 @@
 "use client";
 
 import { ReactNode, useState } from "react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { Character, Clazz } from "roleplayer";
 import { ClazzRecord } from "@/db/schema/classes";
@@ -20,16 +15,8 @@ type ClassDropdownProps = {
   onChange: (classes: { classId: ClazzRecord["id"]; level: number }[]) => void;
 };
 
-export function ClassSelector({
-  placeholder = "Select classes",
-  availableClasses,
-  onChange,
-  character,
-  characterLevel,
-}: ClassDropdownProps) {
-  const [selectedItems, setSelectedItems] = useState<
-    { classId: ClazzRecord["id"]; level: number }[]
-  >(character.classes);
+export function ClassSelector({ placeholder = "Select classes", availableClasses, onChange, character, characterLevel }: ClassDropdownProps) {
+  const [selectedItems, setSelectedItems] = useState<{ classId: ClazzRecord["id"]; level: number }[]>(character.classes);
 
   const onAdd = (classId: ClazzRecord["id"]) => {
     const item = selectedItems.find((s) => s.classId === classId);
@@ -47,10 +34,7 @@ export function ClassSelector({
       return;
     }
 
-    const classes = [
-      ...selectedItems.filter((s) => s.classId !== classId),
-      { classId: classId, level: item?.level + 1 },
-    ];
+    const classes = [...selectedItems.filter((s) => s.classId !== classId), { classId: classId, level: item?.level + 1 }];
 
     setSelectedItems(classes);
     onChange(classes);
@@ -68,10 +52,7 @@ export function ClassSelector({
       return;
     }
 
-    const classes = [
-      ...selectedItems.filter((s) => s.classId !== classId),
-      { classId: classId, level: item?.level - 1 },
-    ];
+    const classes = [...selectedItems.filter((s) => s.classId !== classId), { classId: classId, level: item?.level - 1 }];
 
     setSelectedItems(classes);
     onChange(classes);
@@ -87,46 +68,24 @@ export function ClassSelector({
         </Button>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent
-        className="w-56"
-        onCloseAutoFocus={(e) => e.preventDefault()}
-      >
-        {availableClasses.map(
-          (
-            classOption: ClassDropdownProps["availableClasses"][0],
-            index: number
-          ) => {
-            const current = selectedItems.find(
-              (i) => i.classId === classOption.id
-            );
+      <DropdownMenuContent className="w-56" onCloseAutoFocus={(e) => e.preventDefault()}>
+        {availableClasses.map((classOption: ClassDropdownProps["availableClasses"][0], index: number) => {
+          const current = selectedItems.find((i) => i.classId === classOption.id);
 
-            return (
-              <DropdownMenuItem
-                onSelect={(e) => e.preventDefault()}
-                key={index}
-                className="flex justify-between"
-              >
-                {classOption.name} {current ? <>({current.level})</> : <></>}
-                <div>
-                  <Button
-                    disabled={levelsSelected === characterLevel}
-                    variant="outline"
-                    onClick={() => onAdd(classOption.id)}
-                  >
-                    +
-                  </Button>
-                  <Button
-                    disabled={!current}
-                    variant="outline"
-                    onClick={() => onRemove(classOption.id)}
-                  >
-                    -
-                  </Button>
-                </div>
-              </DropdownMenuItem>
-            );
-          }
-        )}
+          return (
+            <DropdownMenuItem onSelect={(e) => e.preventDefault()} key={index} className="flex justify-between">
+              {classOption.name} {current ? <>({current.level})</> : <></>}
+              <div>
+                <Button disabled={levelsSelected === characterLevel} variant="outline" onClick={() => onAdd(classOption.id)}>
+                  +
+                </Button>
+                <Button disabled={!current} variant="outline" onClick={() => onRemove(classOption.id)}>
+                  -
+                </Button>
+              </div>
+            </DropdownMenuItem>
+          );
+        })}
       </DropdownMenuContent>
     </DropdownMenu>
   );

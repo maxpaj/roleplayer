@@ -1,11 +1,5 @@
 import { Id } from "../../lib/generate-id";
-import {
-  Character,
-  CharacterResourceType,
-  CharacterStatType,
-  Clazz,
-  Position,
-} from "../actor/character";
+import { Character, CharacterResourceType, CharacterStatType, Clazz, Position } from "../actor/character";
 import { Monster } from "../actor/monster";
 import { Battle } from "../battle/battle";
 import { Interaction } from "../world/interaction/interaction";

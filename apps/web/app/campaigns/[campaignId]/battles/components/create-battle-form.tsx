@@ -31,12 +31,7 @@ export function CreateBattleForm({ campaignId }: CreateBattleFormProps) {
   return (
     <>
       <form action={createNewBattle}>
-        <Input
-          type="name"
-          id="name"
-          name="name"
-          placeholder="New Battle name"
-        />
+        <Input type="name" id="name" name="name" placeholder="New Battle name" />
 
         <Button type="submit">Create new Battle</Button>
       </form>

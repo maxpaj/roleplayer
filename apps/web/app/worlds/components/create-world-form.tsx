@@ -36,10 +36,7 @@ export async function CreateWorldForm() {
   const templates = await getTemplateWorlds();
 
   return (
-    <form
-      className="flex items-start flex-wrap sm:flex-nowrap gap-2 justify-between"
-      action={createWorld}
-    >
+    <form className="flex flex-wrap items-start justify-between gap-2 sm:flex-nowrap" action={createWorld}>
       <Input type="name" id="name" name="name" placeholder="New world name" />
       <Combobox
         options={templates.map((t) => ({

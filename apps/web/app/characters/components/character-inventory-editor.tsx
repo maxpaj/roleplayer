@@ -8,11 +8,7 @@ type CharacterInventoryEditorProps = {
   world: RemoveFunctions<World>;
   onChange: (inventory: Item[], equipment: CharacterEquipmentSlot[]) => void;
 };
-export function CharacterInventoryEditor({
-  character,
-  world,
-  onChange,
-}: CharacterInventoryEditorProps) {
+export function CharacterInventoryEditor({ character, world, onChange }: CharacterInventoryEditorProps) {
   return (
     <>
       {character.inventory.map((item) => {

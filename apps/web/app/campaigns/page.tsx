@@ -9,10 +9,7 @@ export default async function CampaignPage() {
   return (
     <div>
       <H2>Campaigns</H2>
-      <Muted className="mb-4">
-        Create a new campaign from a selection of worlds, or continue the
-        adventure from where you left off!
-      </Muted>
+      <Muted className="mb-4">Create a new campaign from a selection of worlds, or continue the adventure from where you left off!</Muted>
 
       <div className="flex gap-2">
         {campaigns.map((c) => (

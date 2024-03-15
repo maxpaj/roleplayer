@@ -39,12 +39,8 @@
           "name": "action_worldId_world_id_fk",
           "tableFrom": "action",
           "tableTo": "world",
-          "columnsFrom": [
-            "worldId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["worldId"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -111,12 +107,8 @@
           "name": "campaign_worldId_world_id_fk",
           "tableFrom": "campaign",
           "tableTo": "world",
-          "columnsFrom": [
-            "worldId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["worldId"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -124,12 +116,8 @@
           "name": "campaign_userId_user_id_fk",
           "tableFrom": "campaign",
           "tableTo": "user",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["userId"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -190,12 +178,8 @@
           "name": "character_userId_user_id_fk",
           "tableFrom": "character",
           "tableTo": "user",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["userId"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -203,12 +187,8 @@
           "name": "character_worldId_world_id_fk",
           "tableFrom": "character",
           "tableTo": "world",
-          "columnsFrom": [
-            "worldId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["worldId"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -251,12 +231,8 @@
           "name": "classes_worldId_world_id_fk",
           "tableFrom": "classes",
           "tableTo": "world",
-          "columnsFrom": [
-            "worldId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["worldId"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -305,12 +281,8 @@
           "name": "event_campaignId_campaign_id_fk",
           "tableFrom": "event",
           "tableTo": "campaign",
-          "columnsFrom": [
-            "campaignId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["campaignId"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -353,12 +325,8 @@
           "name": "item_worldId_world_id_fk",
           "tableFrom": "item",
           "tableTo": "world",
-          "columnsFrom": [
-            "worldId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["worldId"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -401,12 +369,8 @@
           "name": "monster_worldId_world_id_fk",
           "tableFrom": "monster",
           "tableTo": "world",
-          "columnsFrom": [
-            "worldId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["worldId"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -437,12 +401,8 @@
           "name": "monsterToActions_userId_monster_id_fk",
           "tableFrom": "monsterToActions",
           "tableTo": "monster",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["userId"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -450,12 +410,8 @@
           "name": "monsterToActions_actionId_action_id_fk",
           "tableFrom": "monsterToActions",
           "tableTo": "action",
-          "columnsFrom": [
-            "actionId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["actionId"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -498,12 +454,8 @@
           "name": "status_worldId_world_id_fk",
           "tableFrom": "status",
           "tableTo": "world",
-          "columnsFrom": [
-            "worldId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["worldId"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -537,9 +489,7 @@
       "indexes": {
         "user_name_idx": {
           "name": "user_name_idx",
-          "columns": [
-            "name"
-          ],
+          "columns": ["name"],
           "isUnique": true
         }
       },
@@ -588,12 +538,8 @@
           "name": "world_userId_user_id_fk",
           "tableFrom": "world",
           "tableTo": "user",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["userId"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }

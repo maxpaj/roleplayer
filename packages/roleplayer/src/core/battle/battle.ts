@@ -42,22 +42,13 @@ export class Battle {
   }
 
   currentActorTurn(events: CampaignEvent[]) {
-    const charactersNotActedCurrentRound = this.entities.filter(
-      (battleChar) => {
-        const hasActed = events.some(
-          (e) =>
-            isCharacterEvent(e) &&
-            e.id === battleChar.actor.id &&
-            e.type === "CharacterEndRound"
-        );
+    const charactersNotActedCurrentRound = this.entities.filter((battleChar) => {
+      const hasActed = events.some((e) => isCharacterEvent(e) && e.id === battleChar.actor.id && e.type === "CharacterEndRound");
 
-        return !hasActed;
-      }
-    );
+      return !hasActed;
+    });
 
-    const sorted = charactersNotActedCurrentRound.sort(
-      (a, b) => b.initiative - a.initiative
-    );
+    const sorted = charactersNotActedCurrentRound.sort((a, b) => b.initiative - a.initiative);
 
     return sorted[0] as BattleActor;
   }

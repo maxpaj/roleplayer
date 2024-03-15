@@ -5,11 +5,7 @@ import { ButtonLink } from "@/components/ui/button-link";
 import { getWorldData } from "../actions";
 import { CreateMonsterForm } from "./components/create-monster-form";
 
-export default async function MonstersPage({
-  params,
-}: {
-  params: { worldId: string };
-}) {
+export default async function MonstersPage({ params }: { params: { worldId: string } }) {
   const { worldId: id } = params;
   const worldId = id;
   const worldData = await getWorldData(worldId);
@@ -22,18 +18,14 @@ export default async function MonstersPage({
   return (
     <>
       <H3>Monsters</H3>
-      <Muted>
-        A monster is a simpler kind of characters that only appear in battle
-      </Muted>
+      <Muted>A monster is a simpler kind of characters that only appear in battle</Muted>
       <Separator className="my-3" />
 
       <CreateMonsterForm worldId={worldId} />
 
-      {monsters.length === 0 && (
-        <Muted className="my-4">It's empty! No monsters added yet.</Muted>
-      )}
+      {monsters.length === 0 && <Muted className="my-4">It's empty! No monsters added yet.</Muted>}
 
-      <div className="flex gap-2 flex-wrap">
+      <div className="flex flex-wrap gap-2">
         {monsters.map((m) => (
           <MonsterCard key={m.id} worldId={id} monster={m} />
         ))}

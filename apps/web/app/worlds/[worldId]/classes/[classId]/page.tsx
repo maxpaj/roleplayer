@@ -2,11 +2,7 @@ import { H3 } from "@/components/ui/typography";
 import { getWorldData } from "../../actions";
 import { Separator } from "@/components/ui/separator";
 
-export default async function ClassPage({
-  params,
-}: {
-  params: { worldId: string; classId: string };
-}) {
+export default async function ClassPage({ params }: { params: { worldId: string; classId: string } }) {
   const { worldId: id, classId } = params;
   const worldId = id;
   const worldData = await getWorldData(worldId);

@@ -1,21 +1,9 @@
-import {
-  pgEnum,
-  pgTable,
-  timestamp,
-  uuid,
-  varchar
-} from "drizzle-orm/pg-core";
+import { pgEnum, pgTable, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
 import { actionsSchema } from "./actions";
 import { worldsSchema } from "./worlds";
 
 export const itemTypeEnum = pgEnum("itemType", ["Consumable", "Equipment"]);
-export const rarityEnum = pgEnum("rarity", [
-  "Common",
-  "Uncommon",
-  "Rare",
-  "Epic",
-  "Legendary",
-]);
+export const rarityEnum = pgEnum("rarity", ["Common", "Uncommon", "Rare", "Epic", "Legendary"]);
 
 export const itemsSchema = pgTable("items", {
   id: uuid("id").defaultRandom().primaryKey(),

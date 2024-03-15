@@ -2,14 +2,11 @@ import * as React from "react";
 import Image from "next/image";
 import { cn } from "@/lib/tailwind-utils";
 
-const Card = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
+const Card = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(({ className, ...props }, ref) => (
   <div
     ref={ref}
     className={cn(
-      "relative rounded-lg border bg-card text-card-foreground shadow-sm transition-all hover:bg-foreground/10 hover:border-foreground/50",
+      "bg-card text-card-foreground hover:bg-foreground/10 hover:border-foreground/50 relative rounded-lg border shadow-sm transition-all",
       className
     )}
     {...props}
@@ -18,16 +15,10 @@ const Card = React.forwardRef<
 
 Card.displayName = "Card";
 
-const CardBackground = React.forwardRef<
-  HTMLDivElement,
-  { src: string; alt: string } & React.HTMLAttributes<HTMLDivElement>
->(({ className, alt, src }, ref) => (
+const CardBackground = React.forwardRef<HTMLDivElement, { src: string; alt: string } & React.HTMLAttributes<HTMLDivElement>>(({ className, alt, src }, ref) => (
   <div
     ref={ref}
-    className={cn(
-      "absolute opacity-35 hover:opacity-100 w-full h-full -z-0 top-0 blur-sm hover:blur-none transition-all",
-      className
-    )}
+    className={cn("absolute top-0 -z-0 h-full w-full opacity-35 blur-sm transition-all hover:opacity-100 hover:blur-none", className)}
     style={{
       background: "linear-gradient(45deg, black, #fff)",
     }}
@@ -38,16 +29,10 @@ const CardBackground = React.forwardRef<
 
 CardBackground.displayName = "CardBackground";
 
-const CardBackgroundGradient = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className }, ref) => (
+const CardBackgroundGradient = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(({ className }, ref) => (
   <div
     ref={ref}
-    className={cn(
-      "absolute opacity-35 hover:opacity-100 w-full h-full -z-0",
-      className
-    )}
+    className={cn("absolute -z-0 h-full w-full opacity-35 hover:opacity-100", className)}
     style={{
       background: "linear-gradient(45deg, black 25%, hsl(var(--primary)) 200%)",
     }}
@@ -56,77 +41,34 @@ const CardBackgroundGradient = React.forwardRef<
 
 CardBackgroundGradient.displayName = "CardBackgroundGradient";
 
-const CardHeader = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn("relative z-1 flex flex-col space-y-1.5 p-6", className)}
-    {...props}
-  />
+const CardHeader = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(({ className, ...props }, ref) => (
+  <div ref={ref} className={cn("z-1 relative flex flex-col space-y-1.5 p-6", className)} {...props} />
 ));
 
 CardHeader.displayName = "CardHeader";
 
-const CardTitle = React.forwardRef<
-  HTMLParagraphElement,
-  React.HTMLAttributes<HTMLHeadingElement>
->(({ className, ...props }, ref) => (
-  <h3
-    ref={ref}
-    className={cn(
-      "text-2xl font-semibold leading-none tracking-tight",
-      className
-    )}
-    {...props}
-  />
+const CardTitle = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLHeadingElement>>(({ className, ...props }, ref) => (
+  <h3 ref={ref} className={cn("text-2xl font-semibold leading-none tracking-tight", className)} {...props} />
 ));
 
 CardTitle.displayName = "CardTitle";
 
-const CardDescription = React.forwardRef<
-  HTMLParagraphElement,
-  React.HTMLAttributes<HTMLParagraphElement>
->(({ className, ...props }, ref) => (
-  <p
-    ref={ref}
-    className={cn("text-sm text-muted-foreground", className)}
-    {...props}
-  />
+const CardDescription = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLParagraphElement>>(({ className, ...props }, ref) => (
+  <p ref={ref} className={cn("text-muted-foreground text-sm", className)} {...props} />
 ));
 
 CardDescription.displayName = "CardDescription";
 
-const CardContent = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
+const CardContent = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(({ className, ...props }, ref) => (
   <div ref={ref} className={cn("p-6 pt-0", className)} {...props} />
 ));
 
 CardContent.displayName = "CardContent";
 
-const CardFooter = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn("flex items-center p-6 pt-0", className)}
-    {...props}
-  />
+const CardFooter = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(({ className, ...props }, ref) => (
+  <div ref={ref} className={cn("flex items-center p-6 pt-0", className)} {...props} />
 ));
 
 CardFooter.displayName = "CardFooter";
 
-export {
-  Card,
-  CardHeader,
-  CardFooter,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardBackground,
-  CardBackgroundGradient,
-};
+export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent, CardBackground, CardBackgroundGradient };

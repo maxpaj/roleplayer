@@ -3,9 +3,7 @@ type RecursivelyReplaceNullWithUndefined<T> = T extends null
   : T extends Date
     ? T
     : {
-        [K in keyof T]: T[K] extends (infer U)[]
-          ? RecursivelyReplaceNullWithUndefined<U>[]
-          : RecursivelyReplaceNullWithUndefined<T[K]>;
+        [K in keyof T]: T[K] extends (infer U)[] ? RecursivelyReplaceNullWithUndefined<U>[] : RecursivelyReplaceNullWithUndefined<T[K]>;
       };
 
 /**
@@ -13,9 +11,7 @@ type RecursivelyReplaceNullWithUndefined<T> = T extends null
  * @param obj
  * @returns
  */
-export function nullsToUndefined<T>(
-  obj: T
-): RecursivelyReplaceNullWithUndefined<T> {
+export function nullsToUndefined<T>(obj: T): RecursivelyReplaceNullWithUndefined<T> {
   if (!obj) {
     return undefined as any;
   }

@@ -43,7 +43,7 @@ export function WorldEditorForm({ world }: WorldEditorFormProps) {
         value={update.description || ""}
         placeholder="Describe the world, the story, background, conflicts, factions, etc."
       />
-      <div className="flex gap-2 items-center">
+      <div className="flex items-center gap-2">
         <Info size={16} />
         <Muted>
           You can use{" "}

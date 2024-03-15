@@ -3,11 +3,7 @@ import { DEFAULT_USER_ID } from "@/db/index";
 import { H3, Paragraph } from "@/components/ui/typography";
 import { Separator } from "@/components/ui/separator";
 
-export default async function CharacterPage({
-  params: { worldId: id, characterId: cid },
-}: {
-  params: { worldId: string; characterId: string };
-}) {
+export default async function CharacterPage({ params: { worldId: id, characterId: cid } }: { params: { worldId: string; characterId: string } }) {
   const worldId = id;
   const characterId = cid;
 

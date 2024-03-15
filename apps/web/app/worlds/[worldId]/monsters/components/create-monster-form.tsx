@@ -9,11 +9,7 @@ const validateName = z.object({
   name: z.string().min(1),
 });
 
-export async function CreateMonsterForm({
-  worldId,
-}: {
-  worldId: WorldRecord["id"];
-}) {
+export async function CreateMonsterForm({ worldId }: { worldId: WorldRecord["id"] }) {
   async function createMonster(formData: FormData) {
     "use server";
 

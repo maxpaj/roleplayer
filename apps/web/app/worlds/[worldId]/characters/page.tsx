@@ -3,11 +3,7 @@ import { CreateCharacterForm } from "../../../characters/components/create-chara
 import { H3 } from "@/components/ui/typography";
 import { Separator } from "@/components/ui/separator";
 
-export default async function CharactersPage({
-  params,
-}: {
-  params: { worldId: string };
-}) {
+export default async function CharactersPage({ params }: { params: { worldId: string } }) {
   const { worldId: id } = params;
   const worldId = id;
   const worldData = await getWorldData(id);

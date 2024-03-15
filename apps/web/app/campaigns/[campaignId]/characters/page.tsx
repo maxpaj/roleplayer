@@ -5,11 +5,7 @@ import { getCampaign } from "app/campaigns/actions";
 import { CreateCharacterForm } from "app/characters/components/create-character-form";
 import { CampaignCharacterCard } from "./components/campaign-character-card";
 
-export default async function CampaignCharactersPage({
-  params,
-}: {
-  params: { campaignId: string };
-}) {
+export default async function CampaignCharactersPage({ params }: { params: { campaignId: string } }) {
   const { campaignId: id } = params;
   const campaignId = id;
   const campaignData = await getCampaign(campaignId);
@@ -22,16 +18,10 @@ export default async function CampaignCharactersPage({
       <H3>Characters</H3>
       <Separator className="my-3" />
 
-      <div className="flex gap-2 my-2">
-        <CreateCharacterForm
-          worldId={campaignData.world.world.id}
-          campaignId={campaignData.campaign.id}
-        />
+      <div className="my-2 flex gap-2">
+        <CreateCharacterForm worldId={campaignData.world.world.id} campaignId={campaignData.campaign.id} />
 
-        <ButtonLink
-          href={`/campaigns/${campaignData.campaign.id}/invite-a-friend`}
-          variant="outline"
-        >
+        <ButtonLink href={`/campaigns/${campaignData.campaign.id}/invite-a-friend`} variant="outline">
           Invite a friend
         </ButtonLink>
       </div>
@@ -39,17 +29,11 @@ export default async function CampaignCharactersPage({
       <H4 className="mt-4">Added characters</H4>
       <div className="flex gap-2">
         {campaignData.characters.map((c) => (
-          <CampaignCharacterCard
-            key={c.id}
-            character={c}
-            campaignId={campaignId}
-          />
+          <CampaignCharacterCard key={c.id} character={c} campaignId={campaignId} />
         ))}
       </div>
 
-      {campaignData.characters.length === 0 && (
-        <Muted>No characters added yet.</Muted>
-      )}
+      {campaignData.characters.length === 0 && <Muted>No characters added yet.</Muted>}
     </>
   );
 }

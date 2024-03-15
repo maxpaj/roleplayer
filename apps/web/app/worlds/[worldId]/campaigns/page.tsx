@@ -3,11 +3,7 @@ import { H3, Muted } from "@/components/ui/typography";
 import { getWorldCampaigns } from "../actions";
 import { CampaignCard } from "@/components/campaign-card";
 
-export default async function CampaignsPage({
-  params,
-}: {
-  params: { worldId: string };
-}) {
+export default async function CampaignsPage({ params }: { params: { worldId: string } }) {
   const { worldId: id } = params;
   const campaigns = await getWorldCampaigns(id);
 

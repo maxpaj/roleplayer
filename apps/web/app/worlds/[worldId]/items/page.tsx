@@ -5,11 +5,7 @@ import { ItemCard } from "@/components/item-card";
 import { ItemType, Rarity } from "roleplayer";
 import { CreateItemForm } from "./components/create-item-form";
 
-export default async function ItemsPage({
-  params,
-}: {
-  params: { worldId: string };
-}) {
+export default async function ItemsPage({ params }: { params: { worldId: string } }) {
   const { worldId: id } = params;
   const worldId = id;
   const worldData = await getWorldData(worldId);
@@ -27,16 +23,9 @@ export default async function ItemsPage({
     rarity: Rarity[item.rarity],
   }));
 
-  const equipment = itemsMapped.filter(
-    (item) => item.type === ItemType.Equipment
-  );
-  const consumables = itemsMapped.filter(
-    (item) => item.type === ItemType.Consumable
-  );
-  const other = itemsMapped.filter(
-    (item) =>
-      ![ItemType.Consumable, ItemType.Equipment].includes(ItemType[item.type])
-  );
+  const equipment = itemsMapped.filter((item) => item.type === ItemType.Equipment);
+  const consumables = itemsMapped.filter((item) => item.type === ItemType.Consumable);
+  const other = itemsMapped.filter((item) => ![ItemType.Consumable, ItemType.Equipment].includes(ItemType[item.type]));
 
   return (
     <>
@@ -45,38 +34,30 @@ export default async function ItemsPage({
 
       <CreateItemForm worldId={worldId} />
 
-      {items.length === 0 && (
-        <Muted className="my-4">It's empty! No items added yet.</Muted>
-      )}
+      {items.length === 0 && <Muted className="my-4">It's empty! No items added yet.</Muted>}
 
       <H5>Equipment</H5>
-      {equipment.length === 0 && (
-        <Muted className="my-4">It's empty! No items added yet.</Muted>
-      )}
+      {equipment.length === 0 && <Muted className="my-4">It's empty! No items added yet.</Muted>}
 
-      <div className="flex gap-2 flex-wrap">
+      <div className="flex flex-wrap gap-2">
         {equipment.map((item) => (
           <ItemCard key={item.id} worldId={worldId} item={item} />
         ))}
       </div>
 
       <H5>Consumable</H5>
-      {consumables.length === 0 && (
-        <Muted className="my-4">It's empty! No items added yet.</Muted>
-      )}
+      {consumables.length === 0 && <Muted className="my-4">It's empty! No items added yet.</Muted>}
 
-      <div className="flex gap-2 flex-wrap">
+      <div className="flex flex-wrap gap-2">
         {consumables.map((item) => (
           <ItemCard key={item.id} worldId={worldId} item={item} />
         ))}
       </div>
 
       <H5>Other</H5>
-      {other.length === 0 && (
-        <Muted className="my-4">It's empty! No items added yet.</Muted>
-      )}
+      {other.length === 0 && <Muted className="my-4">It's empty! No items added yet.</Muted>}
 
-      <div className="flex gap-2 flex-wrap">
+      <div className="flex flex-wrap gap-2">
         {other.map((item) => (
           <ItemCard key={item.id} worldId={worldId} item={item} />
         ))}

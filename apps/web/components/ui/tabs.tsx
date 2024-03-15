@@ -12,38 +12,20 @@ type Tab = {
 
 type TabsProps = {
   onTabSelected?: (t: Tab) => void;
-  renderTab?: (
-    tab: Tab,
-    isSelected: boolean,
-    onClick: (t: Tab) => void
-  ) => ReactNode;
+  renderTab?: (tab: Tab, isSelected: boolean, onClick: (t: Tab) => void) => ReactNode;
   tabs: Tab[];
 };
 
-const defaultRender = (
-  tab: Tab,
-  isSelected: boolean,
-  onClick: (t: Tab) => void
-) => {
+const defaultRender = (tab: Tab, isSelected: boolean, onClick: (t: Tab) => void) => {
   return (
-    <Badge
-      key={tab.label}
-      onClick={() => onClick(tab)}
-      variant={isSelected ? "selected" : "ghost"}
-    >
+    <Badge key={tab.label} onClick={() => onClick(tab)} variant={isSelected ? "selected" : "ghost"}>
       {tab.label}
     </Badge>
   );
 };
 
-export function Tabs({
-  tabs,
-  renderTab = defaultRender,
-  onTabSelected,
-}: TabsProps) {
-  const [selectedTab, setSelectedTab] = useState<Tab | undefined>(
-    tabs.find((t) => t.defaultSelected) || tabs[0]
-  );
+export function Tabs({ tabs, renderTab = defaultRender, onTabSelected }: TabsProps) {
+  const [selectedTab, setSelectedTab] = useState<Tab | undefined>(tabs.find((t) => t.defaultSelected) || tabs[0]);
 
   if (!selectedTab) {
     throw new Error("No tabs available");
@@ -51,7 +33,7 @@ export function Tabs({
 
   return (
     <>
-      <div className="flex gap-2 mb-3">
+      <div className="mb-3 flex gap-2">
         {tabs.map((tab) => {
           return renderTab(tab, tab.label === selectedTab.label, (tab) => {
             setSelectedTab(tab);

@@ -11,10 +11,7 @@ export class UserService {
   }
 
   async getUser(userId: UserRecord["id"]): Promise<UserRecord> {
-    const data = await db
-      .select()
-      .from(usersSchema)
-      .where(eq(usersSchema.id, userId));
+    const data = await db.select().from(usersSchema).where(eq(usersSchema.id, userId));
 
     if (!data[0]) {
       throw new Error("No user");
@@ -28,10 +25,7 @@ export class UserService {
   }
 
   async createUser(newUserRecord: NewUserRecord): Promise<{ id: number }> {
-    const rows = await db
-      .insert(usersSchema)
-      .values(newUserRecord)
-      .returning({ id: usersSchema.id });
+    const rows = await db.insert(usersSchema).values(newUserRecord).returning({ id: usersSchema.id });
 
     await db
       .insert(usersSchema)
@@ -50,10 +44,7 @@ export class UserService {
   }
 
   async createUserCharacter(character: NewCharacterRecord) {
-    return db
-      .insert(charactersSchema)
-      .values(character)
-      .returning({ id: charactersSchema.id });
+    return db.insert(charactersSchema).values(character).returning({ id: charactersSchema.id });
   }
 
   async getFriendInvites(userId: UserRecord["id"]) {

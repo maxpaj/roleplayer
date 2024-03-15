@@ -18,11 +18,7 @@ export async function deleteCampaign(id: CampaignRecord["id"]) {
   await new CampaignService().deleteCampaign(id);
 }
 
-export async function createCampaign(
-  userId: UserRecord["id"],
-  worldId: WorldRecord["id"],
-  characters: CharacterRecord[]
-) {
+export async function createCampaign(userId: UserRecord["id"], worldId: WorldRecord["id"], characters: CharacterRecord[]) {
   const created = await new CampaignService().createCampaign({
     isDemo: false,
     userId,
@@ -33,10 +29,7 @@ export async function createCampaign(
   redirect(`/campaigns/${created.id}`);
 }
 
-export async function saveCampaignEvents(
-  campaignId: CampaignRecord["id"],
-  events: CampaignEventWithRound[]
-) {
+export async function saveCampaignEvents(campaignId: CampaignRecord["id"], events: CampaignEventWithRound[]) {
   return await new CampaignService().saveCampaignEvents(campaignId, events);
 }
 

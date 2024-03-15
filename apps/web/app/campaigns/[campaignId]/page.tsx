@@ -1,19 +1,9 @@
 import { H3, H4, Paragraph } from "@/components/ui/typography";
 import { getCampaign } from "../actions";
 import { Separator } from "@/components/ui/separator";
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableRow,
-} from "@/components/ui/table";
+import { Table, TableBody, TableCaption, TableCell, TableRow } from "@/components/ui/table";
 
-export default async function CampaignPage({
-  params,
-}: {
-  params: { campaignId: string };
-}) {
+export default async function CampaignPage({ params }: { params: { campaignId: string } }) {
   const { campaignId: id } = params;
   const campaignData = await getCampaign(id);
 

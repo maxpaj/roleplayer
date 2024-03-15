@@ -1,14 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "./dropdown-menu";
+import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "./dropdown-menu";
 import { Button } from "./button";
 
 type SelectProps = {
@@ -22,11 +15,7 @@ type SelectProps = {
   }[];
   placeholder?: string;
 };
-const MultiSelect = ({
-  placeholder = "Select values",
-  options,
-  values,
-}: SelectProps) => {
+const MultiSelect = ({ placeholder = "Select values", options, values }: SelectProps) => {
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const handleSelectChange = (value: string) => {
     if (!selectedItems.includes(value)) {
@@ -51,10 +40,7 @@ const MultiSelect = ({
             <span>{placeholder}</span>
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent
-          className="w-56"
-          onCloseAutoFocus={(e) => e.preventDefault()}
-        >
+        <DropdownMenuContent className="w-56" onCloseAutoFocus={(e) => e.preventDefault()}>
           <DropdownMenuLabel>{placeholder}</DropdownMenuLabel>
           <DropdownMenuSeparator />
           {options.map((option: SelectProps["options"][0], index: number) => {

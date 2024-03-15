@@ -1,12 +1,7 @@
 import { db } from ".";
 import { actionsSchema } from "./schema/actions";
 import { campaignsSchema } from "./schema/campaigns";
-import {
-  charactersSchema,
-  charactersToActionsSchema,
-  charactersToCampaignsSchema,
-  charactersToItemsSchema,
-} from "./schema/characters";
+import { charactersSchema, charactersToActionsSchema, charactersToCampaignsSchema, charactersToItemsSchema } from "./schema/characters";
 import { classesSchema } from "./schema/classes";
 import { eventsSchema } from "./schema/events";
 import { friendInvitesSchema } from "./schema/friend-invite";

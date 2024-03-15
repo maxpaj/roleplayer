@@ -11,19 +11,13 @@ type StartCampaignFormProps = {
   worldName: string;
 };
 
-export function StartCampaignForm({
-  worldName,
-  worldId,
-}: StartCampaignFormProps) {
+export function StartCampaignForm({ worldName, worldId }: StartCampaignFormProps) {
   return (
     <>
       <Alert>
         <AlertTriangle className="h-4 w-4" />
         <AlertTitle>Reminder</AlertTitle>
-        <AlertDescription>
-          Any changes made to the world after starting the campaign will not be
-          automatically added to the campaign
-        </AlertDescription>
+        <AlertDescription>Any changes made to the world after starting the campaign will not be automatically added to the campaign</AlertDescription>
       </Alert>
 
       <Button

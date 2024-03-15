@@ -43,14 +43,16 @@ export function WorldEditorForm({ world }: WorldEditorFormProps) {
         value={update.description || ""}
         placeholder="Describe the world, the story, background, conflicts, factions, etc."
       />
-
-      <Muted className="flex gap-1 items-center">
-        <Info size={16} /> You can use{" "}
-        <Link className="text-primary" href="https://commonmark.org/help/">
-          Markdown
-        </Link>{" "}
-        to style your world description.
-      </Muted>
+      <div className="flex gap-2 items-center">
+        <Info size={16} />
+        <Muted>
+          You can use{" "}
+          <Link className="text-primary" href="https://commonmark.org/help/">
+            Markdown
+          </Link>{" "}
+          to style your world description.
+        </Muted>
+      </div>
     </div>
   );
 }

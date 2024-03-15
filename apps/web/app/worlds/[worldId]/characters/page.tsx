@@ -1,6 +1,6 @@
 import { getWorldData } from "../actions";
 import { CreateCharacterForm } from "../../../characters/components/create-character-form";
-import { H2, H3 } from "@/components/ui/typography";
+import { H3 } from "@/components/ui/typography";
 import { Separator } from "@/components/ui/separator";
 
 export default async function CharactersPage({

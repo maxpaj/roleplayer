@@ -14,8 +14,9 @@ export default async function BattlesPage({
 }: {
   params: { campaignId: string };
 }) {
-  const { campaignId } = params;
-  const campaignData = await getCampaign(parseInt(campaignId));
+  const { campaignId: id } = params;
+  const campaignId = parseInt(id);
+  const campaignData = await getCampaign(campaignId);
 
   if (!campaignData) {
     return <>Campaign not found</>;
@@ -33,7 +34,7 @@ export default async function BattlesPage({
 
   return (
     <div>
-      <StartBattleButton campaignId={parseInt(campaignId)} />
+      <StartBattleButton campaignId={campaignId} />
 
       <H4 className="mt-4">Ongoing battle</H4>
       {battles.filter((b) => !b.finished).length === 0 && (

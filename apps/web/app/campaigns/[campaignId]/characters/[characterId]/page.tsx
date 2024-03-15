@@ -36,7 +36,10 @@ export default async function CampaignCharacterPage({
 
     const campaign = new Campaign({
       ...campaignData.campaign,
-      world: new World({ ...campaignData.world, ruleset: DefaultRuleSet }),
+      world: new World({
+        ...campaignData.world.world,
+        ruleset: DefaultRuleSet,
+      }),
     });
 
     campaign.setCharacterClasses(characterId, characterUpdate.classes!);
@@ -54,7 +57,7 @@ export default async function CampaignCharacterPage({
   const campaignInstance = new Campaign({
     ...campaign,
     events: events.map((e) => e.eventData) as CampaignEventWithRound[],
-    world: new World({ ...world, ruleset: DefaultRuleSet }),
+    world: new World({ ...world.world, ruleset: DefaultRuleSet }),
   });
 
   const data = campaignInstance.applyEvents();

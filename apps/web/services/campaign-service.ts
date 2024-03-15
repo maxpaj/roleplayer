@@ -24,6 +24,8 @@ import {
   NewFriendInviteRecord,
   friendInvitesSchema,
 } from "../db/schema/friend-invite";
+import { classesSchema } from "@/db/schema/classes";
+import { WorldAggregated } from "./world-service";
 
 export class CampaignService {
   async getAll(
@@ -101,7 +103,7 @@ export class CampaignService {
     }
 
     const world = new World({
-      ...campaignData.world,
+      ...campaignData.world.world,
       ruleset: DefaultRuleSet,
     });
 
@@ -146,7 +148,10 @@ export class CampaignService {
 
     const campaign = new Campaign({
       ...campaignData.campaign,
-      world: new World({ ...campaignData.world, ruleset: DefaultRuleSet }),
+      world: new World({
+        ...campaignData.world.world,
+        ruleset: DefaultRuleSet,
+      }),
     });
 
     await this.saveCampaignEvents(campaign.id, campaign.events);
@@ -160,6 +165,7 @@ export class CampaignService {
       .from(campaignsSchema)
       .innerJoin(worldsSchema, eq(worldsSchema.id, campaignsSchema.worldId))
       .leftJoin(monstersSchema, eq(monstersSchema.worldId, worldsSchema.id))
+      .leftJoin(classesSchema, eq(classesSchema.worldId, worldsSchema.id))
       .leftJoin(
         charactersToCampaignsSchema,
         eq(charactersToCampaignsSchema.campaignId, campaignsSchema.id)
@@ -178,14 +184,23 @@ export class CampaignService {
           campaign: CampaignRecord;
           events: EventRecord[];
           characters: CharacterRecord[];
-          world: WorldRecord;
+          world: WorldAggregated;
         }
       >
     >((acc, row) => {
       const campaign = row.campaigns;
       if (!acc[campaign.id]) {
         acc[campaign.id] = {
-          world: row.worlds,
+          world: {
+            world: row.worlds,
+            actions: [],
+            campaigns: [],
+            characters: [],
+            classes: [],
+            items: [],
+            monsters: [],
+            statuses: [],
+          },
           campaign,
           events: [],
           characters: [],
@@ -205,6 +220,24 @@ export class CampaignService {
             (c) => c.id !== row.characters!.id
           ),
           row.characters,
+        ];
+      }
+
+      if (row.monsters) {
+        acc[campaign.id]!.world.monsters = [
+          ...acc[campaign.id]!.world.monsters.filter(
+            (c) => c.id !== row.monsters!.id
+          ),
+          row.monsters,
+        ];
+      }
+
+      if (row.classes) {
+        acc[campaign.id]!.world.classes = [
+          ...acc[campaign.id]!.world.classes.filter(
+            (c) => c.id !== row.classes!.id
+          ),
+          row.classes,
         ];
       }
 
@@ -274,7 +307,7 @@ export class CampaignService {
 
     // Roleplayer-lib realm start
     const world = new World({
-      ...campaignData.world,
+      ...campaignData.world.world,
       ruleset: DefaultRuleSet,
     });
 

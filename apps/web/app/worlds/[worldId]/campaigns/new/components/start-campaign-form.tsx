@@ -8,9 +8,13 @@ import { WorldRecord } from "@/db/schema/worlds";
 
 type StartCampaignFormProps = {
   worldId: WorldRecord["id"];
+  worldName: string;
 };
 
-export function StartCampaignForm({ worldId }: StartCampaignFormProps) {
+export function StartCampaignForm({
+  worldName,
+  worldId,
+}: StartCampaignFormProps) {
   return (
     <>
       <Alert>
@@ -26,7 +30,7 @@ export function StartCampaignForm({ worldId }: StartCampaignFormProps) {
         className="mb-2 mt-5"
         onClick={async () => {
           await createCampaign({
-            name: "My world new campaign",
+            name: `${worldName}: New campaign`,
             isDemo: false,
             worldId,
             userId: 2,

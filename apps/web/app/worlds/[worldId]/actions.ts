@@ -10,6 +10,7 @@ import { ItemRecord } from "@/db/schema/items";
 import { StatusRecord } from "@/db/schema/statuses";
 import { MonsterRecord } from "@/db/schema/monster";
 import { NewCampaignRecord } from "@/db/schema/campaigns";
+import { ClazzRecord } from "@/db/schema/classes";
 
 type WorldData = {
   world: WorldRecord;
@@ -17,6 +18,7 @@ type WorldData = {
   items: ItemRecord[];
   statuses: StatusRecord[];
   monsters: MonsterRecord[];
+  classes: ClazzRecord[];
 };
 
 export async function getWorldData(

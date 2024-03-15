@@ -15,7 +15,11 @@ import {
 } from "../db/schema/monster";
 import { StatusRecord, statusesSchema } from "../db/schema/statuses";
 import { ActionRecord, actionsSchema } from "../db/schema/actions";
-import { ClazzRecord, classesSchema } from "../db/schema/classes";
+import {
+  ClazzRecord,
+  NewClazzRecord,
+  classesSchema,
+} from "../db/schema/classes";
 import { ItemRecord, NewItemRecord, itemsSchema } from "../db/schema/items";
 import { CampaignService } from "./campaign-service";
 
@@ -50,82 +54,80 @@ export class WorldService {
       .leftJoin(statusesSchema, eq(statusesSchema.worldId, worldsSchema.id))
       .where(eq(worldsSchema.id, worldId));
 
-    const aggregated = rows.reduce<
-      Record<
-        number,
-        {
-          world: WorldRecord;
-          campaigns: CampaignRecord[];
-          monsters: MonsterRecord[];
-          characters: CharacterRecord[];
-          statuses: StatusRecord[];
-          items: ItemRecord[];
-          classes: ClazzRecord[];
-          actions: ActionRecord[];
+    const aggregated = rows.reduce<Record<number, WorldAggregated>>(
+      (acc, row) => {
+        const world = row.worlds;
+
+        if (!acc[world.id]) {
+          acc[world.id] = {
+            world,
+            monsters: [],
+            actions: [],
+            campaigns: [],
+            characters: [],
+            classes: [],
+            items: [],
+            statuses: [],
+          };
         }
-      >
-    >((acc, row) => {
-      const world = row.worlds;
 
-      if (!acc[world.id]) {
-        acc[world.id] = {
-          world,
-          monsters: [],
-          actions: [],
-          campaigns: [],
-          characters: [],
-          classes: [],
-          items: [],
-          statuses: [],
-        };
-      }
+        if (row.characters) {
+          acc[world.id]!.characters = [
+            ...acc[world.id]!.characters.filter(
+              (c) => c.id !== row.characters!.id
+            ),
+            row.characters,
+          ];
+        }
 
-      if (row.characters) {
-        acc[world.id]!.characters = [
-          ...acc[world.id]!.characters.filter(
-            (c) => c.id !== row.characters!.id
-          ),
-          row.characters,
-        ];
-      }
+        if (row.monsters) {
+          acc[world.id]!.monsters = [
+            ...acc[world.id]!.monsters.filter((c) => c.id !== row.monsters!.id),
+            row.monsters,
+          ];
+        }
 
-      if (row.monsters) {
-        acc[world.id]!.monsters = [
-          ...acc[world.id]!.monsters.filter((c) => c.id !== row.monsters!.id),
-          row.monsters,
-        ];
-      }
+        if (row.campaigns) {
+          acc[world.id]!.campaigns = [
+            ...acc[world.id]!.campaigns.filter(
+              (c) => c.id !== row.campaigns!.id
+            ),
+            row.campaigns,
+          ];
+        }
 
-      if (row.campaigns) {
-        acc[world.id]!.campaigns = [
-          ...acc[world.id]!.campaigns.filter((c) => c.id !== row.campaigns!.id),
-          row.campaigns,
-        ];
-      }
+        if (row.statuses) {
+          acc[world.id]!.statuses = [
+            ...acc[world.id]!.statuses.filter((c) => c.id !== row.statuses!.id),
+            row.statuses,
+          ];
+        }
 
-      if (row.statuses) {
-        acc[world.id]!.statuses = [
-          ...acc[world.id]!.statuses.filter((c) => c.id !== row.statuses!.id),
-          row.statuses,
-        ];
-      }
+        if (row.items) {
+          acc[world.id]!.items = [
+            ...acc[world.id]!.items.filter((c) => c.id !== row.items!.id),
+            row.items,
+          ];
+        }
 
-      if (row.items) {
-        acc[world.id]!.items = [
-          ...acc[world.id]!.items.filter((c) => c.id !== row.items!.id),
-          row.items,
-        ];
-      }
+        if (row.actions) {
+          acc[world.id]!.actions = [
+            ...acc[world.id]!.actions.filter((c) => c.id !== row.actions!.id),
+            row.actions,
+          ];
+        }
 
-      if (row.actions) {
-        acc[world.id]!.actions = [
-          ...acc[world.id]!.actions.filter((c) => c.id !== row.actions!.id),
-          row.actions,
-        ];
-      }
+        if (row.classes) {
+          acc[world.id]!.classes = [
+            ...acc[world.id]!.classes.filter((c) => c.id !== row.classes!.id),
+            row.classes,
+          ];
+        }
 
-      return acc;
-    }, {});
+        return acc;
+      },
+      {}
+    );
 
     const result = Object.values(aggregated);
 
@@ -215,5 +217,12 @@ export class WorldService {
       .insert(itemsSchema)
       .values(item)
       .returning({ id: itemsSchema.id });
+  }
+
+  async createCharacterClass(clazz: NewClazzRecord) {
+    return db
+      .insert(classesSchema)
+      .values(clazz)
+      .returning({ id: classesSchema.id });
   }
 }

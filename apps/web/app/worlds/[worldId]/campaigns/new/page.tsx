@@ -8,7 +8,8 @@ export default async function NewCampaignPage({
   params: { worldId: string };
 }) {
   const { worldId: id } = params;
-  const worldData = await getWorldData(parseInt(id));
+  const worldId = parseInt(id);
+  const worldData = await getWorldData(worldId);
   if (!worldData) {
     return <>World not found!</>;
   }
@@ -20,7 +21,7 @@ export default async function NewCampaignPage({
         world might take you.
       </Muted>
 
-      <StartCampaignForm worldId={parseInt(id)} />
+      <StartCampaignForm worldId={worldId} />
     </>
   );
 }

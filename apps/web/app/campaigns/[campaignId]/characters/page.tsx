@@ -24,7 +24,7 @@ export default async function CampaignCharactersPage({
 
       <div className="flex gap-2 my-2">
         <CreateCharacterForm
-          worldId={campaignData.world.id}
+          worldId={campaignData.world.world.id}
           campaignId={campaignData.campaign.id}
         />
 

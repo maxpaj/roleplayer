@@ -4,7 +4,7 @@ import Link from "next/link";
 
 type BattleCardProps = {
   battle: Battle;
-  campaignId: string;
+  campaignId: number;
 };
 
 export function BattleCard({ campaignId, battle }: BattleCardProps) {

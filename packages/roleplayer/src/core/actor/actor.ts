@@ -22,7 +22,7 @@ export interface Actor {
     targetIds: Actor["id"][],
     actionId: Interaction["id"]
   ): CampaignEventWithRound[];
-  getInitiative(): number;
+  rollInitiative(): number;
   getEligibleTargets(action: Interaction): Actor[];
   getAbilityModifier(): number;
 }

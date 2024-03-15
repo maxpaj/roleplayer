@@ -34,7 +34,7 @@ describe("Campaign state", () => {
     const campaign = new Campaign({ id: '0000000-0000-0000-0000-000000000000' as const, name: "Campaign", world, events });
     campaign.applyEvents();
 
-    const characters = campaign.getCharacters();
+    const characters = campaign.getWorldCharacters();
     expect(characters.length).toBe(1);
 
     const character = characters[0];

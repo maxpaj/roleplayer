@@ -47,7 +47,7 @@ export class MonsterInstance implements Actor {
     throw new Error("Method not implemented.");
   }
 
-  getInitiative(): number {
+  rollInitiative(): number {
     return roll(D20);
   }
 

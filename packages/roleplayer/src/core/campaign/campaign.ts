@@ -105,7 +105,7 @@ export class Campaign {
     return data.rounds.length;
   }
 
-  getCharacters() {
+  getWorldCharacters() {
     const world = this.applyEvents();
     return world.characters;
   }
@@ -181,25 +181,37 @@ export class Campaign {
     const monsterUpdate: CampaignEvent = {
       monsterId,
       id: dangerousGenerateId(),
-      type: "MonsterEnterBattle",
+      type: "MonsterBattleEnter",
     };
 
     this.publishCampaignEvent(monsterUpdate);
   }
 
-  addCharacterToCurrentBattle(characterId: Character["id"]) {
+  addCharacterToCurrentBattle(
+    characterId: Character["id"],
+    initiativeRoll: number
+  ) {
     const battle = this.getCurrentBattle();
+
     if (!battle) {
       throw new Error("No current battle ongoing");
     }
 
-    const characterUpdate: CampaignEvent = {
-      characterId,
-      id: dangerousGenerateId(),
-      type: "CharacterEnterBattle",
-    };
+    const characterBattleEnter: CampaignEvent[] = [
+      {
+        characterId,
+        id: dangerousGenerateId(),
+        type: "CharacterBattleEnter",
+      },
+      {
+        characterId,
+        id: dangerousGenerateId(),
+        type: "CharacterBattleInitiativeSet",
+        initiative: initiativeRoll,
+      },
+    ];
 
-    this.publishCampaignEvent(characterUpdate);
+    this.publishCampaignEvent(...characterBattleEnter);
   }
 
   createCharacter(characterId: Character["id"], name: string) {
@@ -509,7 +521,7 @@ export class Campaign {
         break;
       }
 
-      case "MonsterEnterBattle": {
+      case "MonsterBattleEnter": {
         const battle = campaignState.battles.find(
           (b) => b.id === event.battleId
         );
@@ -531,7 +543,7 @@ export class Campaign {
         break;
       }
 
-      case "CharacterEnterBattle":
+      case "CharacterBattleEnter":
       case "CharacterStatChange":
       case "CharacterExperienceSet":
       case "CharacterResourceMaxSet":
@@ -542,8 +554,6 @@ export class Campaign {
       case "CharacterMaximumHealthSet":
       case "CharacterDespawn":
       case "CharacterStartRound":
-      case "CharacterPrimaryAction":
-      case "CharacterSecondaryAction":
       case "CharacterMovement":
       case "CharacterEndRound":
       case "CharacterItemGain":
@@ -592,10 +602,32 @@ export class Campaign {
         break;
       }
 
-      case "CharacterEnterBattle": {
+      case "CharacterBattleInitiativeSet": {
         const battle = campaignState.battles.find(
           (b) => b.id === event.battleId
         );
+
+        if (!battle) {
+          throw new Error("Cannot find battle");
+        }
+
+        const characterBattle = battle.entities.find(
+          (e) => e.actor.id === event.characterId
+        );
+
+        if (!characterBattle) {
+          throw new Error("Cannot find battle character");
+        }
+
+        characterBattle.initiative = event.initiative;
+        break;
+      }
+
+      case "CharacterBattleEnter": {
+        const battle = campaignState.battles.find(
+          (b) => b.id === event.battleId
+        );
+
         if (!battle) {
           throw new Error("Cannot find battle");
         }
@@ -609,7 +641,6 @@ export class Campaign {
         }
 
         battle.addActor(character);
-
         break;
       }
 
@@ -644,7 +675,6 @@ export class Campaign {
         }
 
         resource.amount = event.max;
-
         break;
       }
 
@@ -662,14 +692,6 @@ export class Campaign {
         }
 
         stat.amount = event.amount;
-        break;
-      }
-
-      case "CharacterPrimaryAction": {
-        break;
-      }
-
-      case "CharacterSecondaryAction": {
         break;
       }
 

@@ -36,7 +36,7 @@ export class Battle {
   }
 
   addActor(entity: Actor) {
-    const added = new BattleActor(entity, entity.getInitiative());
+    const added = new BattleActor(entity, entity.rollInitiative());
     this.entities.push(added);
     return added;
   }

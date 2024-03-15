@@ -17,7 +17,8 @@ const badgeVariants = cva(
         outline: "text-foreground",
         selected:
           "border-transparent bg-primary cursor-pointer rounded-full px-4 py-2 transition-colors hover:text-primary-foreground font-medium text-primary-foreground",
-        ghost: "border-transparent cursor-pointer px-4 py-2",
+        ghost:
+          "border-transparent cursor-pointer px-4 py-2 hover:border-primary/50",
       },
     },
     defaultVariants: {

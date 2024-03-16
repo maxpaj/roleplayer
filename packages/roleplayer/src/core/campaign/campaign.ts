@@ -85,16 +85,6 @@ export class Campaign {
     this.publishCampaignEvent(actionGain);
   }
 
-  getNumberOfRounds() {
-    const data = this.getCampaignStateFromEvents();
-    return data.rounds.length;
-  }
-
-  getWorldCharacters() {
-    const world = this.getCampaignStateFromEvents();
-    return world.characters;
-  }
-
   setCharacterStats(characterId: Character["id"], stats: CharacterStat[]) {
     const statsEvents: CampaignEvent[] = stats.map((st) => ({
       type: "CharacterStatChange",
@@ -158,13 +148,6 @@ export class Campaign {
   }
 
   addMonsterToCurrentBattle(monsterId: Monster["id"]) {
-    const campaignState = this.getCampaignStateFromEvents();
-    const battle = campaignState.getCurrentBattle();
-
-    if (!battle) {
-      throw new Error("No current battle ongoing");
-    }
-
     const monsterUpdate: CampaignEvent = {
       monsterId,
       id: dangerousGenerateId(),
@@ -175,13 +158,6 @@ export class Campaign {
   }
 
   addCharacterToCurrentBattle(characterId: Character["id"], initiativeRoll: number) {
-    const campaignState = this.getCampaignStateFromEvents();
-    const battle = campaignState.getCurrentBattle();
-
-    if (!battle) {
-      throw new Error("No current battle ongoing");
-    }
-
     const characterBattleEnter: CampaignEvent[] = [
       {
         characterId,
@@ -244,7 +220,7 @@ export class Campaign {
       ...defaultStatsEvents,
     ];
 
-    this.publishCampaignEvent(...characterSpawnEvents);
+    this.publishRoundEvent(...characterSpawnEvents);
   }
 
   nextRound(battleId?: Battle["id"]) {
@@ -270,15 +246,6 @@ export class Campaign {
     ];
 
     this.publishCampaignEvent(...events);
-  }
-
-  getCharacter(characterId: Character["id"]) {
-    const character = this.getCampaignStateFromEvents().characters.find((c) => c.id === characterId);
-    if (!character) {
-      throw new Error(`Could not find character with id ${characterId}`);
-    }
-
-    return character;
   }
 
   getRoundEvents(round: Round) {
@@ -374,12 +341,28 @@ export class Campaign {
     return this.publishCampaignEvent(...[attackerPrimaryAction, hitDodgeEvent, ...damageTakenEvents, ...statusChangeEvents]);
   }
 
+  publishRoundEvent(...newEvents: CampaignEvent[]) {
+    const currentCampaignState = this.getCampaignStateFromEvents();
+    const currentRound = currentCampaignState.getCurrentRound();
+    const lastSerialNumber = this.events[this.events.length - 1]?.serialNumber || 0;
+    const eventsWithRoundAndBattle = newEvents.map((e, i) => {
+      return {
+        ...e,
+        roundId: currentRound.id,
+        serialNumber: lastSerialNumber + i + 1,
+      };
+    });
+
+    this.events.push(...eventsWithRoundAndBattle);
+    return newEvents;
+  }
+
   publishCampaignEvent(...newEvents: CampaignEvent[]) {
     const currentCampaignState = this.getCampaignStateFromEvents();
     const currentBattle = currentCampaignState.getCurrentBattle();
     const currentRound = currentCampaignState.getCurrentRound();
-
     const lastSerialNumber = this.events[this.events.length - 1]?.serialNumber || 0;
+
     const eventsWithRoundAndBattle = newEvents.map((e, i) => {
       return {
         ...e,

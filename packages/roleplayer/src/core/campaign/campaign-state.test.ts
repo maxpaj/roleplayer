@@ -35,12 +35,11 @@ describe("Campaign state", () => {
 
     const world = new World({ name: "World", ruleset: DefaultRuleSet });
     const campaign = new Campaign({ id: "0000000-0000-0000-0000-000000000000" as const, name: "Campaign", world, events });
-    campaign.getCampaignStateFromEvents();
+    const state = campaign.getCampaignStateFromEvents();
 
-    const characters = campaign.getWorldCharacters();
-    expect(characters.length).toBe(1);
+    expect(state.characters.length).toBe(1);
 
-    const character = characters[0];
+    const character = state.characters[0];
     expect(character!.name).toBe("Some name");
     expect(character!.maximumHealth).toBe(10);
   });

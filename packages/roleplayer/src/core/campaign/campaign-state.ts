@@ -25,6 +25,15 @@ export class CampaignState {
     this.monsters = monsters;
   }
 
+  getCharacter(characterId: Character["id"]) {
+    const character = this.characters.find((c) => c.id === characterId);
+    if (!character) {
+      throw new Error(`Could not find character with id ${characterId}`);
+    }
+
+    return character;
+  }
+
   getCurrentBattle(): Battle | undefined {
     return this.battles[this.battles.length - 1];
   }

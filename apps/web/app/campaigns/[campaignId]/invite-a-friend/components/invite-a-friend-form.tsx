@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 import { CampaignService } from "services/campaign-service";
 import { CampaignRecord } from "@/db/schema/campaigns";
 import { redirect } from "next/navigation";
-import { DEFAULT_USER_ID } from "@/db/index";
+import { DEFAULT_USER_ID } from "@/db/data";
 
 export async function InviteAFriendForm({ campaignId }: { campaignId: CampaignRecord["id"] }) {
   async function sendFriendInvite(formData: FormData) {

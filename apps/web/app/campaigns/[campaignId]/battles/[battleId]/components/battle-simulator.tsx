@@ -17,6 +17,8 @@ import { ActorRecord } from "models/actor";
 import { saveCampaignEvents } from "app/campaigns/actions";
 import { DiceRollCard } from "./dice-roll-card";
 import { Separator } from "@/components/ui/separator";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { AlertOctagon } from "lucide-react";
 
 const EventIconSize = 32;
 
@@ -27,14 +29,14 @@ type BattleSimulatorProps = {
 
 export function BattleSimulator({ campaign, battleId }: BattleSimulatorProps) {
   const [tempCampaign, setTempCampaignReact] = useState<Campaign>(new Campaign(campaign));
-  const [tempCampaignState, setTempCampaignState] = useState<CampaignState>(tempCampaign.applyEvents());
+  const [tempCampaignState, setTempCampaignState] = useState<CampaignState>(tempCampaign.getCampaignStateFromEvents());
   const [, updateState] = useState({});
   const [selectedAction, setSelectedAction] = useState<Interaction | undefined>(undefined);
   const forceUpdate = useCallback(() => updateState({}), []);
 
   async function setCampaign(campaign: Campaign) {
     setTempCampaignReact(campaign);
-    setTempCampaignState(campaign.applyEvents());
+    setTempCampaignState(campaign.getCampaignStateFromEvents());
     await saveCampaignEvents(campaign.id, campaign.events);
     forceUpdate();
   }
@@ -78,11 +80,8 @@ export function BattleSimulator({ campaign, battleId }: BattleSimulatorProps) {
 
   function renderCharacter(currentRound: Round, battleCharacter: BattleActor, isCharacterTurnToAct: boolean) {
     const hasSpentAction = campaignState.characterHasRoundEvent(currentRound, battleCharacter.actor.id, "CharacterPrimaryAction");
-
     const hasSpentBonus = campaignState.characterHasRoundEvent(currentRound, battleCharacter.actor.id, "CharacterSecondaryAction");
-
     const hasFinished = campaignState.characterHasRoundEvent(currentRound, battleCharacter.actor.id, "CharacterEndRound");
-
     const currentActionClass = isCharacterTurnToAct ? "shadow-[inset_0px_0px_30px_0px_rgba(0,0,0,0.25)] shadow-primary/40" : "";
 
     return (
@@ -182,8 +181,7 @@ export function BattleSimulator({ campaign, battleId }: BattleSimulatorProps) {
   }
 
   function renderBattleEvents() {
-    const battleEvents = tempCampaign.getCurrentBattleEvents();
-
+    const battleEvents = tempCampaign.events.filter((e) => e.battleId === battleId);
     return <div className="mb-4 flex w-full flex-col gap-y-4">{battleEvents.map(renderBattleEvent)}</div>;
   }
 
@@ -201,9 +199,22 @@ export function BattleSimulator({ campaign, battleId }: BattleSimulatorProps) {
     const eventIcon = EventIconMap[event.type];
 
     return (
-      <div key={event.id} className="flex gap-2 border border-slate-500 p-2">
-        <Image className="invert" width={EventIconSize} height={EventIconSize} alt={eventIcon.alt} src={eventIcon.icon} />
-        {event.type}
+      <div key={event.id} className="flex justify-between gap-2 border border-slate-500 p-2">
+        <div>
+          <Image className="invert" width={EventIconSize} height={EventIconSize} alt={eventIcon.alt} src={eventIcon.icon} />
+          {event.type}
+        </div>
+
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger>
+              <AlertOctagon />
+            </TooltipTrigger>
+            <TooltipContent>
+              <pre>{JSON.stringify(event, null, 2)}</pre>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </div>
     );
   }
@@ -213,13 +224,13 @@ export function BattleSimulator({ campaign, battleId }: BattleSimulatorProps) {
     return <>Battle state not found</>;
   }
 
-  const currentRound = tempCampaign.getCurrentRound();
+  const campaignState = tempCampaign.getCampaignStateFromEvents();
+  const currentRound = campaignState.getCurrentRound();
   if (!currentRound) {
     return <>No active round</>;
   }
 
-  const campaignState = tempCampaign.applyEvents();
-  const battleEvents = tempCampaign.getCurrentBattleEvents();
+  const battleEvents = tempCampaign.events.filter((e) => e.battleId === battleId);
   const roundEvents = battleEvents.filter((e) => e.roundId === currentRound.id);
   const currentCharacter = battleState.currentActorTurn(roundEvents);
   const canEndTurn = campaignState.allCharactersHaveActed(battleEvents);

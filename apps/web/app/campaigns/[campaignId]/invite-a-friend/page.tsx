@@ -3,7 +3,7 @@ import { H3, Muted } from "@/components/ui/typography";
 import { InviteAFriendForm } from "./components/invite-a-friend-form";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { UserService } from "services/user-service";
-import { DEFAULT_USER_ID } from "@/db/index";
+import { DEFAULT_USER_ID } from "@/db/data";
 
 export default async function InviteAFriendPage({ params: { campaignId: id } }: { params: { campaignId: string } }) {
   const campaignId = id;

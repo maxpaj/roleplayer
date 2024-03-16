@@ -1,5 +1,5 @@
 import { WorldService } from "services/world-service";
-import { DEFAULT_USER_ID } from "@/db/index";
+import { DEFAULT_USER_ID } from "@/db/data";
 import { H3, Paragraph } from "@/components/ui/typography";
 import { Separator } from "@/components/ui/separator";
 

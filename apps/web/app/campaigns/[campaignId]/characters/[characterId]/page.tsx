@@ -46,7 +46,7 @@ export default async function CampaignCharacterPage({ params: { campaignId: id, 
     world: new World({ ...world.world, ruleset: DefaultRuleSet }),
   });
 
-  const data = campaignInstance.applyEvents();
+  const data = campaignInstance.getCampaignStateFromEvents();
   const characterFromEvents = data.characters.find((c) => c.id === characterId);
   const character = characters.find((c) => c.id === characterId);
   const characterEvents = events.filter((e) => e.characterId === characterId);

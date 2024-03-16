@@ -24,6 +24,7 @@
     "@radix-ui/react-scroll-area": "^1.0.5",
     "@radix-ui/react-separator": "^1.0.3",
     "@radix-ui/react-slot": "^1.0.2",
+    "@radix-ui/react-tooltip": "^1.0.7",
     "@vercel/postgres": "^0.7.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
@@ -59,9 +60,9 @@
     "eslint": "^8",
     "install": "^0.13.0",
     "jest": "^29.7.0",
-    "npm": "^10.2.2",
     "pg": "^8.11.3",
     "postcss": "^8",
+    "prettier-plugin-tailwindcss": "^0.5.12",
     "tailwindcss": "^3.3.0",
     "ts-jest": "^29.1.1",
     "typescript": "^5"

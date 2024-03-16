@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { WorldService } from "services/world-service";
 import { WorldRecord } from "@/db/schema/worlds";
-import { DEFAULT_USER_ID } from "@/db/index";
+import { DEFAULT_USER_ID } from "@/db/data";
 import { CampaignRecord } from "@/db/schema/campaigns";
 
 type NewCharacterProps = {

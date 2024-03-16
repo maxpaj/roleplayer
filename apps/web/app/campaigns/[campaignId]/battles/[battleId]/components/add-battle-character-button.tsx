@@ -4,7 +4,7 @@ import { DialogHeader, DialogFooter, Dialog, DialogContent, DialogTitle, DialogT
 import { Muted, Paragraph } from "@/components/ui/typography";
 import { Character } from "roleplayer";
 import { useState } from "react";
-import { EMPTY_GUID } from "@/db/index";
+import { EMPTY_GUID } from "@/lib/guid";
 
 export function AddBattleCharacterButton({
   availableCharacters,

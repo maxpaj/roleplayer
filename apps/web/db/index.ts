@@ -13,9 +13,6 @@ import { statusesSchema } from "./schema/statuses";
 import { usersSchema } from "./schema/users";
 import { worldsSchema } from "./schema/worlds";
 
-export const DEFAULT_USER_ID = "00000000-1111-1111-1111-100000000000";
-export const EMPTY_GUID = "00000000-0000-0000-0000-000000000000";
-
 export const db = drizzle(sql, {
   schema: {
     actions: actionsSchema,

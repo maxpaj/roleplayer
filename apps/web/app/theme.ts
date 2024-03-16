@@ -133,10 +133,6 @@ export const EventIconMap: {
     alt: "",
     icon: defaultIcon,
   },
-  CharacterNameSet: {
-    alt: "",
-    icon: defaultIcon,
-  },
   BattleStarted: {
     alt: "",
     icon: defaultIcon,
@@ -195,14 +191,18 @@ export const EventIconMap: {
   },
   MonsterBattleEnter: {
     alt: "",
-    icon: undefined,
+    icon: defaultIcon,
   },
   CampaignStarted: {
     alt: "",
-    icon: undefined,
+    icon: defaultIcon,
   },
   CharacterBattleInitiativeSet: {
     alt: "",
-    icon: undefined,
+    icon: defaultIcon,
+  },
+  CharacterNameSet: {
+    alt: "",
+    icon: defaultIcon,
   },
 };

@@ -5,7 +5,7 @@ import { CampaignRecord } from "db/schema/campaigns";
 import { UserRecord } from "db/schema/users";
 import { redirect } from "next/navigation";
 import { CampaignEventWithRound } from "roleplayer";
-import { DEFAULT_USER_ID } from "@/db/index";
+import { DEFAULT_USER_ID } from "@/db/data";
 
 export async function createBattle(campaignId: CampaignRecord["id"]) {
   const battle = await new CampaignService().createBattle(campaignId);

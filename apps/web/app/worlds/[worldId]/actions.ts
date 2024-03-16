@@ -1,6 +1,6 @@
 "use server";
 
-import { DEFAULT_USER_ID } from "@/db/index";
+import { DEFAULT_USER_ID } from "@/db/data";
 import { NewCampaignRecord } from "@/db/schema/campaigns";
 import { CharacterRecord } from "@/db/schema/characters";
 import { ClazzRecord } from "@/db/schema/classes";

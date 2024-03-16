@@ -95,7 +95,8 @@ export class CampaignService {
 
     await this.saveCampaignEvents(campaign.id, campaign.events);
 
-    const battle = campaign.getCurrentBattle();
+    const campaignState = campaign.getCampaignStateFromEvents();
+    const battle = campaignState.getCurrentBattle();
 
     return { id: battle?.id };
   }
@@ -217,6 +218,7 @@ export class CampaignService {
         events.map((e: any) => ({
           eventId: e.id,
           campaignId,
+          serialNumber: e.serialNumber,
           characterId: e.characterId,
           roundId: e.roundId,
           battleId: e.battleId,

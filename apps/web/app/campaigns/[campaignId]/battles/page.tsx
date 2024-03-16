@@ -19,7 +19,7 @@ export default async function BattlesPage({ params }: { params: { campaignId: st
     events: campaignData.events.map((e) => e.eventData as CampaignEventWithRound),
   });
 
-  const { battles } = campaign.applyEvents();
+  const { battles } = campaign.getCampaignStateFromEvents();
 
   return (
     <div>

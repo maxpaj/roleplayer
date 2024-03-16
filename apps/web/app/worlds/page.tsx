@@ -2,7 +2,7 @@ import { CreateWorldForm } from "./components/create-world-form";
 import { WorldCard } from "../../components/world-card";
 import { H2, Muted } from "@/components/ui/typography";
 import { WorldService } from "services/world-service";
-import { DEFAULT_USER_ID } from "@/db/index";
+import { DEFAULT_USER_ID } from "@/db/data";
 import { UserRecord } from "@/db/schema/users";
 
 async function getData(userId: UserRecord["id"] = DEFAULT_USER_ID) {

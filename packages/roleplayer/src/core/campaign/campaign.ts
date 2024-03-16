@@ -293,7 +293,7 @@ export class Campaign {
       type: "BattleStarted",
       battleId,
       roundId: dangerousGenerateId(),
-      serialNumber: this.events.length + 1,
+      serialNumber: this.events[this.events.length - 1]!.serialNumber + 1,
     });
 
     return battleId;

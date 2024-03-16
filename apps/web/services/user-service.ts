@@ -1,8 +1,9 @@
-import { DEFAULT_USER_ID, db } from "../db";
+import { db } from "../db";
 import { eq } from "drizzle-orm";
 import { NewUserRecord, UserRecord, usersSchema } from "../db/schema/users";
 import { NewCharacterRecord, charactersSchema } from "../db/schema/characters";
 import { friendInvitesSchema } from "../db/schema/friend-invite";
+import { DEFAULT_USER_ID } from "@/db/data";
 
 export class UserService {
   async getAll(userId: UserRecord["id"] = DEFAULT_USER_ID): Promise<UserRecord[]> {

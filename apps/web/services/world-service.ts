@@ -1,5 +1,5 @@
 import { eq } from "drizzle-orm";
-import { DEFAULT_USER_ID, db } from "../db";
+import { db } from "../db";
 import { ActionRecord, actionsSchema } from "../db/schema/actions";
 import { CampaignRecord, campaignsSchema } from "../db/schema/campaigns";
 import { CharacterRecord, NewCharacterRecord, charactersSchema } from "../db/schema/characters";
@@ -10,6 +10,7 @@ import { StatusRecord, statusesSchema } from "../db/schema/statuses";
 import { UserRecord } from "../db/schema/users";
 import { NewWorldRecord, WorldRecord, worldsSchema } from "../db/schema/worlds";
 import { CampaignService } from "./campaign-service";
+import { DEFAULT_USER_ID } from "@/db/data";
 
 export type WorldAggregated = {
   world: WorldRecord;
@@ -110,7 +111,6 @@ export class WorldService {
 
   async createCharacter(character: NewCharacterRecord, campaignId?: CampaignRecord["id"]): Promise<{ id: CampaignRecord["id"] }> {
     const rows = await db.insert(charactersSchema).values(character).returning();
-
     const created = rows[0];
 
     if (!created) {

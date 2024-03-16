@@ -57,13 +57,13 @@ export function BattleSimulator({ campaign, battleId }: BattleSimulatorProps) {
   }
 
   function characterAttack(attackerId: Id, defenderIds: Id[], action: Interaction) {
-    const attacker = tempCampaign.getCharacter(attackerId);
+    const attacker = tempCampaignState.getCharacter(attackerId);
 
     if (!attacker.actions.length) {
       throw new Error("Has no attacks");
     }
 
-    const defenders = defenderIds.map((defenderId) => tempCampaign.getCharacter(defenderId));
+    const defenders = defenderIds.map((defenderId) => tempCampaignState.getCharacter(defenderId));
 
     const attack = attacker.getAvailableActions().find((a) => a.id === action.id);
 

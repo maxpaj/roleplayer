@@ -116,7 +116,7 @@ describe("interactions", () => {
 
     campaign.publishCampaignEvent(...events);
 
-    const beforeAttack = campaign.applyEvents();
+    const beforeAttack = campaign.getCampaignStateFromEvents();
     const attacker = beforeAttack.characters.find((c) => c.id === attackerId);
     const defender = beforeAttack.characters.find((c) => c.id === defenderId);
     const actions = attacker!.getAvailableActions();
@@ -124,7 +124,7 @@ describe("interactions", () => {
 
     campaign.performCharacterAttack(attacker!, 15, characterAction!, defender!);
 
-    const afterAttack = campaign.applyEvents();
+    const afterAttack = campaign.getCampaignStateFromEvents();
     const defenderFromEvents = afterAttack.characters.find((c) => c.id === defenderId);
 
     expect(defenderFromEvents!.currentHealth).toBe(8);

@@ -21,7 +21,7 @@ describe("Character", () => {
       campaign.createCharacter(characterA, "Character A");
       campaign.createCharacter(characterB, "Character B");
 
-      const data = campaign.applyEvents();
+      const data = campaign.getCampaignStateFromEvents();
       expect(data.characters.length).toBe(2);
     });
 
@@ -45,7 +45,7 @@ describe("Character", () => {
 
       campaign.publishCampaignEvent(...events);
 
-      const data = campaign.applyEvents();
+      const data = campaign.getCampaignStateFromEvents();
       const characterFromEvents = data.characters.find((c) => c.id === characterId);
       expect(characterFromEvents!.maximumHealth).toBe(12);
     });
@@ -95,7 +95,7 @@ describe("Character", () => {
 
       campaign.publishCampaignEvent(...events);
 
-      const data = campaign.applyEvents();
+      const data = campaign.getCampaignStateFromEvents();
       const characterFromEvents = data.characters.find((c) => c.id === characterId);
       expect(characterFromEvents!.position.x).toBe(10);
       expect(characterFromEvents!.position.y).toBe(20);
@@ -165,7 +165,7 @@ describe("Character", () => {
 
       campaign.publishCampaignEvent(...events);
 
-      expect(campaign.applyEvents).toThrow();
+      expect(campaign.getCampaignStateFromEvents).toThrow();
     });
 
     it("should apply temporary health change events", () => {
@@ -199,7 +199,7 @@ describe("Character", () => {
 
       campaign.publishCampaignEvent(...events);
 
-      const data = campaign.applyEvents();
+      const data = campaign.getCampaignStateFromEvents();
       const characterFromEvents = data.characters.find((c) => c.id === characterId);
       expect(characterFromEvents!.currentHealth).toBe(8);
     });
@@ -243,7 +243,7 @@ describe("Character", () => {
 
       campaign.publishCampaignEvent(...events);
 
-      const data = campaign.applyEvents();
+      const data = campaign.getCampaignStateFromEvents();
       const characterFromEvents = data.characters.find((c) => c.id === characterId);
       expect(characterFromEvents!.inventory.length).toBe(1);
     });
@@ -266,7 +266,7 @@ describe("Character", () => {
       campaign.publishCampaignEvent(...events);
 
       try {
-        campaign.applyEvents();
+        campaign.getCampaignStateFromEvents();
       } catch (e) {
         // Success
       }
@@ -285,7 +285,7 @@ describe("Character", () => {
       campaign.nextRound();
       campaign.publishCampaignEvent(...events);
 
-      const data = campaign.applyEvents();
+      const data = campaign.getCampaignStateFromEvents();
 
       expect(data).toBeDefined();
     });

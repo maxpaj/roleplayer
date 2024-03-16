@@ -29,11 +29,13 @@ export class Campaign {
         id: dangerousGenerateId(),
         type: "CampaignStarted",
         roundId: "00000000-0000-0000-0000-000000000000",
+        serialNumber: 0,
       },
       {
         type: "RoundStarted",
         id: dangerousGenerateId(),
         roundId: dangerousGenerateId(),
+        serialNumber: 1,
       },
     ];
   }
@@ -84,12 +86,12 @@ export class Campaign {
   }
 
   getNumberOfRounds() {
-    const data = this.applyEvents();
+    const data = this.getCampaignStateFromEvents();
     return data.rounds.length;
   }
 
   getWorldCharacters() {
-    const world = this.applyEvents();
+    const world = this.getCampaignStateFromEvents();
     return world.characters;
   }
 
@@ -156,7 +158,9 @@ export class Campaign {
   }
 
   addMonsterToCurrentBattle(monsterId: Monster["id"]) {
-    const battle = this.getCurrentBattle();
+    const campaignState = this.getCampaignStateFromEvents();
+    const battle = campaignState.getCurrentBattle();
+
     if (!battle) {
       throw new Error("No current battle ongoing");
     }
@@ -171,7 +175,8 @@ export class Campaign {
   }
 
   addCharacterToCurrentBattle(characterId: Character["id"], initiativeRoll: number) {
-    const battle = this.getCurrentBattle();
+    const campaignState = this.getCampaignStateFromEvents();
+    const battle = campaignState.getCurrentBattle();
 
     if (!battle) {
       throw new Error("No current battle ongoing");
@@ -249,6 +254,7 @@ export class Campaign {
         id: dangerousGenerateId(),
         roundId: dangerousGenerateId(),
         battleId,
+        serialNumber: this.events[this.events.length - 1]!.serialNumber + 1,
       },
     ];
 
@@ -267,7 +273,7 @@ export class Campaign {
   }
 
   getCharacter(characterId: Character["id"]) {
-    const character = this.applyEvents().characters.find((c) => c.id === characterId);
+    const character = this.getCampaignStateFromEvents().characters.find((c) => c.id === characterId);
     if (!character) {
       throw new Error(`Could not find character with id ${characterId}`);
     }
@@ -279,18 +285,6 @@ export class Campaign {
     return this.events.filter((e) => e.roundId === round.id);
   }
 
-  getBattleEvents(battle: Battle) {
-    return this.events.filter((e) => e.battleId === battle.id);
-  }
-
-  getCurrentBattleEvents() {
-    const battle = this.getCurrentBattle();
-    if (!battle) {
-      return [];
-    }
-    return this.getBattleEvents(battle);
-  }
-
   startBattle() {
     const battleId = dangerousGenerateId();
 
@@ -299,24 +293,10 @@ export class Campaign {
       type: "BattleStarted",
       battleId,
       roundId: dangerousGenerateId(),
+      serialNumber: this.events.length + 1,
     });
 
     return battleId;
-  }
-
-  getCurrentBattle(): Battle | undefined {
-    const campaignState = this.applyEvents();
-    return campaignState.battles[campaignState.battles.length - 1];
-  }
-
-  getCurrentRound(): Round {
-    const campaignState = this.applyEvents();
-    const round = campaignState.rounds[campaignState.rounds.length - 1];
-    if (!round) {
-      throw new Error("No current round");
-    }
-
-    return round;
   }
 
   getItem(itemId: Item["id"]) {
@@ -394,19 +374,23 @@ export class Campaign {
     return this.publishCampaignEvent(...[attackerPrimaryAction, hitDodgeEvent, ...damageTakenEvents, ...statusChangeEvents]);
   }
 
-  publishCampaignEvent(...events: CampaignEvent[]) {
-    const currentBattle = this.getCurrentBattle();
-    const currentRound = this.getCurrentRound();
-    const eventsWithRoundAndBattle = events.map((e) => {
+  publishCampaignEvent(...newEvents: CampaignEvent[]) {
+    const currentCampaignState = this.getCampaignStateFromEvents();
+    const currentBattle = currentCampaignState.getCurrentBattle();
+    const currentRound = currentCampaignState.getCurrentRound();
+
+    const lastSerialNumber = this.events[this.events.length - 1]?.serialNumber || 0;
+    const eventsWithRoundAndBattle = newEvents.map((e, i) => {
       return {
         ...e,
         battleId: currentBattle?.id,
         roundId: currentRound.id,
+        serialNumber: lastSerialNumber + i + 1,
       };
     });
 
     this.events.push(...eventsWithRoundAndBattle);
-    return events;
+    return newEvents;
   }
 
   getCharacterRoundEvents(round: Round, characterId: Character["id"]) {
@@ -426,13 +410,16 @@ export class Campaign {
     return this.world!.ruleset.levelProgression.sort((a, b) => a - b).findIndex((l) => l > character.xp);
   }
 
-  isValidEvent(event: CampaignEvent) {
-    return true;
+  isValidEvent(event: CampaignEventWithRound) {
+    return event.serialNumber !== undefined;
   }
 
-  applyEvents() {
+  getCampaignStateFromEvents() {
     const worldState = new CampaignState(this, [], [], []);
-    this.events.filter(this.isValidEvent).forEach((e) => this.applyEvent(e, worldState));
+    this.events
+      .filter(this.isValidEvent)
+      .sort((a, b) => a.serialNumber - b.serialNumber)
+      .forEach((e) => this.applyEvent(e, worldState));
     return worldState;
   }
 
@@ -516,6 +503,7 @@ export class Campaign {
       case "CharacterHealthLoss":
       case "CharacterHealthSet":
       case "CharacterClassReset":
+      case "CharacterBattleInitiativeSet":
       case "CharacterClassLevelGain":
         {
           const character = campaignState.characters.find((c) => c.id === event.characterId);
@@ -536,6 +524,21 @@ export class Campaign {
     switch (event.type) {
       case "RoundStarted": {
         character.resetResources();
+        break;
+      }
+
+      case "CharacterEndRound": {
+        const battle = campaignState.battles.find((b) => b.id === event.battleId);
+
+        if (!battle) {
+          throw new Error("Cannot find battle");
+        }
+
+        const characterBattle = battle.entities.find((e) => e.actor.id === event.characterId);
+        if (!characterBattle) {
+          throw new Error("Cannot find battle character");
+        }
+
         break;
       }
 

@@ -1,8 +1,6 @@
 import { Id } from "../../lib/generate-id";
 import { isCharacterEvent } from "../actor/character";
 import { CampaignEvent } from "../campaign/campaign-events";
-import { D20 } from "../dice/dice";
-import { roll } from "../dice/dice";
 import { AugmentedRequired } from "../../types/with-required";
 import { Actor } from "../actor/actor";
 
@@ -15,11 +13,6 @@ export class BattleActor {
     this.actor = actor;
   }
 }
-
-export function getActorInitiative(c: Actor) {
-  return roll(D20) + c.getAbilityModifier();
-}
-
 export class Battle {
   id!: Id;
   name!: string;

@@ -13,6 +13,7 @@ describe("Campaign state", () => {
         characterId,
         id: dangerousGenerateId(),
         roundId: dangerousGenerateId(),
+        serialNumber: 0,
       },
       {
         type: "CharacterNameSet",
@@ -20,6 +21,7 @@ describe("Campaign state", () => {
         id: dangerousGenerateId(),
         name: "Some name",
         roundId: dangerousGenerateId(),
+        serialNumber: 0,
       },
       {
         type: "CharacterMaximumHealthSet",
@@ -27,12 +29,13 @@ describe("Campaign state", () => {
         id: dangerousGenerateId(),
         roundId: dangerousGenerateId(),
         maximumHealth: 10,
+        serialNumber: 0,
       },
     ];
 
     const world = new World({ name: "World", ruleset: DefaultRuleSet });
     const campaign = new Campaign({ id: "0000000-0000-0000-0000-000000000000" as const, name: "Campaign", world, events });
-    campaign.applyEvents();
+    campaign.getCampaignStateFromEvents();
 
     const characters = campaign.getWorldCharacters();
     expect(characters.length).toBe(1);

@@ -25,6 +25,19 @@ export class CampaignState {
     this.monsters = monsters;
   }
 
+  getCurrentBattle(): Battle | undefined {
+    return this.battles[this.battles.length - 1];
+  }
+
+  getCurrentRound(): Round {
+    const round = this.rounds[this.rounds.length - 1];
+    if (!round) {
+      throw new Error("No current round");
+    }
+
+    return round;
+  }
+
   getActors(): Actor[] {
     return [...this.monsters, ...this.characters];
   }

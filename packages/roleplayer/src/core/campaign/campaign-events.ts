@@ -13,6 +13,7 @@ export type CampaignEvent = CampaignEventType & {
 export type CampaignEventWithRound = CampaignEvent & {
   roundId: Round["id"];
   battleId?: Battle["id"];
+  serialNumber: number;
 };
 
 export type CampaignEventType =

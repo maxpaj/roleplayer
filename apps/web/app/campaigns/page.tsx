@@ -1,7 +1,8 @@
 import { H2, Muted } from "@/components/ui/typography";
 import { getCampaigns } from "./actions";
 import { CampaignCard } from "@/components/campaign-card";
-import { Separator } from "@/components/ui/separator";
+
+export const dynamic = "force-dynamic";
 
 export default async function CampaignPage() {
   const campaigns = await getCampaigns();

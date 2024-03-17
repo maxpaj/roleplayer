@@ -10,7 +10,7 @@ async function getData(userId: UserRecord["id"] = DEFAULT_USER_ID) {
   return worlds;
 }
 
-export default async function WorldsPage({}) {
+export default async function WorldsPage({ params }: { params: {} }) {
   const worlds = await getData();
 
   return (

@@ -25,13 +25,11 @@ jobs:
         working-directory: packages/roleplayer
 
       - name: Build
-        run:
+        run: npm run build
         working-directory: packages/roleplayer
 
       - name: Publish to npm and create release pull request
         uses: changesets/action@v1
-        with:
-          publish: npm run build && npx changeset publish
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

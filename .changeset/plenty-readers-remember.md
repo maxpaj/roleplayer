@@ -1,5 +1,0 @@
----
-"roleplayer": major
----
-
-First release

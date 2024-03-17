@@ -25,8 +25,9 @@ jobs:
 
       - name: Build
         run: npm run build
+        working-directory: packages/roleplayer
 
-      - name: Create release pull request
+      - name: Publish and create release pull request
         uses: changesets/action@v1
         with:
           publish: npm publish

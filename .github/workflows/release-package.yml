@@ -13,7 +13,6 @@ jobs:
         with:
           node-version: 20
       - run: npm install
-        working-directory: ./packages/roleplayer
       - run: npm test
         working-directory: ./packages/roleplayer
 
@@ -49,7 +48,6 @@ jobs:
           node-version: 20
           registry-url: https://npm.pkg.github.com/
       - run: npm install
-        working-directory: ./packages/roleplayer
       - run: npm publish
         working-directory: ./packages/roleplayer
         env:

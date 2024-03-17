@@ -67,7 +67,12 @@ export type CharacterClass = {
   classId: Clazz["id"];
 };
 
-export type LevelProgression = number;
+export type LevelProgression = {
+  id: Id;
+  requiredXp: number;
+  unlocksLevel: number;
+  onLevelUp: (character: Character, publishEvent: Campaign["publishCampaignEvent"]) => void;
+};
 
 export type CharacterEquipmentSlot = {
   item?: Item;

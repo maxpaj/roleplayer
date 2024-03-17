@@ -1,6 +1,6 @@
 {
   "name": "roleplayer-web",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "scripts": {
     "dev": "next dev --turbo",
@@ -37,7 +37,7 @@
     "react": "^18",
     "react-dom": "^18",
     "react-hook-form": "^7.50.1",
-    "roleplayer": "0.0.5-alpha",
+    "roleplayer": "0.0.5",
     "sharp": "^0.33.2",
     "tailwind-merge": "^2.2.1",
     "tailwindcss-animate": "^1.0.7",

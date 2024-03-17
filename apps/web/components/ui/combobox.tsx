@@ -30,9 +30,8 @@ export function Combobox({ options, placeholder = "Select item", onChange }: Com
       <PopoverContent className="w-[200px] p-0">
         <Command>
           <CommandInput placeholder={placeholder} />
-          <CommandEmpty>No option found.</CommandEmpty>
-
           <CommandList>
+            <CommandEmpty>No option found.</CommandEmpty>
             <CommandGroup>
               {options.map((option) => (
                 <CommandItem

@@ -5,13 +5,17 @@ import { Muted, Paragraph } from "@/components/ui/typography";
 import { Character } from "roleplayer";
 import { useState } from "react";
 import { EMPTY_GUID } from "@/lib/guid";
+import { ButtonLink } from "@/components/ui/button-link";
+import { CampaignRecord } from "@/db/schema/campaigns";
 
 export function AddBattleCharacterButton({
   availableCharacters,
+  campaignId,
   onAddCharacter,
 }: {
   onAddCharacter: (characterId: Character["id"]) => void;
   availableCharacters: Character[];
+  campaignId: CampaignRecord["id"];
 }) {
   const [selectedCharacter, setSelectedCharacter] = useState<Character["id"]>(EMPTY_GUID);
   const [open, setOpen] = useState<boolean>(false);
@@ -30,21 +34,23 @@ export function AddBattleCharacterButton({
         <DialogHeader>
           <DialogTitle>Add character</DialogTitle>
         </DialogHeader>
-        <Paragraph>Select character to add to the battle</Paragraph>
-        {availableCharacters.length === 0 && <Muted>No characters added to the availableCharacters.</Muted>}
-
+        {availableCharacters.length === 0 && <Muted>No characters added to the campaign yet</Muted>}
         {availableCharacters.length > 0 && (
-          <Combobox placeholder="Select character to add" onChange={(characterId) => setSelectedCharacter(characterId)} options={characterOptions} />
+          <>
+            <Paragraph>Select character to add to the battle</Paragraph>
+            <Combobox placeholder="Select character to add" onChange={(characterId) => setSelectedCharacter(characterId)} options={characterOptions} />
+          </>
         )}
 
         <DialogFooter>
+          {availableCharacters.length === 0 && (
+            <ButtonLink variant="outline" href={`/campaigns/${campaignId}/characters`}>
+              Add character
+            </ButtonLink>
+          )}
           <Button
-            disabled={!selectedCharacter}
+            disabled={selectedCharacter === EMPTY_GUID}
             onClick={() => {
-              if (!selectedCharacter) {
-                return;
-              }
-
               setOpen(false);
               onAddCharacter(selectedCharacter);
             }}

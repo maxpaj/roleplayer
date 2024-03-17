@@ -22,7 +22,6 @@ jobs:
 
       - name: Install dependencies
         run: npm install
-        working-directory: packages/roleplayer
 
       - name: Build
         run: npm run build

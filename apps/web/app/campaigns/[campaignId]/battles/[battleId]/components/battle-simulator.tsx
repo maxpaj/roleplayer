@@ -18,7 +18,7 @@ import { saveCampaignEvents } from "app/campaigns/actions";
 import { DiceRollCard } from "./dice-roll-card";
 import { Separator } from "@/components/ui/separator";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { AlertOctagon } from "lucide-react";
+import { HelpCircle } from "lucide-react";
 
 const EventIconSize = 32;
 
@@ -76,6 +76,15 @@ export function BattleSimulator({ campaign, battleId }: BattleSimulatorProps) {
     });
 
     setCampaign(tempCampaign);
+  }
+
+  function renderEventMessage(event: CampaignEvent) {
+    switch (event.type) {
+      case "BattleStarted":
+        return "Battle started";
+      case "CharacterBattleEnter":
+        return "Character entered battle";
+    }
   }
 
   function renderCharacter(currentRound: Round, battleCharacter: BattleActor, isCharacterTurnToAct: boolean) {
@@ -200,15 +209,15 @@ export function BattleSimulator({ campaign, battleId }: BattleSimulatorProps) {
 
     return (
       <div key={event.id} className="flex justify-between gap-2 border border-slate-500 p-2">
-        <div>
+        <div className="flex gap-2">
           <Image className="invert" width={EventIconSize} height={EventIconSize} alt={eventIcon.alt} src={eventIcon.icon} />
-          {event.type}
+          {renderEventMessage(event)}
         </div>
 
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger>
-              <AlertOctagon />
+              <HelpCircle />
             </TooltipTrigger>
             <TooltipContent>
               <pre>{JSON.stringify(event, null, 2)}</pre>
@@ -245,7 +254,7 @@ export function BattleSimulator({ campaign, battleId }: BattleSimulatorProps) {
   return (
     <div className="w-full">
       <div className="mb-4 flex gap-2">
-        <AddBattleCharacterButton availableCharacters={campaignState.characters} onAddCharacter={addCharacter} />
+        <AddBattleCharacterButton campaignId={campaign.id} availableCharacters={campaignState.characters} onAddCharacter={addCharacter} />
         <AddBattleMonsterButton campaign={campaign} onAddMonster={addMonster} />
 
         <Button

@@ -3,7 +3,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { H3, Muted } from "@/components/ui/typography";
 import { getCampaign } from "app/campaigns/actions";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { AlertOctagon, OctagonIcon } from "lucide-react";
+import { AlertOctagon, HelpCircle } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 export default async function CampaignEventsPage({ params }: { params: { campaignId: string } }) {
@@ -50,7 +50,7 @@ export default async function CampaignEventsPage({ params }: { params: { campaig
                     <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger>
-                          <AlertOctagon />
+                          <HelpCircle />
                         </TooltipTrigger>
                         <TooltipContent>
                           <pre>{JSON.stringify(e.eventData, null, 2)}</pre>

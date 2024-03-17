@@ -5,20 +5,20 @@ on:
     types: [created]
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - run: npm ci
+      - run: npm install
         working-directory: ./packages/roleplayer
       - run: npm test
         working-directory: ./packages/roleplayer
 
   publish-npm:
-    needs: build
+    needs: test
     runs-on: ubuntu-latest
     permissions:
       packages: write
@@ -29,7 +29,7 @@ jobs:
         with:
           node-version: 20
           registry-url: https://registry.npmjs.org/
-      - run: npm ci
+      - run: npm install
         working-directory: ./packages/roleplayer
       - run: npm publish
         working-directory: ./packages/roleplayer
@@ -37,7 +37,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
   publish-gpr:
-    needs: build
+    needs: test
     runs-on: ubuntu-latest
     permissions:
       packages: write
@@ -48,7 +48,7 @@ jobs:
         with:
           node-version: 20
           registry-url: https://npm.pkg.github.com/
-      - run: npm ci
+      - run: npm install
         working-directory: ./packages/roleplayer
       - run: npm publish
         working-directory: ./packages/roleplayer

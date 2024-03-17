@@ -5,6 +5,9 @@ node_modules
 .pnp
 .pnp.js
 
+# Turbo repo package lock https://github.com/npm/cli/issues/4828
+/package-lock.json
+
 # Local env files
 .env
 .env.local

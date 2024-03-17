@@ -1,5 +1,5 @@
 ---
-"roleplayer": major
+"roleplayer": patch
 ---
 
-First release
+Patch

@@ -2,13 +2,22 @@ import { Button } from "@/components/ui/button";
 import { Combobox } from "@/components/ui/combobox";
 import { DialogHeader, DialogFooter, Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Muted, Paragraph } from "@/components/ui/typography";
-import { Campaign, Monster } from "roleplayer";
+import { Monster } from "roleplayer";
 import { useState } from "react";
-import { RemoveFunctions } from "types/without-functions";
 import { EMPTY_GUID } from "@/lib/guid";
 import { ButtonLink } from "@/components/ui/button-link";
+import { MonsterRecord } from "@/db/schema/monster";
+import { WorldRecord } from "@/db/schema/worlds";
 
-export function AddBattleMonsterButton({ campaign, onAddMonster }: { onAddMonster: (monsterId: Monster["id"]) => void; campaign: RemoveFunctions<Campaign> }) {
+export function AddBattleMonsterButton({
+  monsters,
+  worldId,
+  onAddMonster,
+}: {
+  monsters: MonsterRecord[];
+  worldId: WorldRecord["id"];
+  onAddMonster: (monsterId: Monster["id"]) => void;
+}) {
   const [selectedMonster, setSelectedMonster] = useState<Monster["id"]>(EMPTY_GUID);
   const [open, setOpen] = useState<boolean>(false);
 
@@ -17,18 +26,19 @@ export function AddBattleMonsterButton({ campaign, onAddMonster }: { onAddMonste
       <DialogTrigger asChild>
         <Button variant="outline">Add monster</Button>
       </DialogTrigger>
+
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Add monster</DialogTitle>
         </DialogHeader>
 
-        {campaign.world!.monsters.length === 0 && <Muted>No monsters added to the world</Muted>}
-        {campaign.world!.monsters.length > 0 && (
+        {monsters.length === 0 && <Muted>No monsters added to the world</Muted>}
+        {monsters.length > 0 && (
           <>
             <Paragraph>Select monster type to add</Paragraph>
             <Combobox
               onChange={(monsterId) => setSelectedMonster(monsterId)}
-              options={campaign.world!.monsters.map((c) => ({
+              options={monsters.map((c) => ({
                 label: c.name,
                 value: c.id.toString(),
               }))}
@@ -37,8 +47,8 @@ export function AddBattleMonsterButton({ campaign, onAddMonster }: { onAddMonste
         )}
 
         <DialogFooter>
-          {campaign.world!.monsters.length === 0 && (
-            <ButtonLink variant="outline" href={`/worlds/${campaign.world.id}/monsters`}>
+          {monsters.length === 0 && (
+            <ButtonLink variant="outline" href={`/worlds/${worldId}/monsters`}>
               Add monster
             </ButtonLink>
           )}

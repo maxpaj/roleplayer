@@ -19,15 +19,18 @@ import { DiceRollCard } from "./dice-roll-card";
 import { Separator } from "@/components/ui/separator";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { HelpCircle } from "lucide-react";
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
+import { WorldAggregated } from "services/world-service";
 
 const EventIconSize = 32;
 
 type BattleSimulatorProps = {
   campaign: RemoveFunctions<Campaign>;
   battleId: Battle["id"];
+  world: WorldAggregated;
 };
 
-export function BattleSimulator({ campaign, battleId }: BattleSimulatorProps) {
+export function BattleSimulator({ campaign, battleId, world }: BattleSimulatorProps) {
   const [tempCampaign, setTempCampaignReact] = useState<Campaign>(new Campaign(campaign));
   const [tempCampaignState, setTempCampaignState] = useState<CampaignState>(tempCampaign.getCampaignStateFromEvents());
   const [, updateState] = useState({});
@@ -101,7 +104,9 @@ export function BattleSimulator({ campaign, battleId }: BattleSimulatorProps) {
         <div className="w-full p-2">
           <div className="flex justify-between gap-2">
             <div className="w-full">
-              <H5>{battleCharacter.actor.name}</H5>
+              <H5>
+                {battleCharacter.actor.name} ({battleCharacter.actor.getType()})
+              </H5>
               <Separator className="my-3" />
             </div>
 
@@ -111,28 +116,38 @@ export function BattleSimulator({ campaign, battleId }: BattleSimulatorProps) {
           <div className="relative flex w-full justify-between p-4">
             {isCharacterTurnToAct && (
               <div className="flex gap-x-2">
-                <select
-                  disabled={hasSpentAction || hasFinished}
-                  className="border bg-transparent"
-                  onChange={(e) => {
-                    const a = battleCharacter.actor.getAvailableActions().find((a) => a.name === e.target.value);
-                    setSelectedAction(a);
-                  }}
-                >
-                  <option>Select action</option>
-                  {battleCharacter.actor.getAvailableActions().map((char) => (
-                    <option key={char.name}>{char.name}</option>
-                  ))}
-                </select>
+                <Select disabled={hasSpentAction || hasFinished}>
+                  <SelectTrigger className="w-[180px]">
+                    <SelectValue placeholder="Select action" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {battleCharacter.actor.getAvailableActions().map((action) => (
+                      <SelectItem
+                        key={action.name}
+                        value={action.id}
+                        onClick={() => {
+                          setSelectedAction(action);
+                        }}
+                      >
+                        {action.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
 
-                <select
-                  disabled={hasSpentAction || hasFinished}
-                  className="border bg-transparent"
-                  onChange={(e) => battleCharacter.actor.performAction([e.target.value], selectedAction!.id)}
-                >
-                  <option>Select target</option>
-                  {selectedAction && battleCharacter.actor.getEligibleTargets(selectedAction).map((target) => <option>{target.id}</option>)}
-                </select>
+                <Select disabled={hasSpentAction || hasFinished}>
+                  <SelectTrigger className="w-[180px]">
+                    <SelectValue placeholder="Select target" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {selectedAction &&
+                      battleCharacter.actor.getEligibleTargets(selectedAction).map((target) => (
+                        <SelectItem onClick={() => battleCharacter.actor.performAction([target.id], selectedAction!.id)} value={target.id}>
+                          {target.id}
+                        </SelectItem>
+                      ))}
+                  </SelectContent>
+                </Select>
 
                 <Button
                   disabled={hasFinished}
@@ -141,7 +156,7 @@ export function BattleSimulator({ campaign, battleId }: BattleSimulatorProps) {
                     setCampaign(tempCampaign);
                   }}
                 >
-                  End
+                  End round
                 </Button>
               </div>
             )}
@@ -255,7 +270,7 @@ export function BattleSimulator({ campaign, battleId }: BattleSimulatorProps) {
     <div className="w-full">
       <div className="mb-4 flex gap-2">
         <AddBattleCharacterButton campaignId={campaign.id} availableCharacters={campaignState.characters} onAddCharacter={addCharacter} />
-        <AddBattleMonsterButton campaign={campaign} onAddMonster={addMonster} />
+        <AddBattleMonsterButton worldId={campaign.world.id} monsters={world.monsters} onAddMonster={addMonster} />
 
         <Button
           disabled={!canEndTurn}

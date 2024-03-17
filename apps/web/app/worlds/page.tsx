@@ -5,6 +5,8 @@ import { WorldService } from "services/world-service";
 import { DEFAULT_USER_ID } from "@/db/data";
 import { UserRecord } from "@/db/schema/users";
 
+export const dynamic = "force-dynamic";
+
 async function getData(userId: UserRecord["id"] = DEFAULT_USER_ID) {
   const worlds = await new WorldService().getAll(userId);
   return worlds;

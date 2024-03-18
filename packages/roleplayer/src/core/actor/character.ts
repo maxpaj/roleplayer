@@ -1,3 +1,4 @@
+import { Campaign } from "../..";
 import { Id } from "../../lib/generate-id";
 import { CampaignEvent, CampaignEventType, CampaignEventWithRound } from "../campaign/campaign-events";
 import { D20, roll } from "../dice/dice";
@@ -67,7 +68,12 @@ export type CharacterClass = {
   classId: Clazz["id"];
 };
 
-export type LevelProgression = number;
+export type LevelProgression = {
+  id: Id;
+  requiredXp: number;
+  unlocksLevel: number;
+  onLevelUp?: (character: Character, publishEvent: Campaign["publishCampaignEvent"]) => void;
+};
 
 export type CharacterEquipmentSlot = {
   item?: Item;

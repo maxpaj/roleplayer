@@ -2,25 +2,25 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ClassSelector } from "./class-selector";
-import { Character, World } from "roleplayer";
-import { useState } from "react";
-import { RemoveFunctions } from "types/without-functions";
-import { CharacterClassEditor } from "./class-editor";
-import { CharacterStatsEditor } from "./character-stats-editor";
-import { CharacterInventoryEditor } from "./character-inventory-editor";
 import { Separator } from "@/components/ui/separator";
 import { H3, H4, Muted, Paragraph } from "@/components/ui/typography";
+import { useState } from "react";
+import { Character, World } from "roleplayer";
+import { RemoveFunctions } from "types/without-functions";
+import { CharacterInventoryEditor } from "./character-inventory-editor";
+import { CharacterStatsEditor } from "./character-stats-editor";
+import { CharacterClassEditor } from "./class-editor";
+import { ClassSelector } from "./class-selector";
 
 type CharacterEditorProps = {
   onSave: (character: RemoveFunctions<Character>) => void;
-  characterFromEvents: RemoveFunctions<Character>;
   world: RemoveFunctions<World>;
+  characterFromEvents: RemoveFunctions<Character>;
+  characterLevel: number;
 };
 
-export function CharacterEditor({ onSave, world, characterFromEvents }: CharacterEditorProps) {
+export function CharacterEditor({ onSave, world, characterFromEvents, characterLevel }: CharacterEditorProps) {
   const [update, setUpdate] = useState(characterFromEvents);
-  const characterLevel = world.ruleset.levelProgression.findIndex((l) => l > update.xp);
 
   return (
     <>

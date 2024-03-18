@@ -1,8 +1,15 @@
+import { dangerousGenerateId } from "..";
 import { CharacterStatType, LevelProgression } from "../core/actor/character";
 import { Ruleset } from "../core/ruleset/ruleset";
 import { EquipmentSlotDefinition, ItemEquipmentType } from "../core/world/item/item";
 
-export const DefaultLevelProgression: LevelProgression[] = [0, 50, 100, 200, 400];
+export const DefaultLevelProgression: LevelProgression[] = [
+  { requiredXp: 0, id: dangerousGenerateId(), unlocksLevel: 1 },
+  { requiredXp: 50, id: dangerousGenerateId(), unlocksLevel: 2 },
+  { requiredXp: 100, id: dangerousGenerateId(), unlocksLevel: 3 },
+  { requiredXp: 200, id: dangerousGenerateId(), unlocksLevel: 4 },
+  { requiredXp: 400, id: dangerousGenerateId(), unlocksLevel: 5 },
+];
 
 export const DefaultEquipmentSlotDefinitions: EquipmentSlotDefinition[] = [
   {

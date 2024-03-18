@@ -396,7 +396,10 @@ export class Campaign {
   }
 
   getCharacterLevel(character: Character) {
-    return this.world!.ruleset.levelProgression.sort((a, b) => a - b).findIndex((l) => l > character.xp);
+    const levelProgression = this.world!.ruleset.levelProgression.slice();
+    const levelInfo = levelProgression.find((l) => l.requiredXp >= character.xp);
+    if (!levelInfo) throw new Error(`Cannot find level progression for xp: ${character.xp}`);
+    return levelInfo.unlocksLevel;
   }
 
   isValidEvent(event: CampaignEventWithRound) {

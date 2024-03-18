@@ -19,9 +19,9 @@ export default async function CampaignCharactersPage({ params }: { params: { cam
       <Divider className="my-3" />
 
       <div className="my-2 flex gap-2">
-        <CreateCharacterForm worldId={campaignData.world.world.id} campaignId={campaignData.campaign.id} />
+        <CreateCharacterForm worldId={campaignData.world.id} campaignId={campaignData.id} />
 
-        <ButtonLink href={`/campaigns/${campaignData.campaign.id}/invite-a-friend`} variant="outline">
+        <ButtonLink href={`/campaigns/${campaignData.id}/invite-a-friend`} variant="outline">
           Invite a friend
         </ButtonLink>
       </div>

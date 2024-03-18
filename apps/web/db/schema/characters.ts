@@ -10,7 +10,7 @@ export const charactersSchema = pgTable("characters", {
   name: varchar("name", { length: 256 }).notNull(),
   createdUtc: timestamp("createdUtc").defaultNow(),
   imageUrl: varchar("imageUrl", { length: 2048 }),
-  description: varchar("description", { length: 8192 }),
+  description: varchar("description", { length: 8192 }).default("").notNull(),
   userId: uuid("userId").references(() => usersSchema.id),
   worldId: uuid("worldId")
     .references(() => worldsSchema.id)

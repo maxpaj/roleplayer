@@ -3,15 +3,21 @@ import { BadgeLink } from "@/components/ui/button-link";
 import { getCampaign } from "../actions";
 import Image from "next/image";
 
-export default async function CampaignLayout({ params, children }: { children: React.ReactNode; params: { campaignId: string } }) {
+export default async function CampaignLayout({
+  params,
+  children,
+}: {
+  children: React.ReactNode;
+  params: { campaignId: string };
+}) {
   const { campaignId: id } = params;
-  const campaignData = await getCampaign(id);
+  const campaign = await getCampaign(id);
 
-  if (!campaignData) {
+  if (!campaign) {
     return <>Campaign not found</>;
   }
 
-  const { campaign, world } = campaignData;
+  const { world } = campaign;
 
   return (
     <div>
@@ -19,7 +25,7 @@ export default async function CampaignLayout({ params, children }: { children: R
         <H2>{campaign.name}</H2>
       </div>
 
-      {world.world.imageUrl && (
+      {world.imageUrl && (
         <div className="fixed left-0 top-0 -z-10 h-[800px] w-full opacity-15">
           <div
             className="relative z-10 h-full w-full"
@@ -28,7 +34,13 @@ export default async function CampaignLayout({ params, children }: { children: R
             }}
           />
 
-          <Image className="relative z-0" src={world.world.imageUrl} fill={true} style={{ objectFit: "cover" }} alt={"World background"} />
+          <Image
+            className="relative z-0"
+            src={world.imageUrl}
+            fill={true}
+            style={{ objectFit: "cover" }}
+            alt={"World background"}
+          />
         </div>
       )}
 

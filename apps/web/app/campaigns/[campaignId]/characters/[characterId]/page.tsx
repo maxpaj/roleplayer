@@ -7,13 +7,21 @@ import { getCampaign } from "app/campaigns/actions";
 import { CharacterEditor } from "app/characters/components/character-editor";
 import { redirect } from "next/navigation";
 import { Campaign, CampaignEventWithRound, Character, DefaultRuleSet, World } from "roleplayer";
-import { CampaignService } from "services/campaign-service";
+import { CampaignService, getWorldFromCampaignData } from "services/campaign-service";
 
-export default async function CampaignCharacterPage({ params: { campaignId: id, characterId: cid } }: { params: { campaignId: string; characterId: string } }) {
+export default async function CampaignCharacterPage({
+  params: { campaignId: id, characterId: cid },
+}: {
+  params: { campaignId: string; characterId: string };
+}) {
   const campaignId = id;
   const characterId = cid;
 
-  async function updateCharacter(campaignId: CampaignRecord["id"], characterId: CharacterRecord["id"], characterUpdate: Partial<Character>) {
+  async function updateCharacter(
+    campaignId: CampaignRecord["id"],
+    characterId: CharacterRecord["id"],
+    characterUpdate: Partial<Character>
+  ) {
     "use server";
     const campaignData = await new CampaignService().getCampaign(campaignId);
     if (!campaignData) {
@@ -21,11 +29,9 @@ export default async function CampaignCharacterPage({ params: { campaignId: id, 
     }
 
     const campaign = new Campaign({
-      ...campaignData.campaign,
-      world: new World({
-        ...campaignData.world.world,
-        ruleset: DefaultRuleSet,
-      }),
+      ...campaignData,
+      world: getWorldFromCampaignData(campaignData),
+      events: campaignData.events.map((e) => e.eventData as CampaignEventWithRound),
     });
 
     campaign.setCharacterClasses(characterId, characterUpdate.classes!);
@@ -39,11 +45,12 @@ export default async function CampaignCharacterPage({ params: { campaignId: id, 
     throw new Error("Could not find campaign");
   }
 
-  const { campaign, world, characters, events } = campaignData;
+  const { characters, events } = campaignData;
+
   const campaignInstance = new Campaign({
-    ...campaign,
-    events: events.map((e) => e.eventData) as CampaignEventWithRound[],
-    world: new World({ ...world.world, ruleset: DefaultRuleSet }),
+    ...campaignData,
+    world: getWorldFromCampaignData(campaignData),
+    events: campaignData.events.map((e) => e.eventData as CampaignEventWithRound),
   });
 
   const data = campaignInstance.getCampaignStateFromEvents();

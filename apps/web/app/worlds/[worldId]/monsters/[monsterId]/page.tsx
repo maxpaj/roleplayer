@@ -12,7 +12,7 @@ export default async function MonsterDetailsPage({ params }: { params: { monster
   }
 
   const { monsters } = worldData;
-  const monster = monsters.find((m) => m.monster.id === monsterId);
+  const monster = monsters.find((m) => m.id === monsterId);
 
   if (!monster) {
     return <>Monster not found!</>;
@@ -20,14 +20,14 @@ export default async function MonsterDetailsPage({ params }: { params: { monster
 
   return (
     <>
-      <H4>{monster.monster.name}</H4>
+      <H4>{monster.name}</H4>
       <Divider />
-      <Paragraph>{monster.monster.description}</Paragraph>
+      <Paragraph>{monster.description}</Paragraph>
 
       <H5>Actions</H5>
       <div className="flex flex-wrap gap-2">
         {monster.actions.map((a) => (
-          <ActionCard key={a.action.id} worldId={worldId} action={a} />
+          <ActionCard key={a.id} worldId={worldId} action={a} />
         ))}
       </div>
     </>

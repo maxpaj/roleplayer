@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import { db } from "../db";
-import { ActionRecord, actionsSchema, actionsToEffectSchema } from "../db/schema/actions";
+import { ActionRecord, RequiredResourceRecord, actionsSchema, actionsToEffectSchema } from "../db/schema/actions";
 import { CampaignRecord, campaignsSchema } from "../db/schema/campaigns";
 import { CharacterRecord, NewCharacterRecord, charactersSchema } from "../db/schema/characters";
 import { ClazzRecord, NewClazzRecord, classesSchema } from "../db/schema/classes";
@@ -13,9 +13,9 @@ import { CampaignService } from "./campaign-service";
 import { DEFAULT_USER_ID } from "@/db/data";
 import { alias } from "drizzle-orm/pg-core";
 import { EffectRecord, effectsSchema } from "@/db/schema/effects";
+import { TargetType } from "roleplayer";
 
-export type WorldAggregated = {
-  world: WorldRecord;
+export type WorldAggregated = WorldRecord & {
   campaigns: CampaignRecord[];
   monsters: MonsterAggregated[];
   characters: CharacterRecord[];
@@ -25,13 +25,13 @@ export type WorldAggregated = {
   actions: ActionAggregated[];
 };
 
-export type ActionAggregated = {
-  action: ActionRecord;
+export type ActionAggregated = ActionRecord & {
   appliesEffects: EffectRecord[];
+  eligibleTargets: TargetType[];
+  requiresResources: RequiredResourceRecord[];
 };
 
-export type MonsterAggregated = {
-  monster: MonsterRecord;
+export type MonsterAggregated = MonsterRecord & {
   actions: ActionAggregated[];
 };
 
@@ -80,7 +80,7 @@ export class WorldService {
 
       if (!acc[world.id]) {
         acc[world.id] = {
-          world,
+          ...world,
           monsters: [],
           actions: [],
           campaigns: [],
@@ -99,18 +99,22 @@ export class WorldService {
       }
 
       if (row.monsters) {
-        const existingMonster = acc[world.id]!.monsters.filter((c) => c.monster.id !== row.monsters!.id)[0];
+        const existingMonster = acc[world.id]!.monsters.filter((c) => c.id !== row.monsters!.id)[0];
         const monsterToAdd: MonsterAggregated = {
           actions: existingMonster?.actions || [],
-          monster: existingMonster?.monster || row.monsters,
+          ...(existingMonster || row.monsters),
         };
 
         if (row.monsterActionsAlias) {
-          const existingAction = monsterToAdd.actions.filter((c) => c.action.id !== row.monsterActionsAlias!.id)[0];
+          const existingAction = monsterToAdd.actions.filter((c) => c.id !== row.monsterActionsAlias!.id)[0];
           const actionToAdd: ActionAggregated = {
-            action: existingAction?.action || row.monsterActionsAlias,
+            ...(existingAction || row.monsterActionsAlias),
             appliesEffects: existingAction?.appliesEffects || [],
+            eligibleTargets: existingAction?.eligibleTargets || [],
+            requiresResources: existingAction?.requiresResources || [],
           };
+
+          // TODO: Gather up all action eligible targets
 
           if (row.monsterActionEffectsAlias) {
             const existingEffect = actionToAdd.appliesEffects.filter(
@@ -125,15 +129,12 @@ export class WorldService {
           }
 
           monsterToAdd.actions = [
-            ...monsterToAdd.actions.filter((a) => a.action.id !== row.monsterActionsAlias!.id),
+            ...monsterToAdd.actions.filter((a) => a.id !== row.monsterActionsAlias!.id),
             actionToAdd,
           ];
         }
 
-        acc[world.id]!.monsters = [
-          ...acc[world.id]!.monsters.filter((c) => c.monster.id !== row.monsters!.id),
-          monsterToAdd,
-        ];
+        acc[world.id]!.monsters = [...acc[world.id]!.monsters.filter((c) => c.id !== row.monsters!.id), monsterToAdd];
       }
 
       if (row.campaigns) {
@@ -152,10 +153,12 @@ export class WorldService {
       }
 
       if (row.worldActionsAlias) {
-        const existingAction = acc[world.id]!.actions.filter((c) => c.action.id !== row.worldActionsAlias!.id)[0];
+        const existingAction = acc[world.id]!.actions.filter((c) => c.id !== row.worldActionsAlias!.id)[0];
         const actionToAdd: ActionAggregated = {
-          action: existingAction?.action || row.worldActionsAlias,
+          ...(existingAction || row.worldActionsAlias),
           appliesEffects: existingAction?.appliesEffects || [],
+          eligibleTargets: [],
+          requiresResources: existingAction?.requiresResources || [],
         };
 
         if (row.worldActionEffectsAlias) {
@@ -169,7 +172,7 @@ export class WorldService {
         }
 
         acc[world.id]!.actions = [
-          ...acc[world.id]!.actions.filter((c) => c.action.id !== row.worldActionsAlias!.id),
+          ...acc[world.id]!.actions.filter((c) => c.id !== row.worldActionsAlias!.id),
           actionToAdd,
         ];
       }

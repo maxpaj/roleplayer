@@ -5,12 +5,10 @@ import { Divider } from "@/components/ui/divider";
 
 export default async function MapsPage({ params }: { params: { worldId: string } }) {
   const { worldId: id } = params;
-  const worldData = await getWorldData(id);
-  if (!worldData) {
+  const world = await getWorldData(id);
+  if (!world) {
     return <>World not found</>;
   }
-
-  const { world } = worldData;
 
   return (
     <>

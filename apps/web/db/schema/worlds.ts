@@ -5,7 +5,7 @@ import { usersSchema } from "./users";
 export const worldsSchema = pgTable("worlds", {
   id: uuid("id").defaultRandom().primaryKey(),
   name: varchar("name", { length: 256 }).notNull(),
-  description: varchar("description", { length: 8192 }),
+  description: varchar("description", { length: 8192 }).default("").notNull(),
   imageUrl: varchar("imageUrl", { length: 2048 }),
   isTemplate: boolean("isTemplate").default(false),
   isPublic: boolean("isPublic").default(false),

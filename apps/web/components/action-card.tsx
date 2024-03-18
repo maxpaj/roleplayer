@@ -10,11 +10,11 @@ type ActionCardProps = {
 
 export function ActionCard({ worldId, action }: ActionCardProps) {
   return (
-    <Link href={`/worlds/${worldId}/actions/${action.action.id}`}>
+    <Link href={`/worlds/${worldId}/actions/${action.id}`}>
       <Card className="h-[100px] w-[150px] overflow-hidden">
         <CardHeader className="p-2">
-          <CardTitle className={"text-md"}>{action.action.name}</CardTitle>
-          <CardDescription>{action.action.description}</CardDescription>
+          <CardTitle className={"text-md"}>{action.name}</CardTitle>
+          <CardDescription>{action.description}</CardDescription>
         </CardHeader>
       </Card>
     </Link>

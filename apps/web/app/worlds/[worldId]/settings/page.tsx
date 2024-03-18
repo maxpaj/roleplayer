@@ -8,12 +8,10 @@ import { Divider } from "@/components/ui/divider";
 export default async function SettingsPage({ params }: { params: { worldId: string } }) {
   const { worldId: id } = params;
   const worldId = id;
-  const worldData = await getWorldData(worldId);
-  if (!worldData) {
+  const world = await getWorldData(worldId);
+  if (!world) {
     return <>World not found!</>;
   }
-
-  const { world } = worldData;
 
   return (
     <>

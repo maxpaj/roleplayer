@@ -5,13 +5,13 @@ import { Table, TableBody, TableCaption, TableCell, TableRow } from "@/component
 
 export default async function CampaignPage({ params }: { params: { campaignId: string } }) {
   const { campaignId: id } = params;
-  const campaignData = await getCampaign(id);
+  const campaign = await getCampaign(id);
 
-  if (!campaignData) {
+  if (!campaign) {
     return <>Campaign not found</>;
   }
 
-  const { campaign, world } = campaignData;
+  const { world } = campaign;
 
   return (
     <>
@@ -24,7 +24,7 @@ export default async function CampaignPage({ params }: { params: { campaignId: s
         <TableBody>
           <TableRow>
             <TableCell className="font-medium">World</TableCell>
-            <TableCell>{world.world.name}</TableCell>
+            <TableCell>{world.name}</TableCell>
           </TableRow>
         </TableBody>
       </Table>

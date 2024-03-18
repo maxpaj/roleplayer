@@ -8,7 +8,7 @@ export const rarityEnum = pgEnum("rarity", ["Common", "Uncommon", "Rare", "Epic"
 export const itemsSchema = pgTable("items", {
   id: uuid("id").defaultRandom().primaryKey(),
   name: varchar("name", { length: 256 }).notNull(),
-  description: varchar("description", { length: 8192 }),
+  description: varchar("description", { length: 8192 }).default("").notNull(),
   type: itemTypeEnum("itemType").default("Consumable").notNull(),
   createdUtc: timestamp("createdUtc").defaultNow(),
   rarity: rarityEnum("rarity").default("Common").notNull(),

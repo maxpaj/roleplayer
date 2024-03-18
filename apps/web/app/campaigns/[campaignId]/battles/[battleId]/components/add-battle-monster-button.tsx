@@ -39,8 +39,8 @@ export function AddBattleMonsterButton({
             <Combobox
               onChange={(monsterId) => setSelectedMonster(monsterId)}
               options={monsters.map((c) => ({
-                label: c.monster.name,
-                value: c.monster.id.toString(),
+                label: c.name,
+                value: c.id.toString(),
               }))}
             />
           </>

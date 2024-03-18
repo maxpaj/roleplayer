@@ -6,12 +6,10 @@ import { DeleteCampaignButton } from "./components/delete-campaign-button";
 export default async function CampaignSettingsPage({ params }: { params: { campaignId: string } }) {
   const { campaignId: id } = params;
   const campaignId = id;
-  const campaignData = await getCampaign(campaignId);
-  if (!campaignData) {
+  const campaign = await getCampaign(campaignId);
+  if (!campaign) {
     return <>World not found!</>;
   }
-
-  const { campaign } = campaignData;
 
   return (
     <>

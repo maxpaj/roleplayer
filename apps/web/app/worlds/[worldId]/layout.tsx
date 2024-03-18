@@ -3,7 +3,6 @@ import { H2 } from "@/components/ui/typography";
 import { BadgeLink, ButtonLink } from "@/components/ui/button-link";
 import { GitForkIcon } from "lucide-react";
 import Image from "next/image";
-import { Divider } from "@/components/ui/divider";
 
 export default async function WorldLayout({
   params,
@@ -14,13 +13,11 @@ export default async function WorldLayout({
 }) {
   const { worldId: id } = params;
 
-  const data = await getWorldData(id);
+  const world = await getWorldData(id);
 
-  if (!data) {
+  if (!world) {
     return <>Not found!</>;
   }
-
-  const world = data.world;
 
   return (
     <div>

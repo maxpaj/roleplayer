@@ -2,7 +2,8 @@ import { H4, Muted } from "@/components/ui/typography";
 import { BattleCard } from "./components/battle-card";
 import { StartBattleButton } from "./components/start-battle-button";
 import { getCampaign } from "app/campaigns/actions";
-import { Campaign, CampaignEventWithRound, DefaultRuleSet, World } from "roleplayer";
+import { Campaign, CampaignEventWithRound } from "roleplayer";
+import { getWorldFromCampaignData } from "services/campaign-service";
 
 export default async function BattlesPage({ params }: { params: { campaignId: string } }) {
   const { campaignId: id } = params;
@@ -14,14 +15,8 @@ export default async function BattlesPage({ params }: { params: { campaignId: st
   }
 
   const campaign = new Campaign({
-    ...campaignData.campaign,
-    world: new World({
-      ...campaignData.world.world,
-      monsters: campaignData.world.monsters.map((m) => ({ ...m.monster, actions: m.actions })),
-      actions: campaignData.world.actions,
-      classes: campaignData.world.classes,
-      ruleset: DefaultRuleSet,
-    }),
+    ...campaignData,
+    world: getWorldFromCampaignData(campaignData),
     events: campaignData.events.map((e) => e.eventData as CampaignEventWithRound),
   });
 

@@ -7,11 +7,11 @@ import { CharacterCard } from "@/components/character-card";
 export default async function NpcPage({ params }: { params: { worldId: string } }) {
   const { worldId: id } = params;
   const worldId = id;
-  const worldData = await getWorldData(worldId);
-  if (!worldData) {
+  const world = await getWorldData(worldId);
+  if (!world) {
     return <>World not found!</>;
   }
-  const { world, characters } = worldData;
+  const { characters } = world;
 
   return (
     <>

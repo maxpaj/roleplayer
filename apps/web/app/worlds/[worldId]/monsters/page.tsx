@@ -26,7 +26,7 @@ export default async function MonstersPage({ params }: { params: { worldId: stri
 
       <div className="my-2 flex flex-wrap gap-2">
         {monsters.map((m) => (
-          <MonsterCard key={m.monster.id} worldId={id} monster={m} />
+          <MonsterCard key={m.id} worldId={id} monster={m} />
         ))}
       </div>
     </>

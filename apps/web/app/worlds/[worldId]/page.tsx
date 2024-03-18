@@ -3,15 +3,15 @@ import { WorldEditorForm } from "./components/world-editor-form";
 
 export default async function WorldPage({ params }: { params: { worldId: string } }) {
   const { worldId: id } = params;
-  const data = await getWorldData(id);
+  const world = await getWorldData(id);
 
-  if (!data) {
+  if (!world) {
     return <>Not found!</>;
   }
 
   return (
     <>
-      <WorldEditorForm world={data.world} />
+      <WorldEditorForm world={world} />
     </>
   );
 }

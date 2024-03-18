@@ -11,17 +11,17 @@ export default async function ActionDetailsPage({ params }: { params: { worldId:
     return <>World not found!</>;
   }
 
-  const action = worldData.actions.find((a) => a.action.id === actionId);
+  const action = worldData.actions.find((a) => a.id === actionId);
   if (!action) {
     return <>Action not found!</>;
   }
 
   return (
     <>
-      <H3>{action.action.name}</H3>
+      <H3>{action.name}</H3>
       <Divider className="my-3" />
 
-      <Paragraph>{action.action.description}</Paragraph>
+      <Paragraph>{action.description}</Paragraph>
 
       <div className="flex flex-wrap gap-2">
         {action.appliesEffects.map((e) => (

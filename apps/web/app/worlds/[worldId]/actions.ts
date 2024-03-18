@@ -2,27 +2,12 @@
 
 import { DEFAULT_USER_ID } from "@/db/data";
 import { NewCampaignRecord } from "@/db/schema/campaigns";
-import { CharacterRecord } from "@/db/schema/characters";
-import { ClazzRecord } from "@/db/schema/classes";
-import { ItemRecord } from "@/db/schema/items";
-import { StatusRecord } from "@/db/schema/statuses";
-import { WorldRecord } from "@/db/schema/worlds";
 import { redirect } from "next/navigation";
 import { World } from "roleplayer";
 import { CampaignService } from "services/campaign-service";
-import { ActionAggregated, MonsterAggregated, WorldService } from "services/world-service";
+import { WorldAggregated, WorldService } from "services/world-service";
 
-type WorldData = {
-  world: WorldRecord;
-  characters: CharacterRecord[];
-  items: ItemRecord[];
-  statuses: StatusRecord[];
-  monsters: MonsterAggregated[];
-  classes: ClazzRecord[];
-  actions: ActionAggregated[];
-};
-
-export async function getWorldData(id: World["id"]): Promise<WorldData | undefined> {
+export async function getWorldData(id: World["id"]): Promise<WorldAggregated | undefined> {
   return await new WorldService().getWorld(DEFAULT_USER_ID, id);
 }
 

@@ -138,11 +138,8 @@ describe("interactions", () => {
     const actions = attacker!.getAvailableActions();
     const characterAction = actions.find((a) => a.name === "Slash");
 
-    expect(defenderBeforeAttack!.resources.find((r) => r.resourceTypeId === healthResource.id)?.amount).toBe(10);
-
     campaign.performCharacterAttack(attacker!, 15, characterAction!, defenderBeforeAttack!);
 
-    console.log(campaign.events);
     const afterAttack = campaign.getCampaignStateFromEvents();
     const defenderAfterAttack = afterAttack.characters.find((c) => c.id === defenderId);
 

@@ -132,16 +132,9 @@ export class Character implements Actor {
   equipment: CharacterEquipmentSlot[] = [];
   position!: Position;
 
-  maximumHealth!: number;
-
-  // TODO: Should these be inherited from the first class the character gains?
-  spellCastingAbilityStatId!: CharacterStatType["id"];
-  abilityModifierStatId!: CharacterStatType["id"];
-
+  spellCastingAbilityStatId!: CharacterStatType["id"][];
+  abilityModifierStatId!: CharacterStatType["id"][];
   resources: CharacterResource[] = [];
-
-  currentHealth!: number;
-  temporaryHealth!: number;
   reactionsRemaining: ReactionResource[] = [];
   reactions: Reaction[] = [];
 

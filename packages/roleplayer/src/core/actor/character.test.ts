@@ -34,12 +34,19 @@ describe("Character", () => {
       campaign.nextRound();
       campaign.createCharacter(characterId, "Character");
 
+      const resourceType: CharacterResourceType = {
+        id: dangerousGenerateId(),
+        name: "Health",
+        defaultMax: 20,
+      };
+
       const events: CampaignEvent[] = [
         {
-          type: "CharacterMaximumHealthSet",
-          maximumHealth: 12,
+          type: "CharacterResourceMaxSet",
+          max: 12,
           id: dangerousGenerateId(),
           characterId: characterId,
+          resourceTypeId: resourceType.id,
         },
       ];
 
@@ -47,7 +54,7 @@ describe("Character", () => {
 
       const data = campaign.getCampaignStateFromEvents();
       const characterFromEvents = data.characters.find((c) => c.id === characterId);
-      expect(characterFromEvents!.maximumHealth).toBe(12);
+      expect(characterFromEvents!.resources.find((r) => r.resourceTypeId === resourceType.id)?.amount).toBe(12);
     });
 
     it("should apply movement events", () => {
@@ -168,32 +175,40 @@ describe("Character", () => {
       expect(campaign.getCampaignStateFromEvents).toThrow();
     });
 
-    it("should apply temporary health change events", () => {
+    it("should apply temporary resource change events", () => {
       const characterId = dangerousGenerateId();
       const world = new World({ name: "World", ruleset: DefaultRuleSet });
       const campaign = new Campaign({ id: dangerousGenerateId(), name: "Campaign", world });
       campaign.nextRound();
       campaign.createCharacter(characterId, "Character");
 
+      const resourceType: CharacterResourceType = {
+        id: dangerousGenerateId(),
+        name: "Resource",
+        defaultMax: 20,
+      };
+
       const events: CampaignEvent[] = [
         {
-          type: "CharacterMaximumHealthSet",
-          maximumHealth: 12,
+          type: "CharacterResourceMaxSet",
+          max: 12,
           id: dangerousGenerateId(),
           characterId: characterId,
+          resourceTypeId: resourceType.id,
         },
         {
-          type: "CharacterHealthSet",
-          healthChange: 12,
+          type: "CharacterResourceCurrentChange",
+          amount: 12,
           id: dangerousGenerateId(),
           characterId: characterId,
+          resourceTypeId: resourceType.id,
         },
         {
-          type: "CharacterHealthLoss",
-          healthLoss: 4,
+          type: "CharacterResourceCurrentChange",
+          amount: -4,
           id: dangerousGenerateId(),
           characterId: characterId,
-          interactionId: dangerousGenerateId(),
+          resourceTypeId: resourceType.id,
         },
       ];
 
@@ -201,7 +216,7 @@ describe("Character", () => {
 
       const data = campaign.getCampaignStateFromEvents();
       const characterFromEvents = data.characters.find((c) => c.id === characterId);
-      expect(characterFromEvents!.currentHealth).toBe(8);
+      expect(characterFromEvents!.resources.find((r) => r.resourceTypeId === resourceType.id)?.amount).toBe(8);
     });
 
     it("should apply item gain events", () => {
@@ -254,12 +269,19 @@ describe("Character", () => {
       const campaign = new Campaign({ id: dangerousGenerateId(), name: "Campaign", world });
       campaign.nextRound();
 
+      const resourceType: CharacterResourceType = {
+        id: dangerousGenerateId(),
+        name: "Resource",
+        defaultMax: 20,
+      };
+
       const events: CampaignEvent[] = [
         {
-          type: "CharacterMaximumHealthSet",
-          maximumHealth: 12,
+          type: "CharacterResourceMaxSet",
+          max: 12,
           id: dangerousGenerateId(),
           characterId: characterId,
+          resourceTypeId: resourceType.id,
         },
       ];
 

@@ -27,6 +27,10 @@ export class MonsterInstance implements Actor {
     Object.assign(this, init);
   }
 
+  getName() {
+    return this.definition.name;
+  }
+
   getAbilityModifier(): number {
     return 0;
   }
@@ -40,7 +44,7 @@ export class MonsterInstance implements Actor {
   }
 
   getAvailableActions(): Interaction[] {
-    return this.definition.actions;
+    return this.definition.actions || [];
   }
 
   performAction(): CampaignEventWithRound[] {
@@ -56,10 +60,12 @@ export class MonsterInstance implements Actor {
   }
 }
 
+type ChallengeRating = "1/8" | "1/4" | "1/2" | "1" | "2";
+
 export class Monster {
   id!: Id;
   name!: string;
-  challengeRating!: number;
+  challengeRating!: ChallengeRating;
   baseArmorClass!: number;
   maximumHealth!: number;
   actions!: Interaction[];

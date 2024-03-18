@@ -35,6 +35,7 @@ export type CampaignEventType =
       characterId: Character["id"];
       amount: number;
       resourceTypeId: CharacterResourceType["id"];
+      interactionId?: Interaction["id"];
     }
   | {
       type: "CharacterStatChange";
@@ -89,11 +90,6 @@ export type CampaignEventType =
       equipmentSlotId: Id;
     }
   | {
-      type: "CharacterMaximumHealthSet";
-      characterId: Character["id"];
-      maximumHealth: number;
-    }
-  | {
       type: "CharacterPositionSet";
       characterId: Character["id"];
       targetPosition: Position;
@@ -119,23 +115,6 @@ export type CampaignEventType =
       attackerId: Character["id"];
     }
   | { type: "CharacterAttackDefenderParry"; characterId: Character["id"] }
-  | {
-      type: "CharacterHealthGain";
-      characterId: Character["id"];
-      interactionId: Interaction["id"];
-      healthGain: number;
-    }
-  | {
-      type: "CharacterHealthLoss";
-      characterId: Character["id"];
-      interactionId: Interaction["id"];
-      healthLoss: number;
-    }
-  | {
-      type: "CharacterHealthSet";
-      characterId: Character["id"];
-      healthChange: number;
-    }
   | {
       type: "CharacterClassReset";
       characterId: Character["id"];

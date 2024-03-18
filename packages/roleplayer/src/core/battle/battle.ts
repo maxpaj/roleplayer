@@ -28,7 +28,7 @@ export class Battle {
     return this.entities.every((c) => c.initiative != 0);
   }
 
-  addActor(entity: Actor) {
+  addBattleActor(entity: Actor) {
     const added = new BattleActor(entity, entity.rollInitiative());
     this.entities.push(added);
     return added;

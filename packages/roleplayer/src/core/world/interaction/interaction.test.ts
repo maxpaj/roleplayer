@@ -1,3 +1,4 @@
+import { CharacterResource, CharacterResourceType, DefaultCharacterResourceTypes } from "../../..";
 import { dangerousGenerateId } from "../../../lib/generate-id";
 import { Campaign } from "../../campaign/campaign";
 import { CampaignEvent } from "../../campaign/campaign-events";
@@ -69,6 +70,14 @@ describe("interactions", () => {
     const ruleset = new Ruleset();
     ruleset.characterEquipmentSlots = [equipmentSlot];
 
+    const healthResource: CharacterResourceType = {
+      id: dangerousGenerateId(),
+      name: "Health",
+      defaultMax: 20,
+    };
+
+    ruleset.characterResourceTypes = [healthResource];
+
     const world = new World({ name: "test", ruleset });
     world.statuses = [frozenStatus];
     world.items = [frostSword];
@@ -108,8 +117,9 @@ describe("interactions", () => {
     const events: CampaignEvent[] = [
       {
         id: dangerousGenerateId(),
-        type: "CharacterHealthSet",
-        healthChange: 10,
+        type: "CharacterResourceCurrentChange",
+        amount: 10,
+        resourceTypeId: healthResource.id,
         characterId: defenderId,
       },
     ];
@@ -127,7 +137,7 @@ describe("interactions", () => {
     const afterAttack = campaign.getCampaignStateFromEvents();
     const defenderFromEvents = afterAttack.characters.find((c) => c.id === defenderId);
 
-    expect(defenderFromEvents!.currentHealth).toBe(8);
+    expect(defenderFromEvents!.resources.find((r) => r.resourceTypeId === healthResource.id)?.amount).toBe(8);
     expect(defenderFromEvents!.statuses.find((s) => s.name === "Chill")).toBeDefined();
   });
 });

@@ -277,6 +277,11 @@ export class Campaign {
   }
 
   performCharacterAttack(attacker: Character, diceAttackHitRoll: number, interaction: Interaction, defender: Character) {
+    const healthResource = this.world.ruleset.characterResourceTypes.find((rt) => rt.name === "Health");
+    if (!healthResource) {
+      throw new Error("Health resource not defined in world, cannot perform attack");
+    }
+
     const characterHitModifier = attacker.getCharacterHitModifierWithInteraction(interaction);
     const defenderWasHit = defender.armorClass < diceAttackHitRoll + characterHitModifier;
     const hitDodgeEvent: CampaignEvent = defenderWasHit
@@ -305,8 +310,9 @@ export class Campaign {
               id: dangerousGenerateId(),
               characterId: defender.id,
               interactionId: interaction.id,
-              type: "CharacterHealthLoss",
-              healthLoss: defenderDamageTaken,
+              type: "CharacterResourceCurrentChange",
+              resourceTypeId: healthResource.id,
+              amount: -1 * defenderDamageTaken,
             } satisfies CampaignEvent,
           ];
         })
@@ -447,11 +453,15 @@ export class Campaign {
           throw new Error("Cannot find battle");
         }
 
-        const monsterDefinition = this.world?.monsters.find((m) => m.id === event.monsterId);
+        const monsterDefinition = this.world.monsters.find((m) => m.id === event.monsterId);
+        if (!monsterDefinition) {
+          throw new Error("Cannot find monster definition");
+        }
 
-        battle.addActor(
+        battle.addBattleActor(
           new MonsterInstance({
             id: dangerousGenerateId(),
+            name: monsterDefinition.name,
             definition: monsterDefinition,
           })
         );
@@ -466,7 +476,6 @@ export class Campaign {
       case "CharacterBaseDefenseSet":
       case "CharacterNameSet":
       case "CharacterActionGain":
-      case "CharacterMaximumHealthSet":
       case "CharacterDespawn":
       case "CharacterStartRound":
       case "CharacterMovement":
@@ -482,9 +491,6 @@ export class Campaign {
       case "CharacterAttackDefenderHit":
       case "CharacterAttackDefenderDodge":
       case "CharacterAttackDefenderParry":
-      case "CharacterHealthGain":
-      case "CharacterHealthLoss":
-      case "CharacterHealthSet":
       case "CharacterClassReset":
       case "CharacterBattleInitiativeSet":
       case "CharacterClassLevelGain":
@@ -555,7 +561,7 @@ export class Campaign {
           throw new Error("Cannot find character");
         }
 
-        battle.addActor(character);
+        battle.addBattleActor(character);
         break;
       }
 
@@ -638,15 +644,6 @@ export class Campaign {
         break;
       }
 
-      case "CharacterHealthSet": {
-        if (event.healthChange === undefined || event.healthChange < 0) {
-          throw new Error("Amount is not defined for CharacterHealthGain");
-        }
-
-        character.currentHealth = event.healthChange;
-        break;
-      }
-
       case "CharacterAttackAttackerHit": {
         break;
       }
@@ -672,37 +669,6 @@ export class Campaign {
       }
 
       case "CharacterAttackDefenderParry": {
-        break;
-      }
-
-      case "CharacterHealthGain": {
-        if (event.healthGain === undefined || event.healthGain < 0) {
-          throw new Error("Amount is not defined for CharacterHealthGain");
-        }
-
-        character.currentHealth += event.healthGain;
-        break;
-      }
-
-      case "CharacterHealthLoss": {
-        if (!character.currentHealth && character.currentHealth !== 0) {
-          throw new Error("Character health unknown");
-        }
-
-        if (event.healthLoss === undefined || event.healthLoss < 0) {
-          throw new Error("Amount is not defined for CharacterHealthLoss");
-        }
-
-        character.currentHealth -= event.healthLoss;
-        break;
-      }
-
-      case "CharacterMaximumHealthSet": {
-        if (event.maximumHealth === undefined) {
-          throw new Error("Amount is not defined for CharacterMaximumHealthSet");
-        }
-
-        character.maximumHealth = event.maximumHealth || -1;
         break;
       }
 

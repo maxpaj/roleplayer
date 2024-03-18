@@ -15,7 +15,13 @@ export default async function BattlesPage({ params }: { params: { campaignId: st
 
   const campaign = new Campaign({
     ...campaignData.campaign,
-    world: new World({ ...campaignData.world.world, ruleset: DefaultRuleSet }),
+    world: new World({
+      ...campaignData.world.world,
+      monsters: campaignData.world.monsters.map((m) => ({ ...m.monster, actions: m.actions })),
+      actions: campaignData.world.actions,
+      classes: campaignData.world.classes,
+      ruleset: DefaultRuleSet,
+    }),
     events: campaignData.events.map((e) => e.eventData as CampaignEventWithRound),
   });
 

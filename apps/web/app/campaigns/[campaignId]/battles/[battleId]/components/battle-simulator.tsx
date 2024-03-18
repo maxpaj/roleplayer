@@ -113,9 +113,9 @@ export function BattleSimulator({ campaign, battleId, world }: BattleSimulatorPr
             <DiceRollCard roll={battleCharacter.initiative} />
           </div>
 
-          <div className="relative flex w-full justify-between p-4">
+          <div className="relative flex w-full flex-wrap justify-between p-4">
             {isCharacterTurnToAct && (
-              <div className="flex gap-x-2">
+              <div className="flex flex-wrap gap-2 ">
                 <Select disabled={hasSpentAction || hasFinished}>
                   <SelectTrigger className="w-[180px]">
                     <SelectValue placeholder="Select action" />
@@ -268,7 +268,7 @@ export function BattleSimulator({ campaign, battleId, world }: BattleSimulatorPr
 
   return (
     <div className="w-full">
-      <div className="mb-4 flex gap-2">
+      <div className="mb-4 flex flex-wrap gap-2">
         <AddBattleCharacterButton campaignId={campaign.id} availableCharacters={campaignState.characters} onAddCharacter={addCharacter} />
         <AddBattleMonsterButton worldId={campaign.world.id} monsters={world.monsters} onAddMonster={addMonster} />
 

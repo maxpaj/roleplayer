@@ -13,22 +13,21 @@ export default async function BattlePage({ params }: { params: { campaignId: str
     return <>No campaign found</>;
   }
 
-  const { campaign, events } = campaignData;
-
-  const world = new World({
-    ...campaignData.world.world,
-    ruleset: DefaultRuleSet,
-  });
+  const { campaign, events, world } = campaignData;
 
   const campaignRpLib = new Campaign({
     ...campaign,
     events: events.map((e) => e.eventData) as CampaignEventWithRound[],
-    world,
+    world: new World({
+      ...campaignData.world.world,
+      monsters: campaignData.world.monsters.map((m) => ({ ...m, actions: m.actions })),
+      ruleset: DefaultRuleSet,
+    }),
   });
 
   return (
     <>
-      <BattleSimulator campaign={classToPlain(campaignRpLib)} battleId={battleId} />
+      <BattleSimulator world={world} campaign={classToPlain(campaignRpLib)} battleId={battleId} />
     </>
   );
 }

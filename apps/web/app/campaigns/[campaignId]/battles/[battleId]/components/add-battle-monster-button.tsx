@@ -6,7 +6,6 @@ import { Monster } from "roleplayer";
 import { useState } from "react";
 import { EMPTY_GUID } from "@/lib/guid";
 import { ButtonLink } from "@/components/ui/button-link";
-import { MonsterRecord } from "@/db/schema/monster";
 import { WorldRecord } from "@/db/schema/worlds";
 
 export function AddBattleMonsterButton({
@@ -14,7 +13,7 @@ export function AddBattleMonsterButton({
   worldId,
   onAddMonster,
 }: {
-  monsters: MonsterRecord[];
+  monsters: MonsterAggregated[];
   worldId: WorldRecord["id"];
   onAddMonster: (monsterId: Monster["id"]) => void;
 }) {

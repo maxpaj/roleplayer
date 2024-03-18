@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import { db } from "../db";
-import { ActionRecord, actionsSchema } from "../db/schema/actions";
+import { ActionRecord, actionsSchema, actionsToEffectSchema } from "../db/schema/actions";
 import { CampaignRecord, campaignsSchema } from "../db/schema/campaigns";
 import { CharacterRecord, NewCharacterRecord, charactersSchema } from "../db/schema/characters";
 import { ClazzRecord, NewClazzRecord, classesSchema } from "../db/schema/classes";
@@ -11,6 +11,8 @@ import { UserRecord } from "../db/schema/users";
 import { NewWorldRecord, WorldRecord, worldsSchema } from "../db/schema/worlds";
 import { CampaignService } from "./campaign-service";
 import { DEFAULT_USER_ID } from "@/db/data";
+import { alias } from "drizzle-orm/pg-core";
+import { effectsSchema } from "@/db/schema/effects";
 
 export type WorldAggregated = {
   world: WorldRecord;
@@ -23,9 +25,14 @@ export type WorldAggregated = {
   actions: ActionRecord[];
 };
 
+export type ActionAggregated = {
+  action: ActionRecord;
+  appliesEffects: [];
+};
+
 export type MonsterAggregated = {
   monster: MonsterRecord;
-  actions: ActionRecord[];
+  actions: ActionAggregated[];
 };
 
 export class WorldService {
@@ -36,18 +43,28 @@ export class WorldService {
   }
 
   async getWorld(userId: UserRecord["id"], worldId: WorldRecord["id"]) {
+    const worldActionsAlias = alias(actionsSchema, "actions");
+    const monsterActionsAlias = alias(actionsSchema, "monsterActions");
+    const monsterActionsEffectsAlias = alias(effectsSchema, "monsterActionsEffects");
+
     const rows = await db
       .select()
       .from(worldsSchema)
-      .leftJoin(actionsSchema, eq(actionsSchema.worldId, worldsSchema.id))
+      .leftJoin(worldActionsAlias, eq(worldActionsAlias.worldId, worldsSchema.id))
       .leftJoin(campaignsSchema, eq(worldsSchema.id, campaignsSchema.worldId))
       .leftJoin(charactersSchema, eq(charactersSchema.worldId, worldsSchema.id))
       .leftJoin(classesSchema, eq(classesSchema.worldId, worldsSchema.id))
-      .leftJoin(itemsSchema, eq(itemsSchema.worldId, worldsSchema.id))
-      .leftJoin(monstersSchema, eq(monstersSchema.worldId, worldsSchema.id))
-      .leftJoin(monstersToActionsSchema, eq(monstersToActionsSchema.monsterId, monstersSchema.id))
-      .leftJoin(actionsSchema, eq(monstersToActionsSchema.monsterId, actionsSchema.id))
       .leftJoin(statusesSchema, eq(statusesSchema.worldId, worldsSchema.id))
+      .leftJoin(itemsSchema, eq(itemsSchema.worldId, worldsSchema.id))
+
+      // Join monsters, actions, effects
+      .leftJoin(monstersSchema, eq(monstersSchema.worldId, worldsSchema.id)) // world --> monster
+      .leftJoin(monstersToActionsSchema, eq(monstersToActionsSchema.monsterId, monstersSchema.id)) // monster --> monster/action
+      .leftJoin(monsterActionsAlias, eq(monstersToActionsSchema.monsterId, monsterActionsAlias.id)) // monster/action --> action
+      .leftJoin(actionsToEffectSchema, eq(monsterActionsAlias.id, actionsToEffectSchema.actionId)) // action --> action/effect
+      .leftJoin(monsterActionsEffectsAlias, eq(actionsToEffectSchema.effectId, monsterActionsEffectsAlias.id)) // action/effect --> effect
+
+      // Filter the given world
       .where(eq(worldsSchema.id, worldId));
 
     const aggregated = rows.reduce<Record<WorldRecord["id"], WorldAggregated>>((acc, row) => {
@@ -77,8 +94,15 @@ export class WorldService {
           monster: existing?.monster || row.monsters,
         };
 
-        if (row.actions) {
-          monsterToAdd.actions = [...monsterToAdd.actions.filter((a) => a.id !== row.actions!.id), row.actions];
+        if (row.monsterActions) {
+          const actionToAdd: ActionAggregated = {
+            appliesEffects: [],
+          };
+          monsterToAdd.actions = [...monsterToAdd.actions.filter((a) => a.id !== row.actions!.id), row.monsterActions];
+        }
+
+        if (row.monsterActionsEffects) {
+          monsterToAdd.actions = [...monsterToAdd.actions.filter((a) => a.id !== row.actions!.id), row.monsterActionsEffects];
         }
 
         acc[world.id]!.monsters = [...acc[world.id]!.monsters.filter((c) => c.monster.id !== row.monsters!.id), monsterToAdd];

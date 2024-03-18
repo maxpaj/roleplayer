@@ -28,7 +28,8 @@
     "test": "jest",
     "test-watch": "jest --watch",
     "build": "tsup src/index.ts --format cjs,esm --dts",
-    "lint": "eslint . --max-warnings 0"
+    "lint": "eslint . --max-warnings 0",
+    "lint-fix": "eslint . --fix"
   },
   "devDependencies": {
     "@repo/eslint-config": "*",

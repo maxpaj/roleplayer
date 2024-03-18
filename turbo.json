@@ -3,6 +3,9 @@
   "globalDependencies": [
     "**/.env.*local"
   ],
+  "globalEnv": [
+    "POSTGRES_URL"
+  ],
   "pipeline": {
     "build": {
       "dependsOn": [

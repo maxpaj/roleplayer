@@ -28,6 +28,6 @@ export type Effect = {
 export enum EffectType {
   StatusGain = "StatusGain",
   StatusLoss = "StatusLoss",
-  HealthLoss = "HealthLoss",
-  HealthGain = "HealthGain",
+  ResourceLoss = "ResourceLoss",
+  ResourceGain = "ResourceGain",
 }

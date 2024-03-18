@@ -21,7 +21,7 @@ describe("actions", () => {
       {
         effect: {
           element: ElementType.Cold,
-          type: EffectType.HealthLoss,
+          type: EffectType.ResourceGain,
           amountStatic: 2,
           amountVariable: 0,
         },
@@ -40,7 +40,7 @@ describe("actions", () => {
         appliesEffects: [
           {
             element: ElementType.Slashing,
-            type: EffectType.HealthLoss,
+            type: EffectType.ResourceLoss,
             amountStatic: 2,
             amountVariable: 0,
           },
@@ -95,7 +95,7 @@ describe("actions", () => {
       appliesEffects: [
         {
           element: ElementType.Slashing,
-          type: EffectType.HealthLoss,
+          type: EffectType.ResourceLoss,
           amountStatic: 2,
           amountVariable: 0,
           appliesStatusId: frozenStatus.id,

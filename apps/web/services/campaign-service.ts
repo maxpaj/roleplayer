@@ -28,10 +28,18 @@ export function getWorldFromCampaignData(campaignData: CampaignAggregated) {
     classes: [],
     monsters: campaignData.world.monsters.map((m) => ({
       ...m,
+      resources: m.resourceTypes.map((r) => ({
+        max: r.max,
+        resourceType: {
+          id: r.resourceType,
+          name: r.resourceType,
+          defaultMax: 20,
+        },
+      })),
       actions: m.actions.map((a) => ({
         ...a,
         requiresResources: a.requiresResources.map((r) => ({
-          resourceTypeId: r.resourceId,
+          resourceTypeId: r.resourceType!,
           amount: r.amount,
         })),
         appliesEffects: a.appliesEffects.map((e) => ({
@@ -245,6 +253,7 @@ export class CampaignService {
         const monsterToAdd: MonsterAggregated = {
           ...(existing || row.monsters),
           actions: existing?.actions || [],
+          resourceTypes: existing?.resourceTypes || [],
         };
 
         world!.monsters = [...world!.monsters.filter((c) => c.id !== row.monsters!.id), monsterToAdd];

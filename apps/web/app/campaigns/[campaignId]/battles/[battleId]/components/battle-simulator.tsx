@@ -11,10 +11,9 @@ import {
   Character,
   MonsterInstance,
   BattleActor,
-  DefaultRuleSet,
 } from "roleplayer";
 import { D20, roll } from "roleplayer";
-import { Interaction } from "roleplayer";
+import { Action } from "roleplayer";
 import { Campaign } from "roleplayer";
 import { Id } from "roleplayer";
 import { EventIconMap } from "../../../../../theme";
@@ -44,7 +43,7 @@ export function BattleSimulator({ campaign, battleId, world }: BattleSimulatorPr
   const [tempCampaign, setTempCampaignReact] = useState<Campaign>(new Campaign(campaign));
   const [tempCampaignState, setTempCampaignState] = useState<CampaignState>(tempCampaign.getCampaignStateFromEvents());
   const [, updateState] = useState({});
-  const [selectedAction, setSelectedAction] = useState<Interaction | undefined>(undefined);
+  const [selectedAction, setSelectedAction] = useState<Action | undefined>(undefined);
   const forceUpdate = useCallback(() => updateState({}), []);
 
   async function setCampaign(campaign: Campaign) {
@@ -69,7 +68,7 @@ export function BattleSimulator({ campaign, battleId, world }: BattleSimulatorPr
     setCampaign(tempCampaign);
   }
 
-  function characterAttack(attackerId: Id, defenderIds: Id[], action: Interaction) {
+  function characterAttack(attackerId: Id, defenderIds: Id[], action: Action) {
     const attacker = tempCampaignState.getCharacter(attackerId);
 
     if (!attacker.actions.length) {

@@ -61,7 +61,7 @@ export default async function WorldLayout({
           <BadgeLink href={`/worlds/${world.id}/items`}>Items</BadgeLink>
           <BadgeLink href={`/worlds/${world.id}/npcs`}>NPCs</BadgeLink>
           <BadgeLink href={`/worlds/${world.id}/classes`}>Classes</BadgeLink>
-          <BadgeLink href={`/worlds/${world.id}/interactions`}>Interaction</BadgeLink>
+          <BadgeLink href={`/worlds/${world.id}/actions`}>Actions</BadgeLink>
           <BadgeLink href={`/worlds/${world.id}/campaigns`}>Campaigns</BadgeLink>
         </div>
         <BadgeLink href={`/worlds/${world.id}/settings`}>Settings</BadgeLink>

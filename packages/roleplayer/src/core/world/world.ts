@@ -1,10 +1,10 @@
 import { Id } from "../../lib/generate-id";
 import { AugmentedRequired } from "../../types/with-required";
 import { Character, CharacterClass, Clazz } from "../actor/character";
-import { Interaction } from "./interaction/interaction";
+import { Action } from "./action/action";
 import { Monster } from "../actor/monster";
 import { Item } from "./item/item";
-import { Status } from "./interaction/status";
+import { Status } from "./action/status";
 import { Version } from "../..";
 import { Ruleset } from "../ruleset/ruleset";
 
@@ -20,7 +20,7 @@ export class World {
   monsters: Monster[] = [];
   items: Item[] = [];
   characters: Character[] = [];
-  actions: Interaction[] = [];
+  actions: Action[] = [];
   statuses: Status[] = [];
   classes: Clazz[] = [];
   ruleset!: Ruleset;

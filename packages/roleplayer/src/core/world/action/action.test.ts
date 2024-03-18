@@ -1,4 +1,4 @@
-import { CharacterResource, CharacterResourceType, DefaultCharacterResourceTypes } from "../../..";
+import { CharacterResourceType } from "../../..";
 import { dangerousGenerateId } from "../../../lib/generate-id";
 import { Campaign } from "../../campaign/campaign";
 import { CampaignEvent } from "../../campaign/campaign-events";
@@ -7,10 +7,10 @@ import { Item, ItemEquipmentType, ItemSlot, ItemType } from "../item/item";
 import { Rarity } from "../rarity";
 import { World } from "../world";
 import { EffectType, ElementType } from "./effect";
-import { Interaction, TargetType } from "./interaction";
+import { Action, TargetType } from "./action";
 import { Status, StatusApplicationTrigger, StatusDurationType, StatusType } from "./status";
 
-describe("interactions", () => {
+describe("actions", () => {
   const frozenStatus: Status = {
     id: dangerousGenerateId(),
     name: "Chill",
@@ -36,6 +36,7 @@ describe("interactions", () => {
     actions: [
       {
         id: dangerousGenerateId(),
+        description: "",
         appliesEffects: [
           {
             element: ElementType.Slashing,
@@ -88,7 +89,8 @@ describe("interactions", () => {
     world.statuses = [frozenStatus];
     world.items = [frostSword];
 
-    const action: Interaction = {
+    const action: Action = {
+      description: "",
       id: dangerousGenerateId(),
       appliesEffects: [
         {

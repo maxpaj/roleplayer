@@ -1,6 +1,6 @@
 import { classesSchema } from "@/db/schema/classes";
 import { eq } from "drizzle-orm";
-import { Campaign, CampaignEventWithRound, CampaignState, DefaultRuleSet, World } from "roleplayer";
+import { Campaign, CampaignEventWithRound, DefaultRuleSet, World } from "roleplayer";
 import { db } from "../db";
 import { CampaignRecord, NewCampaignRecord, campaignsSchema } from "../db/schema/campaigns";
 import { CharacterRecord, charactersSchema, charactersToCampaignsSchema } from "../db/schema/characters";
@@ -23,24 +23,27 @@ export class CampaignService {
       .leftJoin(eventsSchema, eq(eventsSchema.campaignId, campaignsSchema.id))
       .where(eq(campaignsSchema.userId, userId));
 
-    const result = rows.reduce<Record<CampaignRecord["id"], { campaign: CampaignRecord; events: EventRecord[] }>>((acc, row) => {
-      const campaign = row.campaigns;
+    const result = rows.reduce<Record<CampaignRecord["id"], { campaign: CampaignRecord; events: EventRecord[] }>>(
+      (acc, row) => {
+        const campaign = row.campaigns;
 
-      if (!campaign) {
+        if (!campaign) {
+          return acc;
+        }
+
+        if (!acc[campaign.id]) {
+          acc[campaign.id] = { campaign, events: [] };
+        }
+
+        const event = row.events;
+        if (event) {
+          acc[campaign.id]!.events.push(event);
+        }
+
         return acc;
-      }
-
-      if (!acc[campaign.id]) {
-        acc[campaign.id] = { campaign, events: [] };
-      }
-
-      const event = row.events;
-      if (event) {
-        acc[campaign.id]!.events.push(event);
-      }
-
-      return acc;
-    }, {});
+      },
+      {}
+    );
 
     return Object.values(result);
   }
@@ -54,23 +57,26 @@ export class CampaignService {
       .leftJoin(charactersSchema, eq(charactersSchema.worldId, worldsSchema.id))
       .leftJoin(eventsSchema, eq(eventsSchema.campaignId, campaignsSchema.id));
 
-    const result = rows.reduce<Record<CampaignRecord["id"], { campaign: CampaignRecord; events: EventRecord[] }>>((acc, row) => {
-      const campaign = row.campaigns;
-      if (!campaign) {
+    const result = rows.reduce<Record<CampaignRecord["id"], { campaign: CampaignRecord; events: EventRecord[] }>>(
+      (acc, row) => {
+        const campaign = row.campaigns;
+        if (!campaign) {
+          return acc;
+        }
+
+        if (!acc[campaign.id]) {
+          acc[campaign.id] = { campaign, events: [] };
+        }
+
+        const event = row.events;
+        if (event) {
+          acc[campaign.id]!.events.push(event);
+        }
+
         return acc;
-      }
-
-      if (!acc[campaign.id]) {
-        acc[campaign.id] = { campaign, events: [] };
-      }
-
-      const event = row.events;
-      if (event) {
-        acc[campaign.id]!.events.push(event);
-      }
-
-      return acc;
-    }, {});
+      },
+      {}
+    );
 
     return Object.values(result);
   }
@@ -139,13 +145,20 @@ export class CampaignService {
       .select()
       .from(campaignsSchema)
       .innerJoin(worldsSchema, eq(worldsSchema.id, campaignsSchema.worldId))
-      .leftJoin(monstersSchema, eq(monstersSchema.worldId, worldsSchema.id))
-      .leftJoin(monstersToActionsSchema, eq(monstersSchema.id, monstersToActionsSchema.monsterId))
+      .leftJoin(eventsSchema, eq(eventsSchema.campaignId, campaignsSchema.id))
+
+      // Join world stuff
       .leftJoin(actionsSchema, eq(actionsSchema.id, monstersToActionsSchema.actionId))
       .leftJoin(classesSchema, eq(classesSchema.worldId, worldsSchema.id))
+
+      // Join monsters
+      .leftJoin(monstersSchema, eq(monstersSchema.worldId, worldsSchema.id))
+      .leftJoin(monstersToActionsSchema, eq(monstersSchema.id, monstersToActionsSchema.monsterId))
+
+      // Join characters
       .leftJoin(charactersToCampaignsSchema, eq(charactersToCampaignsSchema.campaignId, campaignsSchema.id))
       .leftJoin(charactersSchema, eq(charactersToCampaignsSchema.characterId, charactersSchema.id))
-      .leftJoin(eventsSchema, eq(eventsSchema.campaignId, campaignsSchema.id))
+
       .where(eq(campaignsSchema.id, campaignId));
 
     const result = rows.reduce<
@@ -196,10 +209,6 @@ export class CampaignService {
           actions: existing?.actions || [],
           monster: existing?.monster || row.monsters,
         };
-
-        if (row.actions) {
-          monsterToAdd.actions = [...monsterToAdd.actions.filter((a) => a.id !== row.actions!.id), row.actions];
-        }
 
         world!.monsters = [...world!.monsters.filter((c) => c.monster.id !== row.monsters!.id), monsterToAdd];
       }

@@ -2,9 +2,9 @@ import { Campaign } from "../..";
 import { Id } from "../../lib/generate-id";
 import { CampaignEvent, CampaignEventType, CampaignEventWithRound } from "../campaign/campaign-events";
 import { D20, roll } from "../dice/dice";
-import { Effect, ElementType } from "../world/interaction/effect";
-import { Interaction } from "../world/interaction/interaction";
-import { Status } from "../world/interaction/status";
+import { Effect, ElementType } from "../world/action/effect";
+import { Action } from "../world/action/action";
+import { Status } from "../world/action/status";
 import { EquipmentSlotDefinition, Item } from "../world/item/item";
 import { Actor, ActorType } from "./actor";
 
@@ -33,7 +33,7 @@ export enum Alignment {
 
 export type ClassLevelProgression = {
   unlockedAtLevel: number;
-  abilityId: Interaction["id"];
+  abilityId: Action["id"];
 };
 
 export type Race = {
@@ -85,7 +85,7 @@ export type Reaction = {
   name: string;
   type: ReactionEventType;
   eventType: CampaignEventType["type"];
-  interaction: Interaction;
+  action: Action;
 };
 
 export enum ReactionEventType {
@@ -108,7 +108,9 @@ export type CharacterStat = {
   amount: number;
 };
 
-export function isCharacterEvent(event: CampaignEvent): event is Extract<CampaignEvent, { characterId: Character["id"] }> {
+export function isCharacterEvent(
+  event: CampaignEvent
+): event is Extract<CampaignEvent, { characterId: Character["id"] }> {
   return (event as any).characterId !== undefined;
 }
 
@@ -131,7 +133,7 @@ export class Character implements Actor {
   armorClass!: number;
   stats: CharacterStat[] = [];
 
-  actions: Interaction[] = [];
+  actions: Action[] = [];
   classes: CharacterClass[] = [];
   statuses: Status[] = [];
   inventory: Item[] = [];
@@ -152,7 +154,7 @@ export class Character implements Actor {
     return ActorType.Character;
   }
 
-  getEligibleTargets(action: Interaction): Actor[] {
+  getEligibleTargets(action: Action): Actor[] {
     throw new Error("Method not implemented.");
   }
 
@@ -164,7 +166,7 @@ export class Character implements Actor {
     return roll(D20);
   }
 
-  getActions(): Interaction[] {
+  getActions(): Action[] {
     return this.actions;
   }
 
@@ -196,7 +198,7 @@ export class Character implements Actor {
    * Get all available actions for the characters, based on equipment, class, spells, etc.
    * @returns A list of available actions
    */
-  getAvailableActions(): Interaction[] {
+  getAvailableActions(): Action[] {
     return [
       ...this.actions,
       ...this.equipment
@@ -212,10 +214,13 @@ export class Character implements Actor {
   }
 
   getEffectDamageTaken(effect: Effect, damageAmount: number) {
-    return Math.max(damageAmount * this.getResistanceMultiplier(effect.element) - this.getResistanceAbsolute(effect.element), 0);
+    return Math.max(
+      damageAmount * this.getResistanceMultiplier(effect.element) - this.getResistanceAbsolute(effect.element),
+      0
+    );
   }
 
-  getCharacterHitModifierWithInteraction(interaction: Interaction) {
+  getCharacterHitModifierWithAction(action: Action) {
     return 0;
   }
 

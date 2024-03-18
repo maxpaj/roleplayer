@@ -4,7 +4,7 @@ import { Actor } from "../actor/actor";
 import { Character, CharacterClass, CharacterStat, isCharacterEvent } from "../actor/character";
 import { Monster, MonsterInstance } from "../actor/monster";
 import { Battle } from "../battle/battle";
-import { Interaction } from "../world/interaction/interaction";
+import { Action } from "../world/action/action";
 import { EquipmentSlotDefinition, Item } from "../world/item/item";
 import { World } from "../world/world";
 import { CampaignEvent, CampaignEventWithRound } from "./campaign-events";
@@ -74,7 +74,7 @@ export class Campaign {
     this.publishCampaignEvent(equipEvent);
   }
 
-  addActionToCharacter(characterId: Character["id"], actionId: Interaction["id"]) {
+  addActionToCharacter(characterId: Character["id"], actionId: Action["id"]) {
     const actionGain: CampaignEvent = {
       characterId,
       actionId,
@@ -276,12 +276,7 @@ export class Campaign {
     return item;
   }
 
-  performCharacterAttack(
-    attacker: Character,
-    diceAttackHitRoll: number,
-    interaction: Interaction,
-    defender: Character
-  ) {
+  performCharacterAttack(attacker: Character, diceAttackHitRoll: number, action: Action, defender: Character) {
     const healthResource = this.world.ruleset.characterResourceTypes.find((rt) => rt.name === "Health");
     if (!healthResource) {
       throw new Error("Health resource not defined in world, cannot perform attack");
@@ -292,20 +287,20 @@ export class Campaign {
       throw new Error("Primary action resource not defined in world, cannot perform attack");
     }
 
-    const characterHitModifier = attacker.getCharacterHitModifierWithInteraction(interaction);
+    const characterHitModifier = attacker.getCharacterHitModifierWithAction(action);
     const defenderWasHit = defender.armorClass < diceAttackHitRoll + characterHitModifier;
     const hitDodgeEvent: CampaignEvent = defenderWasHit
       ? {
           id: dangerousGenerateId(),
           characterId: defender.id,
-          interactionId: interaction.id,
+          actionId: action.id,
           attackerId: attacker.id,
           type: "CharacterAttackDefenderHit",
         }
       : {
           id: dangerousGenerateId(),
           characterId: defender.id,
-          interactionId: interaction.id,
+          actionId: action.id,
           attackerId: attacker.id,
           type: "CharacterAttackDefenderDodge",
         };
@@ -313,7 +308,7 @@ export class Campaign {
     let defenderCurrentHealth = defender.resources.find((r) => r.resourceTypeId === healthResource.id)!.amount;
 
     const damageTakenEvents: CampaignEvent[] = defenderWasHit
-      ? interaction.appliesEffects.flatMap((attack) => {
+      ? action.appliesEffects.flatMap((attack) => {
           const attackerDamageRoll = attacker.getDamageRoll(attack);
           const defenderDamageTaken = defender.getEffectDamageTaken(attack, attackerDamageRoll);
 
@@ -323,7 +318,7 @@ export class Campaign {
             {
               id: dangerousGenerateId(),
               characterId: defender.id,
-              interactionId: interaction.id,
+              actionId: action.id,
               type: "CharacterResourceCurrentChange",
               resourceTypeId: healthResource.id,
               amount: defenderCurrentHealth,
@@ -333,7 +328,7 @@ export class Campaign {
       : [];
 
     const statusChangeEvents = defenderWasHit
-      ? interaction.appliesEffects
+      ? action.appliesEffects
           .filter((attack) => {
             const status = this.world!.statuses.find((s) => s.id === attack.appliesStatusId);
             return status !== undefined;
@@ -346,7 +341,7 @@ export class Campaign {
             return {
               id: dangerousGenerateId(),
               characterId: defender.id,
-              interactionId: interaction.id,
+              actionId: action.id,
               type: "CharacterStatusGain",
               statusId: defenderStatus!.id,
             } satisfies CampaignEvent;
@@ -356,7 +351,7 @@ export class Campaign {
     const attackerPrimaryAction = {
       id: dangerousGenerateId(),
       characterId: attacker.id,
-      interactionId: interaction.id,
+      actionId: action.id,
       resourceTypeId: actionResource.id,
       type: "CharacterResourceCurrentChange",
       amount: 0,

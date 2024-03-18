@@ -1,10 +1,10 @@
 import { Id } from "../../lib/generate-id";
 import { CharacterResource, Position } from "./character";
 import { Actor, ActorType } from "./actor";
-import { Interaction } from "../world/interaction/interaction";
+import { Action } from "../world/action/action";
 import { D20, roll } from "../dice/dice";
 import { CampaignEventWithRound } from "../campaign/campaign-events";
-import { Status } from "../world/interaction/status";
+import { Status } from "../world/action/status";
 
 export class MonsterInstance implements Actor {
   id!: Id;
@@ -39,11 +39,11 @@ export class MonsterInstance implements Actor {
     return ActorType.Monster;
   }
 
-  getEligibleTargets(action: Interaction): Actor[] {
+  getEligibleTargets(action: Action): Actor[] {
     throw new Error("Method not implemented.");
   }
 
-  getAvailableActions(): Interaction[] {
+  getAvailableActions(): Action[] {
     return this.definition.actions || [];
   }
 
@@ -55,7 +55,7 @@ export class MonsterInstance implements Actor {
     return roll(D20);
   }
 
-  getActions(): Interaction[] {
+  getActions(): Action[] {
     return this.definition.actions;
   }
 }
@@ -68,7 +68,7 @@ export class Monster {
   challengeRating!: ChallengeRating;
   baseArmorClass!: number;
   maximumHealth!: number;
-  actions!: Interaction[];
+  actions!: Action[];
 
   constructor(init?: Partial<Monster>) {
     Object.assign(this, init);

@@ -10,7 +10,7 @@ type ActionCardProps = {
 
 export function ActionCard({ worldId, action }: ActionCardProps) {
   return (
-    <Link href={`/worlds/${worldId}/interactions/${action.action.id}`}>
+    <Link href={`/worlds/${worldId}/actions/${action.action.id}`}>
       <Card className="h-[100px] w-[150px] overflow-hidden">
         <CardHeader className="p-2">
           <CardTitle className={"text-md"}>{action.action.name}</CardTitle>

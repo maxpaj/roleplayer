@@ -1,18 +1,18 @@
-import { Interaction } from "roleplayer";
+import { Action } from "roleplayer";
 import { Card, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import { ClassLevelProgression } from "roleplayer";
 import { WorldRecord } from "@/db/schema/worlds";
 import Link from "next/link";
 
 type LevelAbilityCardProps = {
-  ability: Interaction;
+  ability: Action;
   levelProgression: ClassLevelProgression;
   worldId: WorldRecord["id"];
 };
 
 export function LevelAbilityCard({ worldId, ability, levelProgression }: LevelAbilityCardProps) {
   return (
-    <Link href={`/worlds/${worldId}/interactions/${ability.id}`}>
+    <Link href={`/worlds/${worldId}/actions/${ability.id}`}>
       <Card className="h-[100px] w-[150px] overflow-hidden">
         <CardHeader className="p-2">
           <CardTitle className={"text-md"}>{ability.name}</CardTitle>

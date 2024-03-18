@@ -2,7 +2,7 @@ import { Id } from "../../lib/generate-id";
 import { Character, CharacterResourceType, CharacterStatType, Clazz, Position } from "../actor/character";
 import { Monster } from "../actor/monster";
 import { Battle } from "../battle/battle";
-import { Interaction } from "../world/interaction/interaction";
+import { Action } from "../world/action/action";
 import { Item } from "../world/item/item";
 import { Round } from "./round";
 
@@ -35,7 +35,7 @@ export type CampaignEventType =
       characterId: Character["id"];
       amount: number;
       resourceTypeId: CharacterResourceType["id"];
-      interactionId?: Interaction["id"];
+      actionId?: Action["id"];
     }
   | {
       type: "CharacterStatChange";
@@ -91,7 +91,7 @@ export type CampaignEventType =
   | {
       type: "CharacterStatusGain";
       characterId: Character["id"];
-      interactionId: Interaction["id"];
+      actionId: Action["id"];
       statusId: Id;
     }
   | { type: "CharacterAttackAttackerHit"; characterId: Character["id"] }
@@ -100,12 +100,12 @@ export type CampaignEventType =
       type: "CharacterAttackDefenderHit";
       attackerId: Character["id"];
       characterId: Character["id"];
-      interactionId: Interaction["id"];
+      actionId: Action["id"];
     }
   | {
       type: "CharacterAttackDefenderDodge";
       characterId: Character["id"];
-      interactionId: Interaction["id"];
+      actionId: Action["id"];
       attackerId: Character["id"];
     }
   | { type: "CharacterAttackDefenderParry"; characterId: Character["id"] }

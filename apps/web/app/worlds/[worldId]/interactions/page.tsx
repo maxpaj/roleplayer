@@ -3,7 +3,7 @@ import { getWorldData } from "../actions";
 import { Divider } from "@/components/ui/divider";
 import { ActionCard } from "@/components/action-card";
 
-export default async function InteractionsPage({ params }: { params: { worldId: string } }) {
+export default async function ActionsPage({ params }: { params: { worldId: string } }) {
   const { worldId: id } = params;
   const worldId = id;
   const worldData = await getWorldData(worldId);
@@ -14,10 +14,9 @@ export default async function InteractionsPage({ params }: { params: { worldId: 
 
   return (
     <>
-      <H3>Interactions</H3>
+      <H3>Actions</H3>
       <Muted>
-        Interactions are the base of spells, weapon abilities, or any other kind of interaction between characters and
-        the world
+        Actions are the base of spells, weapon abilities, or any other kind of action between characters and the world
       </Muted>
       <Divider className="my-3" />
 

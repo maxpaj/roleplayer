@@ -11,9 +11,9 @@ export enum TargetType {
 }
 
 /**
- * Represents an interaction, with targets, and some effect that will be applied
+ * Represents an action, with targets, and some effect that will be applied
  */
-export type Interaction = {
+export type Action = {
   id: Id;
   name: string;
   description: string;

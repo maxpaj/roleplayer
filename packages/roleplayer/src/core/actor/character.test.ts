@@ -2,7 +2,7 @@ import { DefaultRuleSet } from "../../data/data";
 import { dangerousGenerateId } from "../../lib/generate-id";
 import { Campaign } from "../campaign/campaign";
 import { CampaignEvent } from "../campaign/campaign-events";
-import { Interaction, TargetType } from "../world/interaction/interaction";
+import { Action, TargetType } from "../world/action/action";
 import { Item, ItemSlot, ItemType } from "../world/item/item";
 import { Rarity } from "../world/rarity";
 import { World } from "../world/world";
@@ -314,7 +314,7 @@ describe("Character", () => {
   });
 
   describe("Character actions", () => {
-    it("should return a list of possible interactions based on the character class abilities, spells and inventory", () => {
+    it("should return a list of possible actions based on the character class abilities, spells and inventory", () => {
       const sword: Item = {
         id: dangerousGenerateId(),
         rarity: Rarity.Common,
@@ -326,6 +326,7 @@ describe("Character", () => {
             name: "Slash",
             rangeDistanceMeters: 5,
             requiresResources: [],
+            description: "",
           },
         ],
         name: "Sword",
@@ -333,16 +334,17 @@ describe("Character", () => {
         type: ItemType.Equipment,
       };
 
-      const healingWord: Interaction = {
+      const healingWord: Action = {
         id: dangerousGenerateId(),
         name: "Healing Word (Level 1)",
         appliesEffects: [],
         eligibleTargets: [TargetType.Friendly],
         rangeDistanceMeters: 30,
         requiresResources: [],
+        description: "",
       };
 
-      const firebolt: Interaction = {
+      const firebolt: Action = {
         id: dangerousGenerateId(),
         appliesEffects: [],
         eligibleTargets: [TargetType.Hostile],
@@ -354,6 +356,7 @@ describe("Character", () => {
             amount: 1,
           },
         ],
+        description: "",
       };
 
       const char = new Character();

@@ -5,6 +5,7 @@ import { worldsSchema } from "./worlds";
 export const actionsSchema = pgTable("actions", {
   id: uuid("id").defaultRandom().primaryKey(),
   name: varchar("name", { length: 256 }).notNull(),
+  description: varchar("description", { length: 8192 }),
   createdUtc: timestamp("createdUtc").defaultNow(),
   worldId: uuid("worldId")
     .references(() => worldsSchema.id)

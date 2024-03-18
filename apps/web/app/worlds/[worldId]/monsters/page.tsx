@@ -1,7 +1,6 @@
 import { Divider } from "@/components/ui/divider";
 import { H3, Muted } from "@/components/ui/typography";
 import { MonsterCard } from "@/components/monster-card";
-import { ButtonLink } from "@/components/ui/button-link";
 import { getWorldData } from "../actions";
 import { CreateMonsterForm } from "./components/create-monster-form";
 
@@ -13,7 +12,7 @@ export default async function MonstersPage({ params }: { params: { worldId: stri
     return <>World not found!</>;
   }
 
-  const { monsters, world } = worldData;
+  const { monsters } = worldData;
 
   return (
     <>
@@ -25,9 +24,9 @@ export default async function MonstersPage({ params }: { params: { worldId: stri
 
       {monsters.length === 0 && <Muted className="my-4">It's empty! No monsters added yet.</Muted>}
 
-      <div className="flex flex-wrap gap-2">
+      <div className="my-2 flex flex-wrap gap-2">
         {monsters.map((m) => (
-          <MonsterCard key={m.id} worldId={id} monster={m} />
+          <MonsterCard key={m.monster.id} worldId={id} monster={m} />
         ))}
       </div>
     </>

@@ -1,6 +1,6 @@
 import { World } from "roleplayer";
 import { Character, Clazz } from "roleplayer";
-import { AbilityCard } from "@/components/ability-card";
+import { LevelAbilityCard } from "@/components/level-ability-card";
 import { RemoveFunctions } from "types/without-functions";
 import { H2, H3 } from "@/components/ui/typography";
 
@@ -38,7 +38,7 @@ export function CharacterClassEditor({ classId, world, character }: ClassEditorP
 
         return (
           <div key={lp.abilityId}>
-            <AbilityCard key={lp.abilityId} ability={ability} levelProgression={lp} />
+            <LevelAbilityCard key={lp.abilityId} worldId={world.id} ability={ability} levelProgression={lp} />
           </div>
         );
       })}

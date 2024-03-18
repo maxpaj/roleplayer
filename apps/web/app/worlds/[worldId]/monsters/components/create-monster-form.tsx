@@ -29,7 +29,7 @@ export async function CreateMonsterForm({ worldId }: { worldId: WorldRecord["id"
   }
 
   return (
-    <form className="flex items-start gap-x-2" action={createMonster}>
+    <form className="flex items-start gap-2" action={createMonster}>
       <Input type="name" id="name" name="name" placeholder="New monster name" />
       <Button type="submit">Create monster</Button>
     </form>

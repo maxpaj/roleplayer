@@ -7,3 +7,6 @@ export const rulesSchema = pgTable("rules", {
   description: varchar("description", { length: 8192 }),
   userId: uuid("userId").references(() => usersSchema.id),
 });
+
+export type RulesRecord = typeof rulesSchema.$inferSelect;
+export type NewRulesRecord = typeof rulesSchema.$inferInsert;

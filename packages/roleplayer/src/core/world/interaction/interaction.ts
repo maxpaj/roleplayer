@@ -16,6 +16,7 @@ export enum TargetType {
 export type Interaction = {
   id: Id;
   name: string;
+  description: string;
   appliesEffects: Effect[];
   eligibleTargets: TargetType[];
   rangeDistanceMeters: number;

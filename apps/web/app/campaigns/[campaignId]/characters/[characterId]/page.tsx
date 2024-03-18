@@ -1,5 +1,5 @@
+import { EventCard } from "@/components/event-card";
 import { H4, Muted } from "@/components/ui/typography";
-import { CampaignService } from "services/campaign-service";
 import { CampaignRecord } from "@/db/schema/campaigns";
 import { CharacterRecord } from "@/db/schema/characters";
 import { classToPlain } from "@/lib/class-to-plain";
@@ -7,7 +7,7 @@ import { getCampaign } from "app/campaigns/actions";
 import { CharacterEditor } from "app/characters/components/character-editor";
 import { redirect } from "next/navigation";
 import { Campaign, CampaignEventWithRound, Character, DefaultRuleSet, World } from "roleplayer";
-import { EventCard } from "@/components/event-card";
+import { CampaignService } from "services/campaign-service";
 
 export default async function CampaignCharacterPage({ params: { campaignId: id, characterId: cid } }: { params: { campaignId: string; characterId: string } }) {
   const campaignId = id;
@@ -65,6 +65,7 @@ export default async function CampaignCharacterPage({ params: { campaignId: id, 
           await updateCharacter(campaignId, characterId, update);
           redirect("../");
         }}
+        characterLevel={campaignInstance.getCharacterLevel(characterFromEvents)}
       />
 
       <H4 className="my-2">Events</H4>

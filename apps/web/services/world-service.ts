@@ -5,7 +5,13 @@ import { CampaignRecord, campaignsSchema } from "../db/schema/campaigns";
 import { CharacterRecord, NewCharacterRecord, charactersSchema } from "../db/schema/characters";
 import { ClazzRecord, NewClazzRecord, classesSchema } from "../db/schema/classes";
 import { ItemRecord, NewItemRecord, itemsSchema } from "../db/schema/items";
-import { MonsterRecord, NewMonsterRecord, monstersSchema, monstersToActionsSchema } from "../db/schema/monster";
+import {
+  MonsterRecord,
+  NewMonsterRecord,
+  monstersSchema,
+  monstersToActionsSchema,
+  monstersToResourcesSchema,
+} from "../db/schema/monster";
 import { StatusRecord, statusesSchema } from "../db/schema/statuses";
 import { UserRecord } from "../db/schema/users";
 import { NewWorldRecord, WorldRecord, worldsSchema } from "../db/schema/worlds";
@@ -14,6 +20,7 @@ import { DEFAULT_USER_ID } from "@/db/data";
 import { alias } from "drizzle-orm/pg-core";
 import { EffectRecord, effectsSchema } from "@/db/schema/effects";
 import { TargetType } from "roleplayer";
+import { ResourceTypeEnum } from "@/db/schema/resources";
 
 export type WorldAggregated = WorldRecord & {
   campaigns: CampaignRecord[];
@@ -31,7 +38,10 @@ export type ActionAggregated = ActionRecord & {
   requiresResources: RequiredResourceRecord[];
 };
 
+type MonsterResourceType = { max: number; resourceType: ResourceTypeEnum };
+
 export type MonsterAggregated = MonsterRecord & {
+  resourceTypes: MonsterResourceType[];
   actions: ActionAggregated[];
 };
 
@@ -67,6 +77,7 @@ export class WorldService {
 
       // Join monsters
       .leftJoin(monstersSchema, eq(monstersSchema.worldId, worldsSchema.id))
+      .leftJoin(monstersToResourcesSchema, eq(monstersToResourcesSchema.monsterId, monstersSchema.id))
       .leftJoin(monstersToActionsSchema, eq(monstersToActionsSchema.monsterId, monstersSchema.id))
       .leftJoin(monsterActionsAlias, eq(monstersToActionsSchema.actionId, monsterActionsAlias.id))
       .leftJoin(monsterActionsToEffectAlias, eq(monsterActionsAlias.id, monsterActionsToEffectAlias.actionId))
@@ -102,8 +113,26 @@ export class WorldService {
         const existingMonster = acc[world.id]!.monsters.filter((c) => c.id !== row.monsters!.id)[0];
         const monsterToAdd: MonsterAggregated = {
           actions: existingMonster?.actions || [],
+          resourceTypes: existingMonster?.resourceTypes || [],
           ...(existingMonster || row.monsters),
         };
+
+        if (row.monsterToResources) {
+          const existingResource = monsterToAdd.resourceTypes.filter(
+            (r) => r.resourceType !== row.monsterToResources!.resourceType
+          )[0];
+
+          const resourceToAdd: MonsterResourceType = {
+            ...(existingResource || row.monsterToResources),
+            max: row.monsterToResources.max,
+            resourceType: row.monsterToResources.resourceType!,
+          };
+
+          monsterToAdd.resourceTypes = [
+            ...monsterToAdd.resourceTypes.filter((a) => a.resourceType !== row.monsterToResources!.resourceType),
+            resourceToAdd,
+          ];
+        }
 
         if (row.monsterActionsAlias) {
           const existingAction = monsterToAdd.actions.filter((c) => c.id !== row.monsterActionsAlias!.id)[0];

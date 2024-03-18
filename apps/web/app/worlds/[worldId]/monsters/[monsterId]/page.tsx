@@ -26,7 +26,11 @@ export default async function MonsterDetailsPage({ params }: { params: { monster
       <div className="flex gap-4 py-3">
         <span>{monster.challengeRating} CR</span>
         <span>{monster.baseArmorClass} AC</span>
-        <span>{monster.maximumHealth} HP</span>
+        {monster.resourceTypes.map((r) => (
+          <span>
+            {r.max} {r.resourceType}
+          </span>
+        ))}
       </div>
 
       <Paragraph>{monster.description}</Paragraph>

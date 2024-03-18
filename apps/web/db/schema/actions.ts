@@ -1,13 +1,14 @@
 import { integer, pgEnum, pgTable, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
 import { effectsSchema } from "./effects";
 import { worldsSchema } from "./worlds";
+import { resourceTypeEnum } from "./resources";
 
 export const actionsSchema = pgTable("actions", {
   id: uuid("id").defaultRandom().primaryKey(),
   name: varchar("name", { length: 256 }).notNull(),
   description: varchar("description", { length: 8192 }).default("").notNull(),
   createdUtc: timestamp("createdUtc").defaultNow(),
-  rangeDistanceMeters: integer("maximumHealth").default(0).notNull(),
+  rangeDistanceMeters: integer("rangeDistanceMeters").default(0).notNull(),
   worldId: uuid("worldId")
     .references(() => worldsSchema.id)
     .notNull(),
@@ -27,9 +28,7 @@ export const actionsToResourceRequirementSchema = pgTable("actionsToResourceRequ
   actionId: uuid("actionId")
     .notNull()
     .references(() => actionsSchema.id),
-  resourceId: uuid("resourceId")
-    .notNull()
-    .references(() => effectsSchema.id),
+  resourceType: resourceTypeEnum("resourceType"),
 });
 
 export const actionsToEffectSchema = pgTable("actionsToEffects", {

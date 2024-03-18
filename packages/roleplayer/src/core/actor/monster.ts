@@ -1,5 +1,5 @@
 import { Id } from "../../lib/generate-id";
-import { CharacterResource, Position } from "./character";
+import { CharacterResource, CharacterResourceType, Position } from "./character";
 import { Actor, ActorType } from "./actor";
 import { Action } from "../world/action/action";
 import { D20, roll } from "../dice/dice";
@@ -67,7 +67,7 @@ export class Monster {
   name!: string;
   challengeRating!: ChallengeRating;
   baseArmorClass!: number;
-  maximumHealth!: number;
+  resources!: { max: number; resourceType: CharacterResourceType }[];
   actions!: Action[];
 
   constructor(init?: Partial<Monster>) {

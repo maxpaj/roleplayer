@@ -7,6 +7,8 @@ import { CampaignEventWithRound } from "./campaign-events";
 describe("Campaign state", () => {
   it("applies events", () => {
     const characterId = dangerousGenerateId();
+    const world = new World({ name: "World", ruleset: DefaultRuleSet });
+    const healthResource = world.ruleset.characterResourceTypes.find((rt) => rt.name === "Health");
     const events: CampaignEventWithRound[] = [
       {
         type: "CharacterSpawned",
@@ -24,23 +26,25 @@ describe("Campaign state", () => {
         serialNumber: 0,
       },
       {
-        type: "CharacterMaximumHealthSet",
+        type: "CharacterResourceMaxSet",
         characterId,
         id: dangerousGenerateId(),
         roundId: dangerousGenerateId(),
-        maximumHealth: 10,
+        resourceTypeId: healthResource!.id,
+        max: 10,
         serialNumber: 0,
       },
     ];
 
-    const world = new World({ name: "World", ruleset: DefaultRuleSet });
     const campaign = new Campaign({ id: "0000000-0000-0000-0000-000000000000" as const, name: "Campaign", world, events });
     const state = campaign.getCampaignStateFromEvents();
 
     expect(state.characters.length).toBe(1);
 
     const character = state.characters[0];
+    const characterHealth = character!.resources.find((r) => r.resourceTypeId === healthResource!.id);
+
     expect(character!.name).toBe("Some name");
-    expect(character!.maximumHealth).toBe(10);
+    expect(characterHealth!.amount).toBe(10);
   });
 });

@@ -13,7 +13,7 @@ export const DefaultLevelProgression: LevelProgression[] = [
 
 export const DefaultEquipmentSlotDefinitions: EquipmentSlotDefinition[] = [
   {
-    id: "0000000-0000-0000-0000-000000000000" as const,
+    id: "0000000-0000-0000-0000-000000003000" as const,
     name: "Main hand",
     eligibleEquipmentTypes: [ItemEquipmentType.OneHandSword],
   },
@@ -30,6 +30,10 @@ export const DefaultCharacterResourceTypes = [
     name: "Health",
     defaultMax: 20,
   },
+  { id: "0000000-0000-0000-0000-000000001002" as const, name: "Primary action", defaultMax: 1 },
+  { id: "0000000-0000-0000-0000-000000001003" as const, name: "Secondary action", defaultMax: 1 },
+  { id: "0000000-0000-0000-0000-000000001004" as const, name: "Spell slot 1", defaultMax: 0 },
+  { id: "0000000-0000-0000-0000-000000001005" as const, name: "Spell slot 2", defaultMax: 0 },
 ];
 
 export const DefaultCharacterStatTypes: CharacterStatType[] = [

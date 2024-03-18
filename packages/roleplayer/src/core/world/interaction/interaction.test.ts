@@ -76,7 +76,13 @@ describe("interactions", () => {
       defaultMax: 20,
     };
 
-    ruleset.characterResourceTypes = [healthResource];
+    const primaryActionResource: CharacterResourceType = {
+      id: dangerousGenerateId(),
+      name: "Primary action",
+      defaultMax: 20,
+    };
+
+    ruleset.characterResourceTypes = [healthResource, primaryActionResource];
 
     const world = new World({ name: "test", ruleset });
     world.statuses = [frozenStatus];
@@ -128,16 +134,19 @@ describe("interactions", () => {
 
     const beforeAttack = campaign.getCampaignStateFromEvents();
     const attacker = beforeAttack.characters.find((c) => c.id === attackerId);
-    const defender = beforeAttack.characters.find((c) => c.id === defenderId);
+    const defenderBeforeAttack = beforeAttack.characters.find((c) => c.id === defenderId);
     const actions = attacker!.getAvailableActions();
     const characterAction = actions.find((a) => a.name === "Slash");
 
-    campaign.performCharacterAttack(attacker!, 15, characterAction!, defender!);
+    expect(defenderBeforeAttack!.resources.find((r) => r.resourceTypeId === healthResource.id)?.amount).toBe(10);
 
+    campaign.performCharacterAttack(attacker!, 15, characterAction!, defenderBeforeAttack!);
+
+    console.log(campaign.events);
     const afterAttack = campaign.getCampaignStateFromEvents();
-    const defenderFromEvents = afterAttack.characters.find((c) => c.id === defenderId);
+    const defenderAfterAttack = afterAttack.characters.find((c) => c.id === defenderId);
 
-    expect(defenderFromEvents!.resources.find((r) => r.resourceTypeId === healthResource.id)?.amount).toBe(8);
-    expect(defenderFromEvents!.statuses.find((s) => s.name === "Chill")).toBeDefined();
+    expect(defenderAfterAttack!.resources.find((r) => r.resourceTypeId === healthResource.id)?.amount).toBe(8);
+    expect(defenderAfterAttack!.statuses.find((s) => s.name === "Chill")).toBeDefined();
   });
 });

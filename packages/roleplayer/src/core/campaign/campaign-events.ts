@@ -61,12 +61,6 @@ export type CampaignEventType =
   | { type: "CharacterDespawn"; characterId: Character["id"] }
   | { type: "CharacterStartRound"; characterId: Character["id"] }
   | {
-      type: "CharacterPrimaryAction";
-      characterId: Character["id"];
-      interactionId: Interaction["id"];
-    }
-  | { type: "CharacterSecondaryAction"; characterId: Character["id"] }
-  | {
       type: "CharacterMovement";
       characterId: Character["id"];
       targetPosition: Position;

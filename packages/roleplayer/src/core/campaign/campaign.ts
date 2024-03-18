@@ -282,6 +282,11 @@ export class Campaign {
       throw new Error("Health resource not defined in world, cannot perform attack");
     }
 
+    const actionResource = this.world.ruleset.characterResourceTypes.find((rt) => rt.name === "Primary action");
+    if (!actionResource) {
+      throw new Error("Primary action resource not defined in world, cannot perform attack");
+    }
+
     const characterHitModifier = attacker.getCharacterHitModifierWithInteraction(interaction);
     const defenderWasHit = defender.armorClass < diceAttackHitRoll + characterHitModifier;
     const hitDodgeEvent: CampaignEvent = defenderWasHit
@@ -300,10 +305,14 @@ export class Campaign {
           type: "CharacterAttackDefenderDodge",
         };
 
+    let defenderCurrentHealth = defender.resources.find((r) => r.resourceTypeId === healthResource.id)!.amount;
+
     const damageTakenEvents: CampaignEvent[] = defenderWasHit
       ? interaction.appliesEffects.flatMap((attack) => {
           const attackerDamageRoll = attacker.getDamageRoll(attack);
           const defenderDamageTaken = defender.getEffectDamageTaken(attack, attackerDamageRoll);
+
+          defenderCurrentHealth -= defenderDamageTaken;
 
           return [
             {
@@ -312,7 +321,7 @@ export class Campaign {
               interactionId: interaction.id,
               type: "CharacterResourceCurrentChange",
               resourceTypeId: healthResource.id,
-              amount: -1 * defenderDamageTaken,
+              amount: defenderCurrentHealth,
             } satisfies CampaignEvent,
           ];
         })
@@ -341,7 +350,9 @@ export class Campaign {
       id: dangerousGenerateId(),
       characterId: attacker.id,
       interactionId: interaction.id,
-      type: "CharacterPrimaryAction",
+      resourceTypeId: actionResource.id,
+      type: "CharacterResourceCurrentChange",
+      amount: 0,
     } satisfies CampaignEvent;
 
     return this.publishCampaignEvent(...[attackerPrimaryAction, hitDodgeEvent, ...damageTakenEvents, ...statusChangeEvents]);

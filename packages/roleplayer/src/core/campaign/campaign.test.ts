@@ -16,22 +16,6 @@ describe("Campaign", () => {
         serialNumber: 0,
       },
       {
-        type: "CharacterNameSet",
-        characterId,
-        id: dangerousGenerateId(),
-        name: "Some name",
-        roundId: dangerousGenerateId(),
-        serialNumber: 0,
-      },
-      {
-        type: "CharacterMaximumHealthSet",
-        characterId,
-        id: dangerousGenerateId(),
-        roundId: dangerousGenerateId(),
-        maximumHealth: 10,
-        serialNumber: 0,
-      },
-      {
         type: "CharacterExperienceSet",
         characterId,
         experience: 100,

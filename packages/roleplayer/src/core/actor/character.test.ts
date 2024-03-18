@@ -205,7 +205,7 @@ describe("Character", () => {
         },
         {
           type: "CharacterResourceCurrentChange",
-          amount: -4,
+          amount: 8,
           id: dangerousGenerateId(),
           characterId: characterId,
           resourceTypeId: resourceType.id,

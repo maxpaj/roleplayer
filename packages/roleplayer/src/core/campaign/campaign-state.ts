@@ -2,7 +2,7 @@ import { Id } from "../../lib/generate-id";
 import { Battle } from "../battle/battle";
 import { Round } from "./round";
 import { Actor } from "../actor/actor";
-import { Character, isCharacterEvent } from "../actor/character";
+import { Character, CharacterResourceType, isCharacterEvent } from "../actor/character";
 import { MonsterInstance } from "../actor/monster";
 import { Campaign } from "./campaign";
 import { CampaignEventType, CampaignEventWithRound } from "./campaign-events";
@@ -51,9 +51,12 @@ export class CampaignState {
     return [...this.monsters, ...this.characters];
   }
 
+  characterHasResource(round: Round, characterId: Id, resourceType: CharacterResourceType["id"]) {
+    return false;
+  }
+
   characterHasRoundEvent(round: Round, characterId: Id, type: CampaignEventType["type"]) {
     const roundCharacterEvents = this.campaign.getCharacterRoundEvents(round, characterId);
-
     return roundCharacterEvents.some((event) => isCharacterEvent(event) && event.characterId === characterId && event.type === type);
   }
 

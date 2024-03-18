@@ -203,7 +203,7 @@ export class CampaignService {
       .leftJoin(eventsSchema, eq(eventsSchema.campaignId, campaignsSchema.id))
 
       // Join world stuff
-      .leftJoin(actionsSchema, eq(actionsSchema.id, monstersToActionsSchema.actionId))
+      .leftJoin(actionsSchema, eq(actionsSchema.worldId, worldsSchema.id))
       .leftJoin(classesSchema, eq(classesSchema.worldId, worldsSchema.id))
 
       // Join monsters

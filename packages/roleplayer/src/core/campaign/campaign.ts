@@ -276,7 +276,12 @@ export class Campaign {
     return item;
   }
 
-  performCharacterAttack(attacker: Character, diceAttackHitRoll: number, interaction: Interaction, defender: Character) {
+  performCharacterAttack(
+    attacker: Character,
+    diceAttackHitRoll: number,
+    interaction: Interaction,
+    defender: Character
+  ) {
     const healthResource = this.world.ruleset.characterResourceTypes.find((rt) => rt.name === "Health");
     if (!healthResource) {
       throw new Error("Health resource not defined in world, cannot perform attack");
@@ -334,7 +339,9 @@ export class Campaign {
             return status !== undefined;
           })
           .flatMap((attack) => {
-            const defenderStatus = defender.getEffectAppliedStatuses(this.world!.statuses.find((s) => s.id === attack.appliesStatusId));
+            const defenderStatus = defender.getEffectAppliedStatuses(
+              this.world!.statuses.find((s) => s.id === attack.appliesStatusId)
+            );
 
             return {
               id: dangerousGenerateId(),
@@ -355,7 +362,9 @@ export class Campaign {
       amount: 0,
     } satisfies CampaignEvent;
 
-    return this.publishCampaignEvent(...[attackerPrimaryAction, hitDodgeEvent, ...damageTakenEvents, ...statusChangeEvents]);
+    return this.publishCampaignEvent(
+      ...[attackerPrimaryAction, hitDodgeEvent, ...damageTakenEvents, ...statusChangeEvents]
+    );
   }
 
   publishRoundEvent(...newEvents: CampaignEvent[]) {
@@ -736,7 +745,9 @@ export class Campaign {
       }
 
       case "CharacterEquipmentSlotGain": {
-        const characterSlot = this.world!.ruleset.characterEquipmentSlots.find((slot) => slot.id === event.equipmentSlotId);
+        const characterSlot = this.world!.ruleset.characterEquipmentSlots.find(
+          (slot) => slot.id === event.equipmentSlotId
+        );
 
         if (!characterSlot) {
           throw new Error("Cannot find slot");

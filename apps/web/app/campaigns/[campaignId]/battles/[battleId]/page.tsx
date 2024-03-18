@@ -20,7 +20,7 @@ export default async function BattlePage({ params }: { params: { campaignId: str
     events: events.map((e) => e.eventData) as CampaignEventWithRound[],
     world: new World({
       ...campaignData.world.world,
-      monsters: campaignData.world.monsters.map((m) => ({ ...m, actions: m.actions })),
+      monsters: campaignData.world.monsters.map((m) => ({ ...m.monster, actions: m.actions })),
       ruleset: DefaultRuleSet,
     }),
   });

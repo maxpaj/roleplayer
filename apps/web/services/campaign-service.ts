@@ -6,10 +6,11 @@ import { CampaignRecord, NewCampaignRecord, campaignsSchema } from "../db/schema
 import { CharacterRecord, charactersSchema, charactersToCampaignsSchema } from "../db/schema/characters";
 import { EventRecord, eventsSchema } from "../db/schema/events";
 import { NewFriendInviteRecord, friendInvitesSchema } from "../db/schema/friend-invite";
-import { monstersSchema } from "../db/schema/monster";
+import { monstersSchema, monstersToActionsSchema } from "../db/schema/monster";
 import { UserRecord } from "../db/schema/users";
 import { WorldRecord, worldsSchema } from "../db/schema/worlds";
-import { WorldAggregated } from "./world-service";
+import { MonsterAggregated, WorldAggregated } from "./world-service";
+import { actionsSchema } from "@/db/schema/actions";
 
 export class CampaignService {
   async getAll(userId: UserRecord["id"]): Promise<{ campaign: CampaignRecord; events: EventRecord[] }[]> {
@@ -139,6 +140,8 @@ export class CampaignService {
       .from(campaignsSchema)
       .innerJoin(worldsSchema, eq(worldsSchema.id, campaignsSchema.worldId))
       .leftJoin(monstersSchema, eq(monstersSchema.worldId, worldsSchema.id))
+      .leftJoin(monstersToActionsSchema, eq(monstersSchema.id, monstersToActionsSchema.monsterId))
+      .leftJoin(actionsSchema, eq(actionsSchema.id, monstersToActionsSchema.actionId))
       .leftJoin(classesSchema, eq(classesSchema.worldId, worldsSchema.id))
       .leftJoin(charactersToCampaignsSchema, eq(charactersToCampaignsSchema.campaignId, campaignsSchema.id))
       .leftJoin(charactersSchema, eq(charactersToCampaignsSchema.characterId, charactersSchema.id))
@@ -156,9 +159,10 @@ export class CampaignService {
         }
       >
     >((acc, row) => {
-      const campaign = row.campaigns;
-      if (!acc[campaign.id]) {
-        acc[campaign.id] = {
+      const campaignRow = row.campaigns;
+
+      if (!acc[campaignRow.id]) {
+        acc[campaignRow.id] = {
           world: {
             world: row.worlds,
             actions: [],
@@ -169,26 +173,39 @@ export class CampaignService {
             monsters: [],
             statuses: [],
           },
-          campaign,
+          campaign: campaignRow,
           events: [],
           characters: [],
         };
       }
 
+      const campaign = acc[campaignRow.id];
+      const world = campaign?.world;
+
       if (row.events) {
-        acc[campaign.id]!.events = [...acc[campaign.id]!.events.filter((c) => c.id !== row.events!.id), row.events];
+        campaign!.events = [...campaign!.events.filter((c) => c.id !== row.events!.id), row.events];
       }
 
       if (row.characters) {
-        acc[campaign.id]!.characters = [...acc[campaign.id]!.characters.filter((c) => c.id !== row.characters!.id), row.characters];
+        campaign!.characters = [...campaign!.characters.filter((c) => c.id !== row.characters!.id), row.characters];
       }
 
       if (row.monsters) {
-        acc[campaign.id]!.world.monsters = [...acc[campaign.id]!.world.monsters.filter((c) => c.id !== row.monsters!.id), row.monsters];
+        const existing = world!.monsters.filter((c) => c.monster.id !== row.monsters!.id)[0];
+        const monsterToAdd: MonsterAggregated = {
+          actions: existing?.actions || [],
+          monster: existing?.monster || row.monsters,
+        };
+
+        if (row.actions) {
+          monsterToAdd.actions = [...monsterToAdd.actions.filter((a) => a.id !== row.actions!.id), row.actions];
+        }
+
+        world!.monsters = [...world!.monsters.filter((c) => c.monster.id !== row.monsters!.id), monsterToAdd];
       }
 
       if (row.classes) {
-        acc[campaign.id]!.world.classes = [...acc[campaign.id]!.world.classes.filter((c) => c.id !== row.classes!.id), row.classes];
+        campaign!.world.classes = [...campaign!.world.classes.filter((c) => c.id !== row.classes!.id), row.classes];
       }
 
       return acc;

@@ -7,6 +7,7 @@ import { useState } from "react";
 import { EMPTY_GUID } from "@/lib/guid";
 import { ButtonLink } from "@/components/ui/button-link";
 import { WorldRecord } from "@/db/schema/worlds";
+import { MonsterAggregated } from "services/world-service";
 
 export function AddBattleMonsterButton({
   monsters,
@@ -38,8 +39,8 @@ export function AddBattleMonsterButton({
             <Combobox
               onChange={(monsterId) => setSelectedMonster(monsterId)}
               options={monsters.map((c) => ({
-                label: c.name,
-                value: c.id.toString(),
+                label: c.monster.name,
+                value: c.monster.id.toString(),
               }))}
             />
           </>

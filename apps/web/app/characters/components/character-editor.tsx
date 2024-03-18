@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
+import { Divider } from "@/components/ui/divider";
 import { H3, H4, Muted, Paragraph } from "@/components/ui/typography";
 import { useState } from "react";
 import { Character, World } from "roleplayer";
@@ -44,7 +44,7 @@ export function CharacterEditor({ onSave, world, characterFromEvents, characterL
           </Button>
         </div>
       </H3>
-      <Separator className="my-3" />
+      <Divider className="my-3" />
 
       <Paragraph>
         Level {characterLevel} ({characterFromEvents.xp} XP)
@@ -70,7 +70,7 @@ export function CharacterEditor({ onSave, world, characterFromEvents, characterL
         return (
           <div key={characterClass.classId}>
             <CharacterClassEditor classId={characterClass.classId} world={world} character={update} />
-            <Separator className="my-3" />
+            <Divider className="my-3" />
           </div>
         );
       })}

@@ -1,9 +1,13 @@
 import { WorldService } from "services/world-service";
 import { DEFAULT_USER_ID } from "@/db/data";
 import { H3, Paragraph } from "@/components/ui/typography";
-import { Separator } from "@/components/ui/separator";
+import { Divider } from "@/components/ui/divider";
 
-export default async function CharacterPage({ params: { worldId: id, characterId: cid } }: { params: { worldId: string; characterId: string } }) {
+export default async function CharacterPage({
+  params: { worldId: id, characterId: cid },
+}: {
+  params: { worldId: string; characterId: string };
+}) {
   const worldId = id;
   const characterId = cid;
 
@@ -23,7 +27,7 @@ export default async function CharacterPage({ params: { worldId: id, characterId
   return (
     <>
       <H3>{character.name}</H3>
-      <Separator className="my-3" />
+      <Divider className="my-3" />
       <Paragraph>{character.description}</Paragraph>
     </>
   );

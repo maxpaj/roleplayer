@@ -1,4 +1,4 @@
-import { Separator } from "@/components/ui/separator";
+import { Divider } from "@/components/ui/divider";
 import { H3, Muted } from "@/components/ui/typography";
 import { getWorldData } from "../actions";
 import { CreateClassForm } from "./components/create-class-form";
@@ -16,7 +16,7 @@ export default async function ClassesPage({ params }: { params: { worldId: strin
   return (
     <div>
       <H3>Classes</H3>
-      <Separator className="my-3" />
+      <Divider className="my-3" />
 
       {worldData.classes.length === 0 && <Muted className="my-2">No classes added yet</Muted>}
 

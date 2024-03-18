@@ -1,6 +1,6 @@
 import { H3, Paragraph } from "@/components/ui/typography";
 import { getCampaign } from "../actions";
-import { Separator } from "@/components/ui/separator";
+import { Divider } from "@/components/ui/divider";
 import { Table, TableBody, TableCaption, TableCell, TableRow } from "@/components/ui/table";
 
 export default async function CampaignPage({ params }: { params: { campaignId: string } }) {
@@ -16,7 +16,7 @@ export default async function CampaignPage({ params }: { params: { campaignId: s
   return (
     <>
       <H3>Campaign</H3>
-      <Separator className="my-3" />
+      <Divider className="my-3" />
       <Paragraph>{campaign.description}</Paragraph>
 
       <Table>

@@ -2,7 +2,17 @@
 
 import { useCallback, useState } from "react";
 import Image from "next/image";
-import { Battle, Round, CampaignEvent, CampaignEventType, CampaignState, Character, MonsterInstance, BattleActor } from "roleplayer";
+import {
+  Battle,
+  Round,
+  CampaignEvent,
+  CampaignEventType,
+  CampaignState,
+  Character,
+  MonsterInstance,
+  BattleActor,
+  DefaultRuleSet,
+} from "roleplayer";
 import { D20, roll } from "roleplayer";
 import { Interaction } from "roleplayer";
 import { Campaign } from "roleplayer";
@@ -16,7 +26,7 @@ import { AddBattleMonsterButton } from "./add-battle-monster-button";
 import { ActorRecord } from "models/actor";
 import { saveCampaignEvents } from "app/campaigns/actions";
 import { DiceRollCard } from "./dice-roll-card";
-import { Separator } from "@/components/ui/separator";
+import { Divider } from "@/components/ui/divider";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { HelpCircle } from "lucide-react";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
@@ -91,10 +101,24 @@ export function BattleSimulator({ campaign, battleId, world }: BattleSimulatorPr
   }
 
   function renderCharacter(currentRound: Round, battleCharacter: BattleActor, isCharacterTurnToAct: boolean) {
-    const hasSpentAction = campaignState.characterHasRoundEvent(currentRound, battleCharacter.actor.id, "CharacterPrimaryAction");
-    const hasSpentBonus = campaignState.characterHasRoundEvent(currentRound, battleCharacter.actor.id, "CharacterSecondaryAction");
-    const hasFinished = campaignState.characterHasRoundEvent(currentRound, battleCharacter.actor.id, "CharacterEndRound");
-    const currentActionClass = isCharacterTurnToAct ? "shadow-[inset_0px_0px_30px_0px_rgba(0,0,0,0.25)] shadow-primary/40" : "";
+    const hasSpentPrimaryAction = !campaignState.characterHasResource(
+      currentRound,
+      battleCharacter.actor.id,
+      "Primary action"
+    );
+    const hasSpentBonusAction = !campaignState.characterHasResource(
+      currentRound,
+      battleCharacter.actor.id,
+      "Primary action"
+    );
+    const hasFinished = campaignState.characterHasRoundEvent(
+      currentRound,
+      battleCharacter.actor.id,
+      "CharacterEndRound"
+    );
+    const currentActionClass = isCharacterTurnToAct
+      ? "shadow-[inset_0px_0px_30px_0px_rgba(0,0,0,0.25)] shadow-primary/40"
+      : "";
 
     return (
       <div
@@ -107,7 +131,7 @@ export function BattleSimulator({ campaign, battleId, world }: BattleSimulatorPr
               <H5>
                 {battleCharacter.actor.name} ({battleCharacter.actor.getType()})
               </H5>
-              <Separator className="my-3" />
+              <Divider className="my-3" />
             </div>
 
             <DiceRollCard roll={battleCharacter.initiative} />
@@ -116,7 +140,7 @@ export function BattleSimulator({ campaign, battleId, world }: BattleSimulatorPr
           <div className="relative flex w-full flex-wrap justify-between p-4">
             {isCharacterTurnToAct && (
               <div className="flex flex-wrap gap-2 ">
-                <Select disabled={hasSpentAction || hasFinished}>
+                <Select disabled={hasSpentPrimaryAction || hasFinished}>
                   <SelectTrigger className="w-[180px]">
                     <SelectValue placeholder="Select action" />
                   </SelectTrigger>
@@ -135,14 +159,17 @@ export function BattleSimulator({ campaign, battleId, world }: BattleSimulatorPr
                   </SelectContent>
                 </Select>
 
-                <Select disabled={hasSpentAction || hasFinished}>
+                <Select disabled={hasSpentPrimaryAction || hasFinished}>
                   <SelectTrigger className="w-[180px]">
                     <SelectValue placeholder="Select target" />
                   </SelectTrigger>
                   <SelectContent>
                     {selectedAction &&
                       battleCharacter.actor.getEligibleTargets(selectedAction).map((target) => (
-                        <SelectItem onClick={() => battleCharacter.actor.performAction([target.id], selectedAction!.id)} value={target.id}>
+                        <SelectItem
+                          onClick={() => battleCharacter.actor.performAction([target.id], selectedAction!.id)}
+                          value={target.id}
+                        >
                           {target.id}
                         </SelectItem>
                       ))}
@@ -173,7 +200,7 @@ export function BattleSimulator({ campaign, battleId, world }: BattleSimulatorPr
       throw new Error("Battle entity record not found");
     }
 
-    return new BattleActor(record.actor, record.initiative);
+    return new BattleActor(record.actor);
   }
 
   function getActorImageURL(battleCharacter: BattleActor): string {
@@ -225,7 +252,13 @@ export function BattleSimulator({ campaign, battleId, world }: BattleSimulatorPr
     return (
       <div key={event.id} className="flex justify-between gap-2 border border-slate-500 p-2">
         <div className="flex gap-2">
-          <Image className="invert" width={EventIconSize} height={EventIconSize} alt={eventIcon.alt} src={eventIcon.icon} />
+          <Image
+            className="invert"
+            width={EventIconSize}
+            height={EventIconSize}
+            alt={eventIcon.alt}
+            src={eventIcon.icon}
+          />
           {renderEventMessage(event)}
         </div>
 
@@ -269,7 +302,11 @@ export function BattleSimulator({ campaign, battleId, world }: BattleSimulatorPr
   return (
     <div className="w-full">
       <div className="mb-4 flex flex-wrap gap-2">
-        <AddBattleCharacterButton campaignId={campaign.id} availableCharacters={campaignState.characters} onAddCharacter={addCharacter} />
+        <AddBattleCharacterButton
+          campaignId={campaign.id}
+          availableCharacters={campaignState.characters}
+          onAddCharacter={addCharacter}
+        />
         <AddBattleMonsterButton worldId={campaign.world.id} monsters={world.monsters} onAddMonster={addMonster} />
 
         <Button
@@ -290,7 +327,9 @@ export function BattleSimulator({ campaign, battleId, world }: BattleSimulatorPr
         <div className="mb-4 flex w-full flex-col gap-3">
           {battleState.entities
             .sort((a, b) => b.initiative - a.initiative)
-            .map((battleChar) => renderCharacter(currentRound, battleChar, currentCharacter.actor.id === battleChar.actor.id))}
+            .map((battleChar) =>
+              renderCharacter(currentRound, battleChar, currentCharacter.actor.id === battleChar.actor.id)
+            )}
         </div>
       )}
 

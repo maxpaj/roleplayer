@@ -1,5 +1,5 @@
 import { ButtonLink } from "@/components/ui/button-link";
-import { Separator } from "@/components/ui/separator";
+import { Divider } from "@/components/ui/divider";
 import { H3, H4, Muted } from "@/components/ui/typography";
 import { getCampaign } from "app/campaigns/actions";
 import { CreateCharacterForm } from "app/characters/components/create-character-form";
@@ -16,7 +16,7 @@ export default async function CampaignCharactersPage({ params }: { params: { cam
   return (
     <>
       <H3>Characters</H3>
-      <Separator className="my-3" />
+      <Divider className="my-3" />
 
       <div className="my-2 flex gap-2">
         <CreateCharacterForm worldId={campaignData.world.world.id} campaignId={campaignData.campaign.id} />

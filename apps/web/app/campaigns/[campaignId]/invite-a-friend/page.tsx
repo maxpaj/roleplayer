@@ -1,4 +1,4 @@
-import { Separator } from "@/components/ui/separator";
+import { Divider } from "@/components/ui/divider";
 import { H3, Muted } from "@/components/ui/typography";
 import { InviteAFriendForm } from "./components/invite-a-friend-form";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -12,7 +12,7 @@ export default async function InviteAFriendPage({ params: { campaignId: id } }: 
   return (
     <>
       <H3>Invite a friend</H3>
-      <Separator className="my-3" />
+      <Divider className="my-3" />
 
       <InviteAFriendForm campaignId={campaignId} />
 

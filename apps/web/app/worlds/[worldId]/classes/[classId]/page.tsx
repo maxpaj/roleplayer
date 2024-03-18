@@ -1,6 +1,6 @@
 import { H3 } from "@/components/ui/typography";
 import { getWorldData } from "../../actions";
-import { Separator } from "@/components/ui/separator";
+import { Divider } from "@/components/ui/divider";
 
 export default async function ClassPage({ params }: { params: { worldId: string; classId: string } }) {
   const { worldId: id, classId } = params;
@@ -16,7 +16,7 @@ export default async function ClassPage({ params }: { params: { worldId: string;
   return (
     <div>
       <H3>{clazz?.name}</H3>
-      <Separator className="my-3" />
+      <Divider className="my-3" />
     </div>
   );
 }

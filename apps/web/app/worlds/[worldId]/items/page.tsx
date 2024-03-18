@@ -1,4 +1,4 @@
-import { Separator } from "@/components/ui/separator";
+import { Divider } from "@/components/ui/divider";
 import { H3, H5, Muted } from "@/components/ui/typography";
 import { getWorldData } from "../actions";
 import { ItemCard } from "@/components/item-card";
@@ -30,7 +30,7 @@ export default async function ItemsPage({ params }: { params: { worldId: string 
   return (
     <>
       <H3>Items</H3>
-      <Separator className="my-3" />
+      <Divider className="my-3" />
 
       <CreateItemForm worldId={worldId} />
 

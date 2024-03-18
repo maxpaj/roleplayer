@@ -1,4 +1,4 @@
-import { Separator } from "@/components/ui/separator";
+import { Divider } from "@/components/ui/divider";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { H3, Muted } from "@/components/ui/typography";
 import { getCampaign } from "app/campaigns/actions";
@@ -17,7 +17,7 @@ export default async function CampaignEventsPage({ params }: { params: { campaig
   return (
     <>
       <H3>Events</H3>
-      <Separator className="my-3" />
+      <Divider className="my-3" />
 
       <div className="my-2 flex items-center gap-2">
         <AlertOctagon size={16} />

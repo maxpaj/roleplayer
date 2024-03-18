@@ -3,9 +3,15 @@ import { H2 } from "@/components/ui/typography";
 import { BadgeLink, ButtonLink } from "@/components/ui/button-link";
 import { GitForkIcon } from "lucide-react";
 import Image from "next/image";
-import { Separator } from "@/components/ui/separator";
+import { Divider } from "@/components/ui/divider";
 
-export default async function WorldLayout({ params, children }: { children: React.ReactNode; params: { worldId: string } }) {
+export default async function WorldLayout({
+  params,
+  children,
+}: {
+  children: React.ReactNode;
+  params: { worldId: string };
+}) {
   const { worldId: id } = params;
 
   const data = await getWorldData(id);
@@ -27,7 +33,13 @@ export default async function WorldLayout({ params, children }: { children: Reac
             }}
           />
 
-          <Image className="relative z-0" src={world.imageUrl} fill={true} style={{ objectFit: "cover" }} alt={"World background"} />
+          <Image
+            className="relative z-0"
+            src={world.imageUrl}
+            fill={true}
+            style={{ objectFit: "cover" }}
+            alt={"World background"}
+          />
         </div>
       )}
       <div className="mb-4 flex flex-wrap justify-between gap-x-4">
@@ -49,6 +61,7 @@ export default async function WorldLayout({ params, children }: { children: Reac
           <BadgeLink href={`/worlds/${world.id}/items`}>Items</BadgeLink>
           <BadgeLink href={`/worlds/${world.id}/npcs`}>NPCs</BadgeLink>
           <BadgeLink href={`/worlds/${world.id}/classes`}>Classes</BadgeLink>
+          <BadgeLink href={`/worlds/${world.id}/interactions`}>Interaction</BadgeLink>
           <BadgeLink href={`/worlds/${world.id}/campaigns`}>Campaigns</BadgeLink>
         </div>
         <BadgeLink href={`/worlds/${world.id}/settings`}>Settings</BadgeLink>

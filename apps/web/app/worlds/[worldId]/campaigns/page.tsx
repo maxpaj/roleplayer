@@ -1,4 +1,4 @@
-import { Separator } from "@/components/ui/separator";
+import { Divider } from "@/components/ui/divider";
 import { H3, Muted } from "@/components/ui/typography";
 import { getWorldCampaigns } from "../actions";
 import { CampaignCard } from "@/components/campaign-card";
@@ -11,7 +11,7 @@ export default async function CampaignsPage({ params }: { params: { worldId: str
     <>
       <H3>Campaigns</H3>
       <Muted>List of campaigns started from this world</Muted>
-      <Separator className="my-3" />
+      <Divider className="my-3" />
 
       <div className="flex gap-2">
         {campaigns.map((c) => (

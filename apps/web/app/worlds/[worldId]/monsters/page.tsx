@@ -1,4 +1,4 @@
-import { Separator } from "@/components/ui/separator";
+import { Divider } from "@/components/ui/divider";
 import { H3, Muted } from "@/components/ui/typography";
 import { MonsterCard } from "@/components/monster-card";
 import { ButtonLink } from "@/components/ui/button-link";
@@ -19,7 +19,7 @@ export default async function MonstersPage({ params }: { params: { worldId: stri
     <>
       <H3>Monsters</H3>
       <Muted>A monster is a simpler kind of characters that only appear in battle</Muted>
-      <Separator className="my-3" />
+      <Divider className="my-3" />
 
       <CreateMonsterForm worldId={worldId} />
 

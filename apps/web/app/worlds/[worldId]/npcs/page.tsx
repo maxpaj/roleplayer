@@ -1,5 +1,5 @@
 import { H3, Muted } from "@/components/ui/typography";
-import { Separator } from "@/components/ui/separator";
+import { Divider } from "@/components/ui/divider";
 import { getWorldData } from "../actions";
 import { CreateCharacterForm } from "../../../characters/components/create-character-form";
 import { CharacterCard } from "@/components/character-card";
@@ -17,7 +17,7 @@ export default async function NpcPage({ params }: { params: { worldId: string } 
     <>
       <H3>Non-player characters</H3>
       <Muted>These are characters that live in the world, but are not controlled by a player</Muted>
-      <Separator className="my-3" />
+      <Divider className="my-3" />
 
       <CreateCharacterForm worldId={worldId} />
 

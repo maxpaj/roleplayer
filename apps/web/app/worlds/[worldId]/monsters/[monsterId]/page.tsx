@@ -1,6 +1,6 @@
 import { Divider } from "@/components/ui/divider";
 import { getWorldData } from "../../actions";
-import { H4, H5, Paragraph } from "@/components/ui/typography";
+import { H3, H4, Paragraph } from "@/components/ui/typography";
 import { ActionCard } from "@/components/action-card";
 
 export default async function MonsterDetailsPage({ params }: { params: { monsterId: string; worldId: string } }) {
@@ -20,16 +20,26 @@ export default async function MonsterDetailsPage({ params }: { params: { monster
 
   return (
     <>
-      <H4>{monster.name}</H4>
+      <H3>{monster.name}</H3>
       <Divider />
+
+      <div className="flex gap-4 py-3">
+        <span>{monster.challengeRating} CR</span>
+        <span>{monster.baseArmorClass} AC</span>
+        <span>{monster.maximumHealth} HP</span>
+      </div>
+
       <Paragraph>{monster.description}</Paragraph>
 
-      <H5>Actions</H5>
-      <div className="flex flex-wrap gap-2">
-        {monster.actions.map((a) => (
-          <ActionCard key={a.id} worldId={worldId} action={a} />
-        ))}
-      </div>
+      <H4>Actions</H4>
+      {monster.actions.length > 0 && (
+        <div className="flex flex-wrap gap-2">
+          {monster.actions.map((a) => (
+            <ActionCard key={a.id} worldId={worldId} action={a} />
+          ))}
+        </div>
+      )}
+      {monster.actions.length === 0 && <Paragraph>No actions added to {monster.name} yet</Paragraph>}
     </>
   );
 }

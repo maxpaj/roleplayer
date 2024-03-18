@@ -1,4 +1,4 @@
-import { H3, Muted } from "@/components/ui/typography";
+import { H3, Muted, Paragraph } from "@/components/ui/typography";
 import { getWorldData } from "../actions";
 import { Divider } from "@/components/ui/divider";
 import { ActionCard } from "@/components/action-card";
@@ -20,11 +20,14 @@ export default async function ActionsPage({ params }: { params: { worldId: strin
       </Muted>
       <Divider className="my-3" />
 
-      <div className="flex flex-wrap gap-2">
-        {worldData.actions.map((a) => (
-          <ActionCard action={a} worldId={worldId} />
-        ))}
-      </div>
+      {worldData.actions.length > 0 && (
+        <div className="flex flex-wrap gap-2">
+          {worldData.actions.map((a) => (
+            <ActionCard action={a} worldId={worldId} />
+          ))}
+        </div>
+      )}
+      {worldData.actions.length === 0 && <Paragraph>No actions added yet</Paragraph>}
     </>
   );
 }

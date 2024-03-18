@@ -1,6 +1,7 @@
-import { Id } from "../../../lib/generate-id";
-import { Interaction } from "../interaction/interaction";
-import { Rarity } from "../rarity";
+import type { Id } from "../../../lib/generate-id";
+import type { Character } from "../../actor/character";
+import type { Interaction } from "../interaction/interaction";
+import type { Rarity } from "../rarity";
 
 export enum ItemType {
   Equipment = "Equipment",
@@ -37,6 +38,7 @@ export type Item = {
   type: ItemType;
   rarity: Rarity;
   description?: string;
+  canUse?: (item: Item, character: Character) => boolean;
 
   /**
    * Actions available for the item.

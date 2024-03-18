@@ -1,11 +1,7 @@
 import defaultIcon from "../assets/logo.svg";
 import moveIcon from "../assets/icons/lorc/boot-prints.svg";
 import newRoundIcon from "../assets/icons/lorc/time-trap.svg";
-import primaryActionIcon from "../assets/icons/skoll/rank-1.svg";
-import secondaryActionIcon from "../assets/icons/skoll/rank-2.svg";
 import dodgeEvent from "../assets/icons/felbrigg/dodge.svg";
-import characterLostHealthEventIcon from "../assets/icons/zeromancer/heart-minus.svg";
-import characterGainHealthEventIcon from "../assets/icons/zeromancer/heart-plus.svg";
 import { CampaignEventType } from "roleplayer";
 
 type ClassColors = {
@@ -61,14 +57,6 @@ export const EventIconMap: {
     alt: "Character movement",
     icon: moveIcon,
   },
-  CharacterPrimaryAction: {
-    alt: "Primary action",
-    icon: primaryActionIcon,
-  },
-  CharacterSecondaryAction: {
-    alt: "Secondary action",
-    icon: secondaryActionIcon,
-  },
   RoundStarted: {
     alt: "New round",
     icon: newRoundIcon,
@@ -121,14 +109,6 @@ export const EventIconMap: {
     alt: "",
     icon: defaultIcon,
   },
-  CharacterHealthGain: {
-    alt: "",
-    icon: characterGainHealthEventIcon,
-  },
-  CharacterHealthLoss: {
-    alt: "Character lost health",
-    icon: characterLostHealthEventIcon,
-  },
   CharacterClassLevelGain: {
     alt: "",
     icon: defaultIcon,
@@ -178,14 +158,6 @@ export const EventIconMap: {
     icon: defaultIcon,
   },
   CharacterExperienceChanged: {
-    alt: "",
-    icon: defaultIcon,
-  },
-  CharacterMaximumHealthSet: {
-    alt: "",
-    icon: defaultIcon,
-  },
-  CharacterHealthSet: {
     alt: "",
     icon: defaultIcon,
   },

@@ -34,7 +34,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   <Image src={logo} alt="Icon" priority />
                 </div>
                 <div>
-                  <Muted className="m-0">Build a role-playing world, invite your friends, create characters and the adventure may begin</Muted>
+                  <Muted className="m-0">
+                    Build a role-playing world, invite your friends, create characters and the adventure may begin
+                  </Muted>
                 </div>
               </div>
 
@@ -42,9 +44,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <h5>Resources</h5>
                 <Link href="https://github.com/maxpaj/roleplayer">
                   <Github size={16} className="mb-1 mr-1 inline-block" /> GitHub
-                </Link>
-                <Link href="https://roleplayer-docs.maxpaj.com">
-                  <BookOpenText size={16} className="mb-1 mr-1 inline-block" /> Documentation
                 </Link>
               </div>
             </div>

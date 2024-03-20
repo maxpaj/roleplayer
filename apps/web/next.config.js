@@ -11,4 +11,13 @@ module.exports = {
     ],
   },
   transpilePackages: ["roleplayer"],
+  async redirects() {
+    return [
+      {
+        source: "/docs",
+        destination: "https://roleplayer-docs.maxpaj.com/",
+        permanent: true,
+      },
+    ];
+  },
 };

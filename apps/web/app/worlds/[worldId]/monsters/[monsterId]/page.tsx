@@ -2,6 +2,8 @@ import { Divider } from "@/components/ui/divider";
 import { getWorldData } from "../../actions";
 import { H3, H4, Paragraph } from "@/components/ui/typography";
 import { ActionCard } from "@/components/action-card";
+import shield from "@/assets/icons/sbed/shield.svg";
+import Image from "next/image";
 
 export default async function MonsterDetailsPage({ params }: { params: { monsterId: string; worldId: string } }) {
   const { worldId, monsterId } = params;
@@ -25,7 +27,10 @@ export default async function MonsterDetailsPage({ params }: { params: { monster
 
       <div className="flex gap-4 py-3">
         <span>{monster.challengeRating} CR</span>
-        <span>{monster.baseArmorClass} AC</span>
+        <span className="item-center flex justify-center gap-x-1">
+          {monster.baseArmorClass}{" "}
+          <Image className="inline dark:invert" src={shield} height="16" width="16" alt={"Armor class"} />
+        </span>
         {monster.resourceTypes.map((r) => (
           <span>
             {r.max} {r.resourceType}

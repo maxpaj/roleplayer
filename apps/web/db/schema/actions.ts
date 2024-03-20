@@ -7,6 +7,7 @@ export const actionsSchema = pgTable("actions", {
   id: uuid("id").defaultRandom().primaryKey(),
   name: varchar("name", { length: 256 }).notNull(),
   description: varchar("description", { length: 8192 }).default("").notNull(),
+  imageUrl: varchar("imageUrl", { length: 2048 }),
   createdUtc: timestamp("createdUtc").defaultNow(),
   rangeDistanceMeters: integer("rangeDistanceMeters").default(0).notNull(),
   worldId: uuid("worldId")

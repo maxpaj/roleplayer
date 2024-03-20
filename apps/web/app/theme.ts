@@ -85,7 +85,7 @@ export const EventIconMap: {
     alt: "",
     icon: defaultIcon,
   },
-  CharacterResourceCurrentChange: {
+  CharacterResourceCurrentGain: {
     alt: "",
     icon: defaultIcon,
   },

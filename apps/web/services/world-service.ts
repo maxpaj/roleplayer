@@ -275,4 +275,12 @@ export class WorldService {
   async createCharacterClass(clazz: NewClazzRecord) {
     return db.insert(classesSchema).values(clazz).returning({ id: classesSchema.id });
   }
+
+  async saveWorld(worldId: WorldRecord["id"], update: Partial<WorldRecord>) {
+    return db
+      .update(worldsSchema)
+      .set({ name: update.name, description: update.description })
+      .where(eq(worldsSchema.id, worldId))
+      .returning({ id: worldsSchema.id });
+  }
 }

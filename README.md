@@ -1,8 +1,18 @@
-# Roleplayer
+<p align="center">
+  <a href="https://roleplayer.maxpaj.com">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://roleplayer.maxpaj.com/_next/static/media/logo.421f6022.svg">
+      <img src="https://roleplayer.maxpaj.com/_next/static/media/logo.421f6022.svg" height="128" style="filter: invert(1)">
+    </picture>
+    <h1 align="center"></h1>
+  </a>
+</p>
 
 Role playing framework/library and UI library (soon™).
 
-[![npm version](https://img.shields.io/npm/v/roleplayer?style=flat-square)](https://www.npmjs.com/package/roleplayer)
+## Getting Started
+
+Clone or install the package, and start hacking.
 
 ## Documentation
 

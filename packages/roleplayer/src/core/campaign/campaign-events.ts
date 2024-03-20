@@ -16,12 +16,29 @@ export type CampaignEventWithRound = CampaignEvent & {
   serialNumber: number;
 };
 
-export type CampaignEventType =
+export type CampaignEventType = SystemEventType | CharacterEventType;
+
+export type SystemEventType =
   | { type: "Unknown" }
   | { type: "CampaignStarted" }
   | { type: "RoundStarted" }
   | { type: "RoundEnded" }
   | { type: "BattleStarted" }
+  | {
+      type: "CharacterBattleEnter";
+      characterId: Character["id"];
+    }
+  | {
+      type: "CharacterBattleInitiativeSet";
+      characterId: Character["id"];
+      initiative: number;
+    }
+  | {
+      type: "MonsterBattleEnter";
+      monsterId: Monster["id"];
+    };
+
+export type CharacterEventType =
   | { type: "CharacterSpawned"; characterId: Character["id"] }
   | { type: "CharacterNameSet"; characterId: Character["id"]; name: string }
   | {
@@ -31,7 +48,14 @@ export type CampaignEventType =
       max: number;
     }
   | {
-      type: "CharacterResourceCurrentChange";
+      type: "CharacterResourceCurrentGain";
+      characterId: Character["id"];
+      amount: number;
+      resourceTypeId: CharacterResourceType["id"];
+      actionId?: Action["id"];
+    }
+  | {
+      type: "CharacterResourceCurrentLoss";
       characterId: Character["id"];
       amount: number;
       resourceTypeId: CharacterResourceType["id"];
@@ -117,17 +141,4 @@ export type CampaignEventType =
       type: "CharacterClassLevelGain";
       characterId: Character["id"];
       classId: Clazz["id"];
-    }
-  | {
-      type: "CharacterBattleEnter";
-      characterId: Character["id"];
-    }
-  | {
-      type: "CharacterBattleInitiativeSet";
-      characterId: Character["id"];
-      initiative: number;
-    }
-  | {
-      type: "MonsterBattleEnter";
-      monsterId: Monster["id"];
     };

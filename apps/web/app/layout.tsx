@@ -7,7 +7,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import Link from "next/link";
 import Image from "next/image";
 import logo from "../assets/logo.svg";
-import { BookOpenText, Github } from "lucide-react";
+import { Github } from "lucide-react";
 import { Muted } from "@/components/ui/typography";
 
 const fontSans = FontSans({

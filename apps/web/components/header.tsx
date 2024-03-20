@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import logo from "../assets/logo.svg";
+import icon from "../assets/icon.svg";
 import { ModeToggle } from "./mode-toggle";
 
 export function Header() {
@@ -9,8 +9,8 @@ export function Header() {
       className="flex items-center justify-between p-4 text-sm"
       style={{ background: "hsla(var(--background) / 50%)" }}
     >
-      <div className="mr-2 flex h-8 w-20 items-center dark:invert">
-        <Image src={logo} alt="Icon" priority />
+      <div className="mr-2 flex items-center dark:invert">
+        <Image src={icon} height="40" width="40" alt="Icon" priority />
       </div>
 
       <nav className="flex items-center gap-x-4">

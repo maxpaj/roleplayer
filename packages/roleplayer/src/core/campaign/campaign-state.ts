@@ -17,7 +17,13 @@ export class CampaignState {
   campaign: Campaign;
   monsters: MonsterInstance[];
 
-  constructor(campaign: Campaign, battles: Battle[] = [], rounds: Round[] = [], characters: Character[] = [], monsters: MonsterInstance[] = []) {
+  constructor(
+    campaign: Campaign,
+    battles: Battle[] = [],
+    rounds: Round[] = [],
+    characters: Character[] = [],
+    monsters: MonsterInstance[] = []
+  ) {
     this.campaign = campaign;
     this.battles = battles;
     this.rounds = rounds;
@@ -57,7 +63,9 @@ export class CampaignState {
 
   characterHasRoundEvent(round: Round, characterId: Id, type: CampaignEventType["type"]) {
     const roundCharacterEvents = this.campaign.getCharacterRoundEvents(round, characterId);
-    return roundCharacterEvents.some((event) => isCharacterEvent(event) && event.characterId === characterId && event.type === type);
+    return roundCharacterEvents.some(
+      (event) => isCharacterEvent(event) && event.characterId === characterId && event.type === type
+    );
   }
 
   allCharactersHaveActed(events: CampaignEventWithRound[]) {
@@ -66,6 +74,8 @@ export class CampaignState {
       throw new Error("Could not get current round");
     }
 
-    return this.characters.every((c) => events.some((e) => e.type === "CharacterEndRound" && e.characterId === c.id && e.roundId === round.id));
+    return this.characters.every((c) =>
+      events.some((e) => e.type === "CharacterEndRound" && e.characterId === c.id && e.roundId === round.id)
+    );
   }
 }

@@ -1,4 +1,9 @@
-import { DefaultCharacterResourceTypes, DefaultCharacterStatTypes, DefaultEquipmentSlotDefinitions, DefaultLevelProgression } from "../../data/data";
+import {
+  DefaultCharacterResourceTypes,
+  DefaultCharacterStatTypes,
+  DefaultEquipmentSlotDefinitions,
+  DefaultLevelProgression,
+} from "../../data/data";
 import { CharacterResourceType, CharacterStatType, LevelProgression } from "../actor/character";
 import { EquipmentSlotDefinition } from "../world/item/item";
 

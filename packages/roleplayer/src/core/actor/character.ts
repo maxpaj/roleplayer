@@ -7,6 +7,7 @@ import { Action } from "../world/action/action";
 import { Status } from "../world/action/status";
 import { EquipmentSlotDefinition, Item } from "../world/item/item";
 import { Actor, ActorType } from "./actor";
+import { Party } from "../campaign/party";
 
 export type Position = {
   x: number;
@@ -37,6 +38,7 @@ export type ClassLevelProgression = {
 };
 
 export type Race = {
+  id: Id;
   name: string;
 };
 
@@ -116,32 +118,31 @@ export function isCharacterEvent(
 
 export class Character implements Actor {
   id!: Id;
-  party!: Id;
+  party!: Party["id"];
   exists!: boolean;
-  isPlayerControlled!: boolean;
 
   name!: string;
+  race!: Race["id"];
   description?: string;
-  playerName!: string;
   alignment!: Alignment;
-
+  classes: CharacterClass[] = [];
   xp!: number;
-  race!: Race;
+
   gold!: number;
+  inventory: Item[] = [];
+  equipment: CharacterEquipmentSlot[] = [];
 
   baseArmorClass!: number;
   armorClass!: number;
   stats: CharacterStat[] = [];
 
   actions: Action[] = [];
-  classes: CharacterClass[] = [];
   statuses: Status[] = [];
-  inventory: Item[] = [];
-  equipment: CharacterEquipmentSlot[] = [];
   position!: Position;
 
-  spellCastingAbilityStatId!: CharacterStatType["id"][];
-  abilityModifierStatId!: CharacterStatType["id"][];
+  spellCastingAbilityStatIds!: CharacterStatType["id"][];
+  abilityModifierStatIds!: CharacterStatType["id"][];
+
   resources: CharacterResource[] = [];
   reactionsRemaining: ReactionResource[] = [];
   reactions: Reaction[] = [];

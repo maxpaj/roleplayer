@@ -266,16 +266,6 @@ export class Campaign {
     return battleId;
   }
 
-  getItem(itemId: Item["id"]) {
-    const item = this.world!.items.find((i) => i.id === itemId);
-
-    if (!item) {
-      throw new Error("No such item");
-    }
-
-    return item;
-  }
-
   performCharacterAttack(attacker: Character, diceAttackHitRoll: number, action: Action, defender: Character) {
     const healthResource = this.world.ruleset.characterResourceTypes.find((rt) => rt.name === "Health");
     if (!healthResource) {

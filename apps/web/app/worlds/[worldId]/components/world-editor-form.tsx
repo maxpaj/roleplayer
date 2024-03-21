@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Muted } from "@/components/ui/typography";
 import { WorldRecord } from "@/db/schema/worlds";
+import { saveWorld } from "app/worlds/actions";
 import { Info } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
@@ -25,6 +26,9 @@ export function WorldEditorForm({ world }: WorldEditorFormProps) {
             name: e.target.value,
           })
         }
+        onBlur={async () => {
+          await saveWorld(world.id, update);
+        }}
         type="name"
         id="name"
         name="name"
@@ -40,9 +44,13 @@ export function WorldEditorForm({ world }: WorldEditorFormProps) {
             description: e.target.value,
           })
         }
+        onBlur={async () => {
+          await saveWorld(world.id, update);
+        }}
         value={update.description || ""}
         placeholder="Describe the world, the story, background, conflicts, factions, etc."
       />
+
       <div className="flex items-center gap-2">
         <Info size={16} />
         <Muted>

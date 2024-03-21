@@ -1,5 +1,4 @@
-import { Id } from "../../../lib/generate-id";
-import { Dice } from "../../dice/dice";
+import { CharacterEventType } from "../../campaign/campaign-events";
 
 export enum ElementType {
   Slashing = "Slashing",
@@ -18,16 +17,6 @@ export enum ElementType {
 }
 
 export type Effect = {
-  type: EffectType;
+  eventType: CharacterEventType["type"];
   element: ElementType;
-  amountVariable?: Dice;
-  amountStatic?: number;
-  appliesStatusId?: Id;
 };
-
-export enum EffectType {
-  StatusGain = "StatusGain",
-  StatusLoss = "StatusLoss",
-  ResourceLoss = "ResourceLoss",
-  ResourceGain = "ResourceGain",
-}

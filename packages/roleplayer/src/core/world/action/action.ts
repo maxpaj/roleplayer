@@ -1,5 +1,6 @@
 import { Id } from "../../../lib/generate-id";
-import { CharacterResourceType } from "../../actor/character";
+import { Actor } from "../../actor/character";
+import { CharacterResourceType } from "../../ruleset/ruleset";
 import { Effect } from "./effect";
 
 export enum TargetType {
@@ -13,15 +14,20 @@ export enum TargetType {
 /**
  * Represents an action, with targets, and some effect that will be applied
  */
-export type Action = {
+export type ActionDefinition = {
   id: Id;
   name: string;
   description: string;
   appliesEffects: Effect[];
   eligibleTargets: TargetType[];
-  rangeDistanceMeters: number;
+  rangeDistanceUnit: number;
   requiresResources: {
     resourceTypeId: CharacterResourceType["id"];
     amount: number;
   }[];
+};
+
+export type Action = {
+  actionId: ActionDefinition["id"];
+  targetId: Actor["id"];
 };

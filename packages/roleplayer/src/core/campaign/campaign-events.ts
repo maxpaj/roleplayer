@@ -1,8 +1,8 @@
+import { CharacterResourceType, CharacterStatType, Clazz } from "../ruleset/ruleset";
 import { Id } from "../../lib/generate-id";
-import { Character, CharacterResourceType, CharacterStatType, Clazz, Position } from "../actor/character";
-import { Monster } from "../actor/monster";
+import { Actor, Position } from "../actor/character";
 import { Battle } from "../battle/battle";
-import { Action } from "../world/action/action";
+import { ActionDefinition } from "../world/action/action";
 import { Item } from "../world/item/item";
 import { Round } from "./round";
 
@@ -26,119 +26,110 @@ export type SystemEventType =
   | { type: "BattleStarted" }
   | {
       type: "CharacterBattleEnter";
-      characterId: Character["id"];
+      characterId: Actor["id"];
     }
   | {
       type: "CharacterBattleInitiativeSet";
-      characterId: Character["id"];
+      characterId: Actor["id"];
       initiative: number;
-    }
-  | {
-      type: "MonsterBattleEnter";
-      monsterId: Monster["id"];
     };
 
 export type CharacterEventType =
-  | { type: "CharacterSpawned"; characterId: Character["id"] }
-  | { type: "CharacterNameSet"; characterId: Character["id"]; name: string }
+  | { type: "CharacterSpawned"; characterId: Actor["id"] }
+  | { type: "CharacterNameSet"; characterId: Actor["id"]; name: string }
   | {
       type: "CharacterResourceMaxSet";
-      characterId: Character["id"];
+      characterId: Actor["id"];
       resourceTypeId: CharacterResourceType["id"];
       max: number;
     }
   | {
-      type: "CharacterResourceCurrentGain";
-      characterId: Character["id"];
+      type: "CharacterResourceGain";
+      characterId: Actor["id"];
       amount: number;
       resourceTypeId: CharacterResourceType["id"];
-      actionId?: Action["id"];
+      actionId?: ActionDefinition["id"];
     }
   | {
-      type: "CharacterResourceCurrentLoss";
-      characterId: Character["id"];
+      type: "CharacterResourceLoss";
+      characterId: Actor["id"];
       amount: number;
       resourceTypeId: CharacterResourceType["id"];
-      actionId?: Action["id"];
+      actionId?: ActionDefinition["id"];
     }
   | {
       type: "CharacterStatChange";
-      characterId: Character["id"];
+      characterId: Actor["id"];
       amount: number;
       statId: CharacterStatType["id"];
     }
   | {
-      type: "CharacterBaseDefenseSet";
-      characterId: Character["id"];
-      defense: number;
-    }
-  | {
       type: "CharacterExperienceChanged";
-      characterId: Character["id"];
+      characterId: Actor["id"];
       experience: number;
     }
   | {
       type: "CharacterExperienceSet";
-      characterId: Character["id"];
+      characterId: Actor["id"];
       experience: number;
     }
-  | { type: "CharacterDespawn"; characterId: Character["id"] }
-  | { type: "CharacterStartRound"; characterId: Character["id"] }
+  | { type: "CharacterDespawn"; characterId: Actor["id"] }
+  | { type: "CharacterStartRound"; characterId: Actor["id"] }
   | {
       type: "CharacterMovement";
-      characterId: Character["id"];
+      characterId: Actor["id"];
       targetPosition: Position;
     }
-  | { type: "CharacterEndRound"; characterId: Character["id"] }
-  | { type: "CharacterActionGain"; characterId: Character["id"]; actionId: Id }
+  | { type: "CharacterEndRound"; characterId: Actor["id"] }
+  | { type: "CharacterActionGain"; characterId: Actor["id"]; actionId: Id }
   | {
       type: "CharacterEquipmentSlotGain";
-      characterId: Character["id"];
+      characterId: Actor["id"];
       equipmentSlotId: Id;
     }
   | {
       type: "CharacterItemGain";
-      characterId: Character["id"];
+      characterId: Actor["id"];
       itemId: Item["id"];
     }
   | {
       type: "CharacterItemEquip";
-      characterId: Character["id"];
+      characterId: Actor["id"];
       itemId: Item["id"];
       equipmentSlotId: Id;
     }
   | {
       type: "CharacterPositionSet";
-      characterId: Character["id"];
+      characterId: Actor["id"];
       targetPosition: Position;
     }
   | {
       type: "CharacterStatusGain";
-      characterId: Character["id"];
-      actionId: Action["id"];
+      characterId: Actor["id"];
+      actionId: ActionDefinition["id"];
       statusId: Id;
     }
-  | { type: "CharacterAttackAttackerHit"; characterId: Character["id"] }
-  | { type: "CharacterAttackAttackerMiss"; characterId: Character["id"] }
+  | { type: "CharacterAttackAttackerHit"; characterId: Actor["id"] }
+  | { type: "CharacterAttackAttackerMiss"; characterId: Actor["id"] }
   | {
       type: "CharacterAttackDefenderHit";
-      attackerId: Character["id"];
-      characterId: Character["id"];
-      actionId: Action["id"];
+      attackerId: Actor["id"];
+      characterId: Actor["id"];
+      actionDefinitionId: ActionDefinition["id"];
     }
   | {
       type: "CharacterAttackDefenderDodge";
-      characterId: Character["id"];
-      actionId: Action["id"];
-      attackerId: Character["id"];
+      characterId: Actor["id"];
+      actionId: ActionDefinition["id"];
+      attackerId: Actor["id"];
     }
-  | { type: "CharacterAttackDefenderParry"; characterId: Character["id"] }
+  | { type: "CharacterAttackDefenderParry"; characterId: Actor["id"] }
   | {
       type: "CharacterClassReset";
-      characterId: Character["id"];
+      characterId: Actor["id"];
     }
   | {
       type: "CharacterClassLevelGain";
-      characterId: Character["id"];
+      characterId: Actor["id"];
       classId: Clazz["id"];
     };

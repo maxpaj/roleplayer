@@ -1,18 +1,17 @@
-import { CharacterResourceType } from "../../..";
+import { CharacterResourceType, DefaultRuleSet } from "../../..";
 import { dangerousGenerateId } from "../../../lib/generate-id";
 import { Campaign } from "../../campaign/campaign";
 import { CampaignEvent } from "../../campaign/campaign-events";
-import { Ruleset } from "../../ruleset/ruleset";
 import { Item, ItemEquipmentType, ItemSlot, ItemType } from "../item/item";
 import { Rarity } from "../rarity";
 import { World } from "../world";
-import { EffectType, ElementType } from "./effect";
-import { Action, TargetType } from "./action";
+import { ElementType } from "./effect";
+import { TargetType } from "./action";
 import { Status, StatusApplicationTrigger, StatusDurationType, StatusType } from "./status";
 
 describe("actions", () => {
   const frozenStatus: Status = {
-    id: dangerousGenerateId(),
+    id: "status-chill",
     name: "Chill",
     durationRounds: 2,
     durationType: StatusDurationType.NumberOfRounds,
@@ -21,9 +20,7 @@ describe("actions", () => {
       {
         effect: {
           element: ElementType.Cold,
-          type: EffectType.ResourceGain,
-          amountStatic: 2,
-          amountVariable: 0,
+          eventType: "CharacterResourceLoss",
         },
         appliesAt: StatusApplicationTrigger.RoundStart,
       },
@@ -31,28 +28,25 @@ describe("actions", () => {
   };
 
   const frostSword: Item = {
-    id: dangerousGenerateId(),
+    id: "item-frost-sword",
     rarity: Rarity.Rare,
     actions: [
       {
-        id: dangerousGenerateId(),
+        id: "action-frost-sword-slash",
         description: "",
         appliesEffects: [
           {
             element: ElementType.Slashing,
-            type: EffectType.ResourceLoss,
-            amountStatic: 2,
-            amountVariable: 0,
+            eventType: "CharacterStatusGain",
           },
           {
             element: ElementType.Cold,
-            type: EffectType.StatusGain,
-            appliesStatusId: frozenStatus.id,
+            eventType: "CharacterResourceLoss",
           },
         ],
         eligibleTargets: [TargetType.Hostile],
         name: "Slash",
-        rangeDistanceMeters: 5,
+        rangeDistanceUnit: 5,
         requiresResources: [],
       },
     ],
@@ -64,68 +58,52 @@ describe("actions", () => {
   it("should apply effects from being hit", () => {
     const equipmentSlot = {
       eligibleEquipmentTypes: [ItemEquipmentType.OneHandSword],
-      id: dangerousGenerateId(),
+      id: "main-hand-equipment-slot-id",
       name: "Main hand",
     };
 
-    const ruleset = new Ruleset();
+    const ruleset = DefaultRuleSet;
     ruleset.characterEquipmentSlots = [equipmentSlot];
 
     const healthResource: CharacterResourceType = {
-      id: dangerousGenerateId(),
+      id: "health-resource-id",
       name: "Health",
       defaultMax: 20,
     };
 
     const primaryActionResource: CharacterResourceType = {
-      id: dangerousGenerateId(),
+      id: "action-resource-id",
       name: "Primary action",
       defaultMax: 20,
     };
 
     ruleset.characterResourceTypes = [healthResource, primaryActionResource];
 
-    const world = new World({ name: "test", ruleset });
+    const world = new World(DefaultRuleSet, () => 2, "Test world", {});
     world.statuses = [frozenStatus];
     world.items = [frostSword];
+    world.actions = frostSword.actions;
 
-    const action: Action = {
-      description: "",
-      id: dangerousGenerateId(),
-      appliesEffects: [
-        {
-          element: ElementType.Slashing,
-          type: EffectType.ResourceLoss,
-          amountStatic: 2,
-          amountVariable: 0,
-          appliesStatusId: frozenStatus.id,
-        },
-      ],
-      eligibleTargets: [],
-      name: "Slash",
-      rangeDistanceMeters: 10,
-      requiresResources: [],
-    };
-
-    world.actions = [action];
-
-    const campaign = new Campaign({ id: "0000000-0000-0000-0000-000000000000" as const, name: "test", world });
+    const campaign = new Campaign({ id: "0000000-0000-0000-0000-000000000000" as const, name: "Test campaign", world });
     campaign.nextRound();
 
-    const attackerId = dangerousGenerateId();
-    const defenderId = dangerousGenerateId();
+    const attackerId = "attacker-id";
+    const defenderId = "defender-id";
 
+    // Setup attacker
     campaign.createCharacter(attackerId, "Attacker");
     campaign.addCharacterEquipmentSlot(attackerId, equipmentSlot.id);
     campaign.addCharacterItem(attackerId, frostSword.id);
 
+    // Setup defender
     campaign.createCharacter(defenderId, "Defender");
+
     campaign.nextRound();
 
     const events: CampaignEvent[] = [
       {
         id: dangerousGenerateId(),
-        type: "CharacterResourceCurrentChange",
+        type: "CharacterResourceGain",
         amount: 10,
         resourceTypeId: healthResource.id,
         characterId: defenderId,
@@ -135,12 +113,13 @@ describe("actions", () => {
     campaign.publishCampaignEvent(...events);
 
     const beforeAttack = campaign.getCampaignStateFromEvents();
-    const attacker = beforeAttack.characters.find((c) => c.id === attackerId);
-    const defenderBeforeAttack = beforeAttack.characters.find((c) => c.id === defenderId);
-    const actions = attacker!.getAvailableActions();
-    const characterAction = actions.find((a) => a.name === "Slash");
 
-    campaign.performCharacterAttack(attacker!, 15, characterAction!, defenderBeforeAttack!);
+    const attacker = beforeAttack.characters.find((c) => c.id === attackerId);
+    const actions = attacker!.getAvailableActions();
+    const characterAction = actions.find((a) => a.id === "action-frost-sword-slash");
+    const defenderBeforeAttack = beforeAttack.characters.filter((c) => c.id === defenderId);
+
+    campaign.performCharacterAttack(attacker!, characterAction!, defenderBeforeAttack);
 
     const afterAttack = campaign.getCampaignStateFromEvents();
     const defenderAfterAttack = afterAttack.characters.find((c) => c.id === defenderId);

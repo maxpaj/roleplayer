@@ -1,7 +1,7 @@
-import { dangerousGenerateId } from "..";
-import { CharacterStatType, LevelProgression } from "../core/actor/character";
-import { Ruleset } from "../core/ruleset/ruleset";
+import { roll, Actor, D20 } from "..";
+import { CharacterStatType, Clazz, LevelProgression, Ruleset } from "../core/ruleset/ruleset";
 import { EquipmentSlotDefinition, ItemEquipmentType } from "../core/world/item/item";
+import { dangerousGenerateId } from "../lib/generate-id";
 
 export const DefaultLevelProgression: LevelProgression[] = [
   { requiredXp: 0, id: dangerousGenerateId(), unlocksLevel: 1 },
@@ -16,6 +16,39 @@ export const DefaultEquipmentSlotDefinitions: EquipmentSlotDefinition[] = [
     id: "0000000-0000-0000-0000-000000003000" as const,
     name: "Main hand",
     eligibleEquipmentTypes: [ItemEquipmentType.OneHandSword],
+  },
+];
+
+export const DefaultClassDefinitions: Clazz[] = [
+  {
+    id: "0000000-0000-0000-0000-000000004000" as const,
+    name: "Warrior",
+    levelProgression: [
+      {
+        actionDefinitionId: "0000000-0000-0000-0000-000000005000" as const,
+        unlockedAtLevel: 1,
+      },
+    ],
+  },
+  {
+    id: "0000000-0000-0000-0000-000000004000" as const,
+    name: "Warrior",
+    levelProgression: [
+      {
+        actionDefinitionId: "0000000-0000-0000-0000-000000005000" as const,
+        unlockedAtLevel: 1,
+      },
+    ],
+  },
+  {
+    id: "0000000-0000-0000-0000-000000004000" as const,
+    name: "Warrior",
+    levelProgression: [
+      {
+        actionDefinitionId: "0000000-0000-0000-0000-000000005000" as const,
+        unlockedAtLevel: 1,
+      },
+    ],
   },
 ];
 
@@ -61,11 +94,25 @@ export const DefaultCharacterStatTypes: CharacterStatType[] = [
     id: "0000000-0000-0000-0000-000000002005" as const,
     name: "Constitution",
   },
+  {
+    id: "0000000-0000-0000-0000-000000002006" as const,
+    name: "Defense",
+  },
 ];
 
 export const DefaultRuleSet: Ruleset = {
+  roll: roll,
   characterEquipmentSlots: DefaultEquipmentSlotDefinitions,
   characterResourceTypes: DefaultCharacterResourceTypes,
   characterStatTypes: DefaultCharacterStatTypes,
   levelProgression: DefaultLevelProgression,
+  classDefinitions: DefaultClassDefinitions,
+  characterHit: (attacker: Actor, defender: Actor) => {
+    const attackerHit = attacker.stats.find((s) => s.statId === "character-stats-hit");
+    if (!attackerHit) throw new Error("Character hit not found");
+
+    const defenderArmorClass = defender.stats.find((s) => s.statId === "character-armor-class");
+    if (!defenderArmorClass) throw new Error("Character hit not found");
+    return roll(D20) + attackerHit.amount > defenderArmorClass.amount;
+  },
 };

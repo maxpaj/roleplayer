@@ -2,7 +2,7 @@ import { Id } from "../../lib/generate-id";
 import { Actor, CharacterClass } from "../actor/character";
 import { ActionDefinition } from "./action/action";
 import { Item } from "./item/item";
-import { Status } from "./action/status";
+import { StatusDefinition } from "./action/status";
 import { Clazz, Race, Roll, Ruleset } from "../..";
 
 /**
@@ -18,18 +18,14 @@ export class World {
   characters: Actor[] = [];
   actions: ActionDefinition[] = [];
   races: Race[] = [];
-  statuses: Status[] = [];
+  statuses: StatusDefinition[] = [];
   classes: Clazz[] = [];
-
-  // System stuff
   ruleset: Ruleset;
-  roll: Roll;
 
-  constructor(ruleset: Ruleset, roll: Roll, name: string, w: Partial<World>) {
+  constructor(ruleset: Ruleset, name: string, w: Partial<World>) {
     Object.assign(this, w);
     this.ruleset = ruleset;
     this.name = name;
-    this.roll = roll;
   }
 
   addCharacter(characterId: Actor["id"], name: string) {

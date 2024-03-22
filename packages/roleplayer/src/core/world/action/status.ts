@@ -1,5 +1,5 @@
 import { Id } from "../../../lib/generate-id";
-import { Effect } from "./effect";
+import { EventGenerator } from "./effect";
 
 export enum StatusApplicationTrigger {
   Always = "Always",
@@ -7,12 +7,12 @@ export enum StatusApplicationTrigger {
   RoundEnd = "RoundEnd",
 }
 
-export type Status = {
+export type StatusDefinition = {
   id: Id;
   name: string;
   type: StatusType;
   appliesEffects: {
-    effect: Effect;
+    effect: EventGenerator;
     appliesAt: StatusApplicationTrigger;
   }[];
   durationType: StatusDurationType;

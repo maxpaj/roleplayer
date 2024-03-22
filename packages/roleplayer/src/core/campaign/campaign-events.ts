@@ -1,4 +1,4 @@
-import { CharacterResourceType, CharacterStatType, Clazz } from "../ruleset/ruleset";
+import { CharacterResourceDefinition, CharacterStatType, Clazz } from "../ruleset/ruleset";
 import { Id } from "../../lib/generate-id";
 import { Actor, Position } from "../actor/character";
 import { Battle } from "../battle/battle";
@@ -40,21 +40,21 @@ export type CharacterEventType =
   | {
       type: "CharacterResourceMaxSet";
       characterId: Actor["id"];
-      resourceTypeId: CharacterResourceType["id"];
+      resourceTypeId: CharacterResourceDefinition["id"];
       max: number;
     }
   | {
       type: "CharacterResourceGain";
       characterId: Actor["id"];
       amount: number;
-      resourceTypeId: CharacterResourceType["id"];
+      resourceTypeId: CharacterResourceDefinition["id"];
       actionId?: ActionDefinition["id"];
     }
   | {
       type: "CharacterResourceLoss";
       characterId: Actor["id"];
       amount: number;
-      resourceTypeId: CharacterResourceType["id"];
+      resourceTypeId: CharacterResourceDefinition["id"];
       actionId?: ActionDefinition["id"];
     }
   | {

@@ -1,6 +1,7 @@
+import { World } from "../..";
 import { Id } from "../../lib/generate-id";
-import { Actor } from "../actor/character";
-import { Roll } from "../dice/dice";
+import { Actor, CharacterResourceGeneration } from "../actor/character";
+import { Dice } from "../dice/dice";
 import { ActionDefinition } from "../world/action/action";
 import { EquipmentSlotDefinition } from "../world/item/item";
 
@@ -20,6 +21,11 @@ export enum Alignment {
   LawfulGood = "LawfulGood",
   ChaoticGood = "ChaoticGood",
 }
+
+export type ElementDefinition = {
+  id: Id;
+  name: string;
+};
 
 export type LevelProgression = {
   id: Id;
@@ -43,7 +49,7 @@ export type Clazz = {
   levelProgression: ClassLevelProgression[];
 };
 
-export type CharacterResourceType = {
+export type CharacterResourceDefinition = {
   id: Id;
   name: string;
   defaultMax?: number;
@@ -61,12 +67,28 @@ export type CharacterStatType = {
  * -
  *
  */
-export type Ruleset = {
-  levelProgression: LevelProgression[];
-  characterStatTypes: CharacterStatType[];
-  characterResourceTypes: CharacterResourceType[];
-  characterEquipmentSlots: EquipmentSlotDefinition[];
-  classDefinitions: Clazz[];
-  characterHit: (attacker: Actor, defender: Actor) => boolean;
-  roll: Roll;
-};
+export interface Ruleset {
+  roll(roll: Dice): number;
+
+  getLevelProgression(): LevelProgression[];
+  getCharacterStatTypes(): CharacterStatType[];
+  getCharacterResourceTypes(): CharacterResourceDefinition[];
+  getCharacterEquipmentSlots(): EquipmentSlotDefinition[];
+  getClassDefinitions(): Clazz[];
+  getElementDefinitions(): ElementDefinition[];
+
+  characterBattleActionOrder(actor: Actor): number;
+  characterHit(world: World, attacker: Actor, defender: Actor): boolean;
+  characterHitDamage(
+    source: Actor,
+    action: ActionDefinition,
+    target: Actor,
+    element: ElementDefinition,
+    variableValue: Dice,
+    staticValue: number
+  ): number;
+  characterResistanceMultiplier(actor: Actor, damageType: ElementDefinition): number;
+  characterResistanceAbsolute(actor: Actor, damageType: ElementDefinition): number;
+  characterResourceGeneration(character: Actor): CharacterResourceGeneration[];
+  characterElementDamageMultiplier(actor: Actor, damageType: ElementDefinition): number;
+}

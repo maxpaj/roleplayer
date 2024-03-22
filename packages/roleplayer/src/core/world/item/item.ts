@@ -1,3 +1,4 @@
+import { CharacterStat, CharacterStatType } from "../../..";
 import { Id } from "../../../lib/generate-id";
 import { ActionDefinition } from "../action/action";
 import { Rarity } from "../rarity";
@@ -37,6 +38,7 @@ export type Item = {
   type: ItemType;
   rarity: Rarity;
   description?: string;
+  stats: CharacterStat[];
 
   /**
    * Actions available for the item.

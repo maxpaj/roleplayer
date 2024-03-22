@@ -1,16 +1,25 @@
-import { CharacterResourceType, DefaultRuleSet } from "../../..";
-import { dangerousGenerateId } from "../../../lib/generate-id";
+import { D10, DefaultRuleSet, ElementDefinition } from "../../..";
 import { Campaign } from "../../campaign/campaign";
-import { CampaignEvent } from "../../campaign/campaign-events";
-import { Item, ItemEquipmentType, ItemSlot, ItemType } from "../item/item";
+import { Item, ItemSlot, ItemType } from "../item/item";
 import { Rarity } from "../rarity";
 import { World } from "../world";
-import { ElementType } from "./effect";
+import { CharacterResourceLossEffect, CharacterStatusGainEffect } from "./effect";
 import { TargetType } from "./action";
-import { Status, StatusApplicationTrigger, StatusDurationType, StatusType } from "./status";
+import { StatusDefinition, StatusApplicationTrigger, StatusDurationType, StatusType } from "./status";
 
 describe("actions", () => {
-  const frozenStatus: Status = {
+  const defaultRuleSet = new DefaultRuleSet(() => 2);
+
+  const element: ElementDefinition = {
+    id: "element-cold",
+    name: "Cold",
+  };
+
+  const mainHandEquipmentSlot = defaultRuleSet.getCharacterEquipmentSlots().find((eq) => eq.name === "Main hand")!;
+
+  const healthResource = defaultRuleSet.getCharacterResourceTypes().find((r) => r.name === "Health")!;
+
+  const frozenStatus: StatusDefinition = {
     id: "status-chill",
     name: "Chill",
     durationRounds: 2,
@@ -18,10 +27,7 @@ describe("actions", () => {
     type: StatusType.Magic,
     appliesEffects: [
       {
-        effect: {
-          element: ElementType.Cold,
-          eventType: "CharacterResourceLoss",
-        },
+        effect: new CharacterResourceLossEffect(element, D10, 2, healthResource.id),
         appliesAt: StatusApplicationTrigger.RoundStart,
       },
     ],
@@ -35,14 +41,8 @@ describe("actions", () => {
         id: "action-frost-sword-slash",
         description: "",
         appliesEffects: [
-          {
-            element: ElementType.Slashing,
-            eventType: "CharacterStatusGain",
-          },
-          {
-            element: ElementType.Cold,
-            eventType: "CharacterResourceLoss",
-          },
+          new CharacterResourceLossEffect(element, D10, 2, healthResource.id),
+          new CharacterStatusGainEffect(frozenStatus),
         ],
         eligibleTargets: [TargetType.Hostile],
         name: "Slash",
@@ -53,33 +53,11 @@ describe("actions", () => {
     name: "Sword of Frost",
     occupiesSlots: [ItemSlot.MainHand],
     type: ItemType.Equipment,
+    stats: [],
   };
 
   it("should apply effects from being hit", () => {
-    const equipmentSlot = {
-      eligibleEquipmentTypes: [ItemEquipmentType.OneHandSword],
-      id: "main-hand-equipment-slot-id",
-      name: "Main hand",
-    };
-
-    const ruleset = DefaultRuleSet;
-    ruleset.characterEquipmentSlots = [equipmentSlot];
-
-    const healthResource: CharacterResourceType = {
-      id: "health-resource-id",
-      name: "Health",
-      defaultMax: 20,
-    };
-
-    const primaryActionResource: CharacterResourceType = {
-      id: "action-resource-id",
-      name: "Primary action",
-      defaultMax: 20,
-    };
-
-    ruleset.characterResourceTypes = [healthResource, primaryActionResource];
-
-    const world = new World(DefaultRuleSet, () => 2, "Test world", {});
+    const world = new World(defaultRuleSet, "Test world", {});
     world.statuses = [frozenStatus];
     world.items = [frostSword];
     world.actions = frostSword.actions;
@@ -92,7 +70,7 @@ describe("actions", () => {
 
     // Setup attacker
     campaign.createCharacter(attackerId, "Attacker");
-    campaign.addCharacterEquipmentSlot(attackerId, equipmentSlot.id);
+    campaign.addCharacterEquipmentSlot(attackerId, mainHandEquipmentSlot.id);
     campaign.addCharacterItem(attackerId, frostSword.id);
 
     // Setup defender
@@ -100,20 +78,7 @@ describe("actions", () => {
 
     campaign.nextRound();
 
-    const events: CampaignEvent[] = [
-      {
-        id: dangerousGenerateId(),
-        type: "CharacterResourceGain",
-        amount: 10,
-        resourceTypeId: healthResource.id,
-        characterId: defenderId,
-      },
-    ];
-
-    campaign.publishCampaignEvent(...events);
-
     const beforeAttack = campaign.getCampaignStateFromEvents();
-
     const attacker = beforeAttack.characters.find((c) => c.id === attackerId);
     const actions = attacker!.getAvailableActions();
     const characterAction = actions.find((a) => a.id === "action-frost-sword-slash");
@@ -123,8 +88,12 @@ describe("actions", () => {
 
     const afterAttack = campaign.getCampaignStateFromEvents();
     const defenderAfterAttack = afterAttack.characters.find((c) => c.id === defenderId);
+    const defenderHealth = defenderAfterAttack!.resources.find((r) => r.resourceTypeId === healthResource.id)?.amount;
+    const defenderChillStatus = defenderAfterAttack!.statuses.find((s) => s.name === "Chill");
 
-    expect(defenderAfterAttack!.resources.find((r) => r.resourceTypeId === healthResource.id)?.amount).toBe(8);
-    expect(defenderAfterAttack!.statuses.find((s) => s.name === "Chill")).toBeDefined();
+    console.warn(campaign.events.filter((e: any) => e.resourceTypeId === "0000000-0000-0000-0000-000000001001"));
+
+    expect(defenderHealth).toBe(2);
+    expect(defenderChillStatus).toBeDefined();
   });
 });

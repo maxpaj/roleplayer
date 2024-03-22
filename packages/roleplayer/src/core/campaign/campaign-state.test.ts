@@ -7,8 +7,8 @@ import { CampaignEventWithRound } from "./campaign-events";
 describe("Campaign state", () => {
   it("applies events", () => {
     const characterId = dangerousGenerateId();
-    const world = new World(DefaultRuleSet, () => 2, "World", {});
-    const healthResource = world.ruleset.characterResourceTypes.find((rt) => rt.name === "Health");
+    const world = new World(new DefaultRuleSet(() => 2), "World", {});
+    const healthResource = world.ruleset.getCharacterResourceTypes().find((rt) => rt.name === "Health");
     const events: CampaignEventWithRound[] = [
       {
         type: "CharacterSpawned",

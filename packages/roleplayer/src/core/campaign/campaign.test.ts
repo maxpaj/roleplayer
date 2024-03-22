@@ -25,13 +25,14 @@ describe("Campaign", () => {
       },
     ];
 
-    const world = new World(DefaultRuleSet, () => 2, "World", {});
+    const world = new World(new DefaultRuleSet(), "World", {});
     const campaign = new Campaign({
       id: "0000000-0000-0000-0000-000000000000" as const,
       name: "Campaign",
       world,
       events,
     });
+
     const state = campaign.getCampaignStateFromEvents();
 
     expect(state.characters.length).toBe(1);

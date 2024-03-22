@@ -8,6 +8,6 @@ export const D20: Dice = 20;
 export type Dice = number;
 export type Roll = (dice: Dice) => number;
 
-export const roll: Roll = (dice: Dice) => {
+export const defaultRoll: Roll = (dice: Dice) => {
   return Math.ceil(Math.random() * dice);
 };

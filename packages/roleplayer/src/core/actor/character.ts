@@ -1,8 +1,8 @@
 import { Id } from "../../lib/generate-id";
 import { CampaignEvent, CampaignEventType, CampaignEventWithRound } from "../campaign/campaign-events";
-import { ActionDefinition } from "../world/action/action";
-import { StatusDefinition } from "../world/action/status";
-import { EquipmentSlotDefinition, Item } from "../world/item/item";
+import { ActionDefinition } from "../action/action";
+import { StatusDefinition } from "../action/status";
+import { EquipmentSlotDefinition, Item } from "../inventory/item";
 import { Party } from "../campaign/party";
 import { World } from "../world/world";
 import {

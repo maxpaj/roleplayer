@@ -2,8 +2,8 @@ import { CharacterResourceDefinition, CharacterStatType, Clazz } from "../rulese
 import { Id } from "../../lib/generate-id";
 import { Actor, Position } from "../actor/character";
 import { Battle } from "../battle/battle";
-import { ActionDefinition } from "../world/action/action";
-import { Item } from "../world/item/item";
+import { ActionDefinition } from "../action/action";
+import { Item } from "../inventory/item";
 import { Round } from "./round";
 
 export type CampaignEvent = CampaignEventType & {

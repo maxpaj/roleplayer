@@ -1,8 +1,8 @@
 import { Id } from "../../lib/generate-id";
 import { Actor, CharacterClass } from "../actor/character";
-import { ActionDefinition } from "./action/action";
-import { Item } from "./item/item";
-import { StatusDefinition } from "./action/status";
+import { ActionDefinition } from "../action/action";
+import { Item } from "../inventory/item";
+import { StatusDefinition } from "../action/status";
 import { Clazz, Race, Roll, Ruleset } from "../..";
 
 /**

@@ -1,7 +1,7 @@
-import { ActionDefinition, CharacterResourceDefinition, Dice, ElementDefinition, dangerousGenerateId } from "../../..";
-import { Actor } from "../../actor/character";
-import { CampaignEvent, CampaignEventType } from "../../campaign/campaign-events";
-import { World } from "../world";
+import { ActionDefinition, CharacterResourceDefinition, Dice, ElementDefinition, dangerousGenerateId } from "../..";
+import { Actor } from "../actor/character";
+import { CampaignEvent, CampaignEventType } from "../campaign/campaign-events";
+import { World } from "../world/world";
 import { StatusDefinition } from "./status";
 
 export interface EventGenerator {

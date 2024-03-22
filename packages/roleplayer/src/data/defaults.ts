@@ -10,7 +10,7 @@ import {
   Dice,
 } from "..";
 import { CharacterStatType, Clazz, LevelProgression, Ruleset } from "../core/ruleset/ruleset";
-import { EquipmentSlotDefinition, ItemEquipmentType } from "../core/world/item/item";
+import { EquipmentSlotDefinition, ItemEquipmentType } from "../core/inventory/item";
 import { dangerousGenerateId } from "../lib/generate-id";
 
 export class DefaultRuleSet implements Ruleset {

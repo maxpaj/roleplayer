@@ -2,8 +2,8 @@ import { World } from "../..";
 import { Id } from "../../lib/generate-id";
 import { Actor, CharacterResourceGeneration } from "../actor/character";
 import { Dice } from "../dice/dice";
-import { ActionDefinition } from "../world/action/action";
-import { EquipmentSlotDefinition } from "../world/item/item";
+import { ActionDefinition } from "../action/action";
+import { EquipmentSlotDefinition } from "../inventory/item";
 
 export enum ActionResourceType {
   Primary = "Primary",

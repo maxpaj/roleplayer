@@ -1,5 +1,5 @@
-import { Id } from "../../../lib/generate-id";
-import { CharacterResourceDefinition } from "../../ruleset/ruleset";
+import { Id } from "../../lib/generate-id";
+import { CharacterResourceDefinition } from "../ruleset/ruleset";
 import { EventGenerator } from "./effect";
 
 export enum TargetType {

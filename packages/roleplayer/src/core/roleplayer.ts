@@ -13,12 +13,16 @@ type RoleplayerConfig = {
  *   - on action
  *   - on new round
  *   - on long rest
+ * - action and effects system
  * - level progression system
  * - stats system
  * - inventory system
  * - character system
+ * - world building system
  * - resource system
  * - npc action system
+ * - dice system
+ * - campaign system
  */
 export class Roleplayer {
   roll: Roll;

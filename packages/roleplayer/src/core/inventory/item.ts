@@ -1,7 +1,7 @@
-import { CharacterStat, CharacterStatType } from "../../..";
-import { Id } from "../../../lib/generate-id";
+import { CharacterStat, CharacterStatType } from "../..";
+import { Id } from "../../lib/generate-id";
 import { ActionDefinition } from "../action/action";
-import { Rarity } from "../rarity";
+import { Rarity } from "../world/rarity";
 
 export enum ItemType {
   Equipment = "Equipment",

@@ -1,8 +1,8 @@
-import { D10, DefaultRuleSet, ElementDefinition } from "../../..";
-import { Campaign } from "../../campaign/campaign";
-import { Item, ItemSlot, ItemType } from "../item/item";
-import { Rarity } from "../rarity";
-import { World } from "../world";
+import { D10, DefaultRuleSet, ElementDefinition } from "../..";
+import { Campaign } from "../campaign/campaign";
+import { Item, ItemSlot, ItemType } from "../inventory/item";
+import { Rarity } from "../world/rarity";
+import { World } from "../world/world";
 import { CharacterResourceLossEffect, CharacterStatusGainEffect } from "./effect";
 import { TargetType } from "./action";
 import { StatusDefinition, StatusApplicationTrigger, StatusDurationType, StatusType } from "./status";

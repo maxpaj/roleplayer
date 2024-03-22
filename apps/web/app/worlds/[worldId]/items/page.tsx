@@ -36,7 +36,7 @@ export default async function ItemsPage({ params }: { params: { worldId: string 
 
       {items.length === 0 && <Muted className="my-4">It's empty! No items added yet.</Muted>}
 
-      <H5>Equipment</H5>
+      <H5 className="my-2">Equipment</H5>
       {equipment.length === 0 && <Muted className="my-4">It's empty! No items added yet.</Muted>}
 
       <div className="flex flex-wrap gap-2">
@@ -45,7 +45,7 @@ export default async function ItemsPage({ params }: { params: { worldId: string 
         ))}
       </div>
 
-      <H5>Consumable</H5>
+      <H5 className="my-2">Consumable</H5>
       {consumables.length === 0 && <Muted className="my-4">It's empty! No items added yet.</Muted>}
 
       <div className="flex flex-wrap gap-2">
@@ -54,7 +54,7 @@ export default async function ItemsPage({ params }: { params: { worldId: string 
         ))}
       </div>
 
-      <H5>Other</H5>
+      <H5 className="my-2">Other</H5>
       {other.length === 0 && <Muted className="my-4">It's empty! No items added yet.</Muted>}
 
       <div className="flex flex-wrap gap-2">

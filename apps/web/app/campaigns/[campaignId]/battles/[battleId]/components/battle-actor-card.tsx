@@ -11,7 +11,7 @@ type BattleActorCardProps = {
 export function BattleActorCard({ campaignId, actor }: BattleActorCardProps) {
   return (
     <Link href={`/campaigns/${campaignId}/characters/${actor.id}`}>
-      <Card className="h-[100px] w-[150px]">
+      <Card className="h-[100px] w-[150px] overflow-hidden">
         <CardHeader className="p-2">{actor.name || "Current"}</CardHeader>
       </Card>
     </Link>

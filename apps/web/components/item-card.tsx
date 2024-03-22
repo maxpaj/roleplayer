@@ -12,7 +12,7 @@ type ItemCardProps = {
 export function ItemCard({ worldId, item }: ItemCardProps) {
   return (
     <Link href={`/worlds/${worldId}/items/${item.id}`}>
-      <Card className="h-[100px] w-[150px]">
+      <Card className="h-[100px] w-[150px] overflow-hidden">
         <CardHeader className="p-2">
           <CardTitle className={"text-md"}>{item.name}</CardTitle>
           <CardDescription>{item.description}</CardDescription>

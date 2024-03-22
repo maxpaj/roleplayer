@@ -11,7 +11,7 @@ type CampaignCharacterCardProps = {
 export function CampaignCharacterCard({ campaignId, character }: CampaignCharacterCardProps) {
   return (
     <Link href={`/campaigns/${campaignId}/characters/${character.id}`}>
-      <Card className="h-[100px] w-[150px]">
+      <Card className="h-[100px] w-[150px] overflow-hidden">
         <CardHeader className="p-2">{character.name || "Current"}</CardHeader>
       </Card>
     </Link>

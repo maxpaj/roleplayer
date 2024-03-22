@@ -11,7 +11,7 @@ type CharacterCardProps = {
 export function CharacterCard({ worldId, character }: CharacterCardProps) {
   return (
     <Link href={`/worlds/${worldId}/characters/${character.id}`}>
-      <Card className="h-[100px] w-[150px]">
+      <Card className="h-[100px] w-[150px] overflow-hidden">
         <CardHeader className="p-2">
           <CardTitle className={"text-md"}>{character.name}</CardTitle>
         </CardHeader>

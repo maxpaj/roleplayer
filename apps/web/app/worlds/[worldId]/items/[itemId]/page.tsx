@@ -1,6 +1,7 @@
+import { EffectDetails } from "@/components/effect-details";
 import { Divider } from "@/components/ui/divider";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { H3, Paragraph } from "@/components/ui/typography";
+import { H3, H4, Paragraph } from "@/components/ui/typography";
 import { DEFAULT_USER_ID } from "@/db/data";
 import { WorldService } from "services/world-service";
 
@@ -22,35 +23,25 @@ export default async function ItemDetailsPage({
     return <>Item not found</>;
   }
 
-  console.log(item);
-
   return (
     <>
       <H3>{item.name}</H3>
       <Divider className="my-3" />
       <Paragraph>{item.description}</Paragraph>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Action</TableHead>
-            <TableHead>Description</TableHead>
-            <TableHead>Effects</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {item.actions.map((e) => (
-            <TableRow key={e.id}>
-              <TableCell>{e.name}</TableCell>
-              <TableCell>{e.description}</TableCell>
-              <TableCell>
-                {e.appliesEffects.map((e) => (
-                  <div>{e.name}</div>
-                ))}
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+
+      {item.actions.map((e) => {
+        return (
+          <div className="border px-3 py-1" key={e.id}>
+            <H4>{e.name}</H4>
+            <Paragraph>{e.description}</Paragraph>
+            <div>
+              {e.appliesEffects.map((e) => (
+                <EffectDetails key={e.id} effect={e} />
+              ))}
+            </div>
+          </div>
+        );
+      })}
     </>
   );
 }

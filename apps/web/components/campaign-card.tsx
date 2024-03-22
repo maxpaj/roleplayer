@@ -10,7 +10,7 @@ type CampaignCardProps = {
 export function CampaignCard({ campaign }: CampaignCardProps) {
   return (
     <Link href={`/campaigns/${campaign.id}`}>
-      <Card className="h-[100px] w-[150px]">
+      <Card className="h-[100px] w-[150px] overflow-hidden">
         <CardHeader className="p-2">
           <CardTitle className={"text-md"}>{campaign.name}</CardTitle>
         </CardHeader>

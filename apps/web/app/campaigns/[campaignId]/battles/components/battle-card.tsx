@@ -11,7 +11,7 @@ type BattleCardProps = {
 export function BattleCard({ campaignId, battle }: BattleCardProps) {
   return (
     <Link href={`/campaigns/${campaignId}/battles/${battle.id}`}>
-      <Card className="h-[100px] w-[150px]">
+      <Card className="h-[100px] w-[150px] overflow-hidden">
         <CardHeader className="p-2">{battle.name || "Current"}</CardHeader>
       </Card>
     </Link>

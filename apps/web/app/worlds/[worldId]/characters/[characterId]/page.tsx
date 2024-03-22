@@ -4,13 +4,10 @@ import { H3, Paragraph } from "@/components/ui/typography";
 import { Divider } from "@/components/ui/divider";
 
 export default async function CharacterPage({
-  params: { worldId: id, characterId: cid },
+  params: { worldId, characterId },
 }: {
   params: { worldId: string; characterId: string };
 }) {
-  const worldId = id;
-  const characterId = cid;
-
   const worldData = await new WorldService().getWorld(DEFAULT_USER_ID, worldId);
 
   if (!worldData) {

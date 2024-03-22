@@ -10,7 +10,7 @@ import {
   charactersToResourcesSchema,
 } from "../db/schema/characters";
 import { ClazzRecord, NewClazzRecord, classesSchema } from "../db/schema/classes";
-import { ItemRecord, NewItemRecord, itemsSchema } from "../db/schema/items";
+import { ItemRecord, NewItemRecord, itemsSchema, itemsToActionsSchema } from "../db/schema/items";
 import { StatusRecord, statusesSchema } from "../db/schema/statuses";
 import { UserRecord } from "../db/schema/users";
 import { NewWorldRecord, WorldRecord, worldsSchema } from "../db/schema/worlds";
@@ -25,7 +25,7 @@ export type WorldAggregated = WorldRecord & {
   monsters: ActorAggregated[];
   characters: ActorAggregated[];
   statuses: StatusRecord[];
-  items: ItemRecord[];
+  items: ItemAggregated[];
   classes: ClazzRecord[];
   actions: ActionAggregated[];
 };
@@ -34,6 +34,10 @@ export type ActionAggregated = ActionRecord & {
   appliesEffects: EffectRecord[];
   eligibleTargets: TargetType[];
   requiresResources: RequiredResourceRecord[];
+};
+
+export type ItemAggregated = ItemRecord & {
+  actions: ActionAggregated[];
 };
 
 export type ActorAggregated = CharacterRecord & {
@@ -57,6 +61,10 @@ export class WorldService {
     const characterActionsToEffectAlias = alias(actionsToEffectSchema, "characterActionsToEffectAlias");
     const characterActionEffectsAlias = alias(effectsSchema, "characterActionEffectsAlias");
 
+    const itemsActionsAlias = alias(actionsSchema, "itemsActionsAlias");
+    const itemsActionsToEffectsAlias = alias(actionsToEffectSchema, "itemsActionsToEffectsAlias");
+    const itemsActionsEffectAlias = alias(effectsSchema, "itemsActionsEffectAlias");
+
     const rows = await db
       .select()
       .from(worldsSchema)
@@ -64,6 +72,10 @@ export class WorldService {
       .leftJoin(classesSchema, eq(classesSchema.worldId, worldsSchema.id))
       .leftJoin(statusesSchema, eq(statusesSchema.worldId, worldsSchema.id))
       .leftJoin(itemsSchema, eq(itemsSchema.worldId, worldsSchema.id))
+      .leftJoin(itemsToActionsSchema, eq(itemsSchema.id, itemsToActionsSchema.itemId))
+      .leftJoin(itemsActionsAlias, eq(itemsActionsAlias.id, itemsToActionsSchema.actionId))
+      .leftJoin(itemsActionsToEffectsAlias, eq(itemsActionsToEffectsAlias.actionId, itemsActionsAlias.id))
+      .leftJoin(itemsActionsEffectAlias, eq(itemsActionsEffectAlias.id, itemsActionsToEffectsAlias.effectId))
 
       // Join actions
       .leftJoin(worldActionsAlias, eq(worldActionsAlias.worldId, worldsSchema.id))
@@ -173,7 +185,38 @@ export class WorldService {
       }
 
       if (row.items) {
-        acc[world.id]!.items = [...acc[world.id]!.items.filter((c) => c.id !== row.items!.id), row.items];
+        const existingItem = acc[world.id]!.items.filter((c) => c.id !== row.items!.id)[0];
+        const itemToAdd: ItemAggregated = {
+          ...(existingItem || row.items),
+          actions: existingItem?.actions || [],
+        };
+
+        if (row.itemsActionsAlias) {
+          const existingItemAction = itemToAdd.actions.filter((c) => c.id !== row.itemsActionsAlias!.id)[0];
+          const actionToAdd: ActionAggregated = {
+            ...(existingItemAction || row.itemsActionsAlias),
+            appliesEffects: [],
+            eligibleTargets: [],
+            requiresResources: [],
+          };
+
+          if (row.itemsActionsEffectAlias) {
+            const existingEffect = actionToAdd.appliesEffects.filter(
+              (e) => e.id !== row.itemsActionsEffectAlias!.id
+            )[0];
+
+            const effectToAdd: EffectRecord = { ...(existingEffect || row.itemsActionsEffectAlias) };
+
+            actionToAdd.appliesEffects = [
+              ...actionToAdd.appliesEffects.filter((a) => a.id !== row.itemsActionsEffectAlias!.id),
+              effectToAdd,
+            ];
+          }
+
+          itemToAdd.actions = [...itemToAdd.actions.filter((a) => a.id !== row.itemsActionsAlias!.id), actionToAdd];
+        }
+
+        acc[world.id]!.items = [...acc[world.id]!.items.filter((c) => c.id !== row.items!.id), itemToAdd];
       }
 
       if (row.worldActionsAlias) {

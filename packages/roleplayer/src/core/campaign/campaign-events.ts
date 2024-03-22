@@ -18,6 +18,40 @@ export type CampaignEventWithRound = CampaignEvent & {
 
 export type CampaignEventType = SystemEventType | CharacterEventType;
 
+export const CampaignEventTypes: CampaignEventType["type"][] = [
+  "Unknown",
+  "CampaignStarted",
+  "RoundStarted",
+  "RoundEnded",
+  "BattleStarted",
+  "CharacterBattleEnter",
+  "CharacterBattleCharacterOrderSet",
+  "CharacterSpawned",
+  "CharacterNameSet",
+  "CharacterResourceMaxSet",
+  "CharacterResourceGain",
+  "CharacterResourceLoss",
+  "CharacterStatChange",
+  "CharacterExperienceChanged",
+  "CharacterExperienceSet",
+  "CharacterDespawn",
+  "CharacterMovement",
+  "CharacterEndRound",
+  "CharacterActionGain",
+  "CharacterEquipmentSlotGain",
+  "CharacterItemGain",
+  "CharacterItemEquip",
+  "CharacterPositionSet",
+  "CharacterStatusGain",
+  "CharacterAttackAttackerHit",
+  "CharacterAttackAttackerMiss",
+  "CharacterAttackDefenderHit",
+  "CharacterAttackDefenderDodge",
+  "CharacterAttackDefenderParry",
+  "CharacterClassReset",
+  "CharacterClassLevelGain",
+] as const;
+
 export type SystemEventType =
   | { type: "Unknown" }
   | { type: "CampaignStarted" }
@@ -74,7 +108,6 @@ export type CharacterEventType =
       experience: number;
     }
   | { type: "CharacterDespawn"; characterId: Actor["id"] }
-  | { type: "CharacterStartRound"; characterId: Actor["id"] }
   | {
       type: "CharacterMovement";
       characterId: Actor["id"];

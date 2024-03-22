@@ -414,7 +414,6 @@ export class Campaign {
       case "CharacterNameSet":
       case "CharacterActionGain":
       case "CharacterDespawn":
-      case "CharacterStartRound":
       case "CharacterMovement":
       case "CharacterEndRound":
       case "CharacterItemGain":

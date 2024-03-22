@@ -37,7 +37,7 @@ describe("Campaign state", () => {
     ];
 
     const campaign = new Campaign({
-      id: "0000000-0000-0000-0000-000000000000" as const,
+      id: "00000000-0000-0000-0000-000000000000" as const,
       name: "Campaign",
       world,
       events,

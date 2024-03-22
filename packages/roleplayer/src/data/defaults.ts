@@ -103,7 +103,7 @@ export const DefaultLevelProgression: LevelProgression[] = [
 
 export const DefaultEquipmentSlotDefinitions: EquipmentSlotDefinition[] = [
   {
-    id: "0000000-0000-0000-0000-000000003000" as const,
+    id: "00000000-0000-0000-0000-000000003000" as const,
     name: "Main hand",
     eligibleEquipmentTypes: [ItemEquipmentType.OneHandSword],
   },
@@ -113,31 +113,31 @@ export const DefaultElementDefinitions: ElementDefinition[] = [];
 
 export const DefaultClassDefinitions: Clazz[] = [
   {
-    id: "0000000-0000-0000-0000-000000004000" as const,
+    id: "00000000-0000-0000-0000-000000004000" as const,
     name: "Rogue",
     levelProgression: [
       {
-        actionDefinitionId: "0000000-0000-0000-0000-000000005000" as const,
+        actionDefinitionId: "00000000-0000-0000-0000-000000005000" as const,
         unlockedAtLevel: 1,
       },
     ],
   },
   {
-    id: "0000000-0000-0000-0000-000000004000" as const,
+    id: "00000000-0000-0000-0000-000000004000" as const,
     name: "Bard",
     levelProgression: [
       {
-        actionDefinitionId: "0000000-0000-0000-0000-000000005000" as const,
+        actionDefinitionId: "00000000-0000-0000-0000-000000005000" as const,
         unlockedAtLevel: 1,
       },
     ],
   },
   {
-    id: "0000000-0000-0000-0000-000000004000" as const,
+    id: "00000000-0000-0000-0000-000000004000" as const,
     name: "Wizard",
     levelProgression: [
       {
-        actionDefinitionId: "0000000-0000-0000-0000-000000005000" as const,
+        actionDefinitionId: "00000000-0000-0000-0000-000000005000" as const,
         unlockedAtLevel: 1,
       },
     ],
@@ -146,53 +146,53 @@ export const DefaultClassDefinitions: Clazz[] = [
 
 export const DefaultCharacterResourceTypes = [
   {
-    id: "0000000-0000-0000-0000-000000001000" as const,
+    id: "00000000-0000-0000-0000-000000001000" as const,
     name: "Movement speed",
     defaultMax: 35,
   },
   {
-    id: "0000000-0000-0000-0000-000000001001" as const,
+    id: "00000000-0000-0000-0000-000000001001" as const,
     name: "Health",
     defaultMax: 20,
   },
   {
-    id: "0000000-0000-0000-0000-000000001001" as const,
+    id: "00000000-0000-0000-0000-000000001001" as const,
     name: "Armor class",
     defaultMax: 10,
   },
-  { id: "0000000-0000-0000-0000-000000001002" as const, name: "Primary action", defaultMax: 1 },
-  { id: "0000000-0000-0000-0000-000000001003" as const, name: "Secondary action", defaultMax: 1 },
-  { id: "0000000-0000-0000-0000-000000001004" as const, name: "Spell slot 1", defaultMax: 0 },
-  { id: "0000000-0000-0000-0000-000000001005" as const, name: "Spell slot 2", defaultMax: 0 },
+  { id: "00000000-0000-0000-0000-000000001002" as const, name: "Primary action", defaultMax: 1 },
+  { id: "00000000-0000-0000-0000-000000001003" as const, name: "Secondary action", defaultMax: 1 },
+  { id: "00000000-0000-0000-0000-000000001004" as const, name: "Spell slot 1", defaultMax: 0 },
+  { id: "00000000-0000-0000-0000-000000001005" as const, name: "Spell slot 2", defaultMax: 0 },
 ];
 
 export const DefaultCharacterStatTypes: CharacterStatType[] = [
   {
-    id: "0000000-0000-0000-0000-000000002000" as const,
+    id: "00000000-0000-0000-0000-000000002000" as const,
     name: "Strength",
   },
   {
-    id: "0000000-0000-0000-0000-000000002001" as const,
+    id: "00000000-0000-0000-0000-000000002001" as const,
     name: "Intelligence",
   },
   {
-    id: "0000000-0000-0000-0000-000000002002" as const,
+    id: "00000000-0000-0000-0000-000000002002" as const,
     name: "Wisdom",
   },
   {
-    id: "0000000-0000-0000-0000-000000002003" as const,
+    id: "00000000-0000-0000-0000-000000002003" as const,
     name: "Charisma",
   },
   {
-    id: "0000000-0000-0000-0000-000000002004" as const,
+    id: "00000000-0000-0000-0000-000000002004" as const,
     name: "Dexterity",
   },
   {
-    id: "0000000-0000-0000-0000-000000002005" as const,
+    id: "00000000-0000-0000-0000-000000002005" as const,
     name: "Constitution",
   },
   {
-    id: "0000000-0000-0000-0000-000000002006" as const,
+    id: "00000000-0000-0000-0000-000000002006" as const,
     name: "Defense",
   },
 ];

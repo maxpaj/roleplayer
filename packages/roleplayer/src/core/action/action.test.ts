@@ -62,7 +62,11 @@ describe("actions", () => {
     world.items = [frostSword];
     world.actions = frostSword.actions;
 
-    const campaign = new Campaign({ id: "0000000-0000-0000-0000-000000000000" as const, name: "Test campaign", world });
+    const campaign = new Campaign({
+      id: "00000000-0000-0000-0000-000000000000" as const,
+      name: "Test campaign",
+      world,
+    });
     campaign.nextRound();
 
     const attackerId = "attacker-id";

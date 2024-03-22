@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Combobox } from "@/components/ui/combobox";
 import { DialogHeader, DialogFooter, Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Muted, Paragraph } from "@/components/ui/typography";
-import { Character } from "roleplayer";
+import { Actor } from "roleplayer";
 import { useState } from "react";
 import { EMPTY_GUID } from "@/lib/guid";
 import { ButtonLink } from "@/components/ui/button-link";
@@ -13,11 +13,11 @@ export function AddBattleCharacterButton({
   campaignId,
   onAddCharacter,
 }: {
-  onAddCharacter: (characterId: Character["id"]) => void;
-  availableCharacters: Character[];
+  onAddCharacter: (characterId: Actor["id"]) => void;
+  availableCharacters: Actor[];
   campaignId: CampaignRecord["id"];
 }) {
-  const [selectedCharacter, setSelectedCharacter] = useState<Character["id"]>(EMPTY_GUID);
+  const [selectedCharacter, setSelectedCharacter] = useState<Actor["id"]>(EMPTY_GUID);
   const [open, setOpen] = useState<boolean>(false);
 
   const characterOptions = availableCharacters.map((c) => ({
@@ -38,7 +38,11 @@ export function AddBattleCharacterButton({
         {availableCharacters.length > 0 && (
           <>
             <Paragraph>Select character to add to the battle</Paragraph>
-            <Combobox placeholder="Select character to add" onChange={(characterId) => setSelectedCharacter(characterId)} options={characterOptions} />
+            <Combobox
+              placeholder="Select character to add"
+              onChange={(characterId) => setSelectedCharacter(characterId)}
+              options={characterOptions}
+            />
           </>
         )}
 

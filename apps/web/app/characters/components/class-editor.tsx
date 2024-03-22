@@ -1,12 +1,12 @@
 import { World } from "roleplayer";
-import { Character, Clazz } from "roleplayer";
+import { Actor, Clazz } from "roleplayer";
 import { LevelAbilityCard } from "@/components/level-ability-card";
 import { RemoveFunctions } from "types/without-functions";
 import { H2, H3 } from "@/components/ui/typography";
 
 type ClassEditorProps = {
   world: RemoveFunctions<World>;
-  character: RemoveFunctions<Character>;
+  character: RemoveFunctions<Actor>;
   classId: Clazz["id"];
 };
 
@@ -31,14 +31,14 @@ export function CharacterClassEditor({ classId, world, character }: ClassEditorP
 
       <H3>Select skills</H3>
       {clazz.levelProgression.map((lp) => {
-        const ability = world.actions.find((a) => a.id === lp.abilityId);
+        const ability = world.actions.find((a) => a.id === lp.actionDefinitionId);
         if (!ability) {
           throw new Error("Ability not found");
         }
 
         return (
-          <div key={lp.abilityId}>
-            <LevelAbilityCard key={lp.abilityId} worldId={world.id} ability={ability} levelProgression={lp} />
+          <div key={lp.actionDefinitionId}>
+            <LevelAbilityCard key={lp.actionDefinitionId} worldId={world.id} ability={ability} levelProgression={lp} />
           </div>
         );
       })}

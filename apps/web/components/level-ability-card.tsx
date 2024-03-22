@@ -1,11 +1,10 @@
-import { Action } from "roleplayer";
 import { Card, CardDescription, CardHeader, CardTitle } from "./ui/card";
-import { ClassLevelProgression } from "roleplayer";
+import { ActionDefinition, ClassLevelProgression } from "roleplayer";
 import { WorldRecord } from "@/db/schema/worlds";
 import Link from "next/link";
 
 type LevelAbilityCardProps = {
-  ability: Action;
+  ability: ActionDefinition;
   levelProgression: ClassLevelProgression;
   worldId: WorldRecord["id"];
 };

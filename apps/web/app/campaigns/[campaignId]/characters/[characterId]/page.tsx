@@ -6,7 +6,7 @@ import { classToPlain } from "@/lib/class-to-plain";
 import { getCampaign } from "app/campaigns/actions";
 import { CharacterEditor } from "app/characters/components/character-editor";
 import { redirect } from "next/navigation";
-import { Campaign, CampaignEventWithRound, Character, DefaultRuleSet, World } from "roleplayer";
+import { Actor, Campaign, CampaignEventWithRound } from "roleplayer";
 import { CampaignService, getWorldFromCampaignData } from "services/campaign-service";
 
 export default async function CampaignCharacterPage({
@@ -20,7 +20,7 @@ export default async function CampaignCharacterPage({
   async function updateCharacter(
     campaignId: CampaignRecord["id"],
     characterId: CharacterRecord["id"],
-    characterUpdate: Partial<Character>
+    characterUpdate: Partial<Actor>
   ) {
     "use server";
     const campaignData = await new CampaignService().getCampaign(campaignId);

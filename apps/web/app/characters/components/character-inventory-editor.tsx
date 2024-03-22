@@ -1,10 +1,10 @@
-import { Character, Item, World } from "roleplayer";
+import { Actor, Item, World } from "roleplayer";
 import { CharacterEquipmentSlot } from "roleplayer";
 import { ItemCard } from "@/components/item-card";
 import { RemoveFunctions } from "types/without-functions";
 
 type CharacterInventoryEditorProps = {
-  character: RemoveFunctions<Character>;
+  character: RemoveFunctions<Actor>;
   world: RemoveFunctions<World>;
   onChange: (inventory: Item[], equipment: CharacterEquipmentSlot[]) => void;
 };

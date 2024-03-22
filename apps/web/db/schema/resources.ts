@@ -1,17 +1,11 @@
-import { pgEnum } from "drizzle-orm/pg-core";
+import { integer, pgTable, uuid, varchar } from "drizzle-orm/pg-core";
 
-export const resourceTypeEnum = pgEnum("resourceType", [
-  "Health",
-  "Mana",
-  "Primary action",
-  "Secondary action",
-  "Movement",
-  "Spell Level 1",
-  "Spell Level 2",
-  "Spell Level 3",
-  "Spell Level 4",
-  "Spell Level 5",
-  "Spell Level 6",
-]);
+export const resourcesTypeSchema = pgTable("resourceTypes", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  name: varchar("name", { length: 256 }).notNull(),
+  description: varchar("description", { length: 8192 }).default("").notNull(),
+  defaultMax: integer("defaultMax").default(0).notNull(),
+});
 
-export type ResourceTypeEnum = (typeof resourceTypeEnum.enumValues)[number];
+export type ResourceRecord = typeof resourcesTypeSchema.$inferSelect;
+export type NewResourceRecord = typeof resourcesTypeSchema.$inferInsert;

@@ -2,23 +2,23 @@ import { Button } from "@/components/ui/button";
 import { Combobox } from "@/components/ui/combobox";
 import { DialogHeader, DialogFooter, Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Muted, Paragraph } from "@/components/ui/typography";
-import { Monster } from "roleplayer";
+import { Actor } from "roleplayer";
 import { useState } from "react";
 import { EMPTY_GUID } from "@/lib/guid";
 import { ButtonLink } from "@/components/ui/button-link";
 import { WorldRecord } from "@/db/schema/worlds";
-import { MonsterAggregated } from "services/world-service";
+import { ActorAggregated } from "services/world-service";
 
 export function AddBattleMonsterButton({
   monsters,
   worldId,
   onAddMonster,
 }: {
-  monsters: MonsterAggregated[];
+  monsters: ActorAggregated[];
   worldId: WorldRecord["id"];
-  onAddMonster: (monsterId: Monster["id"]) => void;
+  onAddMonster: (monsterId: Actor["id"]) => void;
 }) {
-  const [selectedMonster, setSelectedMonster] = useState<Monster["id"]>(EMPTY_GUID);
+  const [selectedMonster, setSelectedMonster] = useState<Actor["id"]>(EMPTY_GUID);
   const [open, setOpen] = useState<boolean>(false);
 
   return (

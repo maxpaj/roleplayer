@@ -31,13 +31,16 @@ export function CreateCharacterForm({ worldId, campaignId }: NewCharacterProps) 
     const characterId = await new WorldService().createCharacter(
       {
         name: validationResult.data.name,
+        type: "Player",
         worldId: worldId,
         userId: DEFAULT_USER_ID,
       },
       campaignId
     );
 
-    return campaignId ? redirect(`/campaigns/${campaignId}/characters/${characterId.id}`) : redirect(`/worlds/${worldId}/characters/${characterId.id}`);
+    return campaignId
+      ? redirect(`/campaigns/${campaignId}/characters/${characterId.id}`)
+      : redirect(`/worlds/${worldId}/characters/${characterId.id}`);
   }
 
   return (

@@ -1,14 +1,14 @@
 "use client";
 
 import { Input } from "@/components/ui/input";
-import { Character, World } from "roleplayer";
+import { Actor, World } from "roleplayer";
 import { CharacterStat } from "roleplayer";
 import { useState } from "react";
 import { RemoveFunctions } from "types/without-functions";
 import { H5 } from "@/components/ui/typography";
 
 type CharacterStatsEditorProps = {
-  character: RemoveFunctions<Character>;
+  character: RemoveFunctions<Actor>;
   world: RemoveFunctions<World>;
   onChange: (stats: CharacterStat[]) => void;
 };
@@ -20,7 +20,7 @@ export function CharacterStatsEditor({ world, character, onChange }: CharacterSt
     <>
       {stats
         .map((s) => ({
-          statType: world.ruleset.characterStatTypes.find((st) => st.id === s.statId),
+          statType: world.ruleset.getCharacterStatTypes().find((st) => st.id === s.statId),
           characterStat: s,
         }))
         .sort((a, b) => (a.statType!.name > b.statType!.name ? 1 : -1))

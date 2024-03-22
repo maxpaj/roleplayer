@@ -8,21 +8,18 @@ import {
   CampaignEvent,
   CampaignEventType,
   CampaignState,
-  Character,
-  MonsterInstance,
+  Actor,
+  Campaign,
+  Id,
+  ActionDefinition,
   BattleActor,
 } from "roleplayer";
-import { D20, roll } from "roleplayer";
-import { Action } from "roleplayer";
-import { Campaign } from "roleplayer";
-import { Id } from "roleplayer";
 import { EventIconMap } from "../../../../../theme";
 import { Button } from "@/components/ui/button";
 import { H3, H5, Muted } from "@/components/ui/typography";
 import { RemoveFunctions } from "types/without-functions";
 import { AddBattleCharacterButton } from "./add-battle-character-button";
 import { AddBattleMonsterButton } from "./add-battle-monster-button";
-import { ActorRecord } from "models/actor";
 import { saveCampaignEvents } from "app/campaigns/actions";
 import { DiceRollCard } from "./dice-roll-card";
 import { Divider } from "@/components/ui/divider";
@@ -43,7 +40,7 @@ export function BattleSimulator({ campaign, battleId, world }: BattleSimulatorPr
   const [tempCampaign, setTempCampaignReact] = useState<Campaign>(new Campaign(campaign));
   const [tempCampaignState, setTempCampaignState] = useState<CampaignState>(tempCampaign.getCampaignStateFromEvents());
   const [, updateState] = useState({});
-  const [selectedAction, setSelectedAction] = useState<Action | undefined>(undefined);
+  const [selectedAction, setSelectedAction] = useState<ActionDefinition | undefined>(undefined);
   const forceUpdate = useCallback(() => updateState({}), []);
 
   async function setCampaign(campaign: Campaign) {
@@ -53,22 +50,22 @@ export function BattleSimulator({ campaign, battleId, world }: BattleSimulatorPr
     forceUpdate();
   }
 
-  function addCharacter(characterId: Character["id"]) {
+  function addCharacter(characterId: Actor["id"]) {
     const character = campaignState.characters.find((c) => c.id === characterId);
     if (!character) {
       throw new Error("Not such character");
     }
 
-    tempCampaign.addCharacterToCurrentBattle(characterId, character.rollInitiative());
+    tempCampaign.addCharacterToCurrentBattle(characterId);
     setCampaign(tempCampaign);
   }
 
-  function addMonster(monsterId: MonsterInstance["id"]) {
-    tempCampaign.addMonsterToCurrentBattle(monsterId);
+  function addMonster(monsterId: Actor["id"]) {
+    tempCampaign.addCharacterToCurrentBattle(monsterId);
     setCampaign(tempCampaign);
   }
 
-  function characterAttack(attackerId: Id, defenderIds: Id[], action: Action) {
+  function characterAttack(attackerId: Id, defenderIds: Id[], action: ActionDefinition) {
     const attacker = tempCampaignState.getCharacter(attackerId);
 
     if (!attacker.actions.length) {
@@ -83,9 +80,7 @@ export function BattleSimulator({ campaign, battleId, world }: BattleSimulatorPr
       throw new Error("Cannot find attack");
     }
 
-    defenders.forEach((defender) => {
-      return tempCampaign.performCharacterAttack(attacker, roll(D20), attack, defender);
-    });
+    tempCampaign.performCharacterAttack(attacker, attack, defenders);
 
     setCampaign(tempCampaign);
   }
@@ -128,12 +123,12 @@ export function BattleSimulator({ campaign, battleId, world }: BattleSimulatorPr
           <div className="flex justify-between gap-2">
             <div className="w-full">
               <H5>
-                {battleCharacter.actor.name} ({battleCharacter.actor.getType()})
+                {battleCharacter.actor.name} ({battleCharacter.actor.type})
               </H5>
               <Divider className="my-3" />
             </div>
 
-            <DiceRollCard roll={battleCharacter.initiative} />
+            <DiceRollCard roll={battleCharacter.actingOrder} />
           </div>
 
           <div className="relative flex w-full flex-wrap justify-between p-4">
@@ -166,7 +161,9 @@ export function BattleSimulator({ campaign, battleId, world }: BattleSimulatorPr
                     {selectedAction &&
                       battleCharacter.actor.getEligibleTargets(selectedAction).map((target) => (
                         <SelectItem
-                          onClick={() => battleCharacter.actor.performAction([target.id], selectedAction!.id)}
+                          onClick={() =>
+                            tempCampaign.performCharacterAttack(battleCharacter.actor, selectedAction, [target])
+                          }
                           value={target.id}
                         >
                           {target.id}
@@ -192,29 +189,29 @@ export function BattleSimulator({ campaign, battleId, world }: BattleSimulatorPr
     );
   }
 
-  function getBattleEntityRecord(battleCharacter: BattleActor): BattleActor {
+  function getBattleEntityRecord(battleCharacter: BattleActor): Actor {
     const record = campaignActorRecords.find((char) => char.actor.id === battleCharacter.actor.id);
 
     if (!record) {
       throw new Error("Battle entity record not found");
     }
 
-    return new BattleActor(record.actor);
+    return record.actor;
   }
 
-  function getActorImageURL(battleCharacter: BattleActor): string {
+  function getActorImageURL(battleCharacter: Actor): string {
     return "https://image.jpg";
   }
 
-  function getActor(battleCharacter: BattleActor): ActorRecord {
+  function getActor(battleCharacter: BattleActor): {} {
     const battleEntityRecord = getBattleEntityRecord(battleCharacter);
-    const battleEntityImageUrl = getActorImageURL(battleCharacter);
+    const battleEntityImageUrl = getActorImageURL(battleCharacter.actor);
 
     return {
-      ...battleEntityRecord.actor,
+      ...battleEntityRecord,
       renderPortrait: () => (
         <>
-          {battleEntityRecord.actor.getType()}
+          {battleEntityRecord.type}
 
           <div
             className="absolute z-0 h-full w-full"
@@ -325,7 +322,7 @@ export function BattleSimulator({ campaign, battleId, world }: BattleSimulatorPr
       {battleState.entities.length > 0 && (
         <div className="mb-4 flex w-full flex-col gap-3">
           {battleState.entities
-            .sort((a, b) => b.initiative - a.initiative)
+            .sort((a, b) => b.actingOrder - a.actingOrder)
             .map((battleChar) =>
               renderCharacter(currentRound, battleChar, currentCharacter.actor.id === battleChar.actor.id)
             )}

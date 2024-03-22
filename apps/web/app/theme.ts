@@ -45,10 +45,6 @@ export const icons: ClassIcons = {
 export const EventIconMap: {
   [key in CampaignEventType["type"]]: { alt: string; icon: any };
 } = {
-  CharacterStartRound: {
-    alt: "Character start round",
-    icon: defaultIcon,
-  },
   CharacterEndRound: {
     alt: "Character end round",
     icon: defaultIcon,
@@ -85,7 +81,7 @@ export const EventIconMap: {
     alt: "",
     icon: defaultIcon,
   },
-  CharacterResourceCurrentGain: {
+  CharacterResourceGain: {
     alt: "",
     icon: defaultIcon,
   },
@@ -125,10 +121,6 @@ export const EventIconMap: {
     alt: "",
     icon: defaultIcon,
   },
-  CharacterBaseDefenseSet: {
-    alt: "",
-    icon: defaultIcon,
-  },
   CharacterActionGain: {
     alt: "",
     icon: defaultIcon,
@@ -161,19 +153,19 @@ export const EventIconMap: {
     alt: "",
     icon: defaultIcon,
   },
-  MonsterBattleEnter: {
-    alt: "",
-    icon: defaultIcon,
-  },
   CampaignStarted: {
     alt: "",
     icon: defaultIcon,
   },
-  CharacterBattleInitiativeSet: {
+  CharacterBattleCharacterOrderSet: {
     alt: "",
     icon: defaultIcon,
   },
   CharacterNameSet: {
+    alt: "",
+    icon: defaultIcon,
+  },
+  CharacterResourceLoss: {
     alt: "",
     icon: defaultIcon,
   },

@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { WorldService } from "services/world-service";
 import { WorldRecord } from "@/db/schema/worlds";
+import { DEFAULT_USER_ID } from "@/db/data";
 
 const validateName = z.object({
   name: z.string().min(1),
@@ -20,12 +21,14 @@ export async function CreateMonsterForm({ worldId }: { worldId: WorldRecord["id"
       throw new Error("World name missing");
     }
 
-    const stored = await new WorldService().createMonster({
+    const stored = await new WorldService().createCharacter({
       name: monsterInput.name!.toString(),
+      type: "Monster",
+      userId: DEFAULT_USER_ID,
       worldId,
     });
 
-    return redirect(`/worlds/${worldId}/monsters/${stored[0]!.id}`);
+    return redirect(`/worlds/${worldId}/monsters/${stored.id}`);
   }
 
   return (

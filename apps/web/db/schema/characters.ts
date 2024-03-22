@@ -1,13 +1,16 @@
-import { pgTable, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
+import { integer, pgEnum, pgTable, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
 import { actionsSchema } from "./actions";
 import { campaignsSchema } from "./campaigns";
 import { itemsSchema } from "./items";
 import { usersSchema } from "./users";
 import { worldsSchema } from "./worlds";
 
+export const characterTypeEnum = pgEnum("characterType", ["Monster", "Player", "NPC"]);
+
 export const charactersSchema = pgTable("characters", {
   id: uuid("id").defaultRandom().primaryKey(),
   name: varchar("name", { length: 256 }).notNull(),
+  type: characterTypeEnum("type").default("Player").notNull(),
   createdUtc: timestamp("createdUtc").defaultNow(),
   imageUrl: varchar("imageUrl", { length: 2048 }),
   description: varchar("description", { length: 8192 }).default("").notNull(),
@@ -45,6 +48,19 @@ export const charactersToCampaignsSchema = pgTable("characterToCampaigns", {
   campaignId: uuid("campaignId")
     .notNull()
     .references(() => campaignsSchema.id),
+});
+
+export const charactersToResourcesSchema = pgTable("characterToResources", {
+  characterId: uuid("characterId")
+    .notNull()
+    .references(() => charactersSchema.id),
+
+  resourceTypeId: uuid("characterId")
+    .notNull()
+    .references(() => charactersSchema.id),
+
+  amount: integer("amount").default(0).notNull(),
+  max: integer("max").default(0).notNull(),
 });
 
 export type CharacterRecord = typeof charactersSchema.$inferSelect;

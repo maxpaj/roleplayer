@@ -1,30 +1,37 @@
-import { pgEnum, pgTable, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
+import { json, pgEnum, pgTable, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
 import { worldsSchema } from "./worlds";
 
-export const effectTypeEnum = pgEnum("effectType", ["StatusGain", "StatusLoss", "ResourceLoss", "ResourceGain"]);
-
-export const elementTypeEnum = pgEnum("elementType", [
-  "Slashing",
-  "Piercing",
-  "Bludgeoning",
-  "Poison",
-  "Acid",
-  "Fire",
-  "Cold",
-  "Radiant",
-  "Necrotic",
-  "Lightning",
-  "Thunder",
-  "Force",
-  "Psychic",
+export const effectTypeEnum = pgEnum("effectType", [
+  "CharacterSpawned",
+  "CharacterNameSet",
+  "CharacterResourceMaxSet",
+  "CharacterResourceGain",
+  "CharacterResourceLoss",
+  "CharacterStatChange",
+  "CharacterExperienceChanged",
+  "CharacterExperienceSet",
+  "CharacterDespawn",
+  "CharacterMovement",
+  "CharacterEndRound",
+  "CharacterActionGain",
+  "CharacterEquipmentSlotGain",
+  "CharacterItemGain",
+  "CharacterItemEquip",
+  "CharacterPositionSet",
+  "CharacterStatusGain",
+  "CharacterAttackAttackerHit",
+  "CharacterAttackAttackerMiss",
+  "CharacterAttackDefenderHit",
+  "CharacterAttackDefenderDodge",
+  "CharacterAttackDefenderParry",
 ]);
 
 export const effectsSchema = pgTable("effects", {
   id: uuid("id").defaultRandom().primaryKey(),
   name: varchar("name", { length: 256 }).notNull(),
   type: effectTypeEnum("type").notNull(),
-  element: elementTypeEnum("element").notNull(),
   description: varchar("description", { length: 8192 }).default("").notNull(),
+  parameters: json("parameters").notNull(),
   createdUtc: timestamp("createdUtc").defaultNow(),
   worldId: uuid("worldId")
     .references(() => worldsSchema.id)

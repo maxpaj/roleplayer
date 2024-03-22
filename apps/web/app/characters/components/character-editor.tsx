@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Divider } from "@/components/ui/divider";
 import { H3, H4, Muted, Paragraph } from "@/components/ui/typography";
 import { useState } from "react";
-import { Character, World } from "roleplayer";
+import { Actor, World } from "roleplayer";
 import { RemoveFunctions } from "types/without-functions";
 import { CharacterInventoryEditor } from "./character-inventory-editor";
 import { CharacterStatsEditor } from "./character-stats-editor";
@@ -13,9 +13,9 @@ import { CharacterClassEditor } from "./class-editor";
 import { ClassSelector } from "./class-selector";
 
 type CharacterEditorProps = {
-  onSave: (character: RemoveFunctions<Character>) => void;
+  onSave: (character: RemoveFunctions<Actor>) => void;
   world: RemoveFunctions<World>;
-  characterFromEvents: RemoveFunctions<Character>;
+  characterFromEvents: RemoveFunctions<Actor>;
   characterLevel: number;
 };
 

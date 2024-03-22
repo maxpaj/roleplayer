@@ -1,16 +1,28 @@
 import { classesSchema } from "@/db/schema/classes";
 import { eq } from "drizzle-orm";
-import { Campaign, CampaignEventWithRound, DefaultRuleSet, EffectType, ElementType, World } from "roleplayer";
+import {
+  Actor,
+  Campaign,
+  CampaignEventWithRound,
+  CharacterResourceLossEffect,
+  DefaultRuleSet,
+  World,
+} from "roleplayer";
 import { db } from "../db";
 import { CampaignRecord, NewCampaignRecord, campaignsSchema } from "../db/schema/campaigns";
-import { CharacterRecord, charactersSchema, charactersToCampaignsSchema } from "../db/schema/characters";
+import {
+  CharacterRecord,
+  charactersSchema,
+  charactersToActionsSchema,
+  charactersToCampaignsSchema,
+} from "../db/schema/characters";
 import { EventRecord, eventsSchema } from "../db/schema/events";
 import { NewFriendInviteRecord, friendInvitesSchema } from "../db/schema/friend-invite";
-import { monstersSchema, monstersToActionsSchema } from "../db/schema/monster";
 import { UserRecord } from "../db/schema/users";
 import { WorldRecord, worldsSchema } from "../db/schema/worlds";
-import { MonsterAggregated, WorldAggregated } from "./world-service";
+import { ActorAggregated, WorldAggregated } from "./world-service";
 import { actionsSchema } from "@/db/schema/actions";
+import { EffectRecord } from "@/db/schema/effects";
 
 export type CampaignAggregated = CampaignRecord & {
   events: EventRecord[];
@@ -18,40 +30,61 @@ export type CampaignAggregated = CampaignRecord & {
   world: WorldAggregated;
 };
 
-export function getWorldFromCampaignData(campaignData: CampaignAggregated) {
-  return new World({
-    ...campaignData.world,
-    items: [],
-    characters: [],
-    actions: [],
-    statuses: [],
-    classes: [],
-    monsters: campaignData.world.monsters.map((m) => ({
-      ...m,
-      resources: m.resourceTypes.map((r) => ({
-        max: r.max,
-        resourceType: {
-          id: r.resourceType,
-          name: r.resourceType,
-          defaultMax: 20,
-        },
+function mapEffect(effect: EffectRecord) {
+  switch (effect.type) {
+    case "CharacterResourceLoss": {
+      const parameters = effect.parameters as any; // TODO: How can we type this based on CharacterResourceLoss?
+
+      return new CharacterResourceLossEffect(
+        parameters.element,
+        parameters.variableValue,
+        parameters.staticValue,
+        parameters.resourceTypeId
+      );
+    }
+    default:
+      throw new Error("Unknown effect type");
+  }
+}
+
+function mapCharacterRecordToRoleplayerCharacter(world: World, m: ActorAggregated) {
+  return new Actor(world, {
+    ...m,
+    resources: m.resourceTypes,
+    actions: m.actions.map((a) => ({
+      ...a,
+      rangeDistanceUnit: a.rangeDistanceUnit,
+      requiresResources: a.requiresResources.map((r) => ({
+        resourceTypeId: r.resourceType!,
+        amount: r.amount,
       })),
-      actions: m.actions.map((a) => ({
-        ...a,
-        requiresResources: a.requiresResources.map((r) => ({
-          resourceTypeId: r.resourceType!,
-          amount: r.amount,
-        })),
-        appliesEffects: a.appliesEffects.map((e) => ({
-          ...e,
-          element: ElementType[e.element],
-          type: EffectType[e.type],
-        })),
-        eligibleTargets: a.eligibleTargets,
-      })),
+      appliesEffects: a.appliesEffects.map(mapEffect),
+      eligibleTargets: a.eligibleTargets,
     })),
-    ruleset: DefaultRuleSet,
   });
+}
+
+export function getWorldFromCampaignData(campaignData: CampaignAggregated) {
+  const world = new World(
+    new DefaultRuleSet(() => {
+      throw new Error("No rolls allowed back end");
+    }),
+    "",
+    {
+      ...campaignData.world,
+      items: [],
+      characters: [],
+      monsters: [],
+      actions: [],
+      statuses: [],
+      classes: [],
+      ruleset: new DefaultRuleSet(),
+    }
+  );
+
+  world.characters = campaignData.world.characters.map((c) => mapCharacterRecordToRoleplayerCharacter(world, c));
+
+  return world;
 }
 
 export class CampaignService {
@@ -60,7 +93,6 @@ export class CampaignService {
       .select()
       .from(campaignsSchema)
       .leftJoin(worldsSchema, eq(worldsSchema.id, campaignsSchema.worldId))
-      .leftJoin(monstersSchema, eq(monstersSchema.worldId, worldsSchema.id))
       .leftJoin(charactersSchema, eq(charactersSchema.worldId, worldsSchema.id))
       .leftJoin(eventsSchema, eq(eventsSchema.campaignId, campaignsSchema.id))
       .where(eq(campaignsSchema.userId, userId));
@@ -95,7 +127,6 @@ export class CampaignService {
       .select()
       .from(campaignsSchema)
       .leftJoin(worldsSchema, eq(worldsSchema.id, campaignsSchema.worldId))
-      .leftJoin(monstersSchema, eq(monstersSchema.worldId, worldsSchema.id))
       .leftJoin(charactersSchema, eq(charactersSchema.worldId, worldsSchema.id))
       .leftJoin(eventsSchema, eq(eventsSchema.campaignId, campaignsSchema.id));
 
@@ -129,7 +160,7 @@ export class CampaignService {
       throw new Error("No such campaign");
     }
 
-    const world = new World({
+    const world = new World(new DefaultRuleSet(), "", {
       ...campaignData.world,
       characters: [],
       actions: [],
@@ -137,7 +168,6 @@ export class CampaignService {
       items: [],
       monsters: [],
       statuses: [],
-      ruleset: DefaultRuleSet,
     });
 
     const campaign = new Campaign({
@@ -178,7 +208,7 @@ export class CampaignService {
     const campaign = new Campaign({
       ...campaignData,
       events: [],
-      world: new World({
+      world: new World(new DefaultRuleSet(), "", {
         ...campaignData.world,
         characters: [],
         actions: [],
@@ -186,7 +216,6 @@ export class CampaignService {
         items: [],
         monsters: [],
         statuses: [],
-        ruleset: DefaultRuleSet,
       }),
     });
 
@@ -207,8 +236,8 @@ export class CampaignService {
       .leftJoin(classesSchema, eq(classesSchema.worldId, worldsSchema.id))
 
       // Join monsters
-      .leftJoin(monstersSchema, eq(monstersSchema.worldId, worldsSchema.id))
-      .leftJoin(monstersToActionsSchema, eq(monstersSchema.id, monstersToActionsSchema.monsterId))
+      .leftJoin(charactersSchema, eq(charactersSchema.worldId, worldsSchema.id))
+      .leftJoin(charactersToActionsSchema, eq(charactersSchema.id, charactersToActionsSchema.characterId))
 
       // Join characters
       .leftJoin(charactersToCampaignsSchema, eq(charactersToCampaignsSchema.campaignId, campaignsSchema.id))
@@ -238,7 +267,6 @@ export class CampaignService {
       }
 
       const campaign = acc[campaignRow.id];
-      const world = campaign?.world;
 
       if (row.events) {
         campaign!.events = [...campaign!.events.filter((c) => c.id !== row.events!.id), row.events];
@@ -246,17 +274,6 @@ export class CampaignService {
 
       if (row.characters) {
         campaign!.characters = [...campaign!.characters.filter((c) => c.id !== row.characters!.id), row.characters];
-      }
-
-      if (row.monsters) {
-        const existing = world!.monsters.filter((c) => c.id !== row.monsters!.id)[0];
-        const monsterToAdd: MonsterAggregated = {
-          ...(existing || row.monsters),
-          actions: existing?.actions || [],
-          resourceTypes: existing?.resourceTypes || [],
-        };
-
-        world!.monsters = [...world!.monsters.filter((c) => c.id !== row.monsters!.id), monsterToAdd];
       }
 
       if (row.classes) {
@@ -320,7 +337,7 @@ export class CampaignService {
     const { events } = campaignData;
 
     // Roleplayer-lib realm start
-    const world = new World({
+    const world = new World(new DefaultRuleSet(), "", {
       ...campaignData.world,
       characters: [],
       actions: [],
@@ -328,7 +345,6 @@ export class CampaignService {
       items: [],
       monsters: [],
       statuses: [],
-      ruleset: DefaultRuleSet,
     });
 
     const c = new Campaign({

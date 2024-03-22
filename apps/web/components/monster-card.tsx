@@ -1,9 +1,9 @@
 import { Card, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import Link from "next/link";
-import { MonsterAggregated } from "services/world-service";
+import { ActorAggregated } from "services/world-service";
 
 type MonsterCardProps = {
-  monster: MonsterAggregated;
+  monster: ActorAggregated;
   worldId: string;
 };
 

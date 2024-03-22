@@ -1,7 +1,7 @@
 import { integer, pgEnum, pgTable, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
 import { effectsSchema } from "./effects";
 import { worldsSchema } from "./worlds";
-import { resourcesTypeSchema } from "./resources";
+import { resourceTypesSchema } from "./resources";
 
 export const actionsSchema = pgTable("actions", {
   id: uuid("id").defaultRandom().primaryKey(),
@@ -32,7 +32,7 @@ export const actionsToResourceRequirementSchema = pgTable("actionsToResourceRequ
 
   resourceType: uuid("resourceTypeId")
     .notNull()
-    .references(() => resourcesTypeSchema.id),
+    .references(() => resourceTypesSchema.id),
 });
 
 export const actionsToEffectSchema = pgTable("actionsToEffects", {

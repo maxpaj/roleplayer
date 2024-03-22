@@ -4,6 +4,7 @@ import { campaignsSchema } from "./campaigns";
 import { itemsSchema } from "./items";
 import { usersSchema } from "./users";
 import { worldsSchema } from "./worlds";
+import { resourceTypesSchema } from "./resources";
 
 export const characterTypeEnum = pgEnum("characterType", ["Monster", "Player", "NPC"]);
 
@@ -55,9 +56,9 @@ export const charactersToResourcesSchema = pgTable("characterToResources", {
     .notNull()
     .references(() => charactersSchema.id),
 
-  resourceTypeId: uuid("characterId")
+  resourceTypeId: uuid("resourceTypeId")
     .notNull()
-    .references(() => charactersSchema.id),
+    .references(() => resourceTypesSchema.id),
 
   amount: integer("amount").default(0).notNull(),
   max: integer("max").default(0).notNull(),

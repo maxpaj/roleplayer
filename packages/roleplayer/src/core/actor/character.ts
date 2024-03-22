@@ -1,57 +1,24 @@
-import { Campaign } from "../..";
 import { Id } from "../../lib/generate-id";
 import { CampaignEvent, CampaignEventType, CampaignEventWithRound } from "../campaign/campaign-events";
-import { D20, roll } from "../dice/dice";
+import { D20 } from "../dice/dice";
 import { Effect, ElementType } from "../world/action/effect";
-import { Action } from "../world/action/action";
+import { ActionDefinition } from "../world/action/action";
 import { Status } from "../world/action/status";
 import { EquipmentSlotDefinition, Item } from "../world/item/item";
-import { Actor, ActorType } from "./actor";
 import { Party } from "../campaign/party";
+import { World } from "../world/world";
+import { Alignment, CharacterResourceType, CharacterStatType, Clazz, Race } from "../ruleset/ruleset";
+
+export enum ActorType {
+  Monster = "Monster",
+  Character = "Character",
+  World = "World",
+}
 
 export type Position = {
   x: number;
   y: number;
   z: number;
-};
-
-export enum ActionResourceType {
-  Primary = "Primary",
-  Secondary = "Secondary",
-}
-
-export enum Alignment {
-  NeutralEvil = "NeutralEvil",
-  LawfulEvil = "LawfulEvil",
-  ChaoticEvil = "ChaoticEvil",
-  NeutralNeutral = "NeutralNeutral",
-  EvilNeutral = "EvilNeutral",
-  GoodNeutral = "GoodNeutral",
-  NeutralGood = "NeutralGood",
-  LawfulGood = "LawfulGood",
-  ChaoticGood = "ChaoticGood",
-}
-
-export type ClassLevelProgression = {
-  unlockedAtLevel: number;
-  abilityId: Action["id"];
-};
-
-export type Race = {
-  id: Id;
-  name: string;
-};
-
-export type Clazz = {
-  id: Id;
-  name: string;
-  levelProgression: ClassLevelProgression[];
-};
-
-export type CharacterResourceType = {
-  id: Id;
-  name: string;
-  defaultMax?: number;
 };
 
 export type CharacterResource = {
@@ -70,13 +37,6 @@ export type CharacterClass = {
   classId: Clazz["id"];
 };
 
-export type LevelProgression = {
-  id: Id;
-  requiredXp: number;
-  unlocksLevel: number;
-  onLevelUp?: (character: Character, publishEvent: Campaign["publishCampaignEvent"]) => void;
-};
-
 export type CharacterEquipmentSlot = {
   item?: Item;
   slotId: EquipmentSlotDefinition["id"];
@@ -87,7 +47,7 @@ export type Reaction = {
   name: string;
   type: ReactionEventType;
   eventType: CampaignEventType["type"];
-  action: Action;
+  action: ActionDefinition;
 };
 
 export enum ReactionEventType {
@@ -100,62 +60,47 @@ export type ReactionResource = {
   targetId: Actor["id"];
 };
 
-export type CharacterStatType = {
-  id: Id;
-  name: string;
-};
-
 export type CharacterStat = {
   statId: CharacterStatType["id"];
   amount: number;
 };
 
-export function isCharacterEvent(
-  event: CampaignEvent
-): event is Extract<CampaignEvent, { characterId: Character["id"] }> {
+export function isCharacterEvent(event: CampaignEvent): event is Extract<CampaignEvent, { characterId: Actor["id"] }> {
   return (event as any).characterId !== undefined;
 }
 
-export class Character implements Actor {
+export class Actor {
   id!: Id;
   party!: Party["id"];
   exists!: boolean;
 
+  xp!: number;
   name!: string;
   race!: Race["id"];
   description?: string;
   alignment!: Alignment;
   classes: CharacterClass[] = [];
-  xp!: number;
 
-  gold!: number;
   inventory: Item[] = [];
   equipment: CharacterEquipmentSlot[] = [];
 
-  baseArmorClass!: number;
-  armorClass!: number;
   stats: CharacterStat[] = [];
-
-  actions: Action[] = [];
+  actions: ActionDefinition[] = [];
   statuses: Status[] = [];
   position!: Position;
-
-  spellCastingAbilityStatIds!: CharacterStatType["id"][];
-  abilityModifierStatIds!: CharacterStatType["id"][];
 
   resources: CharacterResource[] = [];
   reactionsRemaining: ReactionResource[] = [];
   reactions: Reaction[] = [];
 
-  constructor(init?: Partial<Character>) {
+  world: World;
+
+  constructor(world: World, init?: Partial<Actor>) {
     Object.assign(this, init);
+    this.world = world;
   }
 
-  getType(): ActorType {
-    return ActorType.Character;
-  }
-
-  getEligibleTargets(action: Action): Actor[] {
+  getEligibleTargets(action: ActionDefinition): Actor[] {
     throw new Error("Method not implemented.");
   }
 
@@ -164,10 +109,10 @@ export class Character implements Actor {
   }
 
   rollInitiative(): number {
-    return roll(D20);
+    return this.world.roll(D20);
   }
 
-  getActions(): Action[] {
+  getActions(): ActionDefinition[] {
     return this.actions;
   }
 
@@ -183,8 +128,15 @@ export class Character implements Actor {
     this.resources = this.resources.map((r) => ({ ...r, amount: r.max }));
   }
 
-  getDamageRoll(effect: Effect) {
-    return (effect.amountStatic || 0) + roll(effect.amountVariable || 0);
+  action(actionDefinition: ActionDefinition) {
+    return {
+      rolls: [
+        {
+          name: "Hit",
+          roll: 20,
+        },
+      ],
+    };
   }
 
   getResistanceMultiplier(damageType: ElementType) {
@@ -199,7 +151,7 @@ export class Character implements Actor {
    * Get all available actions for the characters, based on equipment, class, spells, etc.
    * @returns A list of available actions
    */
-  getAvailableActions(): Action[] {
+  getAvailableActions(): ActionDefinition[] {
     return [
       ...this.actions,
       ...this.equipment
@@ -221,9 +173,13 @@ export class Character implements Actor {
     );
   }
 
-  getCharacterHitModifierWithAction(action: Action) {
+  getCharacterHitModifierWithAction(action: ActionDefinition) {
     return 0;
   }
 
   applyEffects(effects: Effect) {}
+
+  tryHit(target: Actor) {
+    return true;
+  }
 }

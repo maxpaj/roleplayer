@@ -1,11 +1,10 @@
 import { Id } from "../../lib/generate-id";
 import { Battle } from "../battle/battle";
 import { Round } from "./round";
-import { Actor } from "../actor/actor";
-import { Character, CharacterResourceType, isCharacterEvent } from "../actor/character";
-import { MonsterInstance } from "../actor/monster";
+import { Actor, isCharacterEvent } from "../actor/character";
 import { Campaign } from "./campaign";
 import { CampaignEventType, CampaignEventWithRound } from "./campaign-events";
+import { CharacterResourceType } from "../ruleset/ruleset";
 
 /**
  * Represent a campaign current state, after applying all events related to the campaign
@@ -13,25 +12,17 @@ import { CampaignEventType, CampaignEventWithRound } from "./campaign-events";
 export class CampaignState {
   battles: Battle[];
   rounds: Round[];
-  characters: Character[];
+  characters: Actor[];
   campaign: Campaign;
-  monsters: MonsterInstance[];
 
-  constructor(
-    campaign: Campaign,
-    battles: Battle[] = [],
-    rounds: Round[] = [],
-    characters: Character[] = [],
-    monsters: MonsterInstance[] = []
-  ) {
+  constructor(campaign: Campaign, battles: Battle[] = [], rounds: Round[] = [], characters: Actor[] = []) {
     this.campaign = campaign;
     this.battles = battles;
     this.rounds = rounds;
     this.characters = characters;
-    this.monsters = monsters;
   }
 
-  getCharacter(characterId: Character["id"]) {
+  getCharacter(characterId: Actor["id"]) {
     const character = this.characters.find((c) => c.id === characterId);
     if (!character) {
       throw new Error(`Could not find character with id ${characterId}`);
@@ -51,10 +42,6 @@ export class CampaignState {
     }
 
     return round;
-  }
-
-  getActors(): Actor[] {
-    return [...this.monsters, ...this.characters];
   }
 
   characterHasResource(round: Round, characterId: Id, resourceType: CharacterResourceType["id"]) {

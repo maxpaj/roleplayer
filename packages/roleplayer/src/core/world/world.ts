@@ -1,12 +1,9 @@
 import { Id } from "../../lib/generate-id";
-import { AugmentedRequired } from "../../types/with-required";
-import { Character, CharacterClass, Clazz, Race } from "../actor/character";
-import { Action } from "./action/action";
-import { Monster } from "../actor/monster";
+import { Actor, CharacterClass } from "../actor/character";
+import { ActionDefinition } from "./action/action";
 import { Item } from "./item/item";
 import { Status } from "./action/status";
-import { Version } from "../..";
-import { Ruleset } from "../ruleset/ruleset";
+import { Clazz, Race, Roll, Ruleset } from "../..";
 
 /**
  * Container for all world related things.
@@ -15,32 +12,36 @@ import { Ruleset } from "../ruleset/ruleset";
 export class World {
   id!: Id;
   name!: string;
-  libVersion: typeof Version;
 
-  monsters: Monster[] = [];
+  monsters: Actor[] = [];
   items: Item[] = [];
-  characters: Character[] = [];
-  actions: Action[] = [];
+  characters: Actor[] = [];
+  actions: ActionDefinition[] = [];
   races: Race[] = [];
   statuses: Status[] = [];
   classes: Clazz[] = [];
-  ruleset!: Ruleset;
 
-  constructor(w: AugmentedRequired<Partial<World>, "name" | "ruleset">) {
+  // System stuff
+  ruleset: Ruleset;
+  roll: Roll;
+
+  constructor(ruleset: Ruleset, roll: Roll, name: string, w: Partial<World>) {
     Object.assign(this, w);
-    this.libVersion = w.libVersion || Version; // TODO: Should throw if the version of this world isn't supported by the lib
+    this.ruleset = ruleset;
+    this.name = name;
+    this.roll = roll;
   }
 
-  createCharacter(characterId: Character["id"], name: string) {
+  addCharacter(characterId: Actor["id"], name: string) {
     const existing = this.characters.find((c) => c.id === characterId);
     if (existing) {
       throw new Error("Cannot create character, duplicate exists");
     }
 
-    this.characters.push(new Character({ id: characterId, name }));
+    this.characters.push(new Actor(this, { id: characterId, name }));
   }
 
-  setCharacterName(characterId: Character["id"], name: string) {
+  setCharacterName(characterId: Actor["id"], name: string) {
     const existing = this.characters.find((c) => c.id === characterId);
     if (!existing) {
       throw new Error("Cannot find character");
@@ -49,7 +50,7 @@ export class World {
     existing.name = name;
   }
 
-  setCharacterClasses(characterId: Character["id"], classes: CharacterClass[]) {
+  setCharacterClasses(characterId: Actor["id"], classes: CharacterClass[]) {
     const existing = this.characters.find((c) => c.id === characterId);
     if (!existing) {
       throw new Error("Cannot find character");

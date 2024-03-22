@@ -1,4 +1,4 @@
-import { Clazz, Race } from "./core/actor/character";
+import { Clazz, Race } from "./core/ruleset/ruleset";
 import { dangerousGenerateId } from "./lib/generate-id";
 
 export function randomEnum<T extends object>(anEnum: T): T[keyof T] {
@@ -20,7 +20,7 @@ export function randomClass(): Clazz {
 }
 
 export function randomRace(): Race {
-  return { name: "Random race" };
+  return { id: dangerousGenerateId(), name: "Random race" };
 }
 
 export function randomDigit(min: number, max: number) {

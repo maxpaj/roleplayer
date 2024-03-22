@@ -1,5 +1,5 @@
 import { Id } from "../../../lib/generate-id";
-import { Action } from "../action/action";
+import { ActionDefinition } from "../action/action";
 import { Rarity } from "../rarity";
 
 export enum ItemType {
@@ -41,7 +41,7 @@ export type Item = {
   /**
    * Actions available for the item.
    */
-  actions: Action[];
+  actions: ActionDefinition[];
 
   /**
    * An item may occupy additional slots while equipped.

@@ -1,4 +1,4 @@
-import { DefaultRuleSet } from "../../data/data";
+import { DefaultRuleSet } from "../../data/defaults";
 import { dangerousGenerateId } from "../../lib/generate-id";
 import { World } from "../world/world";
 import { Campaign } from "./campaign";
@@ -7,7 +7,7 @@ import { CampaignEventWithRound } from "./campaign-events";
 describe("Campaign state", () => {
   it("applies events", () => {
     const characterId = dangerousGenerateId();
-    const world = new World({ name: "World", ruleset: DefaultRuleSet });
+    const world = new World(DefaultRuleSet, () => 2, "World", {});
     const healthResource = world.ruleset.characterResourceTypes.find((rt) => rt.name === "Health");
     const events: CampaignEventWithRound[] = [
       {
@@ -36,7 +36,12 @@ describe("Campaign state", () => {
       },
     ];
 
-    const campaign = new Campaign({ id: "0000000-0000-0000-0000-000000000000" as const, name: "Campaign", world, events });
+    const campaign = new Campaign({
+      id: "0000000-0000-0000-0000-000000000000" as const,
+      name: "Campaign",
+      world,
+      events,
+    });
     const state = campaign.getCampaignStateFromEvents();
 
     expect(state.characters.length).toBe(1);
@@ -45,6 +50,6 @@ describe("Campaign state", () => {
     const characterHealth = character!.resources.find((r) => r.resourceTypeId === healthResource!.id);
 
     expect(character!.name).toBe("Some name");
-    expect(characterHealth!.amount).toBe(10);
+    expect(characterHealth!.max).toBe(10);
   });
 });

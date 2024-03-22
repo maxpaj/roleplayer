@@ -537,7 +537,6 @@ export class Campaign {
           throw new Error(`Cannot find resource ${event.resourceTypeId}`);
         }
 
-        console.error("gain", event.amount, resource.amount, event.amount + resource.amount);
         resource.amount += event.amount;
         break;
       }
@@ -549,7 +548,6 @@ export class Campaign {
           throw new Error(`Cannot find resource ${event.resourceTypeId}`);
         }
 
-        console.error("loss", event.amount, resource.amount, event.amount + resource.amount);
         resource.amount -= event.amount;
         break;
       }

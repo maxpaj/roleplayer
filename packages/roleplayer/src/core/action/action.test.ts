@@ -91,8 +91,6 @@ describe("actions", () => {
     const defenderHealth = defenderAfterAttack!.resources.find((r) => r.resourceTypeId === healthResource.id)?.amount;
     const defenderChillStatus = defenderAfterAttack!.statuses.find((s) => s.name === "Chill");
 
-    console.warn(campaign.events.filter((e: any) => e.resourceTypeId === "0000000-0000-0000-0000-000000001001"));
-
     expect(defenderHealth).toBe(2);
     expect(defenderChillStatus).toBeDefined();
   });

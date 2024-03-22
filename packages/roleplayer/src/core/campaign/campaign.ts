@@ -2,7 +2,7 @@ import { Id, dangerousGenerateId } from "../../lib/generate-id";
 import { AugmentedRequired } from "../../types/with-required";
 import { Actor, CharacterClass, CharacterStat, isCharacterEvent } from "../actor/character";
 import { Battle } from "../battle/battle";
-import { Action, ActionDefinition } from "../world/action/action";
+import { ActionDefinition } from "../world/action/action";
 import { EquipmentSlotDefinition, Item } from "../world/item/item";
 import { World } from "../world/world";
 import { CampaignEvent, CampaignEventWithRound } from "./campaign-events";
@@ -148,7 +148,13 @@ export class Campaign {
     this.publishCampaignEvent(characterUpdate);
   }
 
-  addCharacterToCurrentBattle(characterId: Actor["id"], initiativeRoll: number) {
+  addCharacterToCurrentBattle(characterId: Actor["id"]) {
+    const actor = this.world.characters.find((c) => c.id === characterId);
+    if (!actor) {
+      throw new Error("Actor not found");
+    }
+
+    const order = this.world.ruleset.characterBattleActionOrder(actor);
     const characterBattleEnter: CampaignEvent[] = [
       {
         characterId,
@@ -158,8 +164,8 @@ export class Campaign {
       {
         characterId,
         id: dangerousGenerateId(),
-        type: "CharacterBattleInitiativeSet",
-        initiative: initiativeRoll,
+        type: "CharacterBattleCharacterOrderSet",
+        order: order,
       },
     ];
 
@@ -258,8 +264,6 @@ export class Campaign {
     return battleId;
   }
 
-  performAction(actor: Actor, action: Action) {}
-
   performCharacterAttack(attacker: Actor, actionDef: ActionDefinition, targets: Actor[]) {
     const characterAction = attacker.action(actionDef);
     const characterActionHitRoll = characterAction.rolls.find((r) => r.name === "Hit");
@@ -351,17 +355,21 @@ export class Campaign {
     return levelInfo.unlocksLevel;
   }
 
+  getBattleEvents(battleId: Battle["id"]) {
+    return this.events.filter((e) => e.battleId === battleId);
+  }
+
   isValidEvent(event: CampaignEventWithRound) {
     return event.serialNumber !== undefined;
   }
 
   getCampaignStateFromEvents() {
-    const worldState = new CampaignState(this, [], [], []);
+    const campaignState = new CampaignState(this, [], [], []);
     this.events
       .filter(this.isValidEvent)
       .sort((a, b) => a.serialNumber - b.serialNumber)
-      .forEach((e) => this.applyEvent(e, worldState));
-    return worldState;
+      .forEach((e) => this.applyEvent(e, campaignState));
+    return campaignState;
   }
 
   applyEvent(event: CampaignEventWithRound, campaignState: CampaignState) {
@@ -422,7 +430,7 @@ export class Campaign {
       case "CharacterAttackDefenderDodge":
       case "CharacterAttackDefenderParry":
       case "CharacterClassReset":
-      case "CharacterBattleInitiativeSet":
+      case "CharacterBattleCharacterOrderSet":
       case "CharacterClassLevelGain":
         {
           const character = campaignState.characters.find((c) => c.id === event.characterId);
@@ -461,7 +469,7 @@ export class Campaign {
         break;
       }
 
-      case "CharacterBattleInitiativeSet": {
+      case "CharacterBattleCharacterOrderSet": {
         const battle = campaignState.battles.find((b) => b.id === event.battleId);
 
         if (!battle) {
@@ -474,7 +482,7 @@ export class Campaign {
           throw new Error("Cannot find battle character");
         }
 
-        characterBattle.initiative = event.initiative;
+        characterBattle.actingOrder = event.order;
         break;
       }
 

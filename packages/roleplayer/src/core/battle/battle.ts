@@ -3,7 +3,7 @@ import { Actor, isCharacterEvent } from "../actor/character";
 import { CampaignEvent } from "../campaign/campaign-events";
 import { AugmentedRequired } from "../../types/with-required";
 
-type BattleActor = { initiative: number; actor: Actor };
+export type BattleActor = { actingOrder: number; actor: Actor };
 
 export class Battle {
   id!: Id;
@@ -16,12 +16,12 @@ export class Battle {
     this.finished = this.finished || false;
   }
 
-  hasRolledForInitiative() {
-    return this.entities.every((c) => c.initiative != 0);
+  hasActionOrder() {
+    return this.entities.every((c) => c.actingOrder !== 0);
   }
 
   addBattleActor(actor: Actor) {
-    const added = { actor, initiative: 0 };
+    const added = { actor, actingOrder: 0 };
     this.entities.push(added);
     return added;
   }
@@ -35,7 +35,7 @@ export class Battle {
       return !hasActed;
     });
 
-    const sorted = charactersNotActedCurrentRound.sort((a, b) => b.initiative - a.initiative);
+    const sorted = charactersNotActedCurrentRound.sort((a, b) => b.actingOrder - a.actingOrder);
 
     return sorted[0] as BattleActor;
   }

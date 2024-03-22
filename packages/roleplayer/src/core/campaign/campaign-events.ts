@@ -29,9 +29,9 @@ export type SystemEventType =
       characterId: Actor["id"];
     }
   | {
-      type: "CharacterBattleInitiativeSet";
+      type: "CharacterBattleCharacterOrderSet";
       characterId: Actor["id"];
-      initiative: number;
+      order: number;
     };
 
 export type CharacterEventType =

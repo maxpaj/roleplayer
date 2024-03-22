@@ -79,6 +79,8 @@ export class Actor {
   party!: Party["id"];
   exists!: boolean;
 
+  type!: "Player" | "NPC";
+
   xp!: number;
   name!: string;
   race!: Race["id"];

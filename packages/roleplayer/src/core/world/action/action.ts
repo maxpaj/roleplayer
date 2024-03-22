@@ -1,5 +1,4 @@
 import { Id } from "../../../lib/generate-id";
-import { Actor } from "../../actor/character";
 import { CharacterResourceDefinition } from "../../ruleset/ruleset";
 import { EventGenerator } from "./effect";
 
@@ -25,9 +24,4 @@ export type ActionDefinition = {
     resourceTypeId: CharacterResourceDefinition["id"];
     amount: number;
   }[];
-};
-
-export type Action = {
-  actionId: ActionDefinition["id"];
-  targetId: Actor["id"];
 };

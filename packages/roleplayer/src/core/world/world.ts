@@ -6,8 +6,12 @@ import { StatusDefinition } from "./action/status";
 import { Clazz, Race, Roll, Ruleset } from "../..";
 
 /**
- * Container for all world related things.
- * Holds information about items, spells, statuses, classes, etc. that exists in the world.
+ * Container for all world related things. Is limited to what is allowed by the ruleset.
+ * Holds information about items, spells, statuses, etc. that exists in the world.
+ *
+ * - items (Frost Sword, Light Saber)
+ * - actions (Frostburn action def) ()
+ * - spells
  */
 export class World {
   id!: Id;

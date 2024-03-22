@@ -63,8 +63,13 @@ export type CharacterStatType = {
 /**
  * This contains rules based on the book.
  *
- * - Level progression
- * -
+ * - level progression definition (how much xp per level)
+ * - stat types (STR, DEX, CON, INT, WIS, CHA, what does what?)
+ * - professions (classes)
+ * - character resources (health, mana, movement, etc)
+ * - equipment / inventory slots
+ * - elements (fire, water, earth, air, etc)
+ * - battle rules, who acts first, what determines a hit or a dodge on attack
  *
  */
 export interface Ruleset {

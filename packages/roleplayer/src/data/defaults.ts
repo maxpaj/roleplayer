@@ -1,7 +1,97 @@
-import { roll, Actor, D20 } from "..";
+import {
+  defaultRoll,
+  Actor,
+  D20,
+  World,
+  ElementDefinition,
+  CharacterResourceGeneration,
+  ActionDefinition,
+  CharacterResourceDefinition,
+  Dice,
+} from "..";
 import { CharacterStatType, Clazz, LevelProgression, Ruleset } from "../core/ruleset/ruleset";
 import { EquipmentSlotDefinition, ItemEquipmentType } from "../core/world/item/item";
 import { dangerousGenerateId } from "../lib/generate-id";
+
+export class DefaultRuleSet implements Ruleset {
+  roll(dice: Dice): number {
+    return defaultRoll(dice);
+  }
+
+  getLevelProgression(): LevelProgression[] {
+    return DefaultLevelProgression;
+  }
+
+  getCharacterStatTypes(): CharacterStatType[] {
+    return DefaultCharacterStatTypes;
+  }
+
+  getCharacterResourceTypes(): CharacterResourceDefinition[] {
+    return DefaultCharacterResourceTypes;
+  }
+
+  getCharacterEquipmentSlots(): EquipmentSlotDefinition[] {
+    return DefaultEquipmentSlotDefinitions;
+  }
+
+  getClassDefinitions(): Clazz[] {
+    return DefaultClassDefinitions;
+  }
+
+  getElementDefinitions(): ElementDefinition[] {
+    return DefaultElementDefinitions;
+  }
+
+  addEquipmentSlot(equipmentSlot: { eligibleEquipmentTypes: ItemEquipmentType[]; id: string; name: string }) {
+    throw new Error("Method not implemented.");
+  }
+
+  characterHitDamage(
+    source: Actor,
+    action: ActionDefinition,
+    target: Actor,
+    element: ElementDefinition,
+    variableValue: Dice,
+    staticValue: number
+  ) {
+    const targetResistance = target.getResistance(element);
+    const sourceDamage = this.roll(variableValue) + staticValue;
+    return sourceDamage * targetResistance;
+  }
+
+  characterHit(world: World, attacker: Actor, defender: Actor) {
+    const attackerHit = attacker.stats.find((s) => s.statId === "character-stats-hit");
+    if (!attackerHit) throw new Error("Character hit not found");
+
+    const defenderArmorClass = defender.stats.find((s) => s.statId === "character-armor-class");
+    if (!defenderArmorClass) throw new Error("Character hit not found");
+    return defaultRoll(D20) + attackerHit.amount > defenderArmorClass.amount;
+  }
+
+  characterElementDamageMultiplier(actor: Actor, damageType: ElementDefinition): number {
+    return 1;
+  }
+
+  characterResistanceMultiplier(actor: Actor, damageType: ElementDefinition): number {
+    return 1;
+  }
+
+  characterResistanceAbsolute(actor: Actor, damageType: ElementDefinition): number {
+    return 1;
+  }
+
+  characterResourceGeneration(character: Actor): CharacterResourceGeneration[] {
+    return [];
+  }
+
+  characterBattleActionOrder(actor: Actor): number {
+    return this.roll(D20);
+  }
+
+  constructor(roll: (dice: Dice) => number = defaultRoll) {
+    this.roll = roll;
+  }
+}
 
 export const DefaultLevelProgression: LevelProgression[] = [
   { requiredXp: 0, id: dangerousGenerateId(), unlocksLevel: 1 },
@@ -19,10 +109,12 @@ export const DefaultEquipmentSlotDefinitions: EquipmentSlotDefinition[] = [
   },
 ];
 
+export const DefaultElementDefinitions: ElementDefinition[] = [];
+
 export const DefaultClassDefinitions: Clazz[] = [
   {
     id: "0000000-0000-0000-0000-000000004000" as const,
-    name: "Warrior",
+    name: "Rogue",
     levelProgression: [
       {
         actionDefinitionId: "0000000-0000-0000-0000-000000005000" as const,
@@ -32,7 +124,7 @@ export const DefaultClassDefinitions: Clazz[] = [
   },
   {
     id: "0000000-0000-0000-0000-000000004000" as const,
-    name: "Warrior",
+    name: "Bard",
     levelProgression: [
       {
         actionDefinitionId: "0000000-0000-0000-0000-000000005000" as const,
@@ -42,7 +134,7 @@ export const DefaultClassDefinitions: Clazz[] = [
   },
   {
     id: "0000000-0000-0000-0000-000000004000" as const,
-    name: "Warrior",
+    name: "Wizard",
     levelProgression: [
       {
         actionDefinitionId: "0000000-0000-0000-0000-000000005000" as const,
@@ -62,6 +154,11 @@ export const DefaultCharacterResourceTypes = [
     id: "0000000-0000-0000-0000-000000001001" as const,
     name: "Health",
     defaultMax: 20,
+  },
+  {
+    id: "0000000-0000-0000-0000-000000001001" as const,
+    name: "Armor class",
+    defaultMax: 10,
   },
   { id: "0000000-0000-0000-0000-000000001002" as const, name: "Primary action", defaultMax: 1 },
   { id: "0000000-0000-0000-0000-000000001003" as const, name: "Secondary action", defaultMax: 1 },
@@ -99,20 +196,3 @@ export const DefaultCharacterStatTypes: CharacterStatType[] = [
     name: "Defense",
   },
 ];
-
-export const DefaultRuleSet: Ruleset = {
-  roll: roll,
-  characterEquipmentSlots: DefaultEquipmentSlotDefinitions,
-  characterResourceTypes: DefaultCharacterResourceTypes,
-  characterStatTypes: DefaultCharacterStatTypes,
-  levelProgression: DefaultLevelProgression,
-  classDefinitions: DefaultClassDefinitions,
-  characterHit: (attacker: Actor, defender: Actor) => {
-    const attackerHit = attacker.stats.find((s) => s.statId === "character-stats-hit");
-    if (!attackerHit) throw new Error("Character hit not found");
-
-    const defenderArmorClass = defender.stats.find((s) => s.statId === "character-armor-class");
-    if (!defenderArmorClass) throw new Error("Character hit not found");
-    return roll(D20) + attackerHit.amount > defenderArmorClass.amount;
-  },
-};

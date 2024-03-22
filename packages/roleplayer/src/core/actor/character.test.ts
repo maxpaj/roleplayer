@@ -2,7 +2,7 @@ import { DefaultRuleSet } from "../../data/defaults";
 import { dangerousGenerateId } from "../../lib/generate-id";
 import { Campaign } from "../campaign/campaign";
 import { CampaignEvent } from "../campaign/campaign-events";
-import { CharacterResourceType } from "../ruleset/ruleset";
+import { CharacterResourceDefinition } from "../ruleset/ruleset";
 import { ActionDefinition, TargetType } from "../world/action/action";
 import { Item, ItemSlot, ItemType } from "../world/item/item";
 import { Rarity } from "../world/rarity";
@@ -10,12 +10,14 @@ import { World } from "../world/world";
 import { Actor } from "./character";
 
 describe("Character", () => {
+  const defaultRuleSet = new DefaultRuleSet(() => 2);
+
   describe("Create character events", () => {
     it("should handle create character events", () => {
       const characterA = dangerousGenerateId();
       const characterB = dangerousGenerateId();
 
-      const world = new World(DefaultRuleSet, () => 2, "World", {});
+      const world = new World(defaultRuleSet, "World", {});
       const campaign = new Campaign({ id: dangerousGenerateId(), name: "Campaign", world });
 
       campaign.nextRound();
@@ -29,13 +31,13 @@ describe("Character", () => {
     it("should apply maximum health change events", () => {
       const characterId = dangerousGenerateId();
 
-      const world = new World(DefaultRuleSet, () => 2, "World", {});
+      const world = new World(defaultRuleSet, "World", {});
       const campaign = new Campaign({ id: dangerousGenerateId(), name: "Campaign", world });
 
       campaign.nextRound();
       campaign.createCharacter(characterId, "Character");
 
-      const resourceType: CharacterResourceType = {
+      const resourceType: CharacterResourceDefinition = {
         id: dangerousGenerateId(),
         name: "Health",
         defaultMax: 20,
@@ -60,13 +62,13 @@ describe("Character", () => {
 
     it("should apply movement events", () => {
       const characterId = dangerousGenerateId();
-      const world = new World(DefaultRuleSet, () => 2, "World", {});
+      const world = new World(defaultRuleSet, "World", {});
       const campaign = new Campaign({ id: dangerousGenerateId(), name: "Campaign", world });
 
       campaign.nextRound();
       campaign.createCharacter(characterId, "Character");
 
-      const movementSpeedResource = DefaultRuleSet.characterResourceTypes.find((r) => r.name === "Movement speed");
+      const movementSpeedResource = defaultRuleSet.getCharacterResourceTypes().find((r) => r.name === "Movement speed");
 
       const events: CampaignEvent[] = [
         {
@@ -107,12 +109,12 @@ describe("Character", () => {
     });
 
     it("should reject movement event when movement exceeds remaining movement", () => {
-      const movementResource: CharacterResourceType = {
+      const movementResource: CharacterResourceDefinition = {
         id: dangerousGenerateId(),
         name: "Movement speed",
       };
 
-      const world = new World(DefaultRuleSet, () => 2, "World", {});
+      const world = new World(defaultRuleSet, "World", {});
       const campaign = new Campaign({ id: dangerousGenerateId(), name: "Campaign", world });
 
       const characterId = dangerousGenerateId();
@@ -172,12 +174,12 @@ describe("Character", () => {
 
     it("should apply temporary resource change events", () => {
       const characterId = dangerousGenerateId();
-      const world = new World(DefaultRuleSet, () => 2, "World", {});
+      const world = new World(defaultRuleSet, "World", {});
       const campaign = new Campaign({ id: dangerousGenerateId(), name: "Campaign", world });
       campaign.nextRound();
       campaign.createCharacter(characterId, "Character");
 
-      const testResourceType: CharacterResourceType = {
+      const testResourceType: CharacterResourceDefinition = {
         id: dangerousGenerateId(),
         name: "Resource",
         defaultMax: 20,
@@ -218,13 +220,14 @@ describe("Character", () => {
     it("should apply item gain events", () => {
       const characterId = dangerousGenerateId();
       const itemId = dangerousGenerateId();
-      const world = new World(DefaultRuleSet, () => 2, "World", {
+      const world = new World(defaultRuleSet, "World", {
         items: [
           {
             id: itemId,
             rarity: Rarity.Common,
             actions: [],
             name: "Item",
+            stats: [],
             occupiesSlots: [ItemSlot.Inventory],
             type: ItemType.Equipment,
             description: "",
@@ -260,11 +263,11 @@ describe("Character", () => {
     it("should apply reject character events if character doesn't exist", () => {
       const characterId = dangerousGenerateId();
 
-      const world = new World(DefaultRuleSet, () => 2, "World", {});
+      const world = new World(defaultRuleSet, "World", {});
       const campaign = new Campaign({ id: dangerousGenerateId(), name: "Campaign", world });
       campaign.nextRound();
 
-      const resourceType: CharacterResourceType = {
+      const resourceType: CharacterResourceDefinition = {
         id: dangerousGenerateId(),
         name: "Resource",
         defaultMax: 20,
@@ -290,7 +293,7 @@ describe("Character", () => {
     });
 
     it("should handle unknown events gracefully", () => {
-      const world = new World(DefaultRuleSet, () => 2, "World", {});
+      const world = new World(defaultRuleSet, "World", {});
       const campaign = new Campaign({ id: dangerousGenerateId(), name: "New campaign", world });
       const events: CampaignEvent[] = [
         {
@@ -310,10 +313,11 @@ describe("Character", () => {
 
   describe("Character actions", () => {
     it("should return a list of possible actions based on the character class abilities, spells and inventory", () => {
-      const world = new World(DefaultRuleSet, () => 2, "World", {});
+      const world = new World(defaultRuleSet, "World", {});
       const sword: Item = {
         id: dangerousGenerateId(),
         rarity: Rarity.Common,
+        stats: [],
         actions: [
           {
             id: dangerousGenerateId(),

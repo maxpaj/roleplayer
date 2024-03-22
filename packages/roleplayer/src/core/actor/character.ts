@@ -1,13 +1,18 @@
 import { Id } from "../../lib/generate-id";
 import { CampaignEvent, CampaignEventType, CampaignEventWithRound } from "../campaign/campaign-events";
-import { D20 } from "../dice/dice";
-import { Effect, ElementType } from "../world/action/effect";
 import { ActionDefinition } from "../world/action/action";
-import { Status } from "../world/action/status";
+import { StatusDefinition } from "../world/action/status";
 import { EquipmentSlotDefinition, Item } from "../world/item/item";
 import { Party } from "../campaign/party";
 import { World } from "../world/world";
-import { Alignment, CharacterResourceType, CharacterStatType, Clazz, Race } from "../ruleset/ruleset";
+import {
+  Alignment,
+  CharacterResourceDefinition,
+  CharacterStatType,
+  Clazz,
+  ElementDefinition,
+  Race,
+} from "../ruleset/ruleset";
 
 export enum ActorType {
   Monster = "Monster",
@@ -22,7 +27,7 @@ export type Position = {
 };
 
 export type CharacterResource = {
-  resourceTypeId: CharacterResourceType["id"];
+  resourceTypeId: CharacterResourceDefinition["id"];
   amount: number;
   max: number;
   min: number;
@@ -86,7 +91,7 @@ export class Actor {
 
   stats: CharacterStat[] = [];
   actions: ActionDefinition[] = [];
-  statuses: Status[] = [];
+  statuses: StatusDefinition[] = [];
   position!: Position;
 
   resources: CharacterResource[] = [];
@@ -108,10 +113,6 @@ export class Actor {
     throw new Error("Method not implemented.");
   }
 
-  rollInitiative(): number {
-    return this.world.roll(D20);
-  }
-
   getActions(): ActionDefinition[] {
     return this.actions;
   }
@@ -121,11 +122,15 @@ export class Actor {
   }
 
   getResourceGeneration(): CharacterResourceGeneration[] {
-    return [];
+    return this.world.ruleset.characterResourceGeneration(this);
   }
 
   resetResources() {
     this.resources = this.resources.map((r) => ({ ...r, amount: r.max }));
+  }
+
+  getBattleActionOrder() {
+    return this.world.ruleset.characterBattleActionOrder(this);
   }
 
   action(actionDefinition: ActionDefinition) {
@@ -139,12 +144,16 @@ export class Actor {
     };
   }
 
-  getResistanceMultiplier(damageType: ElementType) {
-    return 1;
+  getStats() {
+    return this.stats;
   }
 
-  getResistanceAbsolute(damageType: ElementType) {
-    return 0;
+  getResistanceMultiplier(damageType: ElementDefinition) {
+    return this.world.ruleset.characterResistanceMultiplier(this, damageType);
+  }
+
+  getResistanceAbsolute(damageType: ElementDefinition) {
+    return this.world.ruleset.characterResistanceAbsolute(this, damageType);
   }
 
   /**
@@ -162,22 +171,28 @@ export class Actor {
     ];
   }
 
-  getEffectAppliedStatuses(status: Status | undefined) {
+  getDamage(element: ElementDefinition) {
+    return 2;
+  }
+  getResistance(element: ElementDefinition) {
+    return 2;
+  }
+
+  getElementDamageMultiplier() {
+    return 1;
+  }
+
+  getEffectAppliedStatuses(status: StatusDefinition | undefined) {
     return status;
   }
 
-  getEffectDamageTaken(effect: Effect, damageAmount: number) {
-    return Math.max(
-      damageAmount * this.getResistanceMultiplier(effect.element) - this.getResistanceAbsolute(effect.element),
-      0
-    );
+  getElementDamageTaken(element: ElementDefinition, damageAmount: number) {
+    return this.world.ruleset.characterResistanceMultiplier(this, element) * damageAmount;
   }
 
   getCharacterHitModifierWithAction(action: ActionDefinition) {
     return 0;
   }
-
-  applyEffects(effects: Effect) {}
 
   tryHit(target: Actor) {
     return true;

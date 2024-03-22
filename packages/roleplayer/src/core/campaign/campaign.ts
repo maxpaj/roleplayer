@@ -1,4 +1,3 @@
-import { Effect } from "../..";
 import { Id, dangerousGenerateId } from "../../lib/generate-id";
 import { AugmentedRequired } from "../../types/with-required";
 import { Actor, CharacterClass, CharacterStat, isCharacterEvent } from "../actor/character";
@@ -126,7 +125,7 @@ export class Campaign {
 
   // TODO: Move to a D&D specific ruleset
   setCharacterBaseDefense(characterId: Actor["id"], defense: number) {
-    const defenseStatId = this.world.ruleset.characterStatTypes.find((st) => st.name === "Defense")!.id;
+    const defenseStatId = this.world.ruleset.getCharacterStatTypes().find((st) => st.name === "Defense")!.id;
     const characterUpdate: CampaignEvent = {
       characterId,
       id: dangerousGenerateId(),
@@ -168,7 +167,7 @@ export class Campaign {
   }
 
   createCharacter(characterId: Actor["id"], name: string) {
-    const defaultResourcesEvents: CampaignEvent[] = this.world!.ruleset.characterResourceTypes.map((cr) => ({
+    const defaultResourcesEvents: CampaignEvent[] = this.world!.ruleset.getCharacterResourceTypes().map((cr) => ({
       type: "CharacterResourceMaxSet",
       max: cr.defaultMax || 0,
       characterId,
@@ -176,7 +175,7 @@ export class Campaign {
       id: dangerousGenerateId(),
     }));
 
-    const defaultStatsEvents: CampaignEvent[] = this.world!.ruleset.characterStatTypes.map((st) => ({
+    const defaultStatsEvents: CampaignEvent[] = this.world!.ruleset.getCharacterStatTypes().map((st) => ({
       type: "CharacterStatChange",
       amount: 0,
       characterId,
@@ -206,7 +205,7 @@ export class Campaign {
         type: "CharacterStatChange",
         amount: 10,
         characterId,
-        statId: this.world.ruleset.characterStatTypes.find((st) => st.name === "Defense")!.id,
+        statId: this.world.ruleset.getCharacterStatTypes().find((st) => st.name === "Defense")!.id,
         id: dangerousGenerateId(),
       },
       ...defaultResourcesEvents,
@@ -268,20 +267,19 @@ export class Campaign {
       throw new Error("Hit roll not defined for character action");
     }
 
-    const healthResource = this.world.ruleset.characterResourceTypes.find((rt) => rt.name === "Health");
+    const healthResource = this.world.ruleset.getCharacterResourceTypes().find((rt) => rt.name === "Health");
     if (!healthResource) {
       throw new Error("Health resource not defined in world, cannot perform attack");
     }
 
-    const actionResource = this.world.ruleset.characterResourceTypes.find((rt) => rt.name === "Primary action");
+    const actionResource = this.world.ruleset.getCharacterResourceTypes().find((rt) => rt.name === "Primary action");
     if (!actionResource) {
       throw new Error("Primary action resource not defined in world, cannot perform attack");
     }
 
-    const defenderEvents = targets.flatMap((target) => {
-      const isHit = attacker.tryHit(target);
-      if (isHit) {
-        return actionDef.appliesEffects.map((effect) => this.applyEffectEvents(target, effect));
+    const targetReceiveAttackEvents = targets.flatMap((target) => {
+      if (attacker.tryHit(target)) {
+        return actionDef.appliesEffects.map((effect) => effect.instantiate(actionDef, attacker, target, this.world));
       }
 
       return [];
@@ -295,14 +293,7 @@ export class Campaign {
       id: dangerousGenerateId(),
     }));
 
-    return this.publishCampaignEvent(...characterResourceLoss, ...defenderEvents);
-  }
-
-  applyEffectEvents(defender: Actor, effect: Effect): CampaignEvent {
-    return {
-      id: dangerousGenerateId(),
-      type: "Unknown",
-    };
+    return this.publishCampaignEvent(...characterResourceLoss, ...targetReceiveAttackEvents);
   }
 
   endCharacterTurn(actor: Actor) {
@@ -354,7 +345,7 @@ export class Campaign {
   }
 
   getCharacterLevel(character: Actor) {
-    const levelProgression = this.world!.ruleset.levelProgression.slice();
+    const levelProgression = this.world!.ruleset.getLevelProgression().slice();
     const levelInfo = levelProgression.find((l) => l.requiredXp >= character.xp);
     if (!levelInfo) throw new Error(`Cannot find level progression for xp: ${character.xp}`);
     return levelInfo.unlocksLevel;
@@ -538,6 +529,7 @@ export class Campaign {
           throw new Error(`Cannot find resource ${event.resourceTypeId}`);
         }
 
+        console.error("gain", event.amount, resource.amount, event.amount + resource.amount);
         resource.amount += event.amount;
         break;
       }
@@ -549,6 +541,7 @@ export class Campaign {
           throw new Error(`Cannot find resource ${event.resourceTypeId}`);
         }
 
+        console.error("loss", event.amount, resource.amount, event.amount + resource.amount);
         resource.amount -= event.amount;
         break;
       }
@@ -667,7 +660,7 @@ export class Campaign {
       }
 
       case "CharacterEquipmentSlotGain": {
-        const characterSlot = this.world!.ruleset.characterEquipmentSlots.find(
+        const characterSlot = this.world!.ruleset.getCharacterEquipmentSlots().find(
           (slot) => slot.id === event.equipmentSlotId
         );
 
@@ -708,7 +701,7 @@ export class Campaign {
       }
 
       case "CharacterMovement": {
-        const resourceType = this.world!.ruleset.characterResourceTypes.find((r) => r.name === "Movement speed");
+        const resourceType = this.world!.ruleset.getCharacterResourceTypes().find((r) => r.name === "Movement speed");
 
         if (!resourceType) {
           throw new Error("Movement resource not defined in world");

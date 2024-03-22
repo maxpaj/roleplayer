@@ -4,7 +4,7 @@ import { Round } from "./round";
 import { Actor, isCharacterEvent } from "../actor/character";
 import { Campaign } from "./campaign";
 import { CampaignEventType, CampaignEventWithRound } from "./campaign-events";
-import { CharacterResourceType } from "../ruleset/ruleset";
+import { CharacterResourceDefinition } from "../ruleset/ruleset";
 
 /**
  * Represent a campaign current state, after applying all events related to the campaign
@@ -44,7 +44,7 @@ export class CampaignState {
     return round;
   }
 
-  characterHasResource(round: Round, characterId: Id, resourceType: CharacterResourceType["id"]) {
+  characterHasResource(round: Round, characterId: Id, resourceType: CharacterResourceDefinition["id"]) {
     return false;
   }
 

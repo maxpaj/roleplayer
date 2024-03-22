@@ -46,6 +46,6 @@ export class Roleplayer {
   }
 
   createWorld(name: string, world: Partial<World>, ruleset: Ruleset) {
-    return new World(ruleset, this.roll, name, world);
+    return new World(ruleset, name, world);
   }
 }

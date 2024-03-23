@@ -4,6 +4,7 @@ import { getWorldData } from "../actions";
 import { ItemCard } from "@/components/item-card";
 import { ItemType, Rarity } from "roleplayer";
 import { CreateItemForm } from "./components/create-item-form";
+import Link from "next/link";
 
 export default async function ItemsPage({ params }: { params: { worldId: string } }) {
   const { worldId: id } = params;
@@ -41,7 +42,9 @@ export default async function ItemsPage({ params }: { params: { worldId: string 
 
       <div className="flex flex-wrap gap-2">
         {equipment.map((item) => (
-          <ItemCard key={item.id} worldId={worldId} item={item} />
+          <Link href={`/worlds/${worldId}/items/${item.id}`} key={item.id}>
+            <ItemCard key={item.id} item={item} />
+          </Link>
         ))}
       </div>
 
@@ -50,7 +53,9 @@ export default async function ItemsPage({ params }: { params: { worldId: string 
 
       <div className="flex flex-wrap gap-2">
         {consumables.map((item) => (
-          <ItemCard key={item.id} worldId={worldId} item={item} />
+          <Link href={`/worlds/${worldId}/items/${item.id}`} key={item.id}>
+            <ItemCard key={item.id} item={item} />
+          </Link>
         ))}
       </div>
 
@@ -59,7 +64,9 @@ export default async function ItemsPage({ params }: { params: { worldId: string 
 
       <div className="flex flex-wrap gap-2">
         {other.map((item) => (
-          <ItemCard key={item.id} worldId={worldId} item={item} />
+          <Link href={`/worlds/${worldId}/items/${item.id}`} key={item.id}>
+            <ItemCard key={item.id} item={item} />
+          </Link>
         ))}
       </div>
     </>

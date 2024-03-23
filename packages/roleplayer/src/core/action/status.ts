@@ -16,7 +16,7 @@ export type StatusDefinition = {
     appliesAt: StatusApplicationTrigger;
   }[];
   durationType: StatusDurationType;
-  durationRounds?: number;
+  duration?: number;
 };
 
 export enum StatusType {

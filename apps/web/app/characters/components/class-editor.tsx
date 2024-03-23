@@ -2,7 +2,7 @@ import { World } from "roleplayer";
 import { Actor, Clazz } from "roleplayer";
 import { LevelAbilityCard } from "@/components/level-ability-card";
 import { RemoveFunctions } from "types/without-functions";
-import { H2, H3 } from "@/components/ui/typography";
+import { H5 } from "@/components/ui/typography";
 
 type ClassEditorProps = {
   world: RemoveFunctions<World>;
@@ -25,12 +25,12 @@ export function CharacterClassEditor({ classId, world, character }: ClassEditorP
 
   return (
     <div>
-      <H2>
+      <H5>
         {clazz.name} (Level {characterClass.level})
-      </H2>
+      </H5>
 
-      <H3>Select skills</H3>
-      {clazz.levelProgression.map((lp) => {
+      <h6>Select skills</h6>
+      {(clazz.levelProgression || []).map((lp) => {
         const ability = world.actions.find((a) => a.id === lp.actionDefinitionId);
         if (!ability) {
           throw new Error("Ability not found");

@@ -45,6 +45,8 @@ export const actionsToEffectSchema = pgTable("actionsToEffects", {
     .references(() => actionsSchema.id),
 });
 
+export type TargetTypeEnum = typeof targetTypeEnum;
+
 export type RequiredResourceRecord = typeof actionsToResourceRequirementSchema.$inferSelect;
 export type NewRequiredResourceRecord = typeof actionsToResourceRequirementSchema.$inferInsert;
 

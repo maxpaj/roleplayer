@@ -3,8 +3,9 @@ import { DnDRuleset } from "roleplayer";
 import { EffectParameters } from "./effect-parameters";
 import { EffectType } from "./effect-type";
 import { H5 } from "./ui/typography";
+import { WorldAggregated } from "services/world-service";
 
-export function EffectDetails({ effect }: { effect: EffectRecord }) {
+export function EffectDetails({ effect, world }: { effect: EffectRecord; world: WorldAggregated }) {
   const params = effect.parameters as { parameters: Record<string, any> };
   const ruleset = new DnDRuleset();
 
@@ -12,7 +13,11 @@ export function EffectDetails({ effect }: { effect: EffectRecord }) {
     <div>
       <H5>{effect.name}</H5>
       <EffectType type={effect.type} />
-      <EffectParameters resourceDefinitions={ruleset.getCharacterResourceTypes()} parameters={params} />
+      <EffectParameters
+        resourceDefinitions={ruleset.getCharacterResourceTypes()}
+        parameters={params}
+        statusDefinitions={world.statuses}
+      />
     </div>
   );
 }

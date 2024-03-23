@@ -5,6 +5,8 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
@@ -88,6 +90,8 @@ export function ClassSelector({
       </DropdownMenuTrigger>
 
       <DropdownMenuContent className="w-56" onCloseAutoFocus={(e) => e.preventDefault()}>
+        <DropdownMenuLabel>Select a class</DropdownMenuLabel>
+        <DropdownMenuSeparator />
         {availableClasses.map((classOption: ClassDropdownProps["availableClasses"][0], index: number) => {
           const current = selectedItems.find((i) => i.classId === classOption.id);
 

@@ -1,13 +1,13 @@
-import { EventCard } from "@/components/event-card";
+import { EventsTable } from "@/components/events-table";
 import { H4, Muted } from "@/components/ui/typography";
 import { CampaignRecord } from "@/db/schema/campaigns";
 import { CharacterRecord } from "@/db/schema/characters";
 import { classToPlain } from "@/lib/class-to-plain";
 import { getCampaign } from "app/campaigns/actions";
 import { CharacterEditor } from "app/characters/components/character-editor";
-import { redirect } from "next/navigation";
-import { Actor, Campaign, CampaignEventWithRound } from "roleplayer";
-import { CampaignService, getWorldFromCampaignData } from "services/campaign-service";
+import { Actor, Campaign, CampaignEventWithRound, DnDRuleset, World } from "roleplayer";
+import { CampaignService } from "services/campaign-service";
+import { WorldService } from "services/world-service";
 
 export default async function CampaignCharacterPage({
   params: { campaignId: id, characterId: cid },
@@ -28,14 +28,21 @@ export default async function CampaignCharacterPage({
       throw new Error("Cannot find campaign");
     }
 
+    const worldData = await new WorldService().getWorld(campaignData.userId, campaignData.world.id);
+    if (!worldData) {
+      throw new Error("Cannot find world");
+    }
+
     const campaign = new Campaign({
       ...campaignData,
-      world: getWorldFromCampaignData(campaignData),
+      world: new World(new DnDRuleset(), worldData.name, worldData as unknown as Partial<World>),
       events: campaignData.events.map((e) => e.eventData as CampaignEventWithRound),
     });
 
     campaign.setCharacterClasses(characterId, characterUpdate.classes!);
     campaign.setCharacterStats(characterId, characterUpdate.stats!);
+
+    (characterUpdate.inventory || []).map((i) => campaign.addCharacterItem(characterId, i.id));
 
     await new CampaignService().saveCampaignEvents(campaignId, campaign.events);
   }
@@ -45,11 +52,16 @@ export default async function CampaignCharacterPage({
     throw new Error("Could not find campaign");
   }
 
+  const worldData = await new WorldService().getWorld(campaignData.userId, campaignData.world.id);
+  if (!worldData) {
+    throw new Error("Cannot find world");
+  }
+
   const { characters, events } = campaignData;
 
   const campaignInstance = new Campaign({
     ...campaignData,
-    world: getWorldFromCampaignData(campaignData),
+    world: new World(new DnDRuleset(), worldData.name, worldData as unknown as Partial<World>),
     events: campaignData.events.map((e) => e.eventData as CampaignEventWithRound),
   });
 
@@ -65,22 +77,17 @@ export default async function CampaignCharacterPage({
   return (
     <>
       <CharacterEditor
-        world={classToPlain(campaignInstance.world)}
+        worldData={worldData}
         characterFromEvents={classToPlain(characterFromEvents)}
         onSave={async (update) => {
           "use server";
           await updateCharacter(campaignId, characterId, update);
-          redirect("../");
         }}
         characterLevel={campaignInstance.getCharacterLevel(characterFromEvents)}
       />
 
-      <H4 className="my-2">Events</H4>
-      <div className="flex flex-wrap gap-2">
-        {characterEvents.map((e) => (
-          <EventCard key={e.id} event={e} campaignId={campaignId} />
-        ))}
-      </div>
+      <H4 className="my-2">History</H4>
+      <EventsTable events={characterEvents} />
 
       {characterEvents.length === 0 && <Muted>No events yet for this character</Muted>}
     </>

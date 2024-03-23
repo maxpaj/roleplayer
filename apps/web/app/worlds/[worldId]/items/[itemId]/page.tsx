@@ -1,6 +1,6 @@
 import { EffectDetails } from "@/components/effect-details";
+import { Badge } from "@/components/ui/badge";
 import { Divider } from "@/components/ui/divider";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { H3, H4, Paragraph } from "@/components/ui/typography";
 import { DEFAULT_USER_ID } from "@/db/data";
 import { WorldService } from "services/world-service";
@@ -27,6 +27,7 @@ export default async function ItemDetailsPage({
     <>
       <H3>{item.name}</H3>
       <Divider className="my-3" />
+      <Badge variant="outline">{item.rarity}</Badge>
       <Paragraph>{item.description}</Paragraph>
 
       {item.actions.map((e) => {
@@ -36,7 +37,10 @@ export default async function ItemDetailsPage({
             <Paragraph>{e.description}</Paragraph>
             <div>
               {e.appliesEffects.map((e) => (
-                <EffectDetails key={e.id} effect={e} />
+                <>
+                  <EffectDetails world={worldData} key={e.id} effect={e} />
+                  <Divider className="my-2" />
+                </>
               ))}
             </div>
           </div>

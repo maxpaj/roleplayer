@@ -1,12 +1,20 @@
 import { eq } from "drizzle-orm";
 import { db } from "../db";
-import { ActionRecord, RequiredResourceRecord, actionsSchema, actionsToEffectSchema } from "../db/schema/actions";
+import {
+  ActionRecord,
+  RequiredResourceRecord,
+  TargetTypeEnum,
+  actionsSchema,
+  actionsToEffectSchema,
+} from "../db/schema/actions";
 import { CampaignRecord, campaignsSchema } from "../db/schema/campaigns";
 import {
+  CharacterClassRecord,
   CharacterRecord,
   NewCharacterRecord,
   charactersSchema,
   charactersToActionsSchema,
+  charactersToClassesSchema,
   charactersToResourcesSchema,
 } from "../db/schema/characters";
 import { ClazzRecord, NewClazzRecord, classesSchema } from "../db/schema/classes";
@@ -18,7 +26,8 @@ import { CampaignService } from "./campaign-service";
 import { DEFAULT_USER_ID } from "@/db/data";
 import { alias } from "drizzle-orm/pg-core";
 import { EffectRecord, effectsSchema } from "@/db/schema/effects";
-import { CharacterResource, TargetType } from "roleplayer";
+import { CharacterResource } from "roleplayer";
+import { RaceRecord } from "@/db/schema/races";
 
 export type WorldAggregated = WorldRecord & {
   campaigns: CampaignRecord[];
@@ -28,6 +37,7 @@ export type WorldAggregated = WorldRecord & {
   items: ItemAggregated[];
   classes: ClazzRecord[];
   actions: ActionAggregated[];
+  races: RaceRecord[];
 };
 
 export type StatusAggregated = StatusRecord & {
@@ -36,7 +46,7 @@ export type StatusAggregated = StatusRecord & {
 
 export type ActionAggregated = ActionRecord & {
   appliesEffects: EffectRecord[];
-  eligibleTargets: TargetType[];
+  eligibleTargets: TargetTypeEnum[];
   requiresResources: RequiredResourceRecord[];
 };
 
@@ -44,9 +54,12 @@ export type ItemAggregated = ItemRecord & {
   actions: ActionAggregated[];
 };
 
+export type CharacterClassAggregated = CharacterClassRecord;
+
 export type ActorAggregated = CharacterRecord & {
   resourceTypes: CharacterResource[];
   actions: ActionAggregated[];
+  classes: CharacterClassAggregated[];
 };
 
 export class WorldService {
@@ -83,6 +96,7 @@ export class WorldService {
       .leftJoin(statusesToEffectsAlias, eq(statusesToEffectsAlias.statusId, statusesSchema.id))
       .leftJoin(statusesEffectsAlias, eq(statusesEffectsAlias.id, statusesToEffectsAlias.effectId))
 
+      // Join items
       .leftJoin(itemsSchema, eq(itemsSchema.worldId, worldsSchema.id))
       .leftJoin(itemsToActionsSchema, eq(itemsSchema.id, itemsToActionsSchema.itemId))
       .leftJoin(itemsActionsAlias, eq(itemsActionsAlias.id, itemsToActionsSchema.actionId))
@@ -96,6 +110,7 @@ export class WorldService {
 
       // Join characters
       .leftJoin(charactersSchema, eq(charactersSchema.worldId, worldsSchema.id))
+      .leftJoin(charactersToClassesSchema, eq(charactersToClassesSchema.characterId, charactersSchema.id))
       .leftJoin(charactersToResourcesSchema, eq(charactersToResourcesSchema.characterId, charactersSchema.id))
       .leftJoin(charactersToActionsSchema, eq(charactersToActionsSchema.characterId, charactersSchema.id))
       .leftJoin(characterActionsAlias, eq(charactersToActionsSchema.actionId, characterActionsAlias.id))
@@ -111,6 +126,7 @@ export class WorldService {
         const characterToAdd: ActorAggregated = {
           actions: existingCharacter?.actions || [],
           resourceTypes: existingCharacter?.resourceTypes || [],
+          classes: existingCharacter?.classes || [],
           ...(existingCharacter || row.characters),
         };
 
@@ -132,6 +148,21 @@ export class WorldService {
               (a) => a.resourceTypeId !== row.characterToResources!.resourceTypeId
             ),
             resourceToAdd,
+          ];
+        }
+
+        if (row.characterToClasses) {
+          const existingResource = characterToAdd.classes.filter(
+            (r) => r.characterId === row.characterToClasses!.characterId
+          )[0];
+
+          const classToAdd: CharacterClassAggregated = {
+            ...(existingResource || row.characterToClasses),
+          };
+
+          characterToAdd.classes = [
+            ...characterToAdd.classes.filter((a) => a.characterId !== row.characterToClasses!.characterId),
+            classToAdd,
           ];
         }
 
@@ -218,6 +249,7 @@ export class WorldService {
           campaigns: [],
           characters: [],
           classes: [],
+          races: [],
           items: [],
           statuses: [],
         };
@@ -292,7 +324,7 @@ export class WorldService {
   }
 
   async deleteWorld(worldId: WorldRecord["id"]): Promise<void> {
-    throw new Error("Method not implemented.");
+    await db.delete(worldsSchema).where(eq(worldsSchema.id, worldId));
   }
 
   async createWorld(newWorldRecord: NewWorldRecord): Promise<{ id: WorldRecord["id"] }> {

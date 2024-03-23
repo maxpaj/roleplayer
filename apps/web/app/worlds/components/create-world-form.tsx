@@ -37,7 +37,7 @@ export async function CreateWorldForm() {
 
   return (
     <form className="flex flex-wrap items-start justify-between gap-2 sm:flex-nowrap" action={createWorld}>
-      <Input type="name" id="name" name="name" placeholder="New world name" />
+      <Input type="name" id="name" name="name" placeholder="New world name" required />
       <Combobox
         options={templates.map((t) => ({
           label: t.name,

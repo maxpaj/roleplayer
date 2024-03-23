@@ -1,6 +1,14 @@
 import { classesSchema } from "@/db/schema/classes";
 import { eq } from "drizzle-orm";
-import { Actor, Campaign, CampaignEventWithRound, CharacterResourceLossEffect, DnDRuleset, World } from "roleplayer";
+import {
+  Actor,
+  Campaign,
+  CampaignEventWithRound,
+  CharacterResourceLossEffect,
+  DnDRuleset,
+  TargetType,
+  World,
+} from "roleplayer";
 import { db } from "../db";
 import { CampaignRecord, NewCampaignRecord, campaignsSchema } from "../db/schema/campaigns";
 import {
@@ -44,6 +52,10 @@ function mapCharacterRecordToRoleplayerCharacter(world: World, m: ActorAggregate
   return new Actor(world, {
     ...m,
     resources: m.resourceTypes,
+    classes: m.classes.map((c) => ({
+      classId: c.classId,
+      level: c.level,
+    })),
     actions: m.actions.map((a) => ({
       ...a,
       rangeDistanceUnit: a.rangeDistanceUnit,
@@ -52,7 +64,7 @@ function mapCharacterRecordToRoleplayerCharacter(world: World, m: ActorAggregate
         amount: r.amount,
       })),
       appliesEffects: a.appliesEffects.map(mapEffect),
-      eligibleTargets: a.eligibleTargets,
+      eligibleTargets: a.eligibleTargets.map((t) => TargetType[t.enumName as TargetType]),
     })),
   });
 }
@@ -119,9 +131,10 @@ export class CampaignService {
     const rows = await db
       .select()
       .from(campaignsSchema)
-      .leftJoin(worldsSchema, eq(worldsSchema.id, campaignsSchema.worldId))
+      .innerJoin(worldsSchema, eq(worldsSchema.id, campaignsSchema.worldId))
       .leftJoin(charactersSchema, eq(charactersSchema.worldId, worldsSchema.id))
-      .leftJoin(eventsSchema, eq(eventsSchema.campaignId, campaignsSchema.id));
+      .leftJoin(eventsSchema, eq(eventsSchema.campaignId, campaignsSchema.id))
+      .where(eq(campaignsSchema.worldId, worldId));
 
     const result = rows.reduce<Record<CampaignRecord["id"], { campaign: CampaignRecord; events: EventRecord[] }>>(
       (acc, row) => {
@@ -200,7 +213,7 @@ export class CampaignService {
 
     const campaign = new Campaign({
       ...campaignData,
-      events: [],
+      events: undefined,
       world: new World(new DnDRuleset(), "", {
         ...campaignData.world,
         characters: [],
@@ -222,19 +235,18 @@ export class CampaignService {
       .select()
       .from(campaignsSchema)
       .innerJoin(worldsSchema, eq(worldsSchema.id, campaignsSchema.worldId))
+
+      // Join events
       .leftJoin(eventsSchema, eq(eventsSchema.campaignId, campaignsSchema.id))
 
       // Join world stuff
       .leftJoin(actionsSchema, eq(actionsSchema.worldId, worldsSchema.id))
       .leftJoin(classesSchema, eq(classesSchema.worldId, worldsSchema.id))
 
-      // Join monsters
-      .leftJoin(charactersSchema, eq(charactersSchema.worldId, worldsSchema.id))
-      .leftJoin(charactersToActionsSchema, eq(charactersSchema.id, charactersToActionsSchema.characterId))
-
       // Join characters
       .leftJoin(charactersToCampaignsSchema, eq(charactersToCampaignsSchema.campaignId, campaignsSchema.id))
       .leftJoin(charactersSchema, eq(charactersToCampaignsSchema.characterId, charactersSchema.id))
+      .leftJoin(charactersToActionsSchema, eq(charactersSchema.id, charactersToActionsSchema.characterId))
 
       .where(eq(campaignsSchema.id, campaignId));
 
@@ -249,6 +261,7 @@ export class CampaignService {
             actions: [],
             campaigns: [],
             characters: [],
+            races: [],
             classes: [],
             items: [],
             monsters: [],

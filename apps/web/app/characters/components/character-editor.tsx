@@ -5,22 +5,24 @@ import { Input } from "@/components/ui/input";
 import { Divider } from "@/components/ui/divider";
 import { H3, H4, Muted, Paragraph } from "@/components/ui/typography";
 import { useState } from "react";
-import { Actor, World } from "roleplayer";
+import { Actor, DnDRuleset, World } from "roleplayer";
 import { RemoveFunctions } from "types/without-functions";
 import { CharacterInventoryEditor } from "./character-inventory-editor";
 import { CharacterStatsEditor } from "./character-stats-editor";
 import { CharacterClassEditor } from "./class-editor";
 import { ClassSelector } from "./class-selector";
+import { WorldAggregated } from "services/world-service";
 
 type CharacterEditorProps = {
   onSave: (character: RemoveFunctions<Actor>) => void;
-  world: RemoveFunctions<World>;
+  worldData: WorldAggregated;
   characterFromEvents: RemoveFunctions<Actor>;
   characterLevel: number;
 };
 
-export function CharacterEditor({ onSave, world, characterFromEvents, characterLevel }: CharacterEditorProps) {
+export function CharacterEditor({ onSave, worldData, characterFromEvents, characterLevel }: CharacterEditorProps) {
   const [update, setUpdate] = useState(characterFromEvents);
+  const worldEntity = new World(new DnDRuleset(), worldData.name, worldData as unknown as Partial<World>);
 
   return (
     <>
@@ -60,25 +62,27 @@ export function CharacterEditor({ onSave, world, characterFromEvents, characterL
           </>
         }
         characterLevel={characterLevel}
-        availableClasses={world.classes}
+        availableClasses={worldEntity.classes}
         character={update}
         onChange={(classes) => {
           setUpdate((prev) => ({ ...prev, classes }));
         }}
       />
+
       {update.classes.map((characterClass) => {
         return (
           <div key={characterClass.classId}>
-            <CharacterClassEditor classId={characterClass.classId} world={world} character={update} />
+            <CharacterClassEditor classId={characterClass.classId} world={worldEntity} character={update} />
             <Divider className="my-3" />
           </div>
         );
       })}
+
       <H4 className="my-2">Stats</H4>
       <Muted>Stats determine the strengths and weaknesses of your character</Muted>
       <CharacterStatsEditor
         character={update}
-        world={world}
+        world={worldEntity}
         onChange={(stats) => {
           setUpdate((prev) => ({ ...prev, stats }));
         }}
@@ -87,8 +91,9 @@ export function CharacterEditor({ onSave, world, characterFromEvents, characterL
       <Muted>Stuff your character with swords, axes, armors, potions, and more</Muted>
       <CharacterInventoryEditor
         character={update}
-        world={world}
+        world={worldEntity}
         onChange={(inventory) => {
+          console.log(inventory);
           setUpdate((prev) => ({ ...prev, inventory }));
         }}
       />

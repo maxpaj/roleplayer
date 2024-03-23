@@ -4,6 +4,8 @@ import { H3, H4, Muted } from "@/components/ui/typography";
 import { getCampaign } from "app/campaigns/actions";
 import { CreateCharacterForm } from "app/characters/components/create-character-form";
 import { CampaignCharacterCard } from "./components/campaign-character-card";
+import { getWorldData } from "app/worlds/[worldId]/actions";
+import { Campaign, CampaignEventWithRound, DnDRuleset, World } from "roleplayer";
 
 export default async function CampaignCharactersPage({ params }: { params: { campaignId: string } }) {
   const { campaignId: id } = params;
@@ -13,9 +15,22 @@ export default async function CampaignCharactersPage({ params }: { params: { cam
     return <>Campaign not found</>;
   }
 
+  const worldData = await getWorldData(campaignData.worldId);
+  if (!worldData) {
+    return <>World not found</>;
+  }
+
+  const campaign = new Campaign({
+    ...campaignData,
+    world: new World(new DnDRuleset(), worldData.name, worldData as unknown as Partial<World>),
+    events: campaignData.events.map((e) => e.eventData as CampaignEventWithRound),
+  });
+
+  const campaignState = campaign.getCampaignStateFromEvents();
+
   return (
     <>
-      <H3>Characters</H3>
+      <H3>Adventurers</H3>
       <Divider className="my-3" />
 
       <div className="my-2 flex gap-2">
@@ -28,8 +43,8 @@ export default async function CampaignCharactersPage({ params }: { params: { cam
 
       <H4 className="mt-4">Added characters</H4>
       <div className="flex gap-2">
-        {campaignData.characters.map((c) => (
-          <CampaignCharacterCard key={c.id} character={c} campaignId={campaignId} />
+        {campaignState.characters.map((c) => (
+          <CampaignCharacterCard key={c.id} world={worldData} character={c} campaignId={campaignId} />
         ))}
       </div>
 

@@ -5,6 +5,7 @@ import { itemsSchema } from "./items";
 import { usersSchema } from "./users";
 import { worldsSchema } from "./worlds";
 import { resourceTypesSchema } from "./resources";
+import { classesSchema } from "./classes";
 
 export const characterTypeEnum = pgEnum("characterType", ["Monster", "Player", "NPC"]);
 
@@ -40,6 +41,21 @@ export const charactersToItemsSchema = pgTable("characterToItems", {
     .notNull()
     .references(() => itemsSchema.id),
 });
+
+export const charactersToClassesSchema = pgTable("characterToClasses", {
+  characterId: uuid("characterId")
+    .notNull()
+    .references(() => charactersSchema.id),
+
+  classId: uuid("classId")
+    .notNull()
+    .references(() => classesSchema.id),
+
+  level: integer("level").default(1).notNull(),
+});
+
+export type CharacterClassRecord = typeof charactersToClassesSchema.$inferSelect;
+export type NewCharacterClassRecord = typeof charactersToClassesSchema.$inferInsert;
 
 export const charactersToCampaignsSchema = pgTable("characterToCampaigns", {
   characterId: uuid("characterId")

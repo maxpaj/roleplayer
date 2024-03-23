@@ -2,12 +2,15 @@
 
 import { CharacterResourceDefinition } from "roleplayer";
 import { Table, TableBody, TableCell, TableRow } from "./ui/table";
+import { StatusAggregated } from "services/world-service";
 
 export function EffectParameters({
   resourceDefinitions,
+  statusDefinitions,
   parameters,
 }: {
   resourceDefinitions: CharacterResourceDefinition[];
+  statusDefinitions: StatusAggregated[];
   parameters: Record<string, any>;
 }) {
   function renderParameterType(key: string) {
@@ -18,6 +21,8 @@ export function EffectParameters({
         return "Static";
       case "resourceTypeId":
         return "Resource";
+      case "statusId":
+        return "Status";
       default:
         return key;
     }
@@ -27,6 +32,8 @@ export function EffectParameters({
     switch (key) {
       case "resourceTypeId":
         return resourceDefinitions.find((r) => r.id === value)?.name || "Unknown resource";
+      case "statusId":
+        return statusDefinitions.find((r) => r.id === value)?.name || "Unknown status";
       default:
         return value;
     }

@@ -11,7 +11,7 @@ import {
 } from "../db/schema/characters";
 import { ClazzRecord, NewClazzRecord, classesSchema } from "../db/schema/classes";
 import { ItemRecord, NewItemRecord, itemsSchema, itemsToActionsSchema } from "../db/schema/items";
-import { StatusRecord, statusesSchema } from "../db/schema/statuses";
+import { StatusRecord, statusesSchema, statusesToEffectsSchema } from "../db/schema/statuses";
 import { UserRecord } from "../db/schema/users";
 import { NewWorldRecord, WorldRecord, worldsSchema } from "../db/schema/worlds";
 import { CampaignService } from "./campaign-service";
@@ -24,10 +24,14 @@ export type WorldAggregated = WorldRecord & {
   campaigns: CampaignRecord[];
   monsters: ActorAggregated[];
   characters: ActorAggregated[];
-  statuses: StatusRecord[];
+  statuses: StatusAggregated[];
   items: ItemAggregated[];
   classes: ClazzRecord[];
   actions: ActionAggregated[];
+};
+
+export type StatusAggregated = StatusRecord & {
+  appliesEffects: EffectRecord[];
 };
 
 export type ActionAggregated = ActionRecord & {
@@ -65,12 +69,20 @@ export class WorldService {
     const itemsActionsToEffectsAlias = alias(actionsToEffectSchema, "itemsActionsToEffectsAlias");
     const itemsActionsEffectAlias = alias(effectsSchema, "itemsActionsEffectAlias");
 
+    const statusesToEffectsAlias = alias(statusesToEffectsSchema, "statusesToEffectsAlias");
+    const statusesEffectsAlias = alias(effectsSchema, "statusesEffectsAlias");
+
     const rows = await db
       .select()
       .from(worldsSchema)
       .leftJoin(campaignsSchema, eq(worldsSchema.id, campaignsSchema.worldId))
       .leftJoin(classesSchema, eq(classesSchema.worldId, worldsSchema.id))
+
+      // Join statuses
       .leftJoin(statusesSchema, eq(statusesSchema.worldId, worldsSchema.id))
+      .leftJoin(statusesToEffectsAlias, eq(statusesToEffectsAlias.statusId, statusesSchema.id))
+      .leftJoin(statusesEffectsAlias, eq(statusesEffectsAlias.id, statusesToEffectsAlias.effectId))
+
       .leftJoin(itemsSchema, eq(itemsSchema.worldId, worldsSchema.id))
       .leftJoin(itemsToActionsSchema, eq(itemsSchema.id, itemsToActionsSchema.itemId))
       .leftJoin(itemsActionsAlias, eq(itemsActionsAlias.id, itemsToActionsSchema.actionId))
@@ -93,24 +105,9 @@ export class WorldService {
       // Filter the given world
       .where(eq(worldsSchema.id, worldId));
 
-    const aggregated = rows.reduce<Record<WorldRecord["id"], WorldAggregated>>((acc, row) => {
-      const world = row.worlds;
-
-      if (!acc[world.id]) {
-        acc[world.id] = {
-          ...world,
-          monsters: [],
-          actions: [],
-          campaigns: [],
-          characters: [],
-          classes: [],
-          items: [],
-          statuses: [],
-        };
-      }
-
+    function accumulateCharacterRows(row: (typeof rows)[0], acc: Record<string, WorldAggregated>, world: WorldRecord) {
       if (row.characters) {
-        const existingCharacter = acc[world.id]!.characters.filter((c) => c.id !== row.characters!.id)[0];
+        const existingCharacter = acc[world.id]!.characters.filter((c) => c.id === row.characters!.id)[0];
         const characterToAdd: ActorAggregated = {
           actions: existingCharacter?.actions || [],
           resourceTypes: existingCharacter?.resourceTypes || [],
@@ -119,7 +116,7 @@ export class WorldService {
 
         if (row.characterToResources) {
           const existingResource = characterToAdd.resourceTypes.filter(
-            (r) => r.resourceTypeId !== row.characterToResources!.resourceTypeId
+            (r) => r.resourceTypeId === row.characterToResources!.resourceTypeId
           )[0];
 
           const resourceToAdd: CharacterResource = {
@@ -139,7 +136,7 @@ export class WorldService {
         }
 
         if (row.characterActionsAlias) {
-          const existingAction = characterToAdd.actions.filter((c) => c.id !== row.characterActionsAlias!.id)[0];
+          const existingAction = characterToAdd.actions.filter((c) => c.id === row.characterActionsAlias!.id)[0];
           const actionToAdd: ActionAggregated = {
             ...(existingAction || row.characterActionsAlias),
             appliesEffects: existingAction?.appliesEffects || [],
@@ -148,10 +145,9 @@ export class WorldService {
           };
 
           // TODO: Gather up all action eligible targets
-
           if (row.characterActionEffectsAlias) {
             const existingEffect = actionToAdd.appliesEffects.filter(
-              (c) => c.id !== row.characterActionEffectsAlias!.id
+              (c) => c.id === row.characterActionEffectsAlias!.id
             )[0];
             const effectToAdd: EffectRecord = existingEffect || row.characterActionEffectsAlias;
 
@@ -172,37 +168,28 @@ export class WorldService {
           characterToAdd,
         ];
       }
+    }
 
-      if (row.campaigns) {
-        acc[world.id]!.campaigns = [
-          ...acc[world.id]!.campaigns.filter((c) => c.id !== row.campaigns!.id),
-          row.campaigns,
-        ];
-      }
-
-      if (row.statuses) {
-        acc[world.id]!.statuses = [...acc[world.id]!.statuses.filter((c) => c.id !== row.statuses!.id), row.statuses];
-      }
-
+    function accumulateItems(row: (typeof rows)[0], acc: Record<string, WorldAggregated>, world: WorldRecord) {
       if (row.items) {
-        const existingItem = acc[world.id]!.items.filter((c) => c.id !== row.items!.id)[0];
+        const existingItem = acc[world.id]!.items.filter((c) => c.id === row.items!.id)[0];
         const itemToAdd: ItemAggregated = {
           ...(existingItem || row.items),
           actions: existingItem?.actions || [],
         };
 
         if (row.itemsActionsAlias) {
-          const existingItemAction = itemToAdd.actions.filter((c) => c.id !== row.itemsActionsAlias!.id)[0];
+          const existingItemAction = itemToAdd.actions.filter((c) => c.id === row.itemsActionsAlias!.id)[0];
           const actionToAdd: ActionAggregated = {
             ...(existingItemAction || row.itemsActionsAlias),
-            appliesEffects: [],
-            eligibleTargets: [],
-            requiresResources: [],
+            appliesEffects: existingItemAction?.appliesEffects || [],
+            eligibleTargets: existingItemAction?.eligibleTargets || [],
+            requiresResources: existingItemAction?.requiresResources || [],
           };
 
           if (row.itemsActionsEffectAlias) {
             const existingEffect = actionToAdd.appliesEffects.filter(
-              (e) => e.id !== row.itemsActionsEffectAlias!.id
+              (e) => e.id === row.itemsActionsEffectAlias!.id
             )[0];
 
             const effectToAdd: EffectRecord = { ...(existingEffect || row.itemsActionsEffectAlias) };
@@ -218,9 +205,57 @@ export class WorldService {
 
         acc[world.id]!.items = [...acc[world.id]!.items.filter((c) => c.id !== row.items!.id), itemToAdd];
       }
+    }
+
+    const aggregated = rows.reduce<Record<WorldRecord["id"], WorldAggregated>>((acc, row) => {
+      const world = row.worlds;
+
+      if (!acc[world.id]) {
+        acc[world.id] = {
+          ...world,
+          monsters: [],
+          actions: [],
+          campaigns: [],
+          characters: [],
+          classes: [],
+          items: [],
+          statuses: [],
+        };
+      }
+
+      accumulateCharacterRows(row, acc, world);
+
+      if (row.campaigns) {
+        acc[world.id]!.campaigns = [
+          ...acc[world.id]!.campaigns.filter((c) => c.id !== row.campaigns!.id),
+          row.campaigns,
+        ];
+      }
+
+      if (row.statuses) {
+        const existingStatus = acc[world.id]!.statuses.filter((c) => c.id === row.statuses!.id)[0];
+        const statusToAdd: StatusAggregated = {
+          ...(existingStatus || row.statuses),
+          appliesEffects: existingStatus?.appliesEffects || [],
+        };
+
+        if (row.statusesEffectsAlias) {
+          const existingEffect = statusToAdd.appliesEffects.filter((e) => e.id === row.statusesEffectsAlias!.id)[0];
+          const effectToAdd: EffectRecord = { ...(existingEffect || row.statusesEffectsAlias) };
+
+          statusToAdd.appliesEffects = [
+            ...statusToAdd.appliesEffects.filter((a) => a.id !== row.statusesEffectsAlias!.id),
+            effectToAdd,
+          ];
+        }
+
+        acc[world.id]!.statuses = [...acc[world.id]!.statuses.filter((c) => c.id !== row.statuses!.id), statusToAdd];
+      }
+
+      accumulateItems(row, acc, world);
 
       if (row.worldActionsAlias) {
-        const existingAction = acc[world.id]!.actions.filter((c) => c.id !== row.worldActionsAlias!.id)[0];
+        const existingAction = acc[world.id]!.actions.filter((c) => c.id === row.worldActionsAlias!.id)[0];
         const actionToAdd: ActionAggregated = {
           ...(existingAction || row.worldActionsAlias),
           appliesEffects: existingAction?.appliesEffects || [],
@@ -229,7 +264,7 @@ export class WorldService {
         };
 
         if (row.worldActionEffectsAlias) {
-          const existingEffect = actionToAdd.appliesEffects.filter((c) => c.id !== row.worldActionEffectsAlias!.id)[0];
+          const existingEffect = actionToAdd.appliesEffects.filter((c) => c.id === row.worldActionEffectsAlias!.id)[0];
           const effectToAdd: EffectRecord = existingEffect || row.worldActionEffectsAlias;
 
           actionToAdd.appliesEffects = [

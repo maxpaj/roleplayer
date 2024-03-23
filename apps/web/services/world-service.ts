@@ -384,4 +384,12 @@ export class WorldService {
       .where(eq(worldsSchema.id, worldId))
       .returning({ id: worldsSchema.id });
   }
+
+  async saveItem(itemId: ItemRecord["id"], update: Partial<ItemRecord>) {
+    return db
+      .update(itemsSchema)
+      .set({ name: update.name, description: update.description })
+      .where(eq(itemsSchema.id, itemId))
+      .returning({ id: itemsSchema.id });
+  }
 }

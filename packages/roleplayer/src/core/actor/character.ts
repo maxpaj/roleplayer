@@ -14,18 +14,27 @@ import {
   Race,
 } from "../ruleset/ruleset";
 
+/**
+ * @module core/actor
+ */
 export enum ActorType {
   Monster = "Monster",
   Character = "Character",
   World = "World",
 }
 
+/**
+ * @module core/actor
+ */
 export type Position = {
   x: number;
   y: number;
   z: number;
 };
 
+/**
+ * @module core/actor
+ */
 export type CharacterResource = {
   resourceTypeId: CharacterResourceDefinition["id"];
   amount: number;
@@ -33,20 +42,32 @@ export type CharacterResource = {
   min: number;
 };
 
+/**
+ * @module core/actor
+ */
 export type CharacterResourceGeneration = CharacterResource & {
   onEvent: CampaignEventType;
 };
 
+/**
+ * @module core/actor
+ */
 export type CharacterClass = {
   level: number;
   classId: Clazz["id"];
 };
 
+/**
+ * @module core/actor
+ */
 export type CharacterEquipmentSlot = {
   item?: Item;
   slotId: EquipmentSlotDefinition["id"];
 };
 
+/**
+ * @module core/actor
+ */
 export type Reaction = {
   id: Id;
   name: string;
@@ -55,16 +76,25 @@ export type Reaction = {
   action: ActionDefinition;
 };
 
+/**
+ * @module core/actor
+ */
 export enum ReactionEventType {
   OnHit = "OnHit",
   OnDodge = "OnDodge",
 }
 
+/**
+ * @module core/actor
+ */
 export type ReactionResource = {
   reactionId: Reaction["id"];
   targetId: Actor["id"];
 };
 
+/**
+ * @module core/actor
+ */
 export type CharacterStat = {
   statId: CharacterStatType["id"];
   amount: number;
@@ -74,6 +104,9 @@ export function isCharacterEvent(event: CampaignEvent): event is Extract<Campaig
   return (event as any).characterId !== undefined;
 }
 
+/**
+ * @module core/actor
+ */
 export class Actor {
   id!: Id;
   party!: Party["id"];

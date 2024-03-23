@@ -11,6 +11,8 @@ export enum TargetType {
 }
 
 /**
+ * @module core/actions
+ *
  * Represents an action, with targets, and some effect that will be applied
  */
 export type ActionDefinition = {

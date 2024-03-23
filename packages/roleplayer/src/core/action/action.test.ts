@@ -22,7 +22,7 @@ describe("actions", () => {
   const frozenStatus: StatusDefinition = {
     id: "status-chill",
     name: "Chill",
-    durationRounds: 2,
+    duration: 2,
     durationType: StatusDurationType.NumberOfRounds,
     type: StatusType.Magic,
     appliesEffects: [

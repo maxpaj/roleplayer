@@ -21,7 +21,6 @@ export class Campaign {
     this.id = c.id;
     this.name = c.name;
     this.world = c.world;
-
     this.events = c.events || [
       {
         id: dangerousGenerateId(),

@@ -1,12 +1,18 @@
 import { Id } from "../../lib/generate-id";
 import { EventGenerator } from "./effect";
 
+/**
+ * @module core/actions
+ */
 export enum StatusApplicationTrigger {
   Always = "Always",
   RoundStart = "RoundStart",
   RoundEnd = "RoundEnd",
 }
 
+/**
+ * @module core/actions
+ */
 export type StatusDefinition = {
   id: Id;
   name: string;
@@ -19,6 +25,9 @@ export type StatusDefinition = {
   duration?: number;
 };
 
+/**
+ * @module core/actions
+ */
 export enum StatusType {
   Curse = "Curse",
   Poison = "Poison",
@@ -26,6 +35,9 @@ export enum StatusType {
   Physical = "Physical",
 }
 
+/**
+ * @module core/actions
+ */
 export enum StatusDurationType {
   Forever = "Forever",
   UntilLongRest = "UntilLongRest",

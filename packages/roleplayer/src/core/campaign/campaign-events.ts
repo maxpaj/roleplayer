@@ -6,6 +6,8 @@ import { ActionDefinition } from "../action/action";
 import { Item } from "../inventory/item";
 import { Round } from "./round";
 
+export type CampaignEventType = SystemEventType | CharacterEventType;
+
 export type CampaignEvent = CampaignEventType & {
   id: Id;
 };
@@ -15,8 +17,6 @@ export type CampaignEventWithRound = CampaignEvent & {
   battleId?: Battle["id"];
   serialNumber: number;
 };
-
-export type CampaignEventType = SystemEventType | CharacterEventType;
 
 export const CampaignEventTypes: CampaignEventType["type"][] = [
   "Unknown",

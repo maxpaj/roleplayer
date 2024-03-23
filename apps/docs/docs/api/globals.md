@@ -12,7 +12,7 @@
 
 ###### Source
 
-[core/ruleset/ruleset.ts:9](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/ruleset/ruleset.ts#L9)
+[core/ruleset/ruleset.ts:9](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/ruleset/ruleset.ts#L9)
 
 ##### Secondary
 
@@ -20,7 +20,7 @@
 
 ###### Source
 
-[core/ruleset/ruleset.ts:10](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/ruleset/ruleset.ts#L10)
+[core/ruleset/ruleset.ts:10](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/ruleset/ruleset.ts#L10)
 
 ***
 
@@ -34,7 +34,7 @@
 
 ###### Source
 
-[core/actor/character.ts:19](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/actor/character.ts#L19)
+[core/actor/character.ts:19](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/actor/character.ts#L19)
 
 ##### Monster
 
@@ -42,7 +42,7 @@
 
 ###### Source
 
-[core/actor/character.ts:18](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/actor/character.ts#L18)
+[core/actor/character.ts:18](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/actor/character.ts#L18)
 
 ##### World
 
@@ -50,7 +50,7 @@
 
 ###### Source
 
-[core/actor/character.ts:20](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/actor/character.ts#L20)
+[core/actor/character.ts:20](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/actor/character.ts#L20)
 
 ***
 
@@ -64,7 +64,7 @@
 
 ###### Source
 
-[core/ruleset/ruleset.ts:16](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/ruleset/ruleset.ts#L16)
+[core/ruleset/ruleset.ts:16](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/ruleset/ruleset.ts#L16)
 
 ##### ChaoticGood
 
@@ -72,7 +72,7 @@
 
 ###### Source
 
-[core/ruleset/ruleset.ts:22](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/ruleset/ruleset.ts#L22)
+[core/ruleset/ruleset.ts:22](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/ruleset/ruleset.ts#L22)
 
 ##### EvilNeutral
 
@@ -80,7 +80,7 @@
 
 ###### Source
 
-[core/ruleset/ruleset.ts:18](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/ruleset/ruleset.ts#L18)
+[core/ruleset/ruleset.ts:18](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/ruleset/ruleset.ts#L18)
 
 ##### GoodNeutral
 
@@ -88,7 +88,7 @@
 
 ###### Source
 
-[core/ruleset/ruleset.ts:19](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/ruleset/ruleset.ts#L19)
+[core/ruleset/ruleset.ts:19](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/ruleset/ruleset.ts#L19)
 
 ##### LawfulEvil
 
@@ -96,7 +96,7 @@
 
 ###### Source
 
-[core/ruleset/ruleset.ts:15](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/ruleset/ruleset.ts#L15)
+[core/ruleset/ruleset.ts:15](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/ruleset/ruleset.ts#L15)
 
 ##### LawfulGood
 
@@ -104,7 +104,7 @@
 
 ###### Source
 
-[core/ruleset/ruleset.ts:21](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/ruleset/ruleset.ts#L21)
+[core/ruleset/ruleset.ts:21](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/ruleset/ruleset.ts#L21)
 
 ##### NeutralEvil
 
@@ -112,7 +112,7 @@
 
 ###### Source
 
-[core/ruleset/ruleset.ts:14](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/ruleset/ruleset.ts#L14)
+[core/ruleset/ruleset.ts:14](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/ruleset/ruleset.ts#L14)
 
 ##### NeutralGood
 
@@ -120,7 +120,7 @@
 
 ###### Source
 
-[core/ruleset/ruleset.ts:20](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/ruleset/ruleset.ts#L20)
+[core/ruleset/ruleset.ts:20](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/ruleset/ruleset.ts#L20)
 
 ##### NeutralNeutral
 
@@ -128,7 +128,7 @@
 
 ###### Source
 
-[core/ruleset/ruleset.ts:17](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/ruleset/ruleset.ts#L17)
+[core/ruleset/ruleset.ts:17](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/ruleset/ruleset.ts#L17)
 
 ***
 
@@ -142,7 +142,7 @@
 
 ###### Source
 
-[core/inventory/item.ts:15](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/inventory/item.ts#L15)
+[core/inventory/item.ts:15](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/inventory/item.ts#L15)
 
 ##### OneHandMace
 
@@ -150,7 +150,7 @@
 
 ###### Source
 
-[core/inventory/item.ts:16](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/inventory/item.ts#L16)
+[core/inventory/item.ts:16](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/inventory/item.ts#L16)
 
 ##### OneHandSword
 
@@ -158,7 +158,7 @@
 
 ###### Source
 
-[core/inventory/item.ts:13](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/inventory/item.ts#L13)
+[core/inventory/item.ts:13](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/inventory/item.ts#L13)
 
 ##### Shield
 
@@ -166,7 +166,7 @@
 
 ###### Source
 
-[core/inventory/item.ts:12](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/inventory/item.ts#L12)
+[core/inventory/item.ts:12](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/inventory/item.ts#L12)
 
 ##### TwoHandMace
 
@@ -174,7 +174,7 @@
 
 ###### Source
 
-[core/inventory/item.ts:17](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/inventory/item.ts#L17)
+[core/inventory/item.ts:17](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/inventory/item.ts#L17)
 
 ##### TwoHandSword
 
@@ -182,7 +182,7 @@
 
 ###### Source
 
-[core/inventory/item.ts:14](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/inventory/item.ts#L14)
+[core/inventory/item.ts:14](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/inventory/item.ts#L14)
 
 ***
 
@@ -196,7 +196,7 @@
 
 ###### Source
 
-[core/inventory/item.ts:26](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/inventory/item.ts#L26)
+[core/inventory/item.ts:26](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/inventory/item.ts#L26)
 
 ##### Feet
 
@@ -204,7 +204,7 @@
 
 ###### Source
 
-[core/inventory/item.ts:25](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/inventory/item.ts#L25)
+[core/inventory/item.ts:25](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/inventory/item.ts#L25)
 
 ##### Head
 
@@ -212,7 +212,7 @@
 
 ###### Source
 
-[core/inventory/item.ts:24](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/inventory/item.ts#L24)
+[core/inventory/item.ts:24](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/inventory/item.ts#L24)
 
 ##### Inventory
 
@@ -220,7 +220,7 @@
 
 ###### Source
 
-[core/inventory/item.ts:21](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/inventory/item.ts#L21)
+[core/inventory/item.ts:21](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/inventory/item.ts#L21)
 
 ##### MainHand
 
@@ -228,7 +228,7 @@
 
 ###### Source
 
-[core/inventory/item.ts:22](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/inventory/item.ts#L22)
+[core/inventory/item.ts:22](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/inventory/item.ts#L22)
 
 ##### OffHand
 
@@ -236,7 +236,7 @@
 
 ###### Source
 
-[core/inventory/item.ts:23](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/inventory/item.ts#L23)
+[core/inventory/item.ts:23](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/inventory/item.ts#L23)
 
 ***
 
@@ -250,7 +250,7 @@
 
 ###### Source
 
-[core/inventory/item.ts:8](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/inventory/item.ts#L8)
+[core/inventory/item.ts:8](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/inventory/item.ts#L8)
 
 ##### Equipment
 
@@ -258,7 +258,7 @@
 
 ###### Source
 
-[core/inventory/item.ts:7](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/inventory/item.ts#L7)
+[core/inventory/item.ts:7](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/inventory/item.ts#L7)
 
 ***
 
@@ -272,7 +272,7 @@
 
 ###### Source
 
-[core/world/rarity.ts:7](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/world/rarity.ts#L7)
+[core/world/rarity.ts:7](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/world/rarity.ts#L7)
 
 ##### Common
 
@@ -280,7 +280,7 @@
 
 ###### Source
 
-[core/world/rarity.ts:2](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/world/rarity.ts#L2)
+[core/world/rarity.ts:2](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/world/rarity.ts#L2)
 
 ##### Epic
 
@@ -288,7 +288,7 @@
 
 ###### Source
 
-[core/world/rarity.ts:5](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/world/rarity.ts#L5)
+[core/world/rarity.ts:5](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/world/rarity.ts#L5)
 
 ##### Legendary
 
@@ -296,7 +296,7 @@
 
 ###### Source
 
-[core/world/rarity.ts:6](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/world/rarity.ts#L6)
+[core/world/rarity.ts:6](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/world/rarity.ts#L6)
 
 ##### Rare
 
@@ -304,7 +304,7 @@
 
 ###### Source
 
-[core/world/rarity.ts:4](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/world/rarity.ts#L4)
+[core/world/rarity.ts:4](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/world/rarity.ts#L4)
 
 ##### Uncommon
 
@@ -312,7 +312,7 @@
 
 ###### Source
 
-[core/world/rarity.ts:3](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/world/rarity.ts#L3)
+[core/world/rarity.ts:3](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/world/rarity.ts#L3)
 
 ***
 
@@ -326,7 +326,7 @@
 
 ###### Source
 
-[core/actor/character.ts:60](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/actor/character.ts#L60)
+[core/actor/character.ts:60](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/actor/character.ts#L60)
 
 ##### OnHit
 
@@ -334,7 +334,7 @@
 
 ###### Source
 
-[core/actor/character.ts:59](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/actor/character.ts#L59)
+[core/actor/character.ts:59](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/actor/character.ts#L59)
 
 ***
 
@@ -348,7 +348,7 @@
 
 ###### Source
 
-[core/action/action.ts:7](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/action/action.ts#L7)
+[core/action/action.ts:7](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/action/action.ts#L7)
 
 ##### Environment
 
@@ -356,7 +356,7 @@
 
 ###### Source
 
-[core/action/action.ts:10](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/action/action.ts#L10)
+[core/action/action.ts:10](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/action/action.ts#L10)
 
 ##### Friendly
 
@@ -364,7 +364,7 @@
 
 ###### Source
 
-[core/action/action.ts:8](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/action/action.ts#L8)
+[core/action/action.ts:8](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/action/action.ts#L8)
 
 ##### Hostile
 
@@ -372,7 +372,7 @@
 
 ###### Source
 
-[core/action/action.ts:9](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/action/action.ts#L9)
+[core/action/action.ts:9](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/action/action.ts#L9)
 
 ##### Self
 
@@ -380,7 +380,7 @@
 
 ###### Source
 
-[core/action/action.ts:6](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/action/action.ts#L6)
+[core/action/action.ts:6](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/action/action.ts#L6)
 
 ## Classes
 
@@ -404,7 +404,7 @@
 
 ###### Source
 
-[core/actor/character.ts:105](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/actor/character.ts#L105)
+[core/actor/character.ts:105](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/actor/character.ts#L105)
 
 #### Properties
 
@@ -414,7 +414,7 @@
 
 ###### Source
 
-[core/actor/character.ts:95](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/actor/character.ts#L95)
+[core/actor/character.ts:95](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/actor/character.ts#L95)
 
 ##### alignment
 
@@ -422,7 +422,7 @@
 
 ###### Source
 
-[core/actor/character.ts:88](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/actor/character.ts#L88)
+[core/actor/character.ts:88](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/actor/character.ts#L88)
 
 ##### classes
 
@@ -430,7 +430,7 @@
 
 ###### Source
 
-[core/actor/character.ts:89](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/actor/character.ts#L89)
+[core/actor/character.ts:89](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/actor/character.ts#L89)
 
 ##### description?
 
@@ -438,7 +438,7 @@
 
 ###### Source
 
-[core/actor/character.ts:87](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/actor/character.ts#L87)
+[core/actor/character.ts:87](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/actor/character.ts#L87)
 
 ##### equipment
 
@@ -446,7 +446,7 @@
 
 ###### Source
 
-[core/actor/character.ts:92](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/actor/character.ts#L92)
+[core/actor/character.ts:92](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/actor/character.ts#L92)
 
 ##### exists
 
@@ -454,7 +454,7 @@
 
 ###### Source
 
-[core/actor/character.ts:80](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/actor/character.ts#L80)
+[core/actor/character.ts:80](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/actor/character.ts#L80)
 
 ##### id
 
@@ -462,7 +462,7 @@
 
 ###### Source
 
-[core/actor/character.ts:78](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/actor/character.ts#L78)
+[core/actor/character.ts:78](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/actor/character.ts#L78)
 
 ##### inventory
 
@@ -470,7 +470,7 @@
 
 ###### Source
 
-[core/actor/character.ts:91](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/actor/character.ts#L91)
+[core/actor/character.ts:91](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/actor/character.ts#L91)
 
 ##### name
 
@@ -478,7 +478,7 @@
 
 ###### Source
 
-[core/actor/character.ts:85](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/actor/character.ts#L85)
+[core/actor/character.ts:85](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/actor/character.ts#L85)
 
 ##### party
 
@@ -486,7 +486,7 @@
 
 ###### Source
 
-[core/actor/character.ts:79](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/actor/character.ts#L79)
+[core/actor/character.ts:79](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/actor/character.ts#L79)
 
 ##### position
 
@@ -494,7 +494,7 @@
 
 ###### Source
 
-[core/actor/character.ts:97](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/actor/character.ts#L97)
+[core/actor/character.ts:97](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/actor/character.ts#L97)
 
 ##### race
 
@@ -502,7 +502,7 @@
 
 ###### Source
 
-[core/actor/character.ts:86](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/actor/character.ts#L86)
+[core/actor/character.ts:86](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/actor/character.ts#L86)
 
 ##### reactions
 
@@ -510,7 +510,7 @@
 
 ###### Source
 
-[core/actor/character.ts:101](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/actor/character.ts#L101)
+[core/actor/character.ts:101](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/actor/character.ts#L101)
 
 ##### reactionsRemaining
 
@@ -518,7 +518,7 @@
 
 ###### Source
 
-[core/actor/character.ts:100](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/actor/character.ts#L100)
+[core/actor/character.ts:100](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/actor/character.ts#L100)
 
 ##### resources
 
@@ -526,7 +526,7 @@
 
 ###### Source
 
-[core/actor/character.ts:99](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/actor/character.ts#L99)
+[core/actor/character.ts:99](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/actor/character.ts#L99)
 
 ##### stats
 
@@ -534,7 +534,7 @@
 
 ###### Source
 
-[core/actor/character.ts:94](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/actor/character.ts#L94)
+[core/actor/character.ts:94](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/actor/character.ts#L94)
 
 ##### statuses
 
@@ -542,7 +542,7 @@
 
 ###### Source
 
-[core/actor/character.ts:96](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/actor/character.ts#L96)
+[core/actor/character.ts:96](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/actor/character.ts#L96)
 
 ##### type
 
@@ -550,7 +550,7 @@
 
 ###### Source
 
-[core/actor/character.ts:82](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/actor/character.ts#L82)
+[core/actor/character.ts:82](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/actor/character.ts#L82)
 
 ##### world
 
@@ -558,7 +558,7 @@
 
 ###### Source
 
-[core/actor/character.ts:103](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/actor/character.ts#L103)
+[core/actor/character.ts:103](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/actor/character.ts#L103)
 
 ##### xp
 
@@ -566,7 +566,7 @@
 
 ###### Source
 
-[core/actor/character.ts:84](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/actor/character.ts#L84)
+[core/actor/character.ts:84](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/actor/character.ts#L84)
 
 #### Methods
 
@@ -588,7 +588,7 @@
 
 ###### Source
 
-[core/actor/character.ts:138](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/actor/character.ts#L138)
+[core/actor/character.ts:138](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/actor/character.ts#L138)
 
 ##### getAbilityModifier()
 
@@ -600,7 +600,7 @@
 
 ###### Source
 
-[core/actor/character.ts:122](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/actor/character.ts#L122)
+[core/actor/character.ts:122](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/actor/character.ts#L122)
 
 ##### getActions()
 
@@ -612,7 +612,7 @@
 
 ###### Source
 
-[core/actor/character.ts:118](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/actor/character.ts#L118)
+[core/actor/character.ts:118](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/actor/character.ts#L118)
 
 ##### getAvailableActions()
 
@@ -628,7 +628,7 @@ A list of available actions
 
 ###### Source
 
-[core/actor/character.ts:165](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/actor/character.ts#L165)
+[core/actor/character.ts:165](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/actor/character.ts#L165)
 
 ##### getBattleActionOrder()
 
@@ -640,7 +640,7 @@ A list of available actions
 
 ###### Source
 
-[core/actor/character.ts:134](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/actor/character.ts#L134)
+[core/actor/character.ts:134](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/actor/character.ts#L134)
 
 ##### getCharacterHitModifierWithAction()
 
@@ -656,7 +656,7 @@ A list of available actions
 
 ###### Source
 
-[core/actor/character.ts:195](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/actor/character.ts#L195)
+[core/actor/character.ts:195](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/actor/character.ts#L195)
 
 ##### getDamage()
 
@@ -672,7 +672,7 @@ A list of available actions
 
 ###### Source
 
-[core/actor/character.ts:176](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/actor/character.ts#L176)
+[core/actor/character.ts:176](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/actor/character.ts#L176)
 
 ##### getEffectAppliedStatuses()
 
@@ -688,7 +688,7 @@ A list of available actions
 
 ###### Source
 
-[core/actor/character.ts:187](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/actor/character.ts#L187)
+[core/actor/character.ts:187](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/actor/character.ts#L187)
 
 ##### getElementDamageMultiplier()
 
@@ -700,7 +700,7 @@ A list of available actions
 
 ###### Source
 
-[core/actor/character.ts:183](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/actor/character.ts#L183)
+[core/actor/character.ts:183](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/actor/character.ts#L183)
 
 ##### getElementDamageTaken()
 
@@ -718,7 +718,7 @@ A list of available actions
 
 ###### Source
 
-[core/actor/character.ts:191](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/actor/character.ts#L191)
+[core/actor/character.ts:191](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/actor/character.ts#L191)
 
 ##### getEligibleTargets()
 
@@ -734,7 +734,7 @@ A list of available actions
 
 ###### Source
 
-[core/actor/character.ts:110](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/actor/character.ts#L110)
+[core/actor/character.ts:110](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/actor/character.ts#L110)
 
 ##### getResistance()
 
@@ -750,7 +750,7 @@ A list of available actions
 
 ###### Source
 
-[core/actor/character.ts:179](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/actor/character.ts#L179)
+[core/actor/character.ts:179](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/actor/character.ts#L179)
 
 ##### getResistanceAbsolute()
 
@@ -766,7 +766,7 @@ A list of available actions
 
 ###### Source
 
-[core/actor/character.ts:157](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/actor/character.ts#L157)
+[core/actor/character.ts:157](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/actor/character.ts#L157)
 
 ##### getResistanceMultiplier()
 
@@ -782,7 +782,7 @@ A list of available actions
 
 ###### Source
 
-[core/actor/character.ts:153](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/actor/character.ts#L153)
+[core/actor/character.ts:153](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/actor/character.ts#L153)
 
 ##### getResourceGeneration()
 
@@ -794,7 +794,7 @@ A list of available actions
 
 ###### Source
 
-[core/actor/character.ts:126](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/actor/character.ts#L126)
+[core/actor/character.ts:126](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/actor/character.ts#L126)
 
 ##### getStats()
 
@@ -806,7 +806,7 @@ A list of available actions
 
 ###### Source
 
-[core/actor/character.ts:149](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/actor/character.ts#L149)
+[core/actor/character.ts:149](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/actor/character.ts#L149)
 
 ##### performAction()
 
@@ -818,7 +818,7 @@ A list of available actions
 
 ###### Source
 
-[core/actor/character.ts:114](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/actor/character.ts#L114)
+[core/actor/character.ts:114](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/actor/character.ts#L114)
 
 ##### resetResources()
 
@@ -830,7 +830,7 @@ A list of available actions
 
 ###### Source
 
-[core/actor/character.ts:130](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/actor/character.ts#L130)
+[core/actor/character.ts:130](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/actor/character.ts#L130)
 
 ##### tryHit()
 
@@ -846,7 +846,7 @@ A list of available actions
 
 ###### Source
 
-[core/actor/character.ts:199](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/actor/character.ts#L199)
+[core/actor/character.ts:199](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/actor/character.ts#L199)
 
 ***
 
@@ -868,7 +868,7 @@ A list of available actions
 
 ###### Source
 
-[core/battle/battle.ts:14](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/battle/battle.ts#L14)
+[core/battle/battle.ts:14](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/battle/battle.ts#L14)
 
 #### Properties
 
@@ -878,7 +878,7 @@ A list of available actions
 
 ###### Source
 
-[core/battle/battle.ts:12](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/battle/battle.ts#L12)
+[core/battle/battle.ts:12](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/battle/battle.ts#L12)
 
 ##### finished
 
@@ -886,7 +886,7 @@ A list of available actions
 
 ###### Source
 
-[core/battle/battle.ts:11](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/battle/battle.ts#L11)
+[core/battle/battle.ts:11](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/battle/battle.ts#L11)
 
 ##### id
 
@@ -894,7 +894,7 @@ A list of available actions
 
 ###### Source
 
-[core/battle/battle.ts:9](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/battle/battle.ts#L9)
+[core/battle/battle.ts:9](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/battle/battle.ts#L9)
 
 ##### name
 
@@ -902,7 +902,7 @@ A list of available actions
 
 ###### Source
 
-[core/battle/battle.ts:10](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/battle/battle.ts#L10)
+[core/battle/battle.ts:10](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/battle/battle.ts#L10)
 
 #### Methods
 
@@ -928,7 +928,7 @@ A list of available actions
 
 ###### Source
 
-[core/battle/battle.ts:23](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/battle/battle.ts#L23)
+[core/battle/battle.ts:23](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/battle/battle.ts#L23)
 
 ##### currentActorTurn()
 
@@ -944,7 +944,7 @@ A list of available actions
 
 ###### Source
 
-[core/battle/battle.ts:29](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/battle/battle.ts#L29)
+[core/battle/battle.ts:29](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/battle/battle.ts#L29)
 
 ##### hasActionOrder()
 
@@ -956,7 +956,7 @@ A list of available actions
 
 ###### Source
 
-[core/battle/battle.ts:19](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/battle/battle.ts#L19)
+[core/battle/battle.ts:19](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/battle/battle.ts#L19)
 
 ***
 
@@ -978,7 +978,7 @@ A list of available actions
 
 ###### Source
 
-[core/campaign/campaign.ts:18](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/campaign/campaign.ts#L18)
+[core/campaign/campaign.ts:18](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/campaign/campaign.ts#L18)
 
 #### Properties
 
@@ -988,7 +988,7 @@ A list of available actions
 
 ###### Source
 
-[core/campaign/campaign.ts:16](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/campaign/campaign.ts#L16)
+[core/campaign/campaign.ts:16](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/campaign/campaign.ts#L16)
 
 ##### id
 
@@ -996,7 +996,7 @@ A list of available actions
 
 ###### Source
 
-[core/campaign/campaign.ts:13](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/campaign/campaign.ts#L13)
+[core/campaign/campaign.ts:13](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/campaign/campaign.ts#L13)
 
 ##### name
 
@@ -1004,7 +1004,7 @@ A list of available actions
 
 ###### Source
 
-[core/campaign/campaign.ts:14](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/campaign/campaign.ts#L14)
+[core/campaign/campaign.ts:14](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/campaign/campaign.ts#L14)
 
 ##### world
 
@@ -1012,7 +1012,7 @@ A list of available actions
 
 ###### Source
 
-[core/campaign/campaign.ts:15](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/campaign/campaign.ts#L15)
+[core/campaign/campaign.ts:15](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/campaign/campaign.ts#L15)
 
 #### Methods
 
@@ -1032,7 +1032,7 @@ A list of available actions
 
 ###### Source
 
-[core/campaign/campaign.ts:75](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/campaign/campaign.ts#L75)
+[core/campaign/campaign.ts:75](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/campaign/campaign.ts#L75)
 
 ##### addCharacterEquipmentSlot()
 
@@ -1050,7 +1050,7 @@ A list of available actions
 
 ###### Source
 
-[core/campaign/campaign.ts:52](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/campaign/campaign.ts#L52)
+[core/campaign/campaign.ts:52](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/campaign/campaign.ts#L52)
 
 ##### addCharacterItem()
 
@@ -1068,7 +1068,7 @@ A list of available actions
 
 ###### Source
 
-[core/campaign/campaign.ts:41](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/campaign/campaign.ts#L41)
+[core/campaign/campaign.ts:41](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/campaign/campaign.ts#L41)
 
 ##### addCharacterToCurrentBattle()
 
@@ -1084,7 +1084,7 @@ A list of available actions
 
 ###### Source
 
-[core/campaign/campaign.ts:151](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/campaign/campaign.ts#L151)
+[core/campaign/campaign.ts:151](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/campaign/campaign.ts#L151)
 
 ##### applyCharacterEvent()
 
@@ -1104,7 +1104,7 @@ A list of available actions
 
 ###### Source
 
-[core/campaign/campaign.ts:449](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/campaign/campaign.ts#L449)
+[core/campaign/campaign.ts:449](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/campaign/campaign.ts#L449)
 
 ##### applyEvent()
 
@@ -1122,7 +1122,7 @@ A list of available actions
 
 ###### Source
 
-[core/campaign/campaign.ts:375](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/campaign/campaign.ts#L375)
+[core/campaign/campaign.ts:375](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/campaign/campaign.ts#L375)
 
 ##### characterEquipItem()
 
@@ -1142,7 +1142,7 @@ A list of available actions
 
 ###### Source
 
-[core/campaign/campaign.ts:63](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/campaign/campaign.ts#L63)
+[core/campaign/campaign.ts:63](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/campaign/campaign.ts#L63)
 
 ##### characterGainExperience()
 
@@ -1160,7 +1160,7 @@ A list of available actions
 
 ###### Source
 
-[core/campaign/campaign.ts:140](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/campaign/campaign.ts#L140)
+[core/campaign/campaign.ts:140](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/campaign/campaign.ts#L140)
 
 ##### createCharacter()
 
@@ -1178,7 +1178,7 @@ A list of available actions
 
 ###### Source
 
-[core/campaign/campaign.ts:175](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/campaign/campaign.ts#L175)
+[core/campaign/campaign.ts:175](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/campaign/campaign.ts#L175)
 
 ##### endCharacterTurn()
 
@@ -1194,7 +1194,7 @@ A list of available actions
 
 ###### Source
 
-[core/campaign/campaign.ts:303](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/campaign/campaign.ts#L303)
+[core/campaign/campaign.ts:303](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/campaign/campaign.ts#L303)
 
 ##### endRound()
 
@@ -1206,7 +1206,7 @@ A list of available actions
 
 ###### Source
 
-[core/campaign/campaign.ts:238](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/campaign/campaign.ts#L238)
+[core/campaign/campaign.ts:238](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/campaign/campaign.ts#L238)
 
 ##### getBattleEvents()
 
@@ -1222,7 +1222,7 @@ A list of available actions
 
 ###### Source
 
-[core/campaign/campaign.ts:358](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/campaign/campaign.ts#L358)
+[core/campaign/campaign.ts:358](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/campaign/campaign.ts#L358)
 
 ##### getCampaignStateFromEvents()
 
@@ -1234,7 +1234,7 @@ A list of available actions
 
 ###### Source
 
-[core/campaign/campaign.ts:366](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/campaign/campaign.ts#L366)
+[core/campaign/campaign.ts:366](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/campaign/campaign.ts#L366)
 
 ##### getCharacterLevel()
 
@@ -1250,7 +1250,7 @@ A list of available actions
 
 ###### Source
 
-[core/campaign/campaign.ts:351](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/campaign/campaign.ts#L351)
+[core/campaign/campaign.ts:351](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/campaign/campaign.ts#L351)
 
 ##### getCharacterRoundEvents()
 
@@ -1268,7 +1268,7 @@ A list of available actions
 
 ###### Source
 
-[core/campaign/campaign.ts:346](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/campaign/campaign.ts#L346)
+[core/campaign/campaign.ts:346](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/campaign/campaign.ts#L346)
 
 ##### getRoundEvents()
 
@@ -1284,7 +1284,7 @@ A list of available actions
 
 ###### Source
 
-[core/campaign/campaign.ts:249](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/campaign/campaign.ts#L249)
+[core/campaign/campaign.ts:249](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/campaign/campaign.ts#L249)
 
 ##### isValidEvent()
 
@@ -1300,7 +1300,7 @@ A list of available actions
 
 ###### Source
 
-[core/campaign/campaign.ts:362](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/campaign/campaign.ts#L362)
+[core/campaign/campaign.ts:362](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/campaign/campaign.ts#L362)
 
 ##### nextRound()
 
@@ -1316,7 +1316,7 @@ A list of available actions
 
 ###### Source
 
-[core/campaign/campaign.ts:224](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/campaign/campaign.ts#L224)
+[core/campaign/campaign.ts:224](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/campaign/campaign.ts#L224)
 
 ##### performCharacterAttack()
 
@@ -1336,7 +1336,7 @@ A list of available actions
 
 ###### Source
 
-[core/campaign/campaign.ts:267](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/campaign/campaign.ts#L267)
+[core/campaign/campaign.ts:267](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/campaign/campaign.ts#L267)
 
 ##### publishCampaignEvent()
 
@@ -1352,7 +1352,7 @@ A list of available actions
 
 ###### Source
 
-[core/campaign/campaign.ts:327](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/campaign/campaign.ts#L327)
+[core/campaign/campaign.ts:327](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/campaign/campaign.ts#L327)
 
 ##### publishRoundEvent()
 
@@ -1368,7 +1368,7 @@ A list of available actions
 
 ###### Source
 
-[core/campaign/campaign.ts:311](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/campaign/campaign.ts#L311)
+[core/campaign/campaign.ts:311](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/campaign/campaign.ts#L311)
 
 ##### setCharacterBaseDefense()
 
@@ -1386,7 +1386,7 @@ A list of available actions
 
 ###### Source
 
-[core/campaign/campaign.ts:127](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/campaign/campaign.ts#L127)
+[core/campaign/campaign.ts:127](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/campaign/campaign.ts#L127)
 
 ##### setCharacterClasses()
 
@@ -1404,7 +1404,7 @@ A list of available actions
 
 ###### Source
 
-[core/campaign/campaign.ts:98](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/campaign/campaign.ts#L98)
+[core/campaign/campaign.ts:98](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/campaign/campaign.ts#L98)
 
 ##### setCharacterName()
 
@@ -1422,7 +1422,7 @@ A list of available actions
 
 ###### Source
 
-[core/campaign/campaign.ts:115](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/campaign/campaign.ts#L115)
+[core/campaign/campaign.ts:115](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/campaign/campaign.ts#L115)
 
 ##### setCharacterStats()
 
@@ -1440,7 +1440,7 @@ A list of available actions
 
 ###### Source
 
-[core/campaign/campaign.ts:86](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/campaign/campaign.ts#L86)
+[core/campaign/campaign.ts:86](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/campaign/campaign.ts#L86)
 
 ##### startBattle()
 
@@ -1452,7 +1452,7 @@ A list of available actions
 
 ###### Source
 
-[core/campaign/campaign.ts:253](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/campaign/campaign.ts#L253)
+[core/campaign/campaign.ts:253](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/campaign/campaign.ts#L253)
 
 ***
 
@@ -1482,7 +1482,7 @@ Represent a campaign current state, after applying all events related to the cam
 
 ###### Source
 
-[core/campaign/campaign-state.ts:18](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/campaign/campaign-state.ts#L18)
+[core/campaign/campaign-state.ts:18](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/campaign/campaign-state.ts#L18)
 
 #### Properties
 
@@ -1492,7 +1492,7 @@ Represent a campaign current state, after applying all events related to the cam
 
 ###### Source
 
-[core/campaign/campaign-state.ts:13](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/campaign/campaign-state.ts#L13)
+[core/campaign/campaign-state.ts:13](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/campaign/campaign-state.ts#L13)
 
 ##### campaign
 
@@ -1500,7 +1500,7 @@ Represent a campaign current state, after applying all events related to the cam
 
 ###### Source
 
-[core/campaign/campaign-state.ts:16](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/campaign/campaign-state.ts#L16)
+[core/campaign/campaign-state.ts:16](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/campaign/campaign-state.ts#L16)
 
 ##### characters
 
@@ -1508,7 +1508,7 @@ Represent a campaign current state, after applying all events related to the cam
 
 ###### Source
 
-[core/campaign/campaign-state.ts:15](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/campaign/campaign-state.ts#L15)
+[core/campaign/campaign-state.ts:15](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/campaign/campaign-state.ts#L15)
 
 ##### rounds
 
@@ -1516,7 +1516,7 @@ Represent a campaign current state, after applying all events related to the cam
 
 ###### Source
 
-[core/campaign/campaign-state.ts:14](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/campaign/campaign-state.ts#L14)
+[core/campaign/campaign-state.ts:14](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/campaign/campaign-state.ts#L14)
 
 #### Methods
 
@@ -1534,7 +1534,7 @@ Represent a campaign current state, after applying all events related to the cam
 
 ###### Source
 
-[core/campaign/campaign-state.ts:58](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/campaign/campaign-state.ts#L58)
+[core/campaign/campaign-state.ts:58](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/campaign/campaign-state.ts#L58)
 
 ##### characterHasResource()
 
@@ -1554,7 +1554,7 @@ Represent a campaign current state, after applying all events related to the cam
 
 ###### Source
 
-[core/campaign/campaign-state.ts:47](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/campaign/campaign-state.ts#L47)
+[core/campaign/campaign-state.ts:47](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/campaign/campaign-state.ts#L47)
 
 ##### characterHasRoundEvent()
 
@@ -1574,7 +1574,7 @@ Represent a campaign current state, after applying all events related to the cam
 
 ###### Source
 
-[core/campaign/campaign-state.ts:51](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/campaign/campaign-state.ts#L51)
+[core/campaign/campaign-state.ts:51](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/campaign/campaign-state.ts#L51)
 
 ##### getCharacter()
 
@@ -1590,7 +1590,7 @@ Represent a campaign current state, after applying all events related to the cam
 
 ###### Source
 
-[core/campaign/campaign-state.ts:25](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/campaign/campaign-state.ts#L25)
+[core/campaign/campaign-state.ts:25](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/campaign/campaign-state.ts#L25)
 
 ##### getCurrentBattle()
 
@@ -1602,7 +1602,7 @@ Represent a campaign current state, after applying all events related to the cam
 
 ###### Source
 
-[core/campaign/campaign-state.ts:34](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/campaign/campaign-state.ts#L34)
+[core/campaign/campaign-state.ts:34](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/campaign/campaign-state.ts#L34)
 
 ##### getCurrentRound()
 
@@ -1614,7 +1614,7 @@ Represent a campaign current state, after applying all events related to the cam
 
 ###### Source
 
-[core/campaign/campaign-state.ts:38](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/campaign/campaign-state.ts#L38)
+[core/campaign/campaign-state.ts:38](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/campaign/campaign-state.ts#L38)
 
 ***
 
@@ -1646,7 +1646,7 @@ Represent a campaign current state, after applying all events related to the cam
 
 ###### Source
 
-[core/action/effect.ts:19](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/action/effect.ts#L19)
+[core/action/effect.ts:19](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/action/effect.ts#L19)
 
 #### Properties
 
@@ -1656,7 +1656,7 @@ Represent a campaign current state, after applying all events related to the cam
 
 ###### Source
 
-[core/action/effect.ts:13](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/action/effect.ts#L13)
+[core/action/effect.ts:13](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/action/effect.ts#L13)
 
 ##### eventType
 
@@ -1668,7 +1668,7 @@ Represent a campaign current state, after applying all events related to the cam
 
 ###### Source
 
-[core/action/effect.ts:14](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/action/effect.ts#L14)
+[core/action/effect.ts:14](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/action/effect.ts#L14)
 
 ##### resourceTypeId
 
@@ -1676,7 +1676,7 @@ Represent a campaign current state, after applying all events related to the cam
 
 ###### Source
 
-[core/action/effect.ts:15](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/action/effect.ts#L15)
+[core/action/effect.ts:15](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/action/effect.ts#L15)
 
 ##### staticValue
 
@@ -1684,7 +1684,7 @@ Represent a campaign current state, after applying all events related to the cam
 
 ###### Source
 
-[core/action/effect.ts:17](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/action/effect.ts#L17)
+[core/action/effect.ts:17](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/action/effect.ts#L17)
 
 ##### variableValue
 
@@ -1692,7 +1692,7 @@ Represent a campaign current state, after applying all events related to the cam
 
 ###### Source
 
-[core/action/effect.ts:16](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/action/effect.ts#L16)
+[core/action/effect.ts:16](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/action/effect.ts#L16)
 
 #### Methods
 
@@ -1720,7 +1720,7 @@ Represent a campaign current state, after applying all events related to the cam
 
 ###### Source
 
-[core/action/effect.ts:32](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/action/effect.ts#L32)
+[core/action/effect.ts:32](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/action/effect.ts#L32)
 
 ***
 
@@ -1746,7 +1746,7 @@ Represent a campaign current state, after applying all events related to the cam
 
 ###### Source
 
-[core/action/effect.ts:55](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/action/effect.ts#L55)
+[core/action/effect.ts:55](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/action/effect.ts#L55)
 
 #### Properties
 
@@ -1760,7 +1760,7 @@ Represent a campaign current state, after applying all events related to the cam
 
 ###### Source
 
-[core/action/effect.ts:53](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/action/effect.ts#L53)
+[core/action/effect.ts:53](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/action/effect.ts#L53)
 
 ##### status
 
@@ -1768,7 +1768,7 @@ Represent a campaign current state, after applying all events related to the cam
 
 ###### Source
 
-[core/action/effect.ts:52](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/action/effect.ts#L52)
+[core/action/effect.ts:52](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/action/effect.ts#L52)
 
 #### Methods
 
@@ -1796,7 +1796,7 @@ Represent a campaign current state, after applying all events related to the cam
 
 ###### Source
 
-[core/action/effect.ts:60](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/action/effect.ts#L60)
+[core/action/effect.ts:60](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/action/effect.ts#L60)
 
 ***
 
@@ -1833,7 +1833,7 @@ A ruleset should implement rules from a table top game system.
 
 ###### Source
 
-data/rulesets/dnd-5th.ts:91
+[data/rulesets/dnd-5th.ts:91](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/data/rulesets/dnd-5th.ts#L91)
 
 #### Methods
 
@@ -1857,7 +1857,7 @@ data/rulesets/dnd-5th.ts:91
 
 ###### Source
 
-data/rulesets/dnd-5th.ts:45
+[data/rulesets/dnd-5th.ts:45](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/data/rulesets/dnd-5th.ts#L45)
 
 ##### characterBattleActionOrder()
 
@@ -1877,7 +1877,7 @@ data/rulesets/dnd-5th.ts:45
 
 ###### Source
 
-data/rulesets/dnd-5th.ts:87
+[data/rulesets/dnd-5th.ts:87](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/data/rulesets/dnd-5th.ts#L87)
 
 ##### characterElementDamageMultiplier()
 
@@ -1899,7 +1899,7 @@ data/rulesets/dnd-5th.ts:87
 
 ###### Source
 
-data/rulesets/dnd-5th.ts:71
+[data/rulesets/dnd-5th.ts:71](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/data/rulesets/dnd-5th.ts#L71)
 
 ##### characterHit()
 
@@ -1923,7 +1923,7 @@ data/rulesets/dnd-5th.ts:71
 
 ###### Source
 
-data/rulesets/dnd-5th.ts:62
+[data/rulesets/dnd-5th.ts:62](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/data/rulesets/dnd-5th.ts#L62)
 
 ##### characterHitDamage()
 
@@ -1953,7 +1953,7 @@ data/rulesets/dnd-5th.ts:62
 
 ###### Source
 
-data/rulesets/dnd-5th.ts:49
+[data/rulesets/dnd-5th.ts:49](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/data/rulesets/dnd-5th.ts#L49)
 
 ##### characterResistanceAbsolute()
 
@@ -1975,7 +1975,7 @@ data/rulesets/dnd-5th.ts:49
 
 ###### Source
 
-data/rulesets/dnd-5th.ts:79
+[data/rulesets/dnd-5th.ts:79](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/data/rulesets/dnd-5th.ts#L79)
 
 ##### characterResistanceMultiplier()
 
@@ -1997,7 +1997,7 @@ data/rulesets/dnd-5th.ts:79
 
 ###### Source
 
-data/rulesets/dnd-5th.ts:75
+[data/rulesets/dnd-5th.ts:75](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/data/rulesets/dnd-5th.ts#L75)
 
 ##### characterResourceGeneration()
 
@@ -2017,7 +2017,7 @@ data/rulesets/dnd-5th.ts:75
 
 ###### Source
 
-data/rulesets/dnd-5th.ts:83
+[data/rulesets/dnd-5th.ts:83](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/data/rulesets/dnd-5th.ts#L83)
 
 ##### getCharacterEquipmentSlots()
 
@@ -2033,7 +2033,7 @@ data/rulesets/dnd-5th.ts:83
 
 ###### Source
 
-data/rulesets/dnd-5th.ts:33
+[data/rulesets/dnd-5th.ts:33](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/data/rulesets/dnd-5th.ts#L33)
 
 ##### getCharacterResourceTypes()
 
@@ -2049,7 +2049,7 @@ data/rulesets/dnd-5th.ts:33
 
 ###### Source
 
-data/rulesets/dnd-5th.ts:29
+[data/rulesets/dnd-5th.ts:29](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/data/rulesets/dnd-5th.ts#L29)
 
 ##### getCharacterStatTypes()
 
@@ -2065,7 +2065,7 @@ data/rulesets/dnd-5th.ts:29
 
 ###### Source
 
-data/rulesets/dnd-5th.ts:25
+[data/rulesets/dnd-5th.ts:25](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/data/rulesets/dnd-5th.ts#L25)
 
 ##### getClassDefinitions()
 
@@ -2081,7 +2081,7 @@ data/rulesets/dnd-5th.ts:25
 
 ###### Source
 
-data/rulesets/dnd-5th.ts:37
+[data/rulesets/dnd-5th.ts:37](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/data/rulesets/dnd-5th.ts#L37)
 
 ##### getElementDefinitions()
 
@@ -2097,7 +2097,7 @@ data/rulesets/dnd-5th.ts:37
 
 ###### Source
 
-data/rulesets/dnd-5th.ts:41
+[data/rulesets/dnd-5th.ts:41](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/data/rulesets/dnd-5th.ts#L41)
 
 ##### getLevelProgression()
 
@@ -2113,7 +2113,7 @@ data/rulesets/dnd-5th.ts:41
 
 ###### Source
 
-data/rulesets/dnd-5th.ts:21
+[data/rulesets/dnd-5th.ts:21](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/data/rulesets/dnd-5th.ts#L21)
 
 ##### roll()
 
@@ -2133,7 +2133,7 @@ data/rulesets/dnd-5th.ts:21
 
 ###### Source
 
-data/rulesets/dnd-5th.ts:17
+[data/rulesets/dnd-5th.ts:17](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/data/rulesets/dnd-5th.ts#L17)
 
 ***
 
@@ -2184,7 +2184,7 @@ A ruleset should implement rules from a table top game system.
 
 ###### Source
 
-data/rulesets/gloomhaven.ts:33
+[data/rulesets/gloomhaven.ts:33](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/data/rulesets/gloomhaven.ts#L33)
 
 ##### characterElementDamageMultiplier()
 
@@ -2206,7 +2206,7 @@ data/rulesets/gloomhaven.ts:33
 
 ###### Source
 
-data/rulesets/gloomhaven.ts:58
+[data/rulesets/gloomhaven.ts:58](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/data/rulesets/gloomhaven.ts#L58)
 
 ##### characterHit()
 
@@ -2230,7 +2230,7 @@ data/rulesets/gloomhaven.ts:58
 
 ###### Source
 
-data/rulesets/gloomhaven.ts:36
+[data/rulesets/gloomhaven.ts:36](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/data/rulesets/gloomhaven.ts#L36)
 
 ##### characterHitDamage()
 
@@ -2260,7 +2260,7 @@ data/rulesets/gloomhaven.ts:36
 
 ###### Source
 
-data/rulesets/gloomhaven.ts:39
+[data/rulesets/gloomhaven.ts:39](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/data/rulesets/gloomhaven.ts#L39)
 
 ##### characterResistanceAbsolute()
 
@@ -2282,7 +2282,7 @@ data/rulesets/gloomhaven.ts:39
 
 ###### Source
 
-data/rulesets/gloomhaven.ts:52
+[data/rulesets/gloomhaven.ts:52](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/data/rulesets/gloomhaven.ts#L52)
 
 ##### characterResistanceMultiplier()
 
@@ -2304,7 +2304,7 @@ data/rulesets/gloomhaven.ts:52
 
 ###### Source
 
-data/rulesets/gloomhaven.ts:49
+[data/rulesets/gloomhaven.ts:49](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/data/rulesets/gloomhaven.ts#L49)
 
 ##### characterResourceGeneration()
 
@@ -2324,7 +2324,7 @@ data/rulesets/gloomhaven.ts:49
 
 ###### Source
 
-data/rulesets/gloomhaven.ts:55
+[data/rulesets/gloomhaven.ts:55](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/data/rulesets/gloomhaven.ts#L55)
 
 ##### getCharacterEquipmentSlots()
 
@@ -2340,7 +2340,7 @@ data/rulesets/gloomhaven.ts:55
 
 ###### Source
 
-data/rulesets/gloomhaven.ts:24
+[data/rulesets/gloomhaven.ts:24](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/data/rulesets/gloomhaven.ts#L24)
 
 ##### getCharacterResourceTypes()
 
@@ -2356,7 +2356,7 @@ data/rulesets/gloomhaven.ts:24
 
 ###### Source
 
-data/rulesets/gloomhaven.ts:21
+[data/rulesets/gloomhaven.ts:21](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/data/rulesets/gloomhaven.ts#L21)
 
 ##### getCharacterStatTypes()
 
@@ -2372,7 +2372,7 @@ data/rulesets/gloomhaven.ts:21
 
 ###### Source
 
-data/rulesets/gloomhaven.ts:18
+[data/rulesets/gloomhaven.ts:18](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/data/rulesets/gloomhaven.ts#L18)
 
 ##### getClassDefinitions()
 
@@ -2388,7 +2388,7 @@ data/rulesets/gloomhaven.ts:18
 
 ###### Source
 
-data/rulesets/gloomhaven.ts:27
+[data/rulesets/gloomhaven.ts:27](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/data/rulesets/gloomhaven.ts#L27)
 
 ##### getElementDefinitions()
 
@@ -2404,7 +2404,7 @@ data/rulesets/gloomhaven.ts:27
 
 ###### Source
 
-data/rulesets/gloomhaven.ts:30
+[data/rulesets/gloomhaven.ts:30](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/data/rulesets/gloomhaven.ts#L30)
 
 ##### getLevelProgression()
 
@@ -2420,7 +2420,7 @@ data/rulesets/gloomhaven.ts:30
 
 ###### Source
 
-data/rulesets/gloomhaven.ts:15
+[data/rulesets/gloomhaven.ts:15](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/data/rulesets/gloomhaven.ts#L15)
 
 ##### roll()
 
@@ -2440,7 +2440,7 @@ data/rulesets/gloomhaven.ts:15
 
 ###### Source
 
-data/rulesets/gloomhaven.ts:12
+[data/rulesets/gloomhaven.ts:12](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/data/rulesets/gloomhaven.ts#L12)
 
 ***
 
@@ -2491,7 +2491,7 @@ A ruleset should implement rules from a table top game system.
 
 ###### Source
 
-data/rulesets/league-of-dungeoneers.ts:33
+[data/rulesets/league-of-dungeoneers.ts:33](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/data/rulesets/league-of-dungeoneers.ts#L33)
 
 ##### characterElementDamageMultiplier()
 
@@ -2513,7 +2513,7 @@ data/rulesets/league-of-dungeoneers.ts:33
 
 ###### Source
 
-data/rulesets/league-of-dungeoneers.ts:58
+[data/rulesets/league-of-dungeoneers.ts:58](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/data/rulesets/league-of-dungeoneers.ts#L58)
 
 ##### characterHit()
 
@@ -2537,7 +2537,7 @@ data/rulesets/league-of-dungeoneers.ts:58
 
 ###### Source
 
-data/rulesets/league-of-dungeoneers.ts:36
+[data/rulesets/league-of-dungeoneers.ts:36](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/data/rulesets/league-of-dungeoneers.ts#L36)
 
 ##### characterHitDamage()
 
@@ -2567,7 +2567,7 @@ data/rulesets/league-of-dungeoneers.ts:36
 
 ###### Source
 
-data/rulesets/league-of-dungeoneers.ts:39
+[data/rulesets/league-of-dungeoneers.ts:39](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/data/rulesets/league-of-dungeoneers.ts#L39)
 
 ##### characterResistanceAbsolute()
 
@@ -2589,7 +2589,7 @@ data/rulesets/league-of-dungeoneers.ts:39
 
 ###### Source
 
-data/rulesets/league-of-dungeoneers.ts:52
+[data/rulesets/league-of-dungeoneers.ts:52](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/data/rulesets/league-of-dungeoneers.ts#L52)
 
 ##### characterResistanceMultiplier()
 
@@ -2611,7 +2611,7 @@ data/rulesets/league-of-dungeoneers.ts:52
 
 ###### Source
 
-data/rulesets/league-of-dungeoneers.ts:49
+[data/rulesets/league-of-dungeoneers.ts:49](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/data/rulesets/league-of-dungeoneers.ts#L49)
 
 ##### characterResourceGeneration()
 
@@ -2631,7 +2631,7 @@ data/rulesets/league-of-dungeoneers.ts:49
 
 ###### Source
 
-data/rulesets/league-of-dungeoneers.ts:55
+[data/rulesets/league-of-dungeoneers.ts:55](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/data/rulesets/league-of-dungeoneers.ts#L55)
 
 ##### getCharacterEquipmentSlots()
 
@@ -2647,7 +2647,7 @@ data/rulesets/league-of-dungeoneers.ts:55
 
 ###### Source
 
-data/rulesets/league-of-dungeoneers.ts:24
+[data/rulesets/league-of-dungeoneers.ts:24](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/data/rulesets/league-of-dungeoneers.ts#L24)
 
 ##### getCharacterResourceTypes()
 
@@ -2663,7 +2663,7 @@ data/rulesets/league-of-dungeoneers.ts:24
 
 ###### Source
 
-data/rulesets/league-of-dungeoneers.ts:21
+[data/rulesets/league-of-dungeoneers.ts:21](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/data/rulesets/league-of-dungeoneers.ts#L21)
 
 ##### getCharacterStatTypes()
 
@@ -2679,7 +2679,7 @@ data/rulesets/league-of-dungeoneers.ts:21
 
 ###### Source
 
-data/rulesets/league-of-dungeoneers.ts:18
+[data/rulesets/league-of-dungeoneers.ts:18](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/data/rulesets/league-of-dungeoneers.ts#L18)
 
 ##### getClassDefinitions()
 
@@ -2695,7 +2695,7 @@ data/rulesets/league-of-dungeoneers.ts:18
 
 ###### Source
 
-data/rulesets/league-of-dungeoneers.ts:27
+[data/rulesets/league-of-dungeoneers.ts:27](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/data/rulesets/league-of-dungeoneers.ts#L27)
 
 ##### getElementDefinitions()
 
@@ -2711,7 +2711,7 @@ data/rulesets/league-of-dungeoneers.ts:27
 
 ###### Source
 
-data/rulesets/league-of-dungeoneers.ts:30
+[data/rulesets/league-of-dungeoneers.ts:30](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/data/rulesets/league-of-dungeoneers.ts#L30)
 
 ##### getLevelProgression()
 
@@ -2727,7 +2727,7 @@ data/rulesets/league-of-dungeoneers.ts:30
 
 ###### Source
 
-data/rulesets/league-of-dungeoneers.ts:15
+[data/rulesets/league-of-dungeoneers.ts:15](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/data/rulesets/league-of-dungeoneers.ts#L15)
 
 ##### roll()
 
@@ -2747,7 +2747,7 @@ data/rulesets/league-of-dungeoneers.ts:15
 
 ###### Source
 
-data/rulesets/league-of-dungeoneers.ts:12
+[data/rulesets/league-of-dungeoneers.ts:12](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/data/rulesets/league-of-dungeoneers.ts#L12)
 
 ***
 
@@ -2798,7 +2798,7 @@ A ruleset should implement rules from a table top game system.
 
 ###### Source
 
-data/rulesets/pathfinder.ts:33
+[data/rulesets/pathfinder.ts:33](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/data/rulesets/pathfinder.ts#L33)
 
 ##### characterElementDamageMultiplier()
 
@@ -2820,7 +2820,7 @@ data/rulesets/pathfinder.ts:33
 
 ###### Source
 
-data/rulesets/pathfinder.ts:58
+[data/rulesets/pathfinder.ts:58](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/data/rulesets/pathfinder.ts#L58)
 
 ##### characterHit()
 
@@ -2844,7 +2844,7 @@ data/rulesets/pathfinder.ts:58
 
 ###### Source
 
-data/rulesets/pathfinder.ts:36
+[data/rulesets/pathfinder.ts:36](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/data/rulesets/pathfinder.ts#L36)
 
 ##### characterHitDamage()
 
@@ -2874,7 +2874,7 @@ data/rulesets/pathfinder.ts:36
 
 ###### Source
 
-data/rulesets/pathfinder.ts:39
+[data/rulesets/pathfinder.ts:39](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/data/rulesets/pathfinder.ts#L39)
 
 ##### characterResistanceAbsolute()
 
@@ -2896,7 +2896,7 @@ data/rulesets/pathfinder.ts:39
 
 ###### Source
 
-data/rulesets/pathfinder.ts:52
+[data/rulesets/pathfinder.ts:52](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/data/rulesets/pathfinder.ts#L52)
 
 ##### characterResistanceMultiplier()
 
@@ -2918,7 +2918,7 @@ data/rulesets/pathfinder.ts:52
 
 ###### Source
 
-data/rulesets/pathfinder.ts:49
+[data/rulesets/pathfinder.ts:49](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/data/rulesets/pathfinder.ts#L49)
 
 ##### characterResourceGeneration()
 
@@ -2938,7 +2938,7 @@ data/rulesets/pathfinder.ts:49
 
 ###### Source
 
-data/rulesets/pathfinder.ts:55
+[data/rulesets/pathfinder.ts:55](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/data/rulesets/pathfinder.ts#L55)
 
 ##### getCharacterEquipmentSlots()
 
@@ -2954,7 +2954,7 @@ data/rulesets/pathfinder.ts:55
 
 ###### Source
 
-data/rulesets/pathfinder.ts:24
+[data/rulesets/pathfinder.ts:24](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/data/rulesets/pathfinder.ts#L24)
 
 ##### getCharacterResourceTypes()
 
@@ -2970,7 +2970,7 @@ data/rulesets/pathfinder.ts:24
 
 ###### Source
 
-data/rulesets/pathfinder.ts:21
+[data/rulesets/pathfinder.ts:21](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/data/rulesets/pathfinder.ts#L21)
 
 ##### getCharacterStatTypes()
 
@@ -2986,7 +2986,7 @@ data/rulesets/pathfinder.ts:21
 
 ###### Source
 
-data/rulesets/pathfinder.ts:18
+[data/rulesets/pathfinder.ts:18](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/data/rulesets/pathfinder.ts#L18)
 
 ##### getClassDefinitions()
 
@@ -3002,7 +3002,7 @@ data/rulesets/pathfinder.ts:18
 
 ###### Source
 
-data/rulesets/pathfinder.ts:27
+[data/rulesets/pathfinder.ts:27](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/data/rulesets/pathfinder.ts#L27)
 
 ##### getElementDefinitions()
 
@@ -3018,7 +3018,7 @@ data/rulesets/pathfinder.ts:27
 
 ###### Source
 
-data/rulesets/pathfinder.ts:30
+[data/rulesets/pathfinder.ts:30](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/data/rulesets/pathfinder.ts#L30)
 
 ##### getLevelProgression()
 
@@ -3034,7 +3034,7 @@ data/rulesets/pathfinder.ts:30
 
 ###### Source
 
-data/rulesets/pathfinder.ts:15
+[data/rulesets/pathfinder.ts:15](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/data/rulesets/pathfinder.ts#L15)
 
 ##### roll()
 
@@ -3054,7 +3054,7 @@ data/rulesets/pathfinder.ts:15
 
 ###### Source
 
-data/rulesets/pathfinder.ts:12
+[data/rulesets/pathfinder.ts:12](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/data/rulesets/pathfinder.ts#L12)
 
 ***
 
@@ -3087,7 +3087,7 @@ Holds information about items, spells, statuses, etc. that exists in the world.
 
 ###### Source
 
-[core/world/world.ts:29](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/world/world.ts#L29)
+[core/world/world.ts:29](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/world/world.ts#L29)
 
 #### Properties
 
@@ -3097,7 +3097,7 @@ Holds information about items, spells, statuses, etc. that exists in the world.
 
 ###### Source
 
-[core/world/world.ts:23](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/world/world.ts#L23)
+[core/world/world.ts:23](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/world/world.ts#L23)
 
 ##### characters
 
@@ -3105,7 +3105,7 @@ Holds information about items, spells, statuses, etc. that exists in the world.
 
 ###### Source
 
-[core/world/world.ts:22](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/world/world.ts#L22)
+[core/world/world.ts:22](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/world/world.ts#L22)
 
 ##### classes
 
@@ -3113,7 +3113,7 @@ Holds information about items, spells, statuses, etc. that exists in the world.
 
 ###### Source
 
-[core/world/world.ts:26](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/world/world.ts#L26)
+[core/world/world.ts:26](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/world/world.ts#L26)
 
 ##### id
 
@@ -3121,7 +3121,7 @@ Holds information about items, spells, statuses, etc. that exists in the world.
 
 ###### Source
 
-[core/world/world.ts:17](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/world/world.ts#L17)
+[core/world/world.ts:17](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/world/world.ts#L17)
 
 ##### items
 
@@ -3129,7 +3129,7 @@ Holds information about items, spells, statuses, etc. that exists in the world.
 
 ###### Source
 
-[core/world/world.ts:21](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/world/world.ts#L21)
+[core/world/world.ts:21](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/world/world.ts#L21)
 
 ##### monsters
 
@@ -3137,7 +3137,7 @@ Holds information about items, spells, statuses, etc. that exists in the world.
 
 ###### Source
 
-[core/world/world.ts:20](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/world/world.ts#L20)
+[core/world/world.ts:20](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/world/world.ts#L20)
 
 ##### name
 
@@ -3145,7 +3145,7 @@ Holds information about items, spells, statuses, etc. that exists in the world.
 
 ###### Source
 
-[core/world/world.ts:18](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/world/world.ts#L18)
+[core/world/world.ts:18](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/world/world.ts#L18)
 
 ##### races
 
@@ -3153,7 +3153,7 @@ Holds information about items, spells, statuses, etc. that exists in the world.
 
 ###### Source
 
-[core/world/world.ts:24](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/world/world.ts#L24)
+[core/world/world.ts:24](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/world/world.ts#L24)
 
 ##### ruleset
 
@@ -3161,7 +3161,7 @@ Holds information about items, spells, statuses, etc. that exists in the world.
 
 ###### Source
 
-[core/world/world.ts:27](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/world/world.ts#L27)
+[core/world/world.ts:27](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/world/world.ts#L27)
 
 ##### statuses
 
@@ -3169,7 +3169,7 @@ Holds information about items, spells, statuses, etc. that exists in the world.
 
 ###### Source
 
-[core/world/world.ts:25](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/world/world.ts#L25)
+[core/world/world.ts:25](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/world/world.ts#L25)
 
 #### Methods
 
@@ -3189,7 +3189,7 @@ Holds information about items, spells, statuses, etc. that exists in the world.
 
 ###### Source
 
-[core/world/world.ts:35](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/world/world.ts#L35)
+[core/world/world.ts:35](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/world/world.ts#L35)
 
 ##### setCharacterClasses()
 
@@ -3207,7 +3207,7 @@ Holds information about items, spells, statuses, etc. that exists in the world.
 
 ###### Source
 
-[core/world/world.ts:53](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/world/world.ts#L53)
+[core/world/world.ts:53](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/world/world.ts#L53)
 
 ##### setCharacterName()
 
@@ -3225,7 +3225,7 @@ Holds information about items, spells, statuses, etc. that exists in the world.
 
 ###### Source
 
-[core/world/world.ts:44](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/world/world.ts#L44)
+[core/world/world.ts:44](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/world/world.ts#L44)
 
 ## Interfaces
 
@@ -3239,7 +3239,7 @@ Holds information about items, spells, statuses, etc. that exists in the world.
 
 ###### Source
 
-[core/action/effect.ts:8](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/action/effect.ts#L8)
+[core/action/effect.ts:8](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/action/effect.ts#L8)
 
 #### Methods
 
@@ -3263,7 +3263,7 @@ Holds information about items, spells, statuses, etc. that exists in the world.
 
 ###### Source
 
-[core/action/effect.ts:9](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/action/effect.ts#L9)
+[core/action/effect.ts:9](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/action/effect.ts#L9)
 
 ***
 
@@ -3296,7 +3296,7 @@ A ruleset should implement rules from a table top game system.
 
 ###### Source
 
-[core/ruleset/ruleset.ts:86](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/ruleset/ruleset.ts#L86)
+[core/ruleset/ruleset.ts:86](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/ruleset/ruleset.ts#L86)
 
 ##### characterElementDamageMultiplier()
 
@@ -3314,7 +3314,7 @@ A ruleset should implement rules from a table top game system.
 
 ###### Source
 
-[core/ruleset/ruleset.ts:99](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/ruleset/ruleset.ts#L99)
+[core/ruleset/ruleset.ts:99](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/ruleset/ruleset.ts#L99)
 
 ##### characterHit()
 
@@ -3334,7 +3334,7 @@ A ruleset should implement rules from a table top game system.
 
 ###### Source
 
-[core/ruleset/ruleset.ts:87](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/ruleset/ruleset.ts#L87)
+[core/ruleset/ruleset.ts:87](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/ruleset/ruleset.ts#L87)
 
 ##### characterHitDamage()
 
@@ -3360,7 +3360,7 @@ A ruleset should implement rules from a table top game system.
 
 ###### Source
 
-[core/ruleset/ruleset.ts:88](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/ruleset/ruleset.ts#L88)
+[core/ruleset/ruleset.ts:88](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/ruleset/ruleset.ts#L88)
 
 ##### characterResistanceAbsolute()
 
@@ -3378,7 +3378,7 @@ A ruleset should implement rules from a table top game system.
 
 ###### Source
 
-[core/ruleset/ruleset.ts:97](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/ruleset/ruleset.ts#L97)
+[core/ruleset/ruleset.ts:97](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/ruleset/ruleset.ts#L97)
 
 ##### characterResistanceMultiplier()
 
@@ -3396,7 +3396,7 @@ A ruleset should implement rules from a table top game system.
 
 ###### Source
 
-[core/ruleset/ruleset.ts:96](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/ruleset/ruleset.ts#L96)
+[core/ruleset/ruleset.ts:96](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/ruleset/ruleset.ts#L96)
 
 ##### characterResourceGeneration()
 
@@ -3412,7 +3412,7 @@ A ruleset should implement rules from a table top game system.
 
 ###### Source
 
-[core/ruleset/ruleset.ts:98](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/ruleset/ruleset.ts#L98)
+[core/ruleset/ruleset.ts:98](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/ruleset/ruleset.ts#L98)
 
 ##### getCharacterEquipmentSlots()
 
@@ -3424,7 +3424,7 @@ A ruleset should implement rules from a table top game system.
 
 ###### Source
 
-[core/ruleset/ruleset.ts:82](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/ruleset/ruleset.ts#L82)
+[core/ruleset/ruleset.ts:82](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/ruleset/ruleset.ts#L82)
 
 ##### getCharacterResourceTypes()
 
@@ -3436,7 +3436,7 @@ A ruleset should implement rules from a table top game system.
 
 ###### Source
 
-[core/ruleset/ruleset.ts:81](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/ruleset/ruleset.ts#L81)
+[core/ruleset/ruleset.ts:81](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/ruleset/ruleset.ts#L81)
 
 ##### getCharacterStatTypes()
 
@@ -3448,7 +3448,7 @@ A ruleset should implement rules from a table top game system.
 
 ###### Source
 
-[core/ruleset/ruleset.ts:80](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/ruleset/ruleset.ts#L80)
+[core/ruleset/ruleset.ts:80](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/ruleset/ruleset.ts#L80)
 
 ##### getClassDefinitions()
 
@@ -3460,7 +3460,7 @@ A ruleset should implement rules from a table top game system.
 
 ###### Source
 
-[core/ruleset/ruleset.ts:83](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/ruleset/ruleset.ts#L83)
+[core/ruleset/ruleset.ts:83](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/ruleset/ruleset.ts#L83)
 
 ##### getElementDefinitions()
 
@@ -3472,7 +3472,7 @@ A ruleset should implement rules from a table top game system.
 
 ###### Source
 
-[core/ruleset/ruleset.ts:84](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/ruleset/ruleset.ts#L84)
+[core/ruleset/ruleset.ts:84](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/ruleset/ruleset.ts#L84)
 
 ##### getLevelProgression()
 
@@ -3484,7 +3484,7 @@ A ruleset should implement rules from a table top game system.
 
 ###### Source
 
-[core/ruleset/ruleset.ts:79](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/ruleset/ruleset.ts#L79)
+[core/ruleset/ruleset.ts:79](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/ruleset/ruleset.ts#L79)
 
 ##### roll()
 
@@ -3500,7 +3500,7 @@ A ruleset should implement rules from a table top game system.
 
 ###### Source
 
-[core/ruleset/ruleset.ts:77](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/ruleset/ruleset.ts#L77)
+[core/ruleset/ruleset.ts:77](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/ruleset/ruleset.ts#L77)
 
 ## Type Aliases
 
@@ -3542,7 +3542,7 @@ Represents an action, with targets, and some effect that will be applied
 
 #### Source
 
-[core/action/action.ts:16](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/action/action.ts#L16)
+[core/action/action.ts:16](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/action/action.ts#L16)
 
 ***
 
@@ -3562,7 +3562,7 @@ Represents an action, with targets, and some effect that will be applied
 
 #### Source
 
-[core/battle/battle.ts:6](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/battle/battle.ts#L6)
+[core/battle/battle.ts:6](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/battle/battle.ts#L6)
 
 ***
 
@@ -3578,7 +3578,7 @@ Represents an action, with targets, and some effect that will be applied
 
 #### Source
 
-[core/campaign/campaign-events.ts:9](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/campaign/campaign-events.ts#L9)
+[core/campaign/campaign-events.ts:9](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/campaign/campaign-events.ts#L9)
 
 ***
 
@@ -3588,7 +3588,7 @@ Represents an action, with targets, and some effect that will be applied
 
 #### Source
 
-[core/campaign/campaign-events.ts:19](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/campaign/campaign-events.ts#L19)
+[core/campaign/campaign-events.ts:19](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/campaign/campaign-events.ts#L19)
 
 ***
 
@@ -3612,7 +3612,7 @@ Represents an action, with targets, and some effect that will be applied
 
 #### Source
 
-[core/campaign/campaign-events.ts:13](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/campaign/campaign-events.ts#L13)
+[core/campaign/campaign-events.ts:13](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/campaign/campaign-events.ts#L13)
 
 ***
 
@@ -3632,7 +3632,7 @@ Represents an action, with targets, and some effect that will be applied
 
 #### Source
 
-[core/actor/character.ts:40](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/actor/character.ts#L40)
+[core/actor/character.ts:40](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/actor/character.ts#L40)
 
 ***
 
@@ -3652,7 +3652,7 @@ Represents an action, with targets, and some effect that will be applied
 
 #### Source
 
-[core/actor/character.ts:45](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/actor/character.ts#L45)
+[core/actor/character.ts:45](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/actor/character.ts#L45)
 
 ***
 
@@ -3662,7 +3662,7 @@ Represents an action, with targets, and some effect that will be applied
 
 #### Source
 
-[core/campaign/campaign-events.ts:71](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/campaign/campaign-events.ts#L71)
+[core/campaign/campaign-events.ts:71](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/campaign/campaign-events.ts#L71)
 
 ***
 
@@ -3690,7 +3690,7 @@ Represents an action, with targets, and some effect that will be applied
 
 #### Source
 
-[core/actor/character.ts:29](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/actor/character.ts#L29)
+[core/actor/character.ts:29](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/actor/character.ts#L29)
 
 ***
 
@@ -3714,7 +3714,7 @@ Represents an action, with targets, and some effect that will be applied
 
 #### Source
 
-[core/ruleset/ruleset.ts:52](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/ruleset/ruleset.ts#L52)
+[core/ruleset/ruleset.ts:52](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/ruleset/ruleset.ts#L52)
 
 ***
 
@@ -3730,7 +3730,7 @@ Represents an action, with targets, and some effect that will be applied
 
 #### Source
 
-[core/actor/character.ts:36](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/actor/character.ts#L36)
+[core/actor/character.ts:36](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/actor/character.ts#L36)
 
 ***
 
@@ -3750,7 +3750,7 @@ Represents an action, with targets, and some effect that will be applied
 
 #### Source
 
-[core/actor/character.ts:68](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/actor/character.ts#L68)
+[core/actor/character.ts:68](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/actor/character.ts#L68)
 
 ***
 
@@ -3770,7 +3770,7 @@ Represents an action, with targets, and some effect that will be applied
 
 #### Source
 
-[core/ruleset/ruleset.ts:58](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/ruleset/ruleset.ts#L58)
+[core/ruleset/ruleset.ts:58](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/ruleset/ruleset.ts#L58)
 
 ***
 
@@ -3790,7 +3790,7 @@ Represents an action, with targets, and some effect that will be applied
 
 #### Source
 
-[core/ruleset/ruleset.ts:36](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/ruleset/ruleset.ts#L36)
+[core/ruleset/ruleset.ts:36](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/ruleset/ruleset.ts#L36)
 
 ***
 
@@ -3814,7 +3814,7 @@ Represents an action, with targets, and some effect that will be applied
 
 #### Source
 
-[core/ruleset/ruleset.ts:46](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/ruleset/ruleset.ts#L46)
+[core/ruleset/ruleset.ts:46](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/ruleset/ruleset.ts#L46)
 
 ***
 
@@ -3824,7 +3824,7 @@ Represents an action, with targets, and some effect that will be applied
 
 #### Source
 
-[core/dice/dice.ts:8](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/dice/dice.ts#L8)
+[core/dice/dice.ts:8](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/dice/dice.ts#L8)
 
 ***
 
@@ -3844,7 +3844,7 @@ Represents an action, with targets, and some effect that will be applied
 
 #### Source
 
-[core/ruleset/ruleset.ts:25](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/ruleset/ruleset.ts#L25)
+[core/ruleset/ruleset.ts:25](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/ruleset/ruleset.ts#L25)
 
 ***
 
@@ -3868,7 +3868,7 @@ Represents an action, with targets, and some effect that will be applied
 
 #### Source
 
-[core/inventory/item.ts:29](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/inventory/item.ts#L29)
+[core/inventory/item.ts:29](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/inventory/item.ts#L29)
 
 ***
 
@@ -3878,7 +3878,7 @@ Represents an action, with targets, and some effect that will be applied
 
 #### Source
 
-[lib/generate-id.ts:2](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/lib/generate-id.ts#L2)
+[lib/generate-id.ts:2](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/lib/generate-id.ts#L2)
 
 ***
 
@@ -3926,7 +3926,7 @@ An item may occupy additional slots while equipped.
 
 #### Source
 
-[core/inventory/item.ts:35](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/inventory/item.ts#L35)
+[core/inventory/item.ts:35](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/inventory/item.ts#L35)
 
 ***
 
@@ -3950,7 +3950,7 @@ An item may occupy additional slots while equipped.
 
 #### Source
 
-[core/ruleset/ruleset.ts:30](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/ruleset/ruleset.ts#L30)
+[core/ruleset/ruleset.ts:30](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/ruleset/ruleset.ts#L30)
 
 ***
 
@@ -3974,7 +3974,7 @@ An item may occupy additional slots while equipped.
 
 #### Source
 
-[core/actor/character.ts:23](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/actor/character.ts#L23)
+[core/actor/character.ts:23](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/actor/character.ts#L23)
 
 ***
 
@@ -3994,7 +3994,7 @@ An item may occupy additional slots while equipped.
 
 #### Source
 
-[core/ruleset/ruleset.ts:41](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/ruleset/ruleset.ts#L41)
+[core/ruleset/ruleset.ts:41](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/ruleset/ruleset.ts#L41)
 
 ***
 
@@ -4026,7 +4026,7 @@ An item may occupy additional slots while equipped.
 
 #### Source
 
-[core/actor/character.ts:50](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/actor/character.ts#L50)
+[core/actor/character.ts:50](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/actor/character.ts#L50)
 
 ***
 
@@ -4046,7 +4046,7 @@ An item may occupy additional slots while equipped.
 
 #### Source
 
-[core/actor/character.ts:63](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/actor/character.ts#L63)
+[core/actor/character.ts:63](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/actor/character.ts#L63)
 
 ***
 
@@ -4064,7 +4064,7 @@ An item may occupy additional slots while equipped.
 
 #### Source
 
-[core/dice/dice.ts:9](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/dice/dice.ts#L9)
+[core/dice/dice.ts:9](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/dice/dice.ts#L9)
 
 ***
 
@@ -4080,7 +4080,7 @@ An item may occupy additional slots while equipped.
 
 #### Source
 
-[core/campaign/round.ts:3](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/campaign/round.ts#L3)
+[core/campaign/round.ts:3](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/campaign/round.ts#L3)
 
 ***
 
@@ -4090,7 +4090,7 @@ An item may occupy additional slots while equipped.
 
 #### Source
 
-[core/campaign/campaign-events.ts:55](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/campaign/campaign-events.ts#L55)
+[core/campaign/campaign-events.ts:55](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/campaign/campaign-events.ts#L55)
 
 ## Variables
 
@@ -4100,7 +4100,7 @@ An item may occupy additional slots while equipped.
 
 #### Source
 
-[core/campaign/campaign-events.ts:21](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/campaign/campaign-events.ts#L21)
+[core/campaign/campaign-events.ts:21](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/campaign/campaign-events.ts#L21)
 
 ***
 
@@ -4110,7 +4110,7 @@ An item may occupy additional slots while equipped.
 
 #### Source
 
-[core/dice/dice.ts:5](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/dice/dice.ts#L5)
+[core/dice/dice.ts:5](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/dice/dice.ts#L5)
 
 ***
 
@@ -4120,7 +4120,7 @@ An item may occupy additional slots while equipped.
 
 #### Source
 
-[core/dice/dice.ts:1](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/dice/dice.ts#L1)
+[core/dice/dice.ts:1](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/dice/dice.ts#L1)
 
 ***
 
@@ -4130,7 +4130,7 @@ An item may occupy additional slots while equipped.
 
 #### Source
 
-[core/dice/dice.ts:6](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/dice/dice.ts#L6)
+[core/dice/dice.ts:6](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/dice/dice.ts#L6)
 
 ***
 
@@ -4140,7 +4140,7 @@ An item may occupy additional slots while equipped.
 
 #### Source
 
-[core/dice/dice.ts:2](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/dice/dice.ts#L2)
+[core/dice/dice.ts:2](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/dice/dice.ts#L2)
 
 ***
 
@@ -4150,7 +4150,7 @@ An item may occupy additional slots while equipped.
 
 #### Source
 
-[core/dice/dice.ts:3](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/dice/dice.ts#L3)
+[core/dice/dice.ts:3](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/dice/dice.ts#L3)
 
 ***
 
@@ -4160,7 +4160,7 @@ An item may occupy additional slots while equipped.
 
 #### Source
 
-[core/dice/dice.ts:4](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/dice/dice.ts#L4)
+[core/dice/dice.ts:4](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/dice/dice.ts#L4)
 
 ***
 
@@ -4170,7 +4170,7 @@ An item may occupy additional slots while equipped.
 
 #### Source
 
-data/rulesets/dnd-5th.ts:147
+[data/rulesets/dnd-5th.ts:147](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/data/rulesets/dnd-5th.ts#L147)
 
 ***
 
@@ -4180,7 +4180,7 @@ data/rulesets/dnd-5th.ts:147
 
 #### Source
 
-data/rulesets/dnd-5th.ts:169
+[data/rulesets/dnd-5th.ts:169](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/data/rulesets/dnd-5th.ts#L169)
 
 ***
 
@@ -4190,7 +4190,7 @@ data/rulesets/dnd-5th.ts:169
 
 #### Source
 
-data/rulesets/dnd-5th.ts:114
+[data/rulesets/dnd-5th.ts:114](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/data/rulesets/dnd-5th.ts#L114)
 
 ***
 
@@ -4200,7 +4200,7 @@ data/rulesets/dnd-5th.ts:114
 
 #### Source
 
-data/rulesets/dnd-5th.ts:112
+[data/rulesets/dnd-5th.ts:112](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/data/rulesets/dnd-5th.ts#L112)
 
 ***
 
@@ -4210,7 +4210,7 @@ data/rulesets/dnd-5th.ts:112
 
 #### Source
 
-data/rulesets/dnd-5th.ts:104
+[data/rulesets/dnd-5th.ts:104](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/data/rulesets/dnd-5th.ts#L104)
 
 ***
 
@@ -4220,7 +4220,7 @@ data/rulesets/dnd-5th.ts:104
 
 #### Source
 
-data/rulesets/dnd-5th.ts:96
+[data/rulesets/dnd-5th.ts:96](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/data/rulesets/dnd-5th.ts#L96)
 
 ***
 
@@ -4230,7 +4230,7 @@ data/rulesets/dnd-5th.ts:96
 
 #### Source
 
-[index.ts:18](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/index.ts#L18)
+[index.ts:18](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/index.ts#L18)
 
 ## Functions
 
@@ -4244,7 +4244,7 @@ data/rulesets/dnd-5th.ts:96
 
 #### Source
 
-[lib/generate-id.ts:4](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/lib/generate-id.ts#L4)
+[lib/generate-id.ts:4](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/lib/generate-id.ts#L4)
 
 ***
 
@@ -4262,7 +4262,7 @@ data/rulesets/dnd-5th.ts:96
 
 #### Source
 
-[core/dice/dice.ts:11](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/dice/dice.ts#L11)
+[core/dice/dice.ts:11](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/dice/dice.ts#L11)
 
 ***
 
@@ -4282,7 +4282,7 @@ data/rulesets/dnd-5th.ts:96
 
 #### Source
 
-data/rulesets/dnd-5th.ts:200
+[data/rulesets/dnd-5th.ts:200](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/data/rulesets/dnd-5th.ts#L200)
 
 ***
 
@@ -4300,4 +4300,4 @@ data/rulesets/dnd-5th.ts:200
 
 #### Source
 
-[core/actor/character.ts:73](https://github.com/maxpaj/roleplayer/blob/59f63f7/packages/roleplayer/src/core/actor/character.ts#L73)
+[core/actor/character.ts:73](https://github.com/maxpaj/roleplayer/blob/44f8eff/packages/roleplayer/src/core/actor/character.ts#L73)

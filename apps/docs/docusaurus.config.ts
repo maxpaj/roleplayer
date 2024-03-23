@@ -18,7 +18,7 @@ const config: Config = {
   organizationName: "maxpaj", // Usually your GitHub org/user name.
   projectName: "roleplayer", // Usually your repo name.
 
-  onBrokenLinks: "throw",
+  onBrokenLinks: "warn",
   onBrokenMarkdownLinks: "warn",
 
   // Even if you don't use internationalization, you can use this field to set
@@ -93,12 +93,7 @@ const config: Config = {
       links: [
         {
           title: "Docs",
-          items: [
-            {
-              label: "Tutorial",
-              to: "/docs/intro",
-            },
-          ],
+          items: [],
         },
       ],
       copyright: `Copyright © ${new Date().getFullYear()} Roleplayer`,

@@ -5,8 +5,8 @@
   "scripts": {
     "docusaurus": "docusaurus",
     "dev": "docusaurus start --port 3001 --no-open",
-    "start": "docusaurus start",
-    "build": "docusaurus build",
+    "start": "TYPEDOC_WATCH=true docusaurus start",
+    "build": "TYPEDOC_WATCH=false docusaurus build",
     "swizzle": "docusaurus swizzle",
     "deploy": "docusaurus deploy",
     "clear": "docusaurus clear",
@@ -31,6 +31,9 @@
     "@docusaurus/module-type-aliases": "^3.1.1",
     "@docusaurus/tsconfig": "^3.1.1",
     "@docusaurus/types": "^3.1.1",
+    "docusaurus-plugin-typedoc": "^1.0.0-next.28",
+    "typedoc": "^0.25.12",
+    "typedoc-plugin-markdown": "^4.0.0-next.54",
     "typescript": "^5.4.2"
   },
   "browserslist": {

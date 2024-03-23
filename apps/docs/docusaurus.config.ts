@@ -3,9 +3,9 @@ import type { Config } from "@docusaurus/types";
 import type * as Preset from "@docusaurus/preset-classic";
 
 const config: Config = {
-  title: "Roleplayer",
-  tagline: "Role playing battle simulator.",
-  favicon: "img/favicon.ico",
+  title: "Roleplayer docs",
+  tagline: "Role playing library",
+  favicon: "img/favicon.svg",
 
   // Set the production url of your site here
   url: "https://roleplayer-docs.maxpaj.com",
@@ -28,6 +28,19 @@ const config: Config = {
     defaultLocale: "en",
     locales: ["en"],
   },
+
+  plugins: [
+    [
+      "docusaurus-plugin-typedoc",
+      {
+        entryPoints: ["../../packages/roleplayer/src/index.ts"],
+        tsconfig: "../../packages/roleplayer/tsconfig.json",
+        expandObjects: true,
+        outputFileStrategy: "modules",
+        watch: process.env.TYPEDOC_WATCH,
+      },
+    ],
+  ],
 
   presets: [
     [
@@ -66,9 +79,8 @@ const config: Config = {
           type: "docSidebar",
           sidebarId: "tutorialSidebar",
           position: "left",
-          label: "Tutorial",
+          label: "Docs",
         },
-        { to: "/blog", label: "Blog", position: "left" },
         {
           href: "https://github.com/maxpaj/roleplayer",
           label: "GitHub",

@@ -3,7 +3,7 @@ import { Actor, CharacterClass } from "../actor/character";
 import { ActionDefinition } from "../action/action";
 import { Item } from "../inventory/item";
 import { StatusDefinition } from "../action/status";
-import { Clazz, Race, Roll, Ruleset } from "../..";
+import { Clazz, Race, Ruleset } from "../..";
 
 /**
  * Container for all world related things. Is limited to what is allowed by the ruleset.

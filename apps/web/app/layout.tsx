@@ -44,10 +44,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <div className="flex max-w-[300px] flex-col gap-3">
                 <h5>Resources</h5>
                 <Link href="https://github.com/maxpaj/roleplayer">
-                  <Github size={16} className="mb-1 mr-1 inline-block" /> GitHub
+                  <Github size={16} className="mr-1 inline-block" /> GitHub
                 </Link>
                 <Link href="https://discord.gg/EpZevm6cZW">
-                  <DiscordLogoIcon className="mb-1 mr-1 inline-block" /> Discord
+                  <DiscordLogoIcon className="mr-1 inline-block h-[16px] w-[16px]" /> Discord
                 </Link>
               </div>
             </div>

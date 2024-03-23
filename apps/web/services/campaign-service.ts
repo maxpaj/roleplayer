@@ -1,13 +1,6 @@
 import { classesSchema } from "@/db/schema/classes";
 import { eq } from "drizzle-orm";
-import {
-  Actor,
-  Campaign,
-  CampaignEventWithRound,
-  CharacterResourceLossEffect,
-  DefaultRuleSet,
-  World,
-} from "roleplayer";
+import { Actor, Campaign, CampaignEventWithRound, CharacterResourceLossEffect, DnDRuleset, World } from "roleplayer";
 import { db } from "../db";
 import { CampaignRecord, NewCampaignRecord, campaignsSchema } from "../db/schema/campaigns";
 import {
@@ -66,7 +59,7 @@ function mapCharacterRecordToRoleplayerCharacter(world: World, m: ActorAggregate
 
 export function getWorldFromCampaignData(campaignData: CampaignAggregated) {
   const world = new World(
-    new DefaultRuleSet(() => {
+    new DnDRuleset(() => {
       throw new Error("No rolls allowed back end");
     }),
     "",
@@ -78,7 +71,7 @@ export function getWorldFromCampaignData(campaignData: CampaignAggregated) {
       actions: [],
       statuses: [],
       classes: [],
-      ruleset: new DefaultRuleSet(),
+      ruleset: new DnDRuleset(),
     }
   );
 
@@ -160,7 +153,7 @@ export class CampaignService {
       throw new Error("No such campaign");
     }
 
-    const world = new World(new DefaultRuleSet(), "", {
+    const world = new World(new DnDRuleset(), "", {
       ...campaignData.world,
       characters: [],
       actions: [],
@@ -208,7 +201,7 @@ export class CampaignService {
     const campaign = new Campaign({
       ...campaignData,
       events: [],
-      world: new World(new DefaultRuleSet(), "", {
+      world: new World(new DnDRuleset(), "", {
         ...campaignData.world,
         characters: [],
         actions: [],
@@ -337,7 +330,7 @@ export class CampaignService {
     const { events } = campaignData;
 
     // Roleplayer-lib realm start
-    const world = new World(new DefaultRuleSet(), "", {
+    const world = new World(new DnDRuleset(), "", {
       ...campaignData.world,
       characters: [],
       actions: [],

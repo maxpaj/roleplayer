@@ -1,12 +1,12 @@
 import { EffectRecord } from "@/db/schema/effects";
-import { DefaultRuleSet } from "roleplayer";
+import { DnDRuleset } from "roleplayer";
 import { EffectParameters } from "./effect-parameters";
 import { EffectType } from "./effect-type";
 import { H5 } from "./ui/typography";
 
 export function EffectDetails({ effect }: { effect: EffectRecord }) {
   const params = effect.parameters as { parameters: Record<string, any> };
-  const ruleset = new DefaultRuleSet();
+  const ruleset = new DnDRuleset();
 
   return (
     <div>

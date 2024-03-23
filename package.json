@@ -13,7 +13,7 @@
     "@repo/eslint-config": "*",
     "@repo/typescript-config": "*",
     "prettier": "^3.2.5",
-    "turbo": "^1.12.5",
+    "turbo": "^1.13.0",
     "typescript": "^5.4.2"
   },
   "engines": {

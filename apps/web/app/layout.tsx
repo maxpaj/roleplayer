@@ -9,6 +9,7 @@ import Image from "next/image";
 import logo from "../assets/logo.svg";
 import { Github } from "lucide-react";
 import { Muted } from "@/components/ui/typography";
+import { DiscordLogoIcon } from "@radix-ui/react-icons";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -44,6 +45,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <h5>Resources</h5>
                 <Link href="https://github.com/maxpaj/roleplayer">
                   <Github size={16} className="mb-1 mr-1 inline-block" /> GitHub
+                </Link>
+                <Link href="https://discord.gg/EpZevm6cZW">
+                  <DiscordLogoIcon className="mb-1 mr-1 inline-block" /> Discord
                 </Link>
               </div>
             </div>

@@ -1,4 +1,4 @@
-import { DefaultRuleSet } from "../../data/defaults";
+import { DnDRuleset } from "../../data/rulesets/dnd-5th";
 import { dangerousGenerateId } from "../../lib/generate-id";
 import { Campaign } from "../campaign/campaign";
 import { CampaignEvent } from "../campaign/campaign-events";
@@ -10,7 +10,7 @@ import { World } from "../world/world";
 import { Actor } from "./character";
 
 describe("Character", () => {
-  const defaultRuleSet = new DefaultRuleSet(() => 2);
+  const defaultRuleSet = new DnDRuleset(() => 2);
 
   describe("Create character events", () => {
     it("should handle create character events", () => {

@@ -12,7 +12,7 @@ export * from "./core/inventory/item";
 export * from "./core/world/rarity";
 export * from "./core/world/world";
 export * from "./lib/generate-id";
-export * from "./data/defaults";
+export * from "./data";
 
 // TODO: Should be injected at build time
 export const Version = "0.0.0";

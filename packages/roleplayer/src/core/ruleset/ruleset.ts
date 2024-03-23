@@ -61,19 +61,20 @@ export type CharacterStatType = {
 };
 
 /**
- * This contains rules based on the book.
+ * A ruleset should implement rules from a table top game system.
  *
- * - level progression definition (how much xp per level)
- * - stat types (STR, DEX, CON, INT, WIS, CHA, what does what?)
+ * - level progression definition (how much xp per level, what is unlocked at each level)
+ * - stat types (str, dex, con, int, wis, cha -- what does what?)
  * - professions (classes)
  * - character resources (health, mana, movement, etc)
- * - equipment / inventory slots
+ * - equipment / inventory slots (main hand, off hand, head, chest, etc)
+ * - effects (what happens when a character gets hit, what happens when a character hits)
  * - elements (fire, water, earth, air, etc)
  * - battle rules, who acts first, what determines a hit or a dodge on attack
  *
  */
 export interface Ruleset {
-  roll(roll: Dice): number;
+  roll(dice: Dice): number;
 
   getLevelProgression(): LevelProgression[];
   getCharacterStatTypes(): CharacterStatType[];
@@ -94,6 +95,6 @@ export interface Ruleset {
   ): number;
   characterResistanceMultiplier(actor: Actor, damageType: ElementDefinition): number;
   characterResistanceAbsolute(actor: Actor, damageType: ElementDefinition): number;
-  characterResourceGeneration(character: Actor): CharacterResourceGeneration[];
+  characterResourceGeneration(actor: Actor): CharacterResourceGeneration[];
   characterElementDamageMultiplier(actor: Actor, damageType: ElementDefinition): number;
 }

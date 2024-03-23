@@ -1,4 +1,4 @@
-import { DefaultRuleSet } from "../../data/defaults";
+import { DnDRuleset } from "../../data/rulesets/dnd-5th";
 import { dangerousGenerateId } from "../../lib/generate-id";
 import { World } from "../world/world";
 import { Campaign } from "./campaign";
@@ -7,7 +7,7 @@ import { CampaignEventWithRound } from "./campaign-events";
 describe("Campaign state", () => {
   it("applies events", () => {
     const characterId = dangerousGenerateId();
-    const world = new World(new DefaultRuleSet(() => 2), "World", {});
+    const world = new World(new DnDRuleset(() => 2), "World", {});
     const healthResource = world.ruleset.getCharacterResourceTypes().find((rt) => rt.name === "Health");
     const events: CampaignEventWithRound[] = [
       {

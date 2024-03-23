@@ -1,4 +1,4 @@
-import { D10, DefaultRuleSet, ElementDefinition } from "../..";
+import { D10, DnDRuleset, ElementDefinition } from "../..";
 import { Campaign } from "../campaign/campaign";
 import { Item, ItemSlot, ItemType } from "../inventory/item";
 import { Rarity } from "../world/rarity";
@@ -8,7 +8,7 @@ import { TargetType } from "./action";
 import { StatusDefinition, StatusApplicationTrigger, StatusDurationType, StatusType } from "./status";
 
 describe("actions", () => {
-  const defaultRuleSet = new DefaultRuleSet(() => 2);
+  const defaultRuleSet = new DnDRuleset(() => 2);
 
   const element: ElementDefinition = {
     id: "element-cold",

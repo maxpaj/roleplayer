@@ -1,4 +1,4 @@
-import { DefaultRuleSet } from "../../data/defaults";
+import { DnDRuleset } from "../../data/rulesets/dnd-5th";
 import { dangerousGenerateId } from "../../lib/generate-id";
 import { World } from "../world/world";
 import { Campaign } from "./campaign";
@@ -25,7 +25,7 @@ describe("Campaign", () => {
       },
     ];
 
-    const world = new World(new DefaultRuleSet(), "World", {});
+    const world = new World(new DnDRuleset(), "World", {});
     const campaign = new Campaign({
       id: "00000000-0000-0000-0000-000000000000" as const,
       name: "Campaign",

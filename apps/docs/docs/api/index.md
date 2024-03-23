@@ -1,3 +1,3 @@
 # Roleplayer
 
-Role playing library.
+Role playing framework/library and UI library (soon™).

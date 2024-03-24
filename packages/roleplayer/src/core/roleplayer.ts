@@ -20,7 +20,9 @@ type RoleplayerConfig = {
  * - character system
  * - world building system
  * - resource system
- * - npc action system
+ * - npc system
+ *    - action system
+ *    - relationship system
  * - dice system
  * - campaign system
  */

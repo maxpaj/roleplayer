@@ -21,9 +21,10 @@ import { EventRecord, eventsSchema } from "../db/schema/events";
 import { NewFriendInviteRecord, friendInvitesSchema } from "../db/schema/friend-invite";
 import { UserRecord } from "../db/schema/users";
 import { WorldRecord, worldsSchema } from "../db/schema/worlds";
-import { ActorAggregated, WorldAggregated } from "./world-service";
+import { ActorAggregated, WorldAggregated, WorldService } from "./world-service";
 import { actionsSchema } from "@/db/schema/actions";
 import { EffectRecord } from "@/db/schema/effects";
+import { DEFAULT_USER_ID } from "@/db/data";
 
 export type CampaignAggregated = CampaignRecord & {
   events: EventRecord[];
@@ -166,15 +167,12 @@ export class CampaignService {
       throw new Error("No such campaign");
     }
 
-    const world = new World(new DnDRuleset(), "", {
-      ...campaignData.world,
-      characters: [],
-      actions: [],
-      classes: [],
-      items: [],
-      monsters: [],
-      statuses: [],
-    });
+    const worldData = await new WorldService().getWorld(DEFAULT_USER_ID, campaignData.worldId);
+    if (!worldData) {
+      throw new Error("No such campaign");
+    }
+
+    const world = new World(new DnDRuleset(), "", worldData as unknown as Partial<World>);
 
     const campaign = new Campaign({
       ...campaignData,
@@ -290,10 +288,6 @@ export class CampaignService {
     }, {});
 
     return result[campaignId];
-  }
-
-  async publishEvent(campaignId: CampaignRecord["id"], event: Event): Promise<CampaignRecord> {
-    throw new Error("Method not implemented.");
   }
 
   async getDemoCampaigns(): Promise<CampaignRecord[]> {

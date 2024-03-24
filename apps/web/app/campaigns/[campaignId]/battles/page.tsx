@@ -2,21 +2,25 @@ import { H4, Muted } from "@/components/ui/typography";
 import { BattleCard } from "./components/battle-card";
 import { StartBattleButton } from "./components/start-battle-button";
 import { getCampaign } from "app/campaigns/actions";
-import { Campaign, CampaignEventWithRound } from "roleplayer";
-import { getWorldFromCampaignData } from "services/campaign-service";
+import { Campaign, CampaignEventWithRound, DnDRuleset, World } from "roleplayer";
+import { getWorldData } from "app/worlds/[worldId]/actions";
 
 export default async function BattlesPage({ params }: { params: { campaignId: string } }) {
   const { campaignId: id } = params;
   const campaignId = id;
   const campaignData = await getCampaign(campaignId);
-
   if (!campaignData) {
     return <>Campaign not found</>;
   }
 
+  const worldData = await getWorldData(campaignData.worldId);
+  if (!worldData) {
+    return <>World not found</>;
+  }
+
   const campaign = new Campaign({
     ...campaignData,
-    world: getWorldFromCampaignData(campaignData),
+    world: new World(new DnDRuleset(), worldData.name, worldData as unknown as Partial<World>),
     events: campaignData.events.map((e) => e.eventData as CampaignEventWithRound),
   });
 

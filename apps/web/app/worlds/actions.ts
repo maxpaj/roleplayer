@@ -26,7 +26,7 @@ export async function generateItemDescription(worldId: WorldRecord["id"], itemId
   }
 
   const generationService = new GenerationService();
-  const generated = await generationService.getItemDescription(world, item);
+  const generated = await generationService.getItemDescription(world, item, undefined);
 
   return generated?.message.content!;
 }

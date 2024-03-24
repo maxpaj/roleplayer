@@ -1,8 +1,6 @@
-import { Campaign, CampaignEventWithRound } from "roleplayer";
 import { BattleSimulator } from "./components/battle-simulator";
-import { classToPlain } from "@/lib/class-to-plain";
 import { getCampaign } from "app/campaigns/actions";
-import { getWorldFromCampaignData } from "services/campaign-service";
+import { getWorldData } from "app/worlds/[worldId]/actions";
 
 export default async function BattlePage({ params }: { params: { campaignId: string; battleId: string } }) {
   const { battleId: bid, campaignId: cid } = params;
@@ -11,20 +9,17 @@ export default async function BattlePage({ params }: { params: { campaignId: str
 
   const campaignData = await getCampaign(campaignId);
   if (!campaignData) {
-    return <>No campaign found</>;
+    return <>Campaign not found</>;
   }
 
-  const { events, world } = campaignData;
-
-  const campaignRpLib = new Campaign({
-    ...campaignData,
-    events: events.map((e) => e.eventData) as CampaignEventWithRound[],
-    world: getWorldFromCampaignData(campaignData),
-  });
+  const worldData = await getWorldData(campaignData.worldId);
+  if (!worldData) {
+    return <>World not found</>;
+  }
 
   return (
     <>
-      <BattleSimulator world={world} campaign={classToPlain(campaignRpLib)} battleId={battleId} />
+      <BattleSimulator worldData={worldData} campaignData={campaignData} battleId={battleId} />
     </>
   );
 }

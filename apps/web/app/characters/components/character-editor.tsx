@@ -93,7 +93,6 @@ export function CharacterEditor({ onSave, worldData, characterFromEvents, charac
         character={update}
         world={worldEntity}
         onChange={(inventory) => {
-          console.log(inventory);
           setUpdate((prev) => ({ ...prev, inventory }));
         }}
       />

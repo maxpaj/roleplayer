@@ -49,7 +49,7 @@ export function AddBattleMonsterButton({
         <DialogFooter>
           {monsters.length === 0 && (
             <ButtonLink variant="outline" href={`/worlds/${worldId}/monsters`}>
-              Add monster
+              Create new monster
             </ButtonLink>
           )}
           <Button

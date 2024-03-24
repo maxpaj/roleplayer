@@ -13,11 +13,13 @@ import {
   Id,
   ActionDefinition,
   BattleActor,
+  World,
+  DnDRuleset,
+  CampaignEventWithRound,
 } from "roleplayer";
 import { EventIconMap } from "../../../../../theme";
 import { Button } from "@/components/ui/button";
 import { H3, H5, Muted } from "@/components/ui/typography";
-import { RemoveFunctions } from "types/without-functions";
 import { AddBattleCharacterButton } from "./add-battle-character-button";
 import { AddBattleMonsterButton } from "./add-battle-monster-button";
 import { saveCampaignEvents } from "app/campaigns/actions";
@@ -27,17 +29,24 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { HelpCircle } from "lucide-react";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { WorldAggregated } from "services/world-service";
+import { CampaignAggregated } from "services/campaign-service";
 
 const EventIconSize = 32;
 
 type BattleSimulatorProps = {
-  campaign: RemoveFunctions<Campaign>;
+  campaignData: CampaignAggregated;
   battleId: Battle["id"];
-  world: WorldAggregated;
+  worldData: WorldAggregated;
 };
 
-export function BattleSimulator({ campaign, battleId, world }: BattleSimulatorProps) {
-  const [tempCampaign, setTempCampaignReact] = useState<Campaign>(new Campaign(campaign));
+export function BattleSimulator({ campaignData, battleId, worldData }: BattleSimulatorProps) {
+  const [tempCampaign, setTempCampaignReact] = useState<Campaign>(
+    new Campaign({
+      ...campaignData,
+      world: new World(new DnDRuleset(), worldData.name, worldData as unknown as Partial<World>),
+      events: campaignData.events.map((e) => e.eventData as CampaignEventWithRound),
+    })
+  );
   const [tempCampaignState, setTempCampaignState] = useState<CampaignState>(tempCampaign.getCampaignStateFromEvents());
   const [, updateState] = useState({});
   const [selectedAction, setSelectedAction] = useState<ActionDefinition | undefined>(undefined);
@@ -299,11 +308,15 @@ export function BattleSimulator({ campaign, battleId, world }: BattleSimulatorPr
     <div className="w-full">
       <div className="mb-4 flex flex-wrap gap-2">
         <AddBattleCharacterButton
-          campaignId={campaign.id}
+          campaignId={tempCampaign.id}
           availableCharacters={campaignState.characters}
           onAddCharacter={addCharacter}
         />
-        <AddBattleMonsterButton worldId={campaign.world.id} monsters={world.monsters} onAddMonster={addMonster} />
+        <AddBattleMonsterButton
+          worldId={tempCampaign.world.id}
+          monsters={worldData.monsters}
+          onAddMonster={addMonster}
+        />
 
         <Button
           disabled={!canEndTurn}

@@ -11,7 +11,7 @@ import { MagicWandIcon } from "@radix-ui/react-icons";
 import { Button } from "./ui/button";
 import { Info } from "lucide-react";
 
-const userHasApiToken = false;
+const userHasApiToken = true;
 
 export function ItemEditor({ item, worldData }: { item: ItemAggregated; worldData: WorldAggregated }) {
   const [update, setUpdate] = useState(item);

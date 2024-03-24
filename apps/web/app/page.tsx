@@ -1,5 +1,5 @@
 import { ButtonLink } from "@/components/ui/button-link";
-import { H1, H5, Lead, Paragraph } from "@/components/ui/typography";
+import { H1, H2, H4, Lead, Muted } from "@/components/ui/typography";
 import bg from "assets/bg.webp";
 import { ArrowRight, HammerIcon } from "lucide-react";
 
@@ -17,9 +17,9 @@ export default function Home() {
         }}
       />
 
-      <section className="z-1 relative space-y-6 pb-8 pt-6 md:pb-12 md:pt-10 lg:py-32">
+      <section className="z-1 relative mb-96 space-y-6 pb-8 pt-6 md:pb-12 md:pt-10 lg:py-32">
         <div className="container flex flex-col items-center gap-4 text-center">
-          <H1 className="text-3xl font-semibold sm:text-5xl md:text-6xl lg:text-7xl">Create a journey to remember</H1>
+          <H1 className="text-5xl font-semibold sm:text-5xl md:text-6xl lg:text-7xl">Create a journey to remember</H1>
           <Lead className="my-4">
             Build a role-playing world, invite your friends, create characters and the adventure may begin
           </Lead>
@@ -34,28 +34,34 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="z-1 relative space-y-6 pb-8 pt-6 md:pb-12 md:pt-10 lg:py-32">
-        <div className="container flex flex-col items-center gap-4 text-center">
-          <div>
-            <H5>Design a world</H5>
-            <Paragraph className="my-4">
-              Choose a TTRPG and design a world for the game. Use AI to generate content.
-            </Paragraph>
-          </div>
-          <div>
-            <H5>Combat tracker</H5>
-            <Paragraph className="my-4">Track combat in your game with a simple and easy to use interface.</Paragraph>
-          </div>
-          <div>
-            <H5>Story tracker</H5>
-            <Paragraph className="my-4">
-              Keep track of the path that your party has paved through the world, which characters and factions you've
-              interacted with, etc.
-            </Paragraph>
-          </div>
-          <div>
-            <H5>TTRPG builder</H5>
-            <Paragraph className="my-4">Design rules for a your own role playing game.</Paragraph>
+      <section>
+        <div className="mb-16 text-center">
+          <H2>What's in Roleplayer?</H2>
+          <Lead className="m-0">Everything you need to build a role playing experience</Lead>
+        </div>
+
+        <div className="container">
+          <div className="md:grids-col-4 grid gap-4">
+            <div className="bg-card/70 text-card-foreground rounded-xl border p-6 shadow">
+              <H4 className="mb-1">World designer tool</H4>
+              <Muted>Choose a TTRPG and design a world for the game. Use AI to generate content.</Muted>
+            </div>
+            <div className="bg-card/70 text-card-foreground rounded-xl border p-6 shadow">
+              <H4 className="mb-1">Combat tracker</H4>
+              <Muted>Track combat in your game with a simple and easy to use interface.</Muted>
+            </div>
+
+            <div className="bg-card/70 text-card-foreground rounded-xl border p-6 shadow">
+              <H4 className="mb-1">Story tracker</H4>
+              <Muted>
+                Keep track of the path that your party has paved through the world, which characters and factions you've
+                interacted with, etc.
+              </Muted>
+            </div>
+            <div className="bg-card/70 text-card-foreground rounded-xl border p-6 shadow">
+              <H4 className="mb-1">TTRPG builder</H4>
+              <Muted>Design rules for a your own role playing game.</Muted>
+            </div>
           </div>
         </div>
       </section>

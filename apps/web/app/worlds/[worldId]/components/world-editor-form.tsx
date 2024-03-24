@@ -36,6 +36,7 @@ export function WorldEditorForm({ world }: WorldEditorFormProps) {
       />
 
       <Textarea
+        rows={10}
         id="story"
         name="story"
         onChange={(e) =>

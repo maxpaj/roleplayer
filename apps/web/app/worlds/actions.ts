@@ -4,6 +4,7 @@ import { DEFAULT_USER_ID } from "@/db/data";
 import { ItemRecord } from "@/db/schema/items";
 import { WorldRecord } from "@/db/schema/worlds";
 import { GenerationService } from "services/open-ai-service";
+import { UserService } from "services/user-service";
 import { WorldService } from "services/world-service";
 
 export async function saveWorld(worldId: WorldRecord["id"], world: Partial<WorldRecord>) {
@@ -25,8 +26,8 @@ export async function generateItemDescription(worldId: WorldRecord["id"], itemId
     throw new Error("No such item");
   }
 
-  const generationService = new GenerationService();
-  const generated = await generationService.getItemDescription(world, item, undefined);
+  const user = await new UserService().getUser(DEFAULT_USER_ID);
+  const generated = await new GenerationService().getItemDescription(world, item, user);
 
   return generated?.message.content!;
 }

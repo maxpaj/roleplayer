@@ -27,9 +27,15 @@ export default async function ItemDetailsPage({
     <>
       <H3>{item.name}</H3>
       <Divider className="my-3" />
-      <Badge variant="outline" className="mb-2">
-        {item.rarity}
-      </Badge>
+      <div className="flex gap-2">
+        <Badge variant="outline" className="mb-2">
+          {item.rarity}
+        </Badge>
+        <Badge variant="outline" className="mb-2">
+          {item.type}
+        </Badge>
+      </div>
+
       <ItemEditor item={item} worldData={worldData} />
     </>
   );

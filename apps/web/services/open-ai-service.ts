@@ -4,7 +4,7 @@ import { WorldAggregated } from "./world-service";
 import { UserRecord } from "@/db/schema/users";
 
 export class GenerationService {
-  async getItemDescription(world: WorldAggregated, item: ItemRecord, user?: UserRecord) {
+  async getItemDescription(world: WorldAggregated, item: ItemRecord, user: UserRecord) {
     if (!user || !user.openAiApiToken) {
       throw new Error("No OpenAI API token found. Please set it in your profile.");
     }

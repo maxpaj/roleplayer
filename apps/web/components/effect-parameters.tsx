@@ -44,8 +44,8 @@ export function EffectParameters({
       <TableBody>
         {Object.entries(parameters).map(([key, value]) => (
           <TableRow key={key}>
-            <TableCell>{renderValue(key, value)}</TableCell>
-            <TableCell>{renderParameterType(key)}</TableCell>
+            <TableCell style={{ width: "50%" }}>{renderParameterType(key)}</TableCell>
+            <TableCell style={{ width: "50%" }}>{renderValue(key, value)}</TableCell>
           </TableRow>
         ))}
       </TableBody>

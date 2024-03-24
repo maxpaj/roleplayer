@@ -31,7 +31,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <main className="flex min-h-screen flex-col items-center">{children}</main>
 
           <footer className="bg-background/20 pb-16 pt-6 text-xs backdrop-blur-sm md:px-8 md:pt-4">
-            <div className="container flex flex-col flex-wrap justify-between gap-4 md:h-24 md:flex-row">
+            <div className="container flex flex-col flex-wrap justify-between gap-8 md:h-24 md:flex-row">
               <div className="flex max-w-[300px] flex-col gap-3">
                 <div className="mr-2 flex h-8 w-20 dark:invert">
                   <Image src={logo} alt="Icon" priority />
@@ -43,14 +43,20 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 </div>
               </div>
 
-              <div className="flex max-w-[300px] flex-col gap-3">
-                <h5>Resources</h5>
-                <Link href="https://github.com/maxpaj/roleplayer">
-                  <Github size={16} className="mr-1 inline-block" /> GitHub
-                </Link>
-                <Link href="https://discord.gg/EpZevm6cZW">
-                  <DiscordLogoIcon className="mr-1 inline-block h-[16px] w-[16px]" /> Discord
-                </Link>
+              <div className="flex flex-wrap gap-8">
+                <div className="flex max-w-[300px] flex-col gap-3">
+                  <h5>Community</h5>
+                  <Link href="https://discord.gg/EpZevm6cZW">
+                    <DiscordLogoIcon className="mr-1 inline-block h-[16px] w-[16px]" /> Discord
+                  </Link>
+                </div>
+
+                <div className="flex max-w-[300px] flex-col gap-3">
+                  <h5>Resources</h5>
+                  <Link href="https://github.com/maxpaj/roleplayer">
+                    <Github size={16} className="mr-1 inline-block" /> GitHub
+                  </Link>
+                </div>
               </div>
             </div>
           </footer>

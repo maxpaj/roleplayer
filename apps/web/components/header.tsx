@@ -6,7 +6,7 @@ import { ModeToggle } from "./mode-toggle";
 export function Header() {
   return (
     <header
-      className="flex items-center justify-between p-4 text-sm"
+      className="sticky top-0 z-10 flex w-full items-center justify-between px-4 py-3 text-sm backdrop-blur-md"
       style={{ background: "hsla(var(--background) / 50%)" }}
     >
       <div className="mr-2 flex items-center dark:invert">

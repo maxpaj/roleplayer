@@ -44,6 +44,7 @@ export function TextareaGenerate({ value, onBlur, onChange, generate, ...props }
         onBlur={(e) => onBlur(e.target.value)}
         {...props}
       />
+
       <div className="-mt-2 flex w-full flex-wrap justify-between gap-1 border p-1">
         <div className="align-center flex gap-2">
           <Button disabled={generated.length > 0 || loading} variant="outline" size="sm" onClick={getGenerate}>

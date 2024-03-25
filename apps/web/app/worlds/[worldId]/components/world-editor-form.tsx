@@ -1,12 +1,10 @@
 "use client";
 
+import { MarkdownEditor } from "@/components/markdown-editor";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Muted } from "@/components/ui/typography";
 import { WorldRecord } from "@/db/schema/worlds";
 import { saveWorld } from "app/worlds/actions";
-import { Info } from "lucide-react";
-import Link from "next/link";
 import { useState } from "react";
 
 type WorldEditorFormProps = {
@@ -35,33 +33,29 @@ export function WorldEditorForm({ world }: WorldEditorFormProps) {
         placeholder="World name"
       />
 
-      <Textarea
-        rows={10}
-        id="story"
-        name="story"
-        onChange={(e) =>
+      <MarkdownEditor
+        onChange={(value) =>
           setUpdate({
             ...update,
-            description: e.target.value,
+            description: value,
           })
         }
+        value={update.description || ""}
         onBlur={async () => {
           await saveWorld(world.id, update);
         }}
-        value={update.description || ""}
-        placeholder="Describe the world, the story, background, conflicts, factions, etc."
+        renderEditor={(value, onChange, onBlur) => (
+          <Textarea
+            rows={10}
+            id="story"
+            name="story"
+            onChange={(e) => onChange(e.target.value)}
+            onBlur={onBlur}
+            value={value}
+            placeholder="Describe the world, the story, background, conflicts, factions, etc."
+          />
+        )}
       />
-
-      <div className="flex items-center gap-2">
-        <Info size={16} />
-        <Muted>
-          You can use{" "}
-          <Link className="text-primary" href="https://commonmark.org/help/">
-            Markdown
-          </Link>{" "}
-          to style your world description.
-        </Muted>
-      </div>
     </div>
   );
 }

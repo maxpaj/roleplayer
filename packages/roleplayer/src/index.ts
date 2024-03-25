@@ -14,5 +14,5 @@ export * from "./core/world/world";
 export * from "./lib/generate-id";
 export * from "./data";
 
-// TODO: Should be injected at build time
+// TODO: Should be injected at build/runtime time
 export const Version = "0.0.0";

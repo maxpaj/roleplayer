@@ -237,7 +237,9 @@ export function BattleSimulator({ campaignData, battleId, worldData }: BattleSim
   }
 
   function renderBattleEvents() {
-    const battleEvents = tempCampaign.events.filter((e) => e.battleId === battleId);
+    const battleEvents = tempCampaign.events
+      .filter((e) => e.battleId === battleId)
+      .sort((a, b) => a.serialNumber - b.serialNumber);
     return <div className="mb-4 flex w-full flex-col gap-y-4">{battleEvents.map(renderBattleEvent)}</div>;
   }
 

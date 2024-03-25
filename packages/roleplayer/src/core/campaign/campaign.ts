@@ -5,7 +5,7 @@ import { Battle } from "../battle/battle";
 import { ActionDefinition } from "../action/action";
 import { EquipmentSlotDefinition, Item } from "../inventory/item";
 import { World } from "../world/world";
-import { CampaignEvent, CampaignEventWithRound } from "./campaign-events";
+import { CampaignEvent, CampaignEventWithRound } from "../events/events";
 import { CampaignState } from "./campaign-state";
 import { Round } from "./round";
 

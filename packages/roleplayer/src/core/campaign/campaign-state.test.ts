@@ -2,7 +2,7 @@ import { DnDRuleset } from "../../data/rulesets/dnd-5th";
 import { dangerousGenerateId } from "../../lib/generate-id";
 import { World } from "../world/world";
 import { Campaign } from "./campaign";
-import { CampaignEventWithRound } from "./campaign-events";
+import { CampaignEventWithRound } from "../events/events";
 
 describe("Campaign state", () => {
   it("applies events", () => {

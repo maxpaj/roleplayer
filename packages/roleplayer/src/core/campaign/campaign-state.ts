@@ -3,7 +3,7 @@ import { Battle } from "../battle/battle";
 import { Round } from "./round";
 import { Actor, isCharacterEvent } from "../actor/character";
 import { Campaign } from "./campaign";
-import { CampaignEventType, CampaignEventWithRound } from "./campaign-events";
+import { RoleplayerEvent, CampaignEventWithRound } from "../events/events";
 import { CharacterResourceDefinition } from "../ruleset/ruleset";
 
 /**
@@ -48,7 +48,7 @@ export class CampaignState {
     return false;
   }
 
-  characterHasRoundEvent(round: Round, characterId: Id, type: CampaignEventType["type"]) {
+  characterHasRoundEvent(round: Round, characterId: Id, type: RoleplayerEvent["type"]) {
     const roundCharacterEvents = this.campaign.getCharacterRoundEvents(round, characterId);
     return roundCharacterEvents.some(
       (event) => isCharacterEvent(event) && event.characterId === characterId && event.type === type

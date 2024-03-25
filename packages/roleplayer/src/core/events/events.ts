@@ -4,11 +4,11 @@ import { Actor, Position } from "../actor/character";
 import { Battle } from "../battle/battle";
 import { ActionDefinition } from "../action/action";
 import { Item } from "../inventory/item";
-import { Round } from "./round";
+import { Round } from "../campaign/round";
 
-export type CampaignEventType = SystemEventType | CharacterEventType;
+export type RoleplayerEvent = SystemEventType | CharacterEventType;
 
-export type CampaignEvent = CampaignEventType & {
+export type CampaignEvent = RoleplayerEvent & {
   id: Id;
 };
 
@@ -18,7 +18,7 @@ export type CampaignEventWithRound = CampaignEvent & {
   serialNumber: number;
 };
 
-export const CampaignEventTypes: CampaignEventType["type"][] = [
+export const CampaignEventTypes: RoleplayerEvent["type"][] = [
   "Unknown",
   "CampaignStarted",
   "RoundStarted",

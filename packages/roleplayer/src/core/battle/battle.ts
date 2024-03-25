@@ -1,6 +1,6 @@
 import { Id } from "../../lib/generate-id";
 import { Actor, isCharacterEvent } from "../actor/character";
-import { CampaignEvent } from "../campaign/campaign-events";
+import { CampaignEvent } from "../events/events";
 import { AugmentedRequired } from "../../types/with-required";
 
 export type BattleActor = { actingOrder: number; actor: Actor };

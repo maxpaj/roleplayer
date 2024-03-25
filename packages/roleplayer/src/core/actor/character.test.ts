@@ -1,7 +1,7 @@
 import { DnDRuleset } from "../../data/rulesets/dnd-5th";
 import { dangerousGenerateId } from "../../lib/generate-id";
 import { Campaign } from "../campaign/campaign";
-import { CampaignEvent } from "../campaign/campaign-events";
+import { CampaignEvent } from "../events/events";
 import { CharacterResourceDefinition } from "../ruleset/ruleset";
 import { ActionDefinition, TargetType } from "../action/action";
 import { Item, ItemSlot, ItemType } from "../inventory/item";

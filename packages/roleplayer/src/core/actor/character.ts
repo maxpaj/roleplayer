@@ -1,5 +1,5 @@
 import { Id } from "../../lib/generate-id";
-import { CampaignEvent, CampaignEventType, CampaignEventWithRound } from "../campaign/campaign-events";
+import { CampaignEvent, RoleplayerEvent, CampaignEventWithRound } from "../events/events";
 import { ActionDefinition } from "../action/action";
 import { StatusDefinition } from "../action/status";
 import { EquipmentSlotDefinition, Item } from "../inventory/item";
@@ -46,7 +46,7 @@ export type CharacterResource = {
  * @module core/actor
  */
 export type CharacterResourceGeneration = CharacterResource & {
-  onEvent: CampaignEventType;
+  onEvent: RoleplayerEvent;
 };
 
 /**
@@ -72,7 +72,7 @@ export type Reaction = {
   id: Id;
   name: string;
   type: ReactionEventType;
-  eventType: CampaignEventType["type"];
+  eventType: RoleplayerEvent["type"];
   action: ActionDefinition;
 };
 

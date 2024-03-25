@@ -1,11 +1,11 @@
 import { ActionDefinition, CharacterResourceDefinition, Dice, ElementDefinition, dangerousGenerateId } from "../..";
 import { Actor } from "../actor/character";
-import { CampaignEvent, CampaignEventType } from "../campaign/campaign-events";
+import { CampaignEvent, RoleplayerEvent } from "../events/events";
 import { World } from "../world/world";
 import { StatusDefinition } from "./status";
 
 export interface EventGenerator {
-  eventType: CampaignEventType["type"];
+  eventType: RoleplayerEvent["type"];
   instantiate(action: ActionDefinition, source: Actor, target: Actor, world: World): CampaignEvent;
 }
 

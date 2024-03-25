@@ -1,0 +1,5 @@
+{
+    "name": "@roleplayer/roleplayer",
+    "version": "0.6.0",
+    "exports": "./src/index.ts"
+}

@@ -18,6 +18,7 @@ export function CharacterInventoryEditor({ character, world, onChange }: Charact
           <ItemCard key={item.id} item={item} />
         ))}
       </div>
+
       <ItemSelector
         placeholder="Add item to inventory"
         availableItems={world.items}

@@ -6,6 +6,7 @@ export const usersSchema = pgTable(
     id: uuid("id").defaultRandom().primaryKey(),
     name: varchar("name", { length: 256 }).notNull(),
     createdUtc: timestamp("createdUtc").defaultNow(),
+    imageUrl: varchar("imageUrl", { length: 2048 }),
     openAiApiToken: varchar("openAiApiToken", { length: 256 }),
   },
   (users) => {

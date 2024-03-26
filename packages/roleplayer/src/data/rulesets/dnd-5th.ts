@@ -90,7 +90,22 @@ export class DnDRuleset implements Ruleset {
       {
         id: "00000000-0000-0000-0000-000000003000" as const,
         name: "Main hand",
-        eligibleEquipmentTypes: [ItemEquipmentType.OneHandSword],
+        eligibleEquipmentTypes: [ItemEquipmentType.OneHandWeapon, ItemEquipmentType.Shield],
+      },
+      {
+        id: "00000000-0000-0000-0000-000000003001" as const,
+        name: "Off hand",
+        eligibleEquipmentTypes: [ItemEquipmentType.OneHandWeapon, ItemEquipmentType.Shield],
+      },
+      {
+        id: "00000000-0000-0000-0000-000000003002" as const,
+        name: "Chest",
+        eligibleEquipmentTypes: [ItemEquipmentType.BodyArmor],
+      },
+      {
+        id: "00000000-0000-0000-0000-000000003003" as const,
+        name: "Head",
+        eligibleEquipmentTypes: [ItemEquipmentType.BodyArmor],
       },
     ];
   }

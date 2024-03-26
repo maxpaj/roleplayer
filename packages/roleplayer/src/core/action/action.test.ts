@@ -1,6 +1,6 @@
 import { D10, DnDRuleset, ElementDefinition } from "../..";
 import { Campaign } from "../campaign/campaign";
-import { Item, ItemSlot, ItemType } from "../inventory/item";
+import { ItemDefinition, ItemEquipmentType, ItemSlot, ItemType } from "../inventory/item";
 import { Rarity } from "../world/rarity";
 import { World } from "../world/world";
 import { CharacterResourceLossEffect, CharacterStatusGainEffect } from "./effect";
@@ -33,8 +33,11 @@ describe("actions", () => {
     ],
   };
 
-  const frostSword: Item = {
+  const frostSword: ItemDefinition = {
     id: "item-frost-sword",
+    description: "",
+    equipmentType: ItemEquipmentType.OneHandWeapon,
+    weightUnits: 1,
     rarity: Rarity.Rare,
     actions: [
       {
@@ -46,7 +49,7 @@ describe("actions", () => {
         ],
         eligibleTargets: [TargetType.Hostile],
         name: "Slash",
-        rangeDistanceUnit: 5,
+        rangeDistanceUnits: 5,
         requiresResources: [],
       },
     ],

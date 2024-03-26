@@ -4,7 +4,7 @@ import { Campaign } from "../campaign/campaign";
 import { CampaignEvent } from "../events/events";
 import { CharacterResourceDefinition } from "../ruleset/ruleset";
 import { ActionDefinition, TargetType } from "../action/action";
-import { Item, ItemSlot, ItemType } from "../inventory/item";
+import { ItemDefinition, ItemEquipmentType, ItemSlot, ItemType } from "../inventory/item";
 import { Rarity } from "../world/rarity";
 import { World } from "../world/world";
 import { Actor } from "./character";
@@ -225,12 +225,14 @@ describe("Character", () => {
           {
             id: itemId,
             rarity: Rarity.Common,
+            weightUnits: 1,
             actions: [],
             name: "Item",
             stats: [],
             occupiesSlots: [ItemSlot.Inventory],
             type: ItemType.Equipment,
             description: "",
+            equipmentType: ItemEquipmentType.OneHandWeapon,
           },
         ],
       });
@@ -314,17 +316,20 @@ describe("Character", () => {
   describe("Character actions", () => {
     it("should return a list of possible actions based on the character class abilities, spells and inventory", () => {
       const world = new World(defaultRuleSet, "World", {});
-      const sword: Item = {
+      const sword: ItemDefinition = {
         id: dangerousGenerateId(),
         rarity: Rarity.Common,
+        weightUnits: 1,
         stats: [],
+        description: "",
+        equipmentType: ItemEquipmentType.OneHandWeapon,
         actions: [
           {
             id: dangerousGenerateId(),
             appliesEffects: [],
             eligibleTargets: [TargetType.Hostile],
             name: "Slash",
-            rangeDistanceUnit: 5,
+            rangeDistanceUnits: 5,
             requiresResources: [],
             description: "",
           },
@@ -339,7 +344,7 @@ describe("Character", () => {
         name: "Healing Word (Level 1)",
         appliesEffects: [],
         eligibleTargets: [TargetType.Friendly],
-        rangeDistanceUnit: 30,
+        rangeDistanceUnits: 30,
         requiresResources: [],
         description: "",
       };
@@ -349,7 +354,7 @@ describe("Character", () => {
         appliesEffects: [],
         eligibleTargets: [TargetType.Hostile],
         name: "Firebolt",
-        rangeDistanceUnit: 35,
+        rangeDistanceUnits: 35,
         requiresResources: [
           {
             resourceTypeId: dangerousGenerateId(),

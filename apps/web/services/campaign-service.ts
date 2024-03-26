@@ -59,7 +59,7 @@ function mapCharacterRecordToRoleplayerCharacter(world: World, m: ActorAggregate
     })),
     actions: m.actions.map((a) => ({
       ...a,
-      rangeDistanceUnit: a.rangeDistanceUnit,
+      rangeDistanceUnits: a.rangeDistanceUnits,
       requiresResources: a.requiresResources.map((r) => ({
         resourceTypeId: r.resourceType!,
         amount: r.amount,

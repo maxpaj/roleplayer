@@ -3,7 +3,7 @@ import { Id } from "../../lib/generate-id";
 import { Actor, Position } from "../actor/character";
 import { Battle } from "../battle/battle";
 import { ActionDefinition } from "../action/action";
-import { Item } from "../inventory/item";
+import { ItemDefinition } from "../inventory/item";
 import { Round } from "../campaign/round";
 
 export type RoleplayerEvent = SystemEventType | CharacterEventType;
@@ -123,12 +123,12 @@ export type CharacterEventType =
   | {
       type: "CharacterItemGain";
       characterId: Actor["id"];
-      itemId: Item["id"];
+      itemId: ItemDefinition["id"];
     }
   | {
       type: "CharacterItemEquip";
       characterId: Actor["id"];
-      itemId: Item["id"];
+      itemId: ItemDefinition["id"];
       equipmentSlotId: Id;
     }
   | {

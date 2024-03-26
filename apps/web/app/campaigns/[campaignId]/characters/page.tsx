@@ -30,9 +30,6 @@ export default async function CampaignCharactersPage({ params }: { params: { cam
 
   return (
     <>
-      <H3>Adventurers</H3>
-      <Divider className="my-3" />
-
       <div className="my-2 flex gap-2">
         <CreateCharacterForm worldId={campaignData.world.id} campaignId={campaignData.id} />
 

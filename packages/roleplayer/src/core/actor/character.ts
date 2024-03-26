@@ -2,7 +2,7 @@ import { Id } from "../../lib/generate-id";
 import { CampaignEvent, RoleplayerEvent, CampaignEventWithRound } from "../events/events";
 import { ActionDefinition } from "../action/action";
 import { StatusDefinition } from "../action/status";
-import { EquipmentSlotDefinition, Item } from "../inventory/item";
+import { EquipmentSlotDefinition, ItemDefinition } from "../inventory/item";
 import { Party } from "../campaign/party";
 import { World } from "../world/world";
 import {
@@ -61,8 +61,18 @@ export type CharacterClass = {
  * @module core/actor
  */
 export type CharacterEquipmentSlot = {
-  item?: Item;
+  item?: ItemInstance;
   slotId: EquipmentSlotDefinition["id"];
+};
+
+export type CharacterInventoryItem = {
+  id: Id;
+  item: ItemInstance;
+};
+
+type ItemInstance = {
+  id: Id;
+  itemDefinition: ItemDefinition;
 };
 
 /**
@@ -121,7 +131,7 @@ export class Actor {
   alignment!: Alignment;
   classes: CharacterClass[] = [];
 
-  inventory: Item[] = [];
+  inventory: CharacterInventoryItem[] = [];
   equipment: CharacterEquipmentSlot[] = [];
 
   stats: CharacterStat[] = [];
@@ -201,8 +211,8 @@ export class Actor {
       ...this.equipment
         .flatMap((eq) => eq.item)
         .filter((i) => i)
-        .flatMap((i) => i!.actions),
-      ...this.inventory.flatMap((i) => i.actions),
+        .flatMap((i) => i!.itemDefinition.actions),
+      ...this.inventory.flatMap((i) => i.item.itemDefinition.actions),
     ];
   }
 

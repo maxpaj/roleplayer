@@ -21,8 +21,15 @@ type CharacterEditorProps = {
 };
 
 export function CharacterEditor({ onSave, worldData, characterFromEvents, characterLevel }: CharacterEditorProps) {
-  const [update, setUpdate] = useState(characterFromEvents);
-  const worldEntity = new World(new DnDRuleset(), worldData.name, worldData as unknown as Partial<World>);
+  const worldEntity = new World(
+    new DnDRuleset(() => {
+      throw new Error("no rolling");
+    }),
+    worldData.name,
+    worldData as unknown as Partial<World>
+  );
+
+  const [update, setUpdate] = useState(new Actor(worldEntity, characterFromEvents));
 
   return (
     <>
@@ -37,7 +44,8 @@ export function CharacterEditor({ onSave, worldData, characterFromEvents, charac
             value={update.name}
             onChange={(e) => {
               setUpdate((prev) => {
-                return { ...prev, name: e.target.value };
+                prev.name = e.target.value;
+                return prev;
               });
             }}
           />
@@ -65,7 +73,10 @@ export function CharacterEditor({ onSave, worldData, characterFromEvents, charac
         availableClasses={worldEntity.classes}
         character={update}
         onChange={(classes) => {
-          setUpdate((prev) => ({ ...prev, classes }));
+          setUpdate((prev) => {
+            prev.classes = [...classes];
+            return prev;
+          });
         }}
       />
 
@@ -84,7 +95,10 @@ export function CharacterEditor({ onSave, worldData, characterFromEvents, charac
         character={update}
         world={worldEntity}
         onChange={(stats) => {
-          setUpdate((prev) => ({ ...prev, stats }));
+          setUpdate((prev) => {
+            prev.stats = [...stats];
+            return prev;
+          });
         }}
       />
       <H4 className="my-2">Equipment/inventory</H4>
@@ -92,8 +106,17 @@ export function CharacterEditor({ onSave, worldData, characterFromEvents, charac
       <CharacterInventoryEditor
         character={update}
         world={worldEntity}
-        onChange={(inventory) => {
-          setUpdate((prev) => ({ ...prev, inventory }));
+        onInventoryChange={(inventory) => {
+          setUpdate((prev) => {
+            prev.inventory = [...inventory];
+            return prev;
+          });
+        }}
+        onEquipmentChange={(equipment) => {
+          setUpdate((prev) => {
+            prev.equipment = [...equipment];
+            return prev;
+          });
         }}
       />
     </>

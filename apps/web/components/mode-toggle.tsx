@@ -4,7 +4,7 @@ import * as React from "react";
 import { useTheme } from "next-themes";
 import { Label } from "./ui/label";
 import { Switch } from "./ui/switch";
-import { MoonIcon, SunIcon } from "lucide-react";
+import { MoonIcon } from "lucide-react";
 
 export function LightModeToggle() {
   const { theme, setTheme } = useTheme();
@@ -15,7 +15,7 @@ export function LightModeToggle() {
         <Label htmlFor="light-mode">{<MoonIcon size={18} />}</Label>
         <Switch
           id="light-mode"
-          checked={theme === "dark"}
+          checked={theme === "light"}
           onCheckedChange={() => setTheme(theme === "light" ? "dark" : "light")}
         />
       </div>

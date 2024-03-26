@@ -1,7 +1,7 @@
 import { integer, pgEnum, pgTable, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
 import { actionsSchema } from "./actions";
 import { campaignsSchema } from "./campaigns";
-import { itemsSchema } from "./items";
+import { itemInstanceSchema } from "./items";
 import { usersSchema } from "./users";
 import { worldsSchema } from "./worlds";
 import { resourceTypesSchema } from "./resources";
@@ -39,7 +39,7 @@ export const charactersToItemsSchema = pgTable("characterToItems", {
 
   itemId: uuid("itemId")
     .notNull()
-    .references(() => itemsSchema.id),
+    .references(() => itemInstanceSchema.id),
 });
 
 export const charactersToClassesSchema = pgTable("characterToClasses", {
@@ -65,6 +65,35 @@ export const charactersToCampaignsSchema = pgTable("characterToCampaigns", {
   campaignId: uuid("campaignId")
     .notNull()
     .references(() => campaignsSchema.id),
+});
+
+export const equipmentSlotSchema = pgTable("equipmentSlot", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  name: varchar("name", { length: 256 }).notNull(),
+  createdUtc: timestamp("createdUtc").defaultNow(),
+  worldId: uuid("worldId")
+    .references(() => worldsSchema.id)
+    .notNull(),
+});
+
+export const charactersToEquipmentSlotsSchema = pgTable("charactersToEquipmentSlots", {
+  characterId: uuid("characterId")
+    .notNull()
+    .references(() => charactersSchema.id),
+
+  equipmentSlotId: uuid("equipmentSlotId")
+    .notNull()
+    .references(() => equipmentSlotSchema.id),
+});
+
+export const equipmentToEquipmentSlotsSchema = pgTable("equipmentToEquipmentSlots", {
+  itemId: uuid("itemId")
+    .notNull()
+    .references(() => itemInstanceSchema.id),
+
+  equipmentSlotId: uuid("equipmentSlotId")
+    .notNull()
+    .references(() => equipmentSlotSchema.id),
 });
 
 export const charactersToResourcesSchema = pgTable("characterToResources", {

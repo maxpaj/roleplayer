@@ -1,7 +1,7 @@
 "use server";
 
 import { DEFAULT_USER_ID } from "@/db/data";
-import { ItemRecord } from "@/db/schema/items";
+import { ItemDefinitionRecord } from "@/db/schema/items";
 import { WorldRecord } from "@/db/schema/worlds";
 import { GenerationService } from "services/open-ai-service";
 import { UserService } from "services/user-service";
@@ -11,11 +11,11 @@ export async function saveWorld(worldId: WorldRecord["id"], world: Partial<World
   await new WorldService().saveWorld(worldId, world);
 }
 
-export async function saveItem(itemId: ItemRecord["id"], update: Partial<ItemRecord>) {
+export async function saveItem(itemId: ItemDefinitionRecord["id"], update: Partial<ItemDefinitionRecord>) {
   await new WorldService().saveItem(itemId, update);
 }
 
-export async function generateItemDescription(worldId: WorldRecord["id"], itemId: ItemRecord["id"]) {
+export async function generateItemDescription(worldId: WorldRecord["id"], itemId: ItemDefinitionRecord["id"]) {
   const world = await new WorldService().getWorld(DEFAULT_USER_ID, worldId);
   if (!world) {
     throw new Error("No such world");

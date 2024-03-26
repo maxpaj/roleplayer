@@ -1,7 +1,7 @@
 import { Id } from "../../lib/generate-id";
 import { Actor, CharacterClass } from "../actor/character";
 import { ActionDefinition } from "../action/action";
-import { Item } from "../inventory/item";
+import { EquipmentSlotDefinition, ItemDefinition } from "../inventory/item";
 import { StatusDefinition } from "../action/status";
 import { Clazz, Race, Ruleset } from "../..";
 
@@ -18,7 +18,7 @@ export class World {
   name!: string;
 
   monsters: Actor[] = [];
-  items: Item[] = [];
+  items: ItemDefinition[] = [];
   characters: Actor[] = [];
   actions: ActionDefinition[] = [];
   races: Race[] = [];
@@ -30,6 +30,14 @@ export class World {
     Object.assign(this, w);
     this.ruleset = ruleset;
     this.name = name;
+  }
+
+  getEligibleEquipmentSlots(character: Actor, item: ItemDefinition): EquipmentSlotDefinition[] {
+    const slots = this.ruleset.getCharacterEquipmentSlots();
+    const characterSlots = character.equipment.filter((slot) => !slot.item).map((c) => c.slotId);
+    return slots.filter(
+      (slot) => slot.eligibleEquipmentTypes.includes(item.equipmentType) && characterSlots.includes(slot.id)
+    );
   }
 
   addCharacter(characterId: Actor["id"], name: string) {

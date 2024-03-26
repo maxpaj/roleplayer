@@ -1,9 +1,9 @@
 import * as React from "react";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Item } from "roleplayer";
+import { ItemDefinition } from "roleplayer";
 
 type ItemCardProps = {
-  item: Partial<Item>;
+  item: Partial<ItemDefinition>;
   onClick?: () => void;
 };
 

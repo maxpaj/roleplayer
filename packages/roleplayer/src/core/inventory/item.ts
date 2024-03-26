@@ -1,4 +1,4 @@
-import { CharacterStat, CharacterStatType } from "../..";
+import { CharacterStat } from "../..";
 import { Id } from "../../lib/generate-id";
 import { ActionDefinition } from "../action/action";
 import { Rarity } from "../world/rarity";
@@ -9,12 +9,11 @@ export enum ItemType {
 }
 
 export enum ItemEquipmentType {
+  None = "None",
   Shield = "Shield",
-  OneHandSword = "OneHandSword",
-  TwoHandSword = "TwoHandSword",
-  Dagger = "Dagger",
-  OneHandMace = "OneHandMace",
-  TwoHandMace = "TwoHandMace",
+  OneHandWeapon = "OneHandWeapon",
+  TwoHandWeapon = "TwoHandWeapon",
+  BodyArmor = "BodyArmor",
 }
 
 export enum ItemSlot {
@@ -32,13 +31,15 @@ export type EquipmentSlotDefinition = {
   eligibleEquipmentTypes: ItemEquipmentType[];
 };
 
-export type Item = {
+export type ItemDefinition = {
   id: Id;
   name: string;
   type: ItemType;
   rarity: Rarity;
-  description?: string;
+  description: string;
   stats: CharacterStat[];
+  equipmentType: ItemEquipmentType;
+  weightUnits: number;
 
   /**
    * Actions available for the item.

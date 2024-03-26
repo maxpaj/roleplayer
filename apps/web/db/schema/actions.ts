@@ -9,7 +9,7 @@ export const actionsSchema = pgTable("actions", {
   description: varchar("description", { length: 8192 }).default("").notNull(),
   imageUrl: varchar("imageUrl", { length: 2048 }),
   createdUtc: timestamp("createdUtc").defaultNow(),
-  rangeDistanceUnit: integer("rangeDistanceUnit").default(0).notNull(),
+  rangeDistanceUnits: integer("rangeDistanceUnit").default(0).notNull(),
   worldId: uuid("worldId")
     .references(() => worldsSchema.id)
     .notNull(),

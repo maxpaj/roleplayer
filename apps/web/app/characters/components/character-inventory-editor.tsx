@@ -1,18 +1,58 @@
-import { Actor, Item, World } from "roleplayer";
-import { CharacterEquipmentSlot } from "roleplayer";
-import { RemoveFunctions } from "types/without-functions";
+import { Actor, CharacterEquipmentSlot, CharacterInventoryItem, World } from "roleplayer";
 import { ItemSelector } from "./item-selector";
 import { ItemCard } from "@/components/item-card";
+import { H5, Muted } from "@/components/ui/typography";
+import { CharacterSlotEquipmentSelector } from "./character-equipment-selector copy";
+import { EMPTY_GUID } from "@/lib/guid";
 
 type CharacterInventoryEditorProps = {
-  character: RemoveFunctions<Actor>;
-  world: RemoveFunctions<World>;
-  onChange: (inventory: Item[], equipment: CharacterEquipmentSlot[]) => void;
+  character: Actor;
+  world: World;
+  onInventoryChange: (inventory: CharacterInventoryItem[]) => void;
+  onEquipmentChange: (equipment: CharacterEquipmentSlot[]) => void;
 };
 
-export function CharacterInventoryEditor({ character, world, onChange }: CharacterInventoryEditorProps) {
+export function CharacterInventoryEditor({
+  character,
+  world,
+  onInventoryChange,
+  onEquipmentChange,
+}: CharacterInventoryEditorProps) {
+  const slots = world.ruleset.getCharacterEquipmentSlots();
+
   return (
     <>
+      <H5>Equipment</H5>
+      <div className="my-2">
+        {slots.length === 0 && <Muted>Nothing equipped</Muted>}
+        {slots.map((slot) => {
+          const eligibleEquipment = character.inventory.filter((i) =>
+            slot.eligibleEquipmentTypes.includes(i.item.equipmentType)
+          );
+          const equip = character.equipment.find((s) => s.slotId === slot.id);
+          console.log(eligibleEquipment);
+
+          if (!equip) {
+            return (
+              <CharacterSlotEquipmentSelector
+                key={slot.id}
+                eligibleEquipment={eligibleEquipment.map((i) => i.item)}
+                onEquip={(item) => {
+                  console.log("item equipped", item);
+                }}
+              />
+            );
+          }
+
+          return (
+            <div>
+              {equip.item?.name} {slot.name}
+            </div>
+          );
+        })}
+      </div>
+
+      <H5>Inventory</H5>
       <div className="my-2 flex flex-wrap gap-2">
         {character.inventory.map((item) => (
           <ItemCard key={item.id} item={item} />
@@ -28,7 +68,7 @@ export function CharacterInventoryEditor({ character, world, onChange }: Charact
             throw new Error("Item not found");
           }
 
-          onChange([...character.inventory, item], []);
+          onInventoryChange([...character.inventory, { item, id: EMPTY_GUID }]);
         }}
       />
     </>

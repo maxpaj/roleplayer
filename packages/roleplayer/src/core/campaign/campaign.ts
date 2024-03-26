@@ -3,7 +3,7 @@ import { AugmentedRequired } from "../../types/with-required";
 import { Actor, CharacterClass, CharacterStat, isCharacterEvent } from "../actor/character";
 import { Battle } from "../battle/battle";
 import { ActionDefinition } from "../action/action";
-import { EquipmentSlotDefinition, Item } from "../inventory/item";
+import { EquipmentSlotDefinition, ItemDefinition } from "../inventory/item";
 import { World } from "../world/world";
 import { CampaignEvent, CampaignEventWithRound } from "../events/events";
 import { CampaignState } from "./campaign-state";
@@ -59,7 +59,11 @@ export class Campaign {
     this.publishCampaignEvent(equipEvent);
   }
 
-  characterEquipItem(characterId: Actor["id"], itemId: Item["id"], equipmentSlotId: EquipmentSlotDefinition["id"]) {
+  characterEquipItem(
+    characterId: Actor["id"],
+    itemId: ItemDefinition["id"],
+    equipmentSlotId: EquipmentSlotDefinition["id"]
+  ) {
     const equipEvent: CampaignEvent = {
       characterId,
       itemId,
@@ -659,7 +663,7 @@ export class Campaign {
           throw new Error(`Could not find item with id ${event.itemId} for CharacterGainItem`);
         }
 
-        character.inventory.push(item);
+        character.inventory.push({ id: dangerousGenerateId(), item });
         break;
       }
 

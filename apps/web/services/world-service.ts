@@ -18,7 +18,7 @@ import {
   charactersToResourcesSchema,
 } from "../db/schema/characters";
 import { ClazzRecord, NewClazzRecord, classesSchema } from "../db/schema/classes";
-import { ItemRecord, NewItemRecord, itemsSchema, itemsToActionsSchema } from "../db/schema/items";
+import { ItemDefinitionRecord, NewItemDefinitionRecord, itemsSchema, itemsToActionsSchema } from "../db/schema/items";
 import { StatusRecord, statusesSchema, statusesToEffectsSchema } from "../db/schema/statuses";
 import { UserRecord } from "../db/schema/users";
 import { NewWorldRecord, WorldRecord, worldsSchema } from "../db/schema/worlds";
@@ -50,7 +50,7 @@ export type ActionAggregated = ActionRecord & {
   requiresResources: RequiredResourceRecord[];
 };
 
-export type ItemAggregated = ItemRecord & {
+export type ItemAggregated = ItemDefinitionRecord & {
   actions: ActionAggregated[];
 };
 
@@ -369,7 +369,7 @@ export class WorldService {
     return db.insert(charactersSchema).values(character).returning({ id: charactersSchema.id });
   }
 
-  async createItem(item: NewItemRecord) {
+  async createItem(item: NewItemDefinitionRecord) {
     return db.insert(itemsSchema).values(item).returning({ id: itemsSchema.id });
   }
 
@@ -385,7 +385,7 @@ export class WorldService {
       .returning({ id: worldsSchema.id });
   }
 
-  async saveItem(itemId: ItemRecord["id"], update: Partial<ItemRecord>) {
+  async saveItem(itemId: ItemDefinitionRecord["id"], update: Partial<ItemDefinitionRecord>) {
     return db
       .update(itemsSchema)
       .set({ name: update.name, description: update.description })

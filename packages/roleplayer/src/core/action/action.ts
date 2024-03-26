@@ -21,7 +21,7 @@ export type ActionDefinition = {
   description: string;
   appliesEffects: EventGenerator[];
   eligibleTargets: TargetType[];
-  rangeDistanceUnit: number;
+  rangeDistanceUnits: number;
   requiresResources: {
     resourceTypeId: CharacterResourceDefinition["id"];
     amount: number;

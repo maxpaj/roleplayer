@@ -7,14 +7,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { Item } from "roleplayer";
+import { ItemDefinition } from "roleplayer";
 import { ReactNode } from "react";
 import { ItemCard } from "@/components/item-card";
 
 type ItemSelectorProps = {
-  availableItems: Item[];
+  availableItems: ItemDefinition[];
   placeholder?: ReactNode;
-  onChange: (itemId: Item["id"]) => void;
+  onChange: (itemId: ItemDefinition["id"]) => void;
 };
 
 export function ItemSelector({ availableItems, placeholder = "Select item", onChange }: ItemSelectorProps) {

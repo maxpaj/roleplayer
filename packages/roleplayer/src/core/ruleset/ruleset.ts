@@ -3,7 +3,7 @@ import { Id } from "../../lib/generate-id";
 import { Actor, CharacterResourceGeneration } from "../actor/character";
 import { Dice } from "../dice/dice";
 import { ActionDefinition } from "../action/action";
-import { EquipmentSlotDefinition } from "../inventory/item";
+import { EquipmentSlotDefinition, ItemDefinition } from "../inventory/item";
 
 export enum ActionResourceType {
   Primary = "Primary",

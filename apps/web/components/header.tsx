@@ -3,6 +3,7 @@ import Image from "next/image";
 import icon from "../assets/icon.svg";
 import { UserService } from "services/user-service";
 import { DEFAULT_USER_ID } from "@/db/data";
+import { Divider } from "./ui/divider";
 
 async function getUser() {
   const user = await new UserService().getUser(DEFAULT_USER_ID);
@@ -21,10 +22,16 @@ export async function Header() {
         <Image src={icon} height="40" width="40" alt="Icon" priority />
       </div>
 
-      <nav className="flex items-center gap-x-4">
-        <Link href="/">Home</Link>
-        <Link href="/campaigns">Campaigns</Link>
-        <Link href="/worlds">Worlds</Link>
+      <nav className="flex gap-x-4">
+        <div className="flex items-center gap-2">
+          <Link href="/">Home</Link>
+          <Link href="/campaigns">Campaigns</Link>
+          <Link href="/worlds">Worlds</Link>
+        </div>
+
+        <div>
+          <Divider orientation="vertical" />
+        </div>
 
         <div className="flex items-center gap-2">
           {user && (

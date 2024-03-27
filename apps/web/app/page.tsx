@@ -1,7 +1,16 @@
 import { ButtonLink } from "@/components/ui/button-link";
 import { H1, H2, H4, Lead, Muted } from "@/components/ui/typography";
 import bg from "assets/bg.webp";
-import { ArrowRight, HammerIcon, SwordIcon } from "lucide-react";
+import {
+  ArrowRight,
+  BuildingIcon,
+  GlobeIcon,
+  HammerIcon,
+  HeartIcon,
+  PuzzleIcon,
+  SwordIcon,
+  SwordsIcon,
+} from "lucide-react";
 
 export default function Home() {
   return (
@@ -43,25 +52,33 @@ export default function Home() {
         <div className="container mb-[10vh]">
           <div className="grids-col-4 grid gap-4">
             <div className="bg-card/70 text-card-foreground rounded-xl border p-6 shadow">
-              <H4 className="mb-1">World builder tool</H4>
-              <Muted>Design a world for your campaign. Use AI to generate content.</Muted>
-            </div>
-            <div className="bg-card/70 text-card-foreground rounded-xl border p-6 shadow">
-              <H4 className="mb-1">
-                <SwordIcon /> Combat tracker
+              <H4 className="mb-1 flex items-start gap-2">
+                <SwordsIcon /> Combat tracker
               </H4>
               <Muted>Keep track of character actions and conditions in combat.</Muted>
             </div>
 
             <div className="bg-card/70 text-card-foreground rounded-xl border p-6 shadow">
-              <H4 className="mb-1">Story tracker</H4>
+              <H4 className="mb-1 flex items-start gap-2">
+                <HeartIcon /> Story and relationships system
+              </H4>
               <Muted>
-                Keep track of the path that your party has paved through the world, which characters and factions you've
-                interacted with, etc.
+                Keep track of the path that your party has paved through the world, which characters and factions
+                they've interacted with, etc.
               </Muted>
             </div>
+
             <div className="bg-card/70 text-card-foreground rounded-xl border p-6 shadow">
-              <H4 className="mb-1">TTRPG builder</H4>
+              <H4 className="mb-1 flex items-start gap-2">
+                <HammerIcon /> World builder
+              </H4>
+              <Muted>Design a world for your campaign. Use AI to generate content.</Muted>
+            </div>
+
+            <div className="bg-card/70 text-card-foreground rounded-xl border p-6 shadow">
+              <H4 className="mb-1 flex items-start gap-2">
+                <PuzzleIcon /> Make your own rules
+              </H4>
               <Muted>For the hard core TTRPG nerds. Design rules for a your own role playing game.</Muted>
             </div>
           </div>

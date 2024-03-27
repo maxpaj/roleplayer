@@ -15,7 +15,7 @@ export const itemTypeEnum = pgEnum("itemType", ["Consumable", "Equipment"]);
 
 export const rarityEnum = pgEnum("rarity", ["Common", "Uncommon", "Rare", "Epic", "Legendary"]);
 
-export const itemDefinitionSchema = pgTable("itemDefinitions", {
+export const itemDefinitionsSchema = pgTable("itemDefinitions", {
   id: uuid("id").defaultRandom().primaryKey(),
   name: varchar("name", { length: 256 }).notNull(),
   description: varchar("description", { length: 8192 }).default("").notNull(),
@@ -28,26 +28,26 @@ export const itemDefinitionSchema = pgTable("itemDefinitions", {
     .notNull(),
 });
 
-export type ItemDefinitionRecord = typeof itemDefinitionSchema.$inferSelect;
-export type NewItemDefinitionRecord = typeof itemDefinitionSchema.$inferInsert;
+export type ItemDefinitionRecord = typeof itemDefinitionsSchema.$inferSelect;
+export type NewItemDefinitionRecord = typeof itemDefinitionsSchema.$inferInsert;
 
 export const itemsToActionsSchema = pgTable("itemsToActions", {
   itemId: uuid("itemId")
     .notNull()
-    .references(() => itemDefinitionSchema.id),
+    .references(() => itemDefinitionsSchema.id),
 
   actionId: uuid("actionId")
     .notNull()
     .references(() => actionsSchema.id),
 });
 
-export const itemInstanceSchema = pgTable("itemInstances", {
+export const itemInstancesSchema = pgTable("itemInstances", {
   id: uuid("id").defaultRandom().primaryKey(),
   characterId: uuid("characterId").references(() => charactersSchema.id),
   itemDefinitionId: uuid("itemDefinitionId")
-    .references(() => itemDefinitionSchema.id)
+    .references(() => itemDefinitionsSchema.id)
     .notNull(),
 });
 
-export type ItemInstanceRecord = typeof itemInstanceSchema.$inferSelect;
-export type NewItemInstanceRecord = typeof itemInstanceSchema.$inferInsert;
+export type ItemInstanceRecord = typeof itemInstancesSchema.$inferSelect;
+export type NewItemInstanceRecord = typeof itemInstancesSchema.$inferInsert;

@@ -21,7 +21,7 @@ import { ClazzRecord, NewClazzRecord, classesSchema } from "../db/schema/classes
 import {
   ItemDefinitionRecord,
   NewItemDefinitionRecord,
-  itemDefinitionSchema,
+  itemDefinitionsSchema,
   itemsToActionsSchema,
 } from "../db/schema/items";
 import { StatusRecord, statusesSchema, statusesToEffectsSchema } from "../db/schema/statuses";
@@ -102,8 +102,8 @@ export class WorldService {
       .leftJoin(statusesEffectsAlias, eq(statusesEffectsAlias.id, statusesToEffectsAlias.effectId))
 
       // Join items
-      .leftJoin(itemDefinitionSchema, eq(itemDefinitionSchema.worldId, worldsSchema.id))
-      .leftJoin(itemsToActionsSchema, eq(itemDefinitionSchema.id, itemsToActionsSchema.itemId))
+      .leftJoin(itemDefinitionsSchema, eq(itemDefinitionsSchema.worldId, worldsSchema.id))
+      .leftJoin(itemsToActionsSchema, eq(itemDefinitionsSchema.id, itemsToActionsSchema.itemId))
       .leftJoin(itemsActionsAlias, eq(itemsActionsAlias.id, itemsToActionsSchema.actionId))
       .leftJoin(itemsActionsToEffectsAlias, eq(itemsActionsToEffectsAlias.actionId, itemsActionsAlias.id))
       .leftJoin(itemsActionsEffectAlias, eq(itemsActionsEffectAlias.id, itemsActionsToEffectsAlias.effectId))
@@ -378,7 +378,7 @@ export class WorldService {
   }
 
   async createItem(item: NewItemDefinitionRecord) {
-    return db.insert(itemDefinitionSchema).values(item).returning({ id: itemDefinitionSchema.id });
+    return db.insert(itemDefinitionsSchema).values(item).returning({ id: itemDefinitionsSchema.id });
   }
 
   async createCharacterClass(clazz: NewClazzRecord) {
@@ -395,9 +395,9 @@ export class WorldService {
 
   async saveItem(itemId: ItemDefinitionRecord["id"], update: Partial<ItemDefinitionRecord>) {
     return db
-      .update(itemDefinitionSchema)
+      .update(itemDefinitionsSchema)
       .set({ name: update.name, description: update.description })
-      .where(eq(itemDefinitionSchema.id, itemId))
-      .returning({ id: itemDefinitionSchema.id });
+      .where(eq(itemDefinitionsSchema.id, itemId))
+      .returning({ id: itemDefinitionsSchema.id });
   }
 }

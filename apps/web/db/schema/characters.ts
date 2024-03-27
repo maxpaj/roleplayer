@@ -1,7 +1,7 @@
 import { integer, pgEnum, pgTable, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
 import { actionsSchema } from "./actions";
 import { campaignsSchema } from "./campaigns";
-import { itemInstanceSchema } from "./items";
+import { itemInstancesSchema } from "./items";
 import { usersSchema } from "./users";
 import { worldsSchema } from "./worlds";
 import { resourceTypesSchema } from "./resources";
@@ -39,7 +39,7 @@ export const charactersToItemsSchema = pgTable("characterToItems", {
 
   itemId: uuid("itemId")
     .notNull()
-    .references(() => itemInstanceSchema.id),
+    .references(() => itemInstancesSchema.id),
 });
 
 export const charactersToClassesSchema = pgTable("characterToClasses", {
@@ -89,7 +89,7 @@ export const charactersToEquipmentSlotsSchema = pgTable("charactersToEquipmentSl
 export const equipmentToEquipmentSlotsSchema = pgTable("equipmentToEquipmentSlots", {
   itemId: uuid("itemId")
     .notNull()
-    .references(() => itemInstanceSchema.id),
+    .references(() => itemInstancesSchema.id),
 
   equipmentSlotId: uuid("equipmentSlotId")
     .notNull()

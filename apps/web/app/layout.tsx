@@ -6,7 +6,7 @@ import { Inter as FontSans } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Footer } from "@/components/footer";
 
-const fontSans = FontSans({
+export const fontSans = FontSans({
   subsets: ["latin"],
   variable: "--font-sans",
 });

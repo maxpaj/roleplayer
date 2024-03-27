@@ -43,6 +43,7 @@
     "react-dom": "^18",
     "react-hook-form": "^7.50.1",
     "react-markdown": "^9.0.1",
+    "react-resizable-panels": "^2.0.16",
     "roleplayer": "0.0.6",
     "sharp": "^0.33.2",
     "tailwind-merge": "^2.2.1",

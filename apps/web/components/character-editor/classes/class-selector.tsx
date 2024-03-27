@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Actor, Clazz } from "roleplayer";
 import { ClazzRecord } from "@/db/schema/classes";
 import { RemoveFunctions } from "types/without-functions";
+import { Paragraph } from "@/components/ui/typography";
 
 type ClassDropdownProps = {
   characterLevel: number;
@@ -80,6 +81,7 @@ export function ClassSelector({
   };
 
   const levelsSelected = selectedItems.reduce((s, curr) => curr.level + s, 0);
+  const hasUsedAllLevelPoints = levelsSelected === characterLevel;
 
   return (
     <DropdownMenu>
@@ -96,14 +98,16 @@ export function ClassSelector({
           const current = selectedItems.find((i) => i.classId === classOption.id);
 
           return (
-            <DropdownMenuItem onSelect={(e) => e.preventDefault()} key={index} className="flex justify-between">
-              {classOption.name} {current ? <>({current.level})</> : <></>}
+            <DropdownMenuItem
+              onSelect={(e) => e.preventDefault()}
+              key={index}
+              className="spacing-y-0 flex justify-between"
+            >
+              <Paragraph className={hasUsedAllLevelPoints && !current ? `text-muted-foreground/50` : "text-foreground"}>
+                {classOption.name} {current ? <>(Level {current.level})</> : <></>}
+              </Paragraph>
               <div>
-                <Button
-                  disabled={levelsSelected === characterLevel}
-                  variant="outline"
-                  onClick={() => onAdd(classOption.id)}
-                >
+                <Button disabled={hasUsedAllLevelPoints} variant="outline" onClick={() => onAdd(classOption.id)}>
                   +
                 </Button>
                 <Button disabled={!current} variant="outline" onClick={() => onRemove(classOption.id)}>

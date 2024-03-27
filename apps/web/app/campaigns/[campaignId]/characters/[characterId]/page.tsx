@@ -2,12 +2,11 @@ import { EventsTable } from "@/components/events-table";
 import { H4, Muted } from "@/components/ui/typography";
 import { CampaignRecord } from "@/db/schema/campaigns";
 import { CharacterRecord } from "@/db/schema/characters";
-import { classToPlain } from "@/lib/class-to-plain";
 import { getCampaign } from "app/campaigns/actions";
-import { CharacterEditor } from "app/characters/components/character-editor";
 import { Actor, Campaign, CampaignEventWithRound, DnDRuleset, World } from "roleplayer";
 import { CampaignService } from "services/campaign-service";
 import { WorldService } from "services/world-service";
+import { ClientCharacterEditor } from "../components/client-character-editor";
 
 export default async function CampaignCharacterPage({
   params: { campaignId: id, characterId: cid },
@@ -59,32 +58,16 @@ export default async function CampaignCharacterPage({
 
   const { characters, events } = campaignData;
 
-  const campaignInstance = new Campaign({
-    ...campaignData,
-    world: new World(new DnDRuleset(), worldData.name, worldData as unknown as Partial<World>),
-    events: campaignData.events.map((e) => e.eventData as CampaignEventWithRound),
-  });
-
-  const data = campaignInstance.getCampaignStateFromEvents();
-  const characterFromEvents = data.characters.find((c) => c.id === characterId);
   const character = characters.find((c) => c.id === characterId);
   const characterEvents = events.filter((e) => e.characterId === characterId);
 
-  if (!character || !characterFromEvents) {
+  if (!character) {
     return <>Character not found in campaign</>;
   }
 
   return (
     <>
-      <CharacterEditor
-        worldData={worldData}
-        characterFromEvents={classToPlain(characterFromEvents)}
-        onSave={async (update) => {
-          "use server";
-          await updateCharacter(campaignId, characterId, update);
-        }}
-        characterLevel={campaignInstance.getCharacterLevel(characterFromEvents)}
-      />
+      <ClientCharacterEditor campaignData={campaignData} worldData={worldData} characterId={character.id} />
 
       <H4 className="my-2">History</H4>
       <EventsTable events={characterEvents} />

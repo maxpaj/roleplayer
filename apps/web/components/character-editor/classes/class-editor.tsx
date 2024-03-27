@@ -2,7 +2,7 @@ import { World } from "roleplayer";
 import { Actor, Clazz } from "roleplayer";
 import { LevelAbilityCard } from "@/components/level-ability-card";
 import { RemoveFunctions } from "types/without-functions";
-import { H5 } from "@/components/ui/typography";
+import { H5, Muted } from "@/components/ui/typography";
 
 type ClassEditorProps = {
   world: RemoveFunctions<World>;
@@ -29,7 +29,8 @@ export function CharacterClassEditor({ classId, world, character }: ClassEditorP
         {clazz.name} (Level {characterClass.level})
       </H5>
 
-      <h6>Select skills</h6>
+      <Muted>Select {clazz.name} skills</Muted>
+
       {(clazz.levelProgression || []).map((lp) => {
         const ability = world.actions.find((a) => a.id === lp.actionDefinitionId);
         if (!ability) {

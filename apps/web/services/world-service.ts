@@ -18,7 +18,12 @@ import {
   charactersToResourcesSchema,
 } from "../db/schema/characters";
 import { ClazzRecord, NewClazzRecord, classesSchema } from "../db/schema/classes";
-import { ItemDefinitionRecord, NewItemDefinitionRecord, itemsSchema, itemsToActionsSchema } from "../db/schema/items";
+import {
+  ItemDefinitionRecord,
+  NewItemDefinitionRecord,
+  itemDefinitionSchema,
+  itemsToActionsSchema,
+} from "../db/schema/items";
 import { StatusRecord, statusesSchema, statusesToEffectsSchema } from "../db/schema/statuses";
 import { UserRecord } from "../db/schema/users";
 import { NewWorldRecord, WorldRecord, worldsSchema } from "../db/schema/worlds";
@@ -34,7 +39,7 @@ export type WorldAggregated = WorldRecord & {
   monsters: ActorAggregated[];
   characters: ActorAggregated[];
   statuses: StatusAggregated[];
-  items: ItemAggregated[];
+  itemDefinitions: ItemAggregated[];
   classes: ClazzRecord[];
   actions: ActionAggregated[];
   races: RaceRecord[];
@@ -97,8 +102,8 @@ export class WorldService {
       .leftJoin(statusesEffectsAlias, eq(statusesEffectsAlias.id, statusesToEffectsAlias.effectId))
 
       // Join items
-      .leftJoin(itemsSchema, eq(itemsSchema.worldId, worldsSchema.id))
-      .leftJoin(itemsToActionsSchema, eq(itemsSchema.id, itemsToActionsSchema.itemId))
+      .leftJoin(itemDefinitionSchema, eq(itemDefinitionSchema.worldId, worldsSchema.id))
+      .leftJoin(itemsToActionsSchema, eq(itemDefinitionSchema.id, itemsToActionsSchema.itemId))
       .leftJoin(itemsActionsAlias, eq(itemsActionsAlias.id, itemsToActionsSchema.actionId))
       .leftJoin(itemsActionsToEffectsAlias, eq(itemsActionsToEffectsAlias.actionId, itemsActionsAlias.id))
       .leftJoin(itemsActionsEffectAlias, eq(itemsActionsEffectAlias.id, itemsActionsToEffectsAlias.effectId))
@@ -202,10 +207,10 @@ export class WorldService {
     }
 
     function accumulateItems(row: (typeof rows)[0], acc: Record<string, WorldAggregated>, world: WorldRecord) {
-      if (row.items) {
-        const existingItem = acc[world.id]!.items.filter((c) => c.id === row.items!.id)[0];
+      if (row.itemDefinitions) {
+        const existingItem = acc[world.id]!.itemDefinitions.filter((c) => c.id === row.itemDefinitions!.id)[0];
         const itemToAdd: ItemAggregated = {
-          ...(existingItem || row.items),
+          ...(existingItem || row.itemDefinitions),
           actions: existingItem?.actions || [],
         };
 
@@ -234,7 +239,10 @@ export class WorldService {
           itemToAdd.actions = [...itemToAdd.actions.filter((a) => a.id !== row.itemsActionsAlias!.id), actionToAdd];
         }
 
-        acc[world.id]!.items = [...acc[world.id]!.items.filter((c) => c.id !== row.items!.id), itemToAdd];
+        acc[world.id]!.itemDefinitions = [
+          ...acc[world.id]!.itemDefinitions.filter((c) => c.id !== row.itemDefinitions!.id),
+          itemToAdd,
+        ];
       }
     }
 
@@ -250,7 +258,7 @@ export class WorldService {
           characters: [],
           classes: [],
           races: [],
-          items: [],
+          itemDefinitions: [],
           statuses: [],
         };
       }
@@ -370,7 +378,7 @@ export class WorldService {
   }
 
   async createItem(item: NewItemDefinitionRecord) {
-    return db.insert(itemsSchema).values(item).returning({ id: itemsSchema.id });
+    return db.insert(itemDefinitionSchema).values(item).returning({ id: itemDefinitionSchema.id });
   }
 
   async createCharacterClass(clazz: NewClazzRecord) {
@@ -387,9 +395,9 @@ export class WorldService {
 
   async saveItem(itemId: ItemDefinitionRecord["id"], update: Partial<ItemDefinitionRecord>) {
     return db
-      .update(itemsSchema)
+      .update(itemDefinitionSchema)
       .set({ name: update.name, description: update.description })
-      .where(eq(itemsSchema.id, itemId))
-      .returning({ id: itemsSchema.id });
+      .where(eq(itemDefinitionSchema.id, itemId))
+      .returning({ id: itemDefinitionSchema.id });
   }
 }

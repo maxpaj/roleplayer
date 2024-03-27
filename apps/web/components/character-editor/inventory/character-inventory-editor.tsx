@@ -2,7 +2,7 @@ import { Actor, CharacterEquipmentSlot, CharacterInventoryItem, World } from "ro
 import { ItemSelector } from "./item-selector";
 import { ItemCard } from "@/components/item-card";
 import { H5, Muted } from "@/components/ui/typography";
-import { CharacterSlotEquipmentSelector } from "./character-equipment-selector copy";
+import { CharacterSlotEquipmentSelector } from "./character-equipment-slot-editor";
 import { EMPTY_GUID } from "@/lib/guid";
 
 type CharacterInventoryEditorProps = {
@@ -27,16 +27,15 @@ export function CharacterInventoryEditor({
         {slots.length === 0 && <Muted>Nothing equipped</Muted>}
         {slots.map((slot) => {
           const eligibleEquipment = character.inventory.filter((i) =>
-            slot.eligibleEquipmentTypes.includes(i.item.equipmentType)
+            slot.eligibleEquipmentTypes.includes(i.definition.equipmentType)
           );
           const equip = character.equipment.find((s) => s.slotId === slot.id);
-          console.log(eligibleEquipment);
 
           if (!equip) {
             return (
               <CharacterSlotEquipmentSelector
                 key={slot.id}
-                eligibleEquipment={eligibleEquipment.map((i) => i.item)}
+                eligibleEquipment={eligibleEquipment.map((i) => i.definition)}
                 onEquip={(item) => {
                   console.log("item equipped", item);
                 }}
@@ -46,7 +45,7 @@ export function CharacterInventoryEditor({
 
           return (
             <div>
-              {equip.item?.name} {slot.name}
+              {equip.item?.definition.name} {slot.name}
             </div>
           );
         })}
@@ -61,14 +60,14 @@ export function CharacterInventoryEditor({
 
       <ItemSelector
         placeholder="Add item to inventory"
-        availableItems={world.items}
+        availableItems={world.itemDefinitions}
         onChange={(itemId) => {
-          const item = world.items.find((i) => i.id === itemId);
+          const item = world.itemDefinitions.find((i) => i.id === itemId);
           if (!item) {
             throw new Error("Item not found");
           }
 
-          onInventoryChange([...character.inventory, { item, id: EMPTY_GUID }]);
+          onInventoryChange([...character.inventory, { definition: item, id: EMPTY_GUID }]);
         }}
       />
     </>

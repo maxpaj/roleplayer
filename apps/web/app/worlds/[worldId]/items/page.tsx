@@ -14,7 +14,7 @@ export default async function ItemsPage({ params }: { params: { worldId: string 
     return <>World not found</>;
   }
 
-  const { items } = worldData;
+  const { itemDefinitions: items } = worldData;
 
   const itemsMapped = items.map((item) => ({
     id: item.id,

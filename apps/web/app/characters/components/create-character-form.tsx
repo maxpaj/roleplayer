@@ -47,7 +47,6 @@ export function CreateCharacterForm({ worldId, campaignId }: NewCharacterProps) 
     <>
       <form action={createNewCharacter} className="flex gap-2">
         <Input type="name" id="name" name="name" placeholder="New character name" />
-
         <Button type="submit">Create new character</Button>
       </form>
     </>

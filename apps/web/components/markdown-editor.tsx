@@ -15,18 +15,13 @@ type MarkdownEditorProps = {
 
 export function MarkdownEditor({ renderEditor, disabled, onChange, onBlur, value }: MarkdownEditorProps) {
   const [markdown, setMarkdown] = useState(value);
-  const [showPreview, setShowPreview] = useState(false);
+  const [showPreview, setShowPreview] = useState(true);
 
   return (
     <div className="my-2 flex flex-col">
       <div className="-mt-2 flex w-full flex-wrap justify-between gap-1 border p-1">
-        <Button
-          variant="outline"
-          className={showPreview ? "border-orange-500" : ""}
-          size="sm"
-          onClick={() => setShowPreview(!showPreview)}
-        >
-          {showPreview ? "Show text" : "Show markdown"}
+        <Button variant="outline" size="sm" onClick={() => setShowPreview(!showPreview)}>
+          {showPreview ? "Edit" : "Preview"}
         </Button>
 
         <div className="flex items-center gap-2">
@@ -53,8 +48,8 @@ export function MarkdownEditor({ renderEditor, disabled, onChange, onBlur, value
         )}
 
       {showPreview && (
-        <div className="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex min-h-[80px] w-full rounded-md border px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
-          <div className="prose dark:prose-invert prose-sm">
+        <div className="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex min-h-[80px] w-full justify-center rounded-md border px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+          <div className="prose dark:prose-invert prose-sm min-w-[50vw]">
             <Markdown>{markdown}</Markdown>
           </div>
         </div>

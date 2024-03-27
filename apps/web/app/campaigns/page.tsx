@@ -9,11 +9,6 @@ export default async function CampaignPage() {
 
   return (
     <div>
-      <H2>Campaigns</H2>
-      <Muted className="mb-4">
-        Create a new campaign from a selection of worlds, or continue the adventure from where you left off!
-      </Muted>
-
       {campaigns.length === 0 && (
         <Paragraph>Browse through the available worlds and start a new campaign from there!</Paragraph>
       )}

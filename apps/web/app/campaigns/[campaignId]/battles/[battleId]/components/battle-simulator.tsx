@@ -6,7 +6,6 @@ import {
   Battle,
   Round,
   CampaignEvent,
-  CampaignEventType,
   CampaignState,
   Actor,
   Campaign,
@@ -16,6 +15,7 @@ import {
   World,
   DnDRuleset,
   CampaignEventWithRound,
+  RoleplayerEvent,
 } from "roleplayer";
 import { EventIconMap } from "../../../../../theme";
 import { Button } from "@/components/ui/button";
@@ -244,7 +244,7 @@ export function BattleSimulator({ campaignData, battleId, worldData }: BattleSim
   }
 
   function isVisibleEvent(event: CampaignEvent) {
-    const excludedActions: CampaignEventType["type"][] = [];
+    const excludedActions: RoleplayerEvent["type"][] = [];
     return !excludedActions.includes(event.type);
   }
 

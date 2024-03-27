@@ -2,7 +2,7 @@ import defaultIcon from "../assets/logo.svg";
 import moveIcon from "../assets/icons/lorc/boot-prints.svg";
 import newRoundIcon from "../assets/icons/lorc/time-trap.svg";
 import dodgeEvent from "../assets/icons/felbrigg/dodge.svg";
-import { CampaignEventType } from "roleplayer";
+import { RoleplayerEvent } from "roleplayer";
 
 type ClassColors = {
   [key: string]: string;
@@ -43,7 +43,7 @@ export const icons: ClassIcons = {
 };
 
 export const EventIconMap: {
-  [key in CampaignEventType["type"]]: { alt: string; icon: any };
+  [key in RoleplayerEvent["type"]]: { alt: string; icon: any };
 } = {
   CharacterEndRound: {
     alt: "Character end round",

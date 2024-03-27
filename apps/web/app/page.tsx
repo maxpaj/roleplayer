@@ -1,7 +1,7 @@
 import { ButtonLink } from "@/components/ui/button-link";
 import { H1, H2, H4, Lead, Muted } from "@/components/ui/typography";
 import bg from "assets/bg.webp";
-import { ArrowRight, HammerIcon } from "lucide-react";
+import { ArrowRight, HammerIcon, SwordIcon } from "lucide-react";
 
 export default function Home() {
   return (
@@ -47,8 +47,10 @@ export default function Home() {
               <Muted>Design a world for your campaign. Use AI to generate content.</Muted>
             </div>
             <div className="bg-card/70 text-card-foreground rounded-xl border p-6 shadow">
-              <H4 className="mb-1">Combat tracker</H4>
-              <Muted>Track combat in your game with a simple and easy to use interface.</Muted>
+              <H4 className="mb-1">
+                <SwordIcon /> Combat tracker
+              </H4>
+              <Muted>Keep track of character actions and conditions in combat.</Muted>
             </div>
 
             <div className="bg-card/70 text-card-foreground rounded-xl border p-6 shadow">

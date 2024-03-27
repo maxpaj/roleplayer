@@ -18,7 +18,7 @@ export type CampaignEventWithRound = CampaignEvent & {
   serialNumber: number;
 };
 
-export const CampaignEventTypes: RoleplayerEvent["type"][] = [
+export const RoleplayerEventTypes: RoleplayerEvent["type"][] = [
   "Unknown",
   "CampaignStarted",
   "RoundStarted",

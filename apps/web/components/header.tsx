@@ -19,11 +19,13 @@ export async function Header() {
       style={{ background: "hsla(var(--background) / 50%)" }}
     >
       <div className="mr-2 flex items-center dark:invert">
-        <Image src={icon} height="40" width="40" alt="Icon" priority />
+        <Link href="/">
+          <Image src={icon} height="40" width="40" alt="Icon" priority />
+        </Link>
       </div>
 
       <nav className="flex gap-x-4">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-4">
           <Link href="/">Home</Link>
           <Link href="/campaigns">Campaigns</Link>
           <Link href="/worlds">Worlds</Link>

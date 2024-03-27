@@ -658,12 +658,12 @@ export class Campaign {
       }
 
       case "CharacterItemGain": {
-        const item = this.world!.items.find((eq) => eq.id === event.itemId);
+        const item = this.world!.itemDefinitions.find((eq) => eq.id === event.itemId);
         if (!item) {
           throw new Error(`Could not find item with id ${event.itemId} for CharacterGainItem`);
         }
 
-        character.inventory.push({ id: dangerousGenerateId(), item });
+        character.inventory.push({ id: dangerousGenerateId(), definition: item });
         break;
       }
 
@@ -688,7 +688,7 @@ export class Campaign {
       }
 
       case "CharacterItemEquip": {
-        const item = this.world!.items.find((eq) => eq.id === event.itemId);
+        const item = this.world!.itemDefinitions.find((eq) => eq.id === event.itemId);
         if (!item) {
           throw new Error(`Could not find item on world`);
         }
@@ -703,7 +703,7 @@ export class Campaign {
           throw new Error(`Could not find slot on event`);
         }
 
-        slot.item = item;
+        slot.item = { id: dangerousGenerateId(), definition: item };
 
         break;
       }

@@ -221,7 +221,7 @@ describe("Character", () => {
       const characterId = dangerousGenerateId();
       const itemId = dangerousGenerateId();
       const world = new World(defaultRuleSet, "World", {
-        items: [
+        itemDefinitions: [
           {
             id: itemId,
             rarity: Rarity.Common,
@@ -368,7 +368,7 @@ describe("Character", () => {
       char.equipment = [
         {
           slotId: dangerousGenerateId(),
-          item: sword,
+          item: { id: dangerousGenerateId(), definition: sword },
         },
       ];
 

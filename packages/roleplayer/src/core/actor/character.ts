@@ -61,18 +61,13 @@ export type CharacterClass = {
  * @module core/actor
  */
 export type CharacterEquipmentSlot = {
-  item?: ItemInstance;
+  item?: CharacterInventoryItem;
   slotId: EquipmentSlotDefinition["id"];
 };
 
 export type CharacterInventoryItem = {
   id: Id;
-  item: ItemInstance;
-};
-
-type ItemInstance = {
-  id: Id;
-  itemDefinition: ItemDefinition;
+  definition: ItemDefinition;
 };
 
 /**
@@ -211,8 +206,8 @@ export class Actor {
       ...this.equipment
         .flatMap((eq) => eq.item)
         .filter((i) => i)
-        .flatMap((i) => i!.itemDefinition.actions),
-      ...this.inventory.flatMap((i) => i.item.itemDefinition.actions),
+        .flatMap((i) => i!.definition.actions),
+      ...this.inventory.flatMap((i) => i.definition.actions),
     ];
   }
 

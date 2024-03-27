@@ -62,7 +62,7 @@ describe("actions", () => {
   it("should apply effects from being hit", () => {
     const world = new World(defaultRuleSet, "Test world", {});
     world.statuses = [frozenStatus];
-    world.items = [frostSword];
+    world.itemDefinitions = [frostSword];
     world.actions = frostSword.actions;
 
     const campaign = new Campaign({

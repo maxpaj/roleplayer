@@ -18,7 +18,7 @@ export class World {
   name!: string;
 
   monsters: Actor[] = [];
-  items: ItemDefinition[] = [];
+  itemDefinitions: ItemDefinition[] = [];
   characters: Actor[] = [];
   actions: ActionDefinition[] = [];
   races: Race[] = [];

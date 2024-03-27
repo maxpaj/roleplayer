@@ -27,7 +27,7 @@ export default async function ActionDetailsPage({ params }: { params: { worldId:
 
       <div className="flex gap-4 py-3">
         <span className="item-center flex justify-center gap-x-1">
-          <IconWithText imageSrc={shield} label={action.rangeDistanceUnit.toString()} />
+          <IconWithText imageSrc={shield} label={action.rangeDistanceUnits.toString()} />
         </span>
 
         {action.appliesEffects.map((e) => (

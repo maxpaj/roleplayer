@@ -7,19 +7,29 @@ import { Muted } from "./ui/typography";
 
 type TextareaGenerateProps = Omit<HTMLProps<HTMLTextAreaElement>, "onChange" | "onBlur" | "value" | "ref"> & {
   onChange: (v: string) => void;
-  generate: () => Promise<string>;
+  generate?: () => Promise<string>;
   onBlur: (v: string) => void;
   value: string;
 };
 
-export function TextareaGenerate({ value, onBlur, onChange, generate, ...props }: TextareaGenerateProps) {
+export function TextareaGenerate({
+  value,
+  onBlur,
+  onChange,
+  generate: generateCallback,
+  ...props
+}: TextareaGenerateProps) {
   const [update, setUpdate] = useState(value);
   const [loading, setLoading] = useState(false);
   const [generated, setGenerated] = useState("");
 
   async function getGenerate() {
+    if (!generateCallback) {
+      return;
+    }
+
     setLoading(true);
-    const text = await generate();
+    const text = await generateCallback();
     setGenerated(text);
     setLoading(false);
   }
@@ -47,7 +57,12 @@ export function TextareaGenerate({ value, onBlur, onChange, generate, ...props }
 
       <div className="-mt-2 flex w-full flex-wrap justify-between gap-1 border p-1">
         <div className="align-center flex gap-2">
-          <Button disabled={generated.length > 0 || loading} variant="outline" size="sm" onClick={getGenerate}>
+          <Button
+            disabled={!generateCallback || generated.length > 0 || loading}
+            variant="outline"
+            size="sm"
+            onClick={getGenerate}
+          >
             {loading && <LoadingSpinner size={16} />}
             {!loading && <SparklesIcon size={16} />}
           </Button>

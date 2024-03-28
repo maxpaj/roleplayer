@@ -7,11 +7,28 @@ import { Paragraph, H4 } from "./ui/typography";
 import { useState } from "react";
 import { generateItemDescription, saveItem } from "app/worlds/actions";
 import { TextareaGenerate } from "./textarea-generate";
+import { UserRecord } from "@/db/schema/users";
 
-const userHasApiToken = true;
-
-export function ItemEditor({ item, worldData }: { item: ItemAggregated; worldData: WorldAggregated }) {
+export function ItemEditor({
+  user,
+  item,
+  worldData,
+}: {
+  user: UserRecord;
+  item: ItemAggregated;
+  worldData: WorldAggregated;
+}) {
   const [update, setUpdate] = useState(item);
+  const generate = user.openAiApiToken
+    ? async () => {
+        const description = await generateItemDescription(worldData.id, item.id);
+        if (!description) {
+          return "Failed to generate description";
+        }
+
+        return description;
+      }
+    : undefined;
 
   return (
     <>
@@ -24,14 +41,7 @@ export function ItemEditor({ item, worldData }: { item: ItemAggregated; worldDat
             description: v,
           })
         }
-        generate={async () => {
-          const description = await generateItemDescription(worldData.id, item.id);
-          if (!description) {
-            return "Failed to generate description";
-          }
-
-          return description;
-        }}
+        generate={generate}
         onBlur={async (v) => {
           await saveItem(item.id, { description: v });
         }}

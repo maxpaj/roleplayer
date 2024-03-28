@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Divider } from "@/components/ui/divider";
 import { H3 } from "@/components/ui/typography";
 import { DEFAULT_USER_ID } from "@/db/data";
+import { UserService } from "services/user-service";
 import { WorldService } from "services/world-service";
 
 export default async function ItemDetailsPage({
@@ -10,6 +11,7 @@ export default async function ItemDetailsPage({
 }: {
   params: { worldId: string; itemId: string };
 }) {
+  const user = await new UserService().getUser(DEFAULT_USER_ID);
   const worldData = await new WorldService().getWorld(DEFAULT_USER_ID, worldId);
 
   if (!worldData) {
@@ -36,7 +38,7 @@ export default async function ItemDetailsPage({
         </Badge>
       </div>
 
-      <ItemEditor item={item} worldData={worldData} />
+      <ItemEditor user={user} item={item} worldData={worldData} />
     </>
   );
 }

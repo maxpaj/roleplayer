@@ -1,7 +1,7 @@
 "use client";
 
 import bgdark from "assets/bg-dark.webp";
-import bglight from "assets/bg-light.png";
+import bglight from "assets/bg-light.webp";
 import { useTheme } from "next-themes";
 
 export function HomeBackground() {

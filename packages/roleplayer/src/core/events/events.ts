@@ -126,9 +126,20 @@ export type CharacterEventType =
       itemId: ItemDefinition["id"];
     }
   | {
+      type: "CharacterItemLoss";
+      characterId: Actor["id"];
+      itemId: ItemDefinition["id"];
+    }
+  | {
       type: "CharacterItemEquip";
       characterId: Actor["id"];
       itemId: ItemDefinition["id"];
+      equipmentSlotId: Id;
+    }
+  | {
+      type: "CharacterItemUnEquip";
+      characterId: Actor["id"];
+      itemId?: ItemDefinition["id"];
       equipmentSlotId: Id;
     }
   | {

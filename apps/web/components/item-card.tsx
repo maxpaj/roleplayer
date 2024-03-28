@@ -3,13 +3,13 @@ import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/ca
 import { ItemDefinition } from "roleplayer";
 
 type ItemCardProps = {
-  item: Partial<ItemDefinition>;
+  item: ItemDefinition;
   onClick?: () => void;
 };
 
 export function ItemCard({ item, onClick }: ItemCardProps) {
   return (
-    <Card className="h-[100px] w-[150px] overflow-hidden" onClick={onClick}>
+    <Card className="h-[100px] w-[150px] cursor-pointer overflow-hidden" onClick={onClick}>
       <CardHeader className="p-2">
         <CardTitle className={"text-md"}>{item.name}</CardTitle>
         <CardDescription>{item.description}</CardDescription>

@@ -1,6 +1,6 @@
 import { DiscordLogoIcon } from "@radix-ui/react-icons";
 import { Github } from "lucide-react";
-import { LightModeToggle } from "./mode-toggle";
+import { ThemeToggle } from "./mode-toggle";
 import { Muted, H5 } from "./ui/typography";
 import Image from "next/image";
 import Link from "next/link";
@@ -19,7 +19,7 @@ export function Footer() {
               Build a role-playing world, invite your friends, create characters and the adventure may begin
             </Muted>
           </div>
-          <LightModeToggle />
+          <ThemeToggle />
         </div>
 
         <div className="flex flex-wrap gap-8">

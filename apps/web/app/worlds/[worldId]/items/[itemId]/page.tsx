@@ -36,6 +36,9 @@ export default async function ItemDetailsPage({
         <Badge variant="outline" className="mb-2">
           {item.type}
         </Badge>
+        <Badge variant="outline" className="mb-2">
+          {item.equipmentType}
+        </Badge>
       </div>
 
       <ItemEditor user={user} item={item} worldData={worldData} />

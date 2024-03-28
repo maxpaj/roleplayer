@@ -16,6 +16,7 @@ export const effectTypeEnum = pgEnum("effectType", [
   "CharacterActionGain",
   "CharacterEquipmentSlotGain",
   "CharacterItemGain",
+  "CharacterItemLoss",
   "CharacterItemEquip",
   "CharacterPositionSet",
   "CharacterStatusGain",

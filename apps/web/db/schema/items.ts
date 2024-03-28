@@ -5,7 +5,7 @@ import { charactersSchema } from "./characters";
 
 export const itemEquipmentTypeEnum = pgEnum("itemEquipmentType", [
   "None",
-  "OnehandWeapon",
+  "OneHandWeapon",
   "TwoHandWeapon",
   "BodyArmor",
   "Shield",

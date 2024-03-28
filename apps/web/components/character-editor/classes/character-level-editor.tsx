@@ -1,14 +1,15 @@
 import { Divider } from "@/components/ui/divider";
 import { CharacterClassEditor } from "./class-editor";
 import { ClassSelector } from "./class-selector";
-import { Actor, Campaign, World } from "roleplayer";
-import { ClazzRecord } from "@/db/schema/classes";
+import { Actor, Campaign, CharacterClass, World } from "roleplayer";
 
 type CharacterLevelEditorProps = {
   character: Actor;
   campaign: Campaign;
   world: World;
-  onChange: (classes: { classId: ClazzRecord["id"]; level: number }[]) => void;
+  onAddClass: (classId: string) => void;
+  onRemoveClass: (classId: string) => void;
+  onChange: (classes: CharacterClass[]) => void;
 };
 
 export function CharacterLevelEditor({ campaign, character, world, onChange }: CharacterLevelEditorProps) {
@@ -26,6 +27,8 @@ export function CharacterLevelEditor({ campaign, character, world, onChange }: C
           characterLevel={characterLevel}
           availableClasses={world.classes}
           character={character}
+          onAdd={(clazz) => {}}
+          onRemove={(clazz) => {}}
           onChange={(classes) => {
             onChange(classes);
           }}

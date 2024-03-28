@@ -14,10 +14,10 @@ import { ItemCard } from "@/components/item-card";
 type ItemSelectorProps = {
   availableItems: ItemDefinition[];
   placeholder?: ReactNode;
-  onChange: (itemId: ItemDefinition["id"]) => void;
+  onSelect: (item: ItemDefinition) => void;
 };
 
-export function ItemSelector({ availableItems, placeholder = "Select item", onChange }: ItemSelectorProps) {
+export function ItemSelector({ availableItems, placeholder = "Select item", onSelect }: ItemSelectorProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -29,11 +29,11 @@ export function ItemSelector({ availableItems, placeholder = "Select item", onCh
       <DropdownMenuContent className="w-56" onCloseAutoFocus={(e) => e.preventDefault()}>
         <DropdownMenuLabel>Select an item</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        {availableItems.map((itemOption: ItemSelectorProps["availableItems"][0], index: number) => {
+        {availableItems.map((itemOption: ItemSelectorProps["availableItems"][0]) => {
           return (
-            <DropdownMenuItem onSelect={(e) => e.preventDefault()} key={index} className="flex justify-between">
+            <DropdownMenuItem onSelect={(e) => e.preventDefault()} key={itemOption.id} className="flex justify-between">
               <div>
-                <ItemCard item={itemOption} onClick={() => onChange(itemOption.id)} />
+                <ItemCard item={itemOption} onClick={() => onSelect(itemOption)} />
               </div>
             </DropdownMenuItem>
           );

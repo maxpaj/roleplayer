@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 import { WorldRecord } from "@/db/schema/worlds";
 import { redirect } from "next/navigation";
 import { WorldService } from "services/world-service";
-import { z } from "zod";
+import z from "zod";
 
 const validateName = z.object({
   name: z.string().min(1),

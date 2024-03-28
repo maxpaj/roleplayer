@@ -3,7 +3,7 @@
 import { CharacterEditor } from "@/components/character-editor/character-editor";
 import { ActorRecord } from "models/actor";
 import { Campaign, World, DnDRuleset, CampaignEventWithRound, Actor } from "roleplayer";
-import { CampaignAggregated } from "services/campaign-service";
+import { CampaignAggregated, CampaignService } from "services/campaign-service";
 import { WorldAggregated } from "services/world-service";
 
 export function ClientCharacterEditor({
@@ -39,8 +39,8 @@ export function ClientCharacterEditor({
   return (
     <>
       <CharacterEditor
-        onSave={function (character: Actor): void {
-          throw new Error("Function not implemented.");
+        onSaveCampaign={async (campaign: Campaign) => {
+          await new CampaignService().saveCampaignEvents(campaign.id, campaign.events);
         }}
         world={world}
         character={character}

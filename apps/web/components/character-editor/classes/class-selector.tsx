@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { Actor, Clazz } from "roleplayer";
+import { Actor, CharacterClass, Clazz } from "roleplayer";
 import { ClazzRecord } from "@/db/schema/classes";
 import { RemoveFunctions } from "types/without-functions";
 import { Paragraph } from "@/components/ui/typography";
@@ -20,13 +20,17 @@ type ClassDropdownProps = {
   character: RemoveFunctions<Actor>;
   availableClasses: Clazz[];
   placeholder?: ReactNode;
-  onChange: (classes: { classId: ClazzRecord["id"]; level: number }[]) => void;
+  onAdd: (clazz: CharacterClass) => void;
+  onRemove: (clazz: CharacterClass) => void;
+  onChange: (classes: CharacterClass[]) => void;
 };
 
 export function ClassSelector({
   placeholder = "Select classes",
   availableClasses,
   onChange,
+  onAdd,
+  onRemove,
   character,
   characterLevel,
 }: ClassDropdownProps) {
@@ -34,32 +38,32 @@ export function ClassSelector({
     character.classes
   );
 
-  const onAdd = (classId: ClazzRecord["id"]) => {
+  const onAddClass = (classId: ClazzRecord["id"]) => {
     const item = selectedItems.find((s) => s.classId === classId);
+
     if (!item) {
-      const classes = [
-        ...selectedItems,
-        {
-          classId: classId,
-          level: 1,
-        },
-      ];
+      const add = {
+        classId: classId,
+        level: 1,
+      };
+
+      const classes = [...selectedItems, add];
 
       setSelectedItems(classes);
       onChange(classes);
+      onAdd(add);
       return;
     }
 
-    const classes = [
-      ...selectedItems.filter((s) => s.classId !== classId),
-      { classId: classId, level: item?.level + 1 },
-    ];
+    const add = { classId: classId, level: item?.level + 1 };
+    const classes = [...selectedItems.filter((s) => s.classId !== classId), add];
 
     setSelectedItems(classes);
     onChange(classes);
+    onAdd(add);
   };
 
-  const onRemove = (classId: ClazzRecord["id"]) => {
+  const onRemoveClass = (classId: ClazzRecord["id"]) => {
     const item = selectedItems.find((s) => s.classId === classId);
     if (!item) {
       throw new Error("Item doesnt exist while removing");
@@ -68,14 +72,14 @@ export function ClassSelector({
     if (item.level === 1) {
       setSelectedItems(selectedItems.filter((s) => s.classId !== classId));
       onChange(selectedItems.filter((s) => s.classId !== classId));
+      onRemove(item);
       return;
     }
 
-    const classes = [
-      ...selectedItems.filter((s) => s.classId !== classId),
-      { classId: classId, level: item?.level - 1 },
-    ];
+    const remove = { classId: classId, level: item?.level - 1 };
+    const classes = [...selectedItems.filter((s) => s.classId !== classId), remove];
 
+    onRemove(remove);
     setSelectedItems(classes);
     onChange(classes);
   };
@@ -107,10 +111,10 @@ export function ClassSelector({
                 {classOption.name} {current ? <>(Level {current.level})</> : <></>}
               </Paragraph>
               <div>
-                <Button disabled={hasUsedAllLevelPoints} variant="outline" onClick={() => onAdd(classOption.id)}>
+                <Button disabled={hasUsedAllLevelPoints} variant="outline" onClick={() => onAddClass(classOption.id)}>
                   +
                 </Button>
-                <Button disabled={!current} variant="outline" onClick={() => onRemove(classOption.id)}>
+                <Button disabled={!current} variant="outline" onClick={() => onRemoveClass(classOption.id)}>
                   -
                 </Button>
               </div>

@@ -48,6 +48,17 @@ export class Campaign {
     this.publishCampaignEvent(actionGain);
   }
 
+  removeCharacterItem(characterId: Actor["id"], itemId: Actor["id"]) {
+    const actionGain: CampaignEvent = {
+      characterId,
+      itemId,
+      id: dangerousGenerateId(),
+      type: "CharacterItemLoss",
+    };
+
+    this.publishCampaignEvent(actionGain);
+  }
+
   addCharacterEquipmentSlot(characterId: Actor["id"], equipmentSlotId: EquipmentSlotDefinition["id"]) {
     const equipEvent: CampaignEvent = {
       characterId,
@@ -59,10 +70,26 @@ export class Campaign {
     this.publishCampaignEvent(equipEvent);
   }
 
+  characterUnEquipItem(
+    characterId: Actor["id"],
+    equipmentSlotId: EquipmentSlotDefinition["id"],
+    itemId?: ItemDefinition["id"]
+  ) {
+    const equipEvent: CampaignEvent = {
+      characterId,
+      equipmentSlotId,
+      itemId,
+      id: dangerousGenerateId(),
+      type: "CharacterItemUnEquip",
+    };
+
+    this.publishCampaignEvent(equipEvent);
+  }
+
   characterEquipItem(
     characterId: Actor["id"],
-    itemId: ItemDefinition["id"],
-    equipmentSlotId: EquipmentSlotDefinition["id"]
+    equipmentSlotId: EquipmentSlotDefinition["id"],
+    itemId: ItemDefinition["id"]
   ) {
     const equipEvent: CampaignEvent = {
       characterId,
@@ -420,6 +447,7 @@ export class Campaign {
       case "CharacterMovement":
       case "CharacterEndRound":
       case "CharacterItemGain":
+      case "CharacterItemLoss":
       case "CharacterItemEquip":
       case "CharacterEquipmentSlotGain":
       case "CharacterPositionSet":

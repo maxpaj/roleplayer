@@ -357,4 +357,11 @@ export class CampaignService {
 
     await this.saveCampaignEvents(campaignData.id, c.events);
   }
+
+  async updateCharacter(character: Actor) {
+    const existing = await db.select().from(charactersSchema).where(eq(charactersSchema.id, character.id));
+    if (!existing) {
+      throw new Error("No such character");
+    }
+  }
 }

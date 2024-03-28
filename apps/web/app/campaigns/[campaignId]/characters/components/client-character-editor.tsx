@@ -1,10 +1,31 @@
 "use client";
 
-import { CharacterEditor } from "@/components/character-editor/character-editor";
+import { CampaignCharacterEditor } from "@/components/character-editor/campaign-character-editor";
+import { Button } from "@/components/ui/button";
+import { saveCampaignEvents } from "app/campaigns/actions";
 import { ActorRecord } from "models/actor";
-import { Campaign, World, DnDRuleset, CampaignEventWithRound, Actor } from "roleplayer";
-import { CampaignAggregated, CampaignService } from "services/campaign-service";
+import { useState } from "react";
+import { Campaign, World, DnDRuleset, CampaignEventWithRound } from "roleplayer";
+import { CampaignAggregated } from "services/campaign-service";
 import { WorldAggregated } from "services/world-service";
+
+export function getWorldCampaignState(worldData: WorldAggregated, campaignData: CampaignAggregated) {
+  const world = new World(
+    new DnDRuleset(() => {
+      throw new Error("Rolling not allowed");
+    }),
+    worldData.name,
+    worldData as unknown as Partial<World>
+  );
+
+  const campaign = new Campaign({
+    ...campaignData,
+    world,
+    events: campaignData.events.map((e) => e.eventData as CampaignEventWithRound),
+  });
+
+  return { world, campaign };
+}
 
 export function ClientCharacterEditor({
   campaignData,
@@ -15,21 +36,10 @@ export function ClientCharacterEditor({
   worldData: WorldAggregated;
   characterId: ActorRecord["id"];
 }) {
-  const campaign = new Campaign({
-    ...campaignData,
-    world: new World(new DnDRuleset(), worldData.name, worldData as unknown as Partial<World>),
-    events: campaignData.events.map((e) => e.eventData as CampaignEventWithRound),
-  });
+  const { world, campaign } = getWorldCampaignState(worldData, campaignData);
+  const [update, setUpdate] = useState(campaign);
 
-  const world = new World(
-    new DnDRuleset(() => {
-      throw new Error("Rolling not allowed");
-    }),
-    worldData.name,
-    worldData as unknown as Partial<World>
-  );
-
-  const campaignState = campaign.getCampaignStateFromEvents();
+  const campaignState = update.getCampaignStateFromEvents();
   const character = campaignState.characters.find((c) => c.id === characterId);
 
   if (!character) {
@@ -38,9 +48,18 @@ export function ClientCharacterEditor({
 
   return (
     <>
-      <CharacterEditor
-        onSaveCampaign={async (campaign: Campaign) => {
-          await new CampaignService().saveCampaignEvents(campaign.id, campaign.events);
+      <Button
+        variant="outline"
+        className="h-4 px-3 py-4 text-xs"
+        onClick={async () => {
+          await saveCampaignEvents(campaignData.id, update.events);
+        }}
+      >
+        Save
+      </Button>
+      <CampaignCharacterEditor
+        onSaveCampaign={(campaign: Campaign) => {
+          setUpdate((prev) => campaign);
         }}
         world={world}
         character={character}

@@ -1,6 +1,6 @@
 import { CharacterResourceDefinition, CharacterStatType, Clazz } from "../ruleset/ruleset";
 import { Id } from "../../lib/generate-id";
-import { Actor, Position } from "../actor/character";
+import { Actor, CharacterInventoryItem, Position } from "../actor/character";
 import { Battle } from "../battle/battle";
 import { ActionDefinition } from "../action/action";
 import { ItemDefinition } from "../inventory/item";
@@ -39,8 +39,8 @@ export const RoleplayerEventTypes: RoleplayerEvent["type"][] = [
   "CharacterEndRound",
   "CharacterActionGain",
   "CharacterEquipmentSlotGain",
-  "CharacterItemGain",
-  "CharacterItemEquip",
+  "CharacterInventoryItemGain",
+  "CharacterInventoryItemEquip",
   "CharacterPositionSet",
   "CharacterStatusGain",
   "CharacterAttackAttackerHit",
@@ -121,23 +121,24 @@ export type CharacterEventType =
       equipmentSlotId: Id;
     }
   | {
-      type: "CharacterItemGain";
+      type: "CharacterInventoryItemGain";
       characterId: Actor["id"];
-      itemId: ItemDefinition["id"];
+      itemDefinitionId: ItemDefinition["id"];
+      itemInstanceId: CharacterInventoryItem["id"];
     }
   | {
-      type: "CharacterItemLoss";
+      type: "CharacterInventoryItemLoss";
       characterId: Actor["id"];
-      itemId: ItemDefinition["id"];
+      characterInventoryItemId: ItemDefinition["id"];
     }
   | {
-      type: "CharacterItemEquip";
+      type: "CharacterInventoryItemEquip";
       characterId: Actor["id"];
       itemId: ItemDefinition["id"];
       equipmentSlotId: Id;
     }
   | {
-      type: "CharacterItemUnEquip";
+      type: "CharacterInventoryItemUnEquip";
       characterId: Actor["id"];
       itemId?: ItemDefinition["id"];
       equipmentSlotId: Id;

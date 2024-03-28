@@ -6,8 +6,8 @@ type CharacterSlotEquipmentSelectorProps = {
   slot: EquipmentSlotDefinition;
   existingEquipment?: CharacterEquipmentSlot;
   eligibleEquipment: CharacterInventoryItem[];
-  onEquipAdd: (id: CharacterInventoryItem["id"], item: ItemDefinition) => void;
-  onEquipRemove: (id: CharacterInventoryItem["id"], item: ItemDefinition) => void;
+  onEquipAdd: (characterItemId: CharacterInventoryItem["id"], item: ItemDefinition) => void;
+  onEquipRemove: (characterItemId: CharacterInventoryItem["id"], item: ItemDefinition) => void;
 };
 
 export function CharacterSlotEquipmentSelector({
@@ -26,9 +26,8 @@ export function CharacterSlotEquipmentSelector({
 
       <CardContent>
         <ItemSelector
-          // TODO: Kind of hacking together item instance and definition here to make it work, fix?
-          availableItems={eligibleEquipment.map((e) => ({ ...e.definition, id: e.id }))}
-          onSelect={(equipment) => onEquipAdd(equipment.id, equipment)}
+          availableItems={eligibleEquipment.map((e) => ({ id: e.id, item: e.definition }))}
+          onSelect={(option) => onEquipAdd(option.id, option.item)}
         />
       </CardContent>
     </Card>

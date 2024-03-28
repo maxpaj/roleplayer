@@ -239,7 +239,7 @@ export function BattleSimulator({ campaignData, battleId, worldData }: BattleSim
   function renderBattleEvents() {
     const battleEvents = tempCampaign.events
       .filter((e) => e.battleId === battleId)
-      .sort((a, b) => a.serialNumber - b.serialNumber);
+      .toSorted((a, b) => a.serialNumber - b.serialNumber);
     return <div className="mb-4 flex w-full flex-col gap-y-4">{battleEvents.map(renderBattleEvent)}</div>;
   }
 
@@ -337,7 +337,7 @@ export function BattleSimulator({ campaignData, battleId, worldData }: BattleSim
       {battleState.entities.length > 0 && (
         <div className="mb-4 flex w-full flex-col gap-3">
           {battleState.entities
-            .sort((a, b) => b.actingOrder - a.actingOrder)
+            .toSorted((a, b) => b.actingOrder - a.actingOrder)
             .map((battleChar) =>
               renderCharacter(currentRound, battleChar, currentCharacter.actor.id === battleChar.actor.id)
             )}

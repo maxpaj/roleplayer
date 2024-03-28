@@ -1,9 +1,8 @@
-import { Actor, CharacterEquipmentSlot, CharacterInventoryItem, World } from "roleplayer";
+import { Actor, CharacterEquipmentSlot, CharacterInventoryItem, ItemDefinition, World } from "roleplayer";
 import { ItemSelector } from "./item-selector";
 import { ItemCard } from "@/components/item-card";
 import { H5, Muted } from "@/components/ui/typography";
 import { CharacterSlotEquipmentSelector } from "./character-equipment-slot-editor";
-import { EMPTY_GUID } from "@/lib/guid";
 
 type CharacterInventoryEditorProps = {
   character: Actor;
@@ -12,10 +11,13 @@ type CharacterInventoryEditorProps = {
   onInventoryChange?: (inventory: CharacterInventoryItem[]) => void;
   onEquipmentChange?: (slots: CharacterEquipmentSlot[]) => void;
 
-  onInventoryAdd: (inventory: CharacterInventoryItem) => void;
-  onInventoryRemove: (inventory: CharacterInventoryItem) => void;
-  onEquipmentAdd: (slot: CharacterEquipmentSlot["slotId"], item: CharacterEquipmentSlot["item"]) => void;
-  onEquipmentRemove: (slotId: CharacterEquipmentSlot["slotId"], item?: CharacterEquipmentSlot["item"]) => void;
+  onInventoryAdd: (itemDefinition: ItemDefinition) => void;
+  onInventoryRemove: (characterInventoryItem: CharacterInventoryItem) => void;
+  onEquipmentAdd: (characterEquipmentSlotId: CharacterEquipmentSlot["slotId"], item: CharacterInventoryItem) => void;
+  onEquipmentRemove: (
+    characterEquipmentSlotId: CharacterEquipmentSlot["slotId"],
+    item?: CharacterEquipmentSlot["item"]
+  ) => void;
 };
 
 export function CharacterInventoryEditor({
@@ -47,18 +49,26 @@ export function CharacterInventoryEditor({
               slot={slot}
               existingEquipment={existingSlotEquipment}
               eligibleEquipment={characterEligibleEquipment}
-              onEquipRemove={(id, item) => {
+              onEquipRemove={(characterItemId, item) => {
                 const removed = character.equipment.find((eq) => eq.slotId !== slot.id);
-                onEquipmentRemove(id, removed?.item);
+                onEquipmentRemove(characterItemId, removed?.item);
                 onEquipmentChange && onEquipmentChange(character.equipment.filter((eq) => eq.slotId !== slot.id));
               }}
-              onEquipAdd={(id, item) => {
-                const itemInstance: CharacterEquipmentSlot = { slotId: slot.id, item: { id, definition: item } };
+              onEquipAdd={(characterItemId, item) => {
+                const itemInstance: CharacterEquipmentSlot = {
+                  slotId: slot.id,
+                  item: { id: characterItemId, definition: item },
+                };
+
+                const characterInventory = character.inventory.find((i) => i.id === characterItemId);
+                if (!characterInventory) {
+                  throw new Error("Character inventory not found");
+                }
 
                 // Filter the existing equipment and add the new one
                 const newEquipment = [...character.equipment.filter((eq) => eq.slotId !== slot.id), itemInstance];
                 onEquipmentChange && onEquipmentChange(newEquipment);
-                onEquipmentAdd(itemInstance.slotId, itemInstance.item);
+                onEquipmentAdd(itemInstance.slotId, characterInventory);
               }}
             />
           );
@@ -74,11 +84,9 @@ export function CharacterInventoryEditor({
 
       <ItemSelector
         placeholder="Add item to inventory"
-        availableItems={world.itemDefinitions}
-        onSelect={(item) => {
-          const newItem = { id: EMPTY_GUID, definition: item };
-          onInventoryAdd && onInventoryAdd(newItem);
-          onInventoryChange && onInventoryChange([newItem, ...character.inventory]);
+        availableItems={world.itemDefinitions.map((i) => ({ id: i.id, item: i }))}
+        onSelect={(option) => {
+          onInventoryAdd && onInventoryAdd(option.item);
         }}
       />
     </>

@@ -1,11 +1,11 @@
 import { Id, dangerousGenerateId } from "../../lib/generate-id";
 import { AugmentedRequired } from "../../types/with-required";
-import { Actor, CharacterClass, CharacterStat, isCharacterEvent } from "../actor/character";
+import { Actor, CharacterClass, CharacterInventoryItem, CharacterStat, isCharacterEvent } from "../actor/character";
 import { Battle } from "../battle/battle";
 import { ActionDefinition } from "../action/action";
 import { EquipmentSlotDefinition, ItemDefinition } from "../inventory/item";
 import { World } from "../world/world";
-import { CampaignEvent, CampaignEventWithRound } from "../events/events";
+import { CampaignEvent, CampaignEventWithRound, RoleplayerEvent } from "../events/events";
 import { CampaignState } from "./campaign-state";
 import { Round } from "./round";
 
@@ -37,23 +37,24 @@ export class Campaign {
     ];
   }
 
-  addCharacterItem(characterId: Actor["id"], itemId: Actor["id"]) {
+  addCharacterItem(characterId: Actor["id"], itemDefinitionId: ItemDefinition["id"]) {
     const actionGain: CampaignEvent = {
       characterId,
-      itemId,
+      itemDefinitionId: itemDefinitionId,
       id: dangerousGenerateId(),
-      type: "CharacterItemGain",
+      type: "CharacterInventoryItemGain",
+      itemInstanceId: dangerousGenerateId(),
     };
 
     this.publishCampaignEvent(actionGain);
   }
 
-  removeCharacterItem(characterId: Actor["id"], itemId: Actor["id"]) {
+  removeCharacterItem(characterId: Actor["id"], characterInventoryItemId: CharacterInventoryItem["id"]) {
     const actionGain: CampaignEvent = {
       characterId,
-      itemId,
+      characterInventoryItemId,
       id: dangerousGenerateId(),
-      type: "CharacterItemLoss",
+      type: "CharacterInventoryItemLoss",
     };
 
     this.publishCampaignEvent(actionGain);
@@ -80,7 +81,7 @@ export class Campaign {
       equipmentSlotId,
       itemId,
       id: dangerousGenerateId(),
-      type: "CharacterItemUnEquip",
+      type: "CharacterInventoryItemUnEquip",
     };
 
     this.publishCampaignEvent(equipEvent);
@@ -96,7 +97,7 @@ export class Campaign {
       itemId,
       equipmentSlotId,
       id: dangerousGenerateId(),
-      type: "CharacterItemEquip",
+      type: "CharacterInventoryItemEquip",
     };
 
     this.publishCampaignEvent(equipEvent);
@@ -219,6 +220,13 @@ export class Campaign {
       id: dangerousGenerateId(),
     }));
 
+    const defaultEquipmentSlotEvents: CampaignEvent[] = this.world!.ruleset.getCharacterEquipmentSlots().map((es) => ({
+      type: "CharacterEquipmentSlotGain",
+      characterId,
+      equipmentSlotId: es.id,
+      id: dangerousGenerateId(),
+    }));
+
     const characterSpawnEvents: CampaignEvent[] = [
       {
         type: "CharacterSpawned",
@@ -244,6 +252,7 @@ export class Campaign {
         statId: this.world.ruleset.getCharacterStatTypes().find((st) => st.name === "Defense")!.id,
         id: dangerousGenerateId(),
       },
+      ...defaultEquipmentSlotEvents,
       ...defaultResourcesEvents,
       ...defaultStatsEvents,
     ];
@@ -395,85 +404,95 @@ export class Campaign {
 
   getCampaignStateFromEvents() {
     const campaignState = new CampaignState(this, [], [], []);
-    this.events
-      .filter(this.isValidEvent)
-      .sort((a, b) => a.serialNumber - b.serialNumber)
-      .forEach((e) => this.applyEvent(e, campaignState));
-    return campaignState;
+    const sorted = this.events.filter(this.isValidEvent).toSorted((a, b) => a.serialNumber - b.serialNumber);
+
+    try {
+      sorted.forEach((e) => this.applyEvent(e, campaignState));
+
+      return campaignState;
+    } catch (e) {
+      this.debugEventProcessing(campaignState, sorted);
+      throw e;
+    }
   }
 
   applyEvent(event: CampaignEventWithRound, campaignState: CampaignState) {
-    switch (event.type) {
-      case "CampaignStarted": {
-        break;
-      }
-
-      case "RoundStarted": {
-        campaignState.rounds.push({
-          id: event.roundId,
-        });
-        campaignState.characters.forEach((c) => c.resetResources());
-        break;
-      }
-
-      case "BattleStarted": {
-        campaignState.battles.push(
-          new Battle({
-            id: event.battleId,
-            name: "Battle",
-          })
-        );
-
-        break;
-      }
-
-      case "CharacterSpawned": {
-        campaignState.characters.push(new Actor(this.world, { id: event.characterId }));
-        break;
-      }
-
-      case "RoundEnded": {
-        break;
-      }
-
-      case "CharacterBattleEnter":
-      case "CharacterStatChange":
-      case "CharacterExperienceSet":
-      case "CharacterResourceMaxSet":
-      case "CharacterExperienceChanged":
-      case "CharacterNameSet":
-      case "CharacterActionGain":
-      case "CharacterDespawn":
-      case "CharacterMovement":
-      case "CharacterEndRound":
-      case "CharacterItemGain":
-      case "CharacterItemLoss":
-      case "CharacterItemEquip":
-      case "CharacterEquipmentSlotGain":
-      case "CharacterPositionSet":
-      case "CharacterResourceGain":
-      case "CharacterResourceLoss":
-      case "CharacterStatusGain":
-      case "CharacterAttackAttackerHit":
-      case "CharacterAttackAttackerMiss":
-      case "CharacterAttackDefenderHit":
-      case "CharacterAttackDefenderDodge":
-      case "CharacterAttackDefenderParry":
-      case "CharacterClassReset":
-      case "CharacterBattleCharacterOrderSet":
-      case "CharacterClassLevelGain":
-        {
-          const character = campaignState.characters.find((c) => c.id === event.characterId);
-          if (!character) {
-            throw new Error(`Character ${event.characterId} not found when processing ${event.type}`);
-          }
-
-          this.applyCharacterEvent(character, campaignState, event);
+    try {
+      switch (event.type) {
+        case "CampaignStarted": {
+          break;
         }
-        break;
 
-      default:
-        console.warn(`Unknown event type ${event.type}`);
+        case "RoundStarted": {
+          campaignState.rounds.push({
+            id: event.roundId,
+          });
+          campaignState.characters.forEach((c) => c.resetResources());
+          break;
+        }
+
+        case "BattleStarted": {
+          campaignState.battles.push(
+            new Battle({
+              id: event.battleId,
+              name: "Battle",
+            })
+          );
+
+          break;
+        }
+
+        case "CharacterSpawned": {
+          campaignState.characters.push(new Actor(this.world, { id: event.characterId }));
+          break;
+        }
+
+        case "RoundEnded": {
+          break;
+        }
+
+        case "CharacterBattleEnter":
+        case "CharacterStatChange":
+        case "CharacterExperienceSet":
+        case "CharacterResourceMaxSet":
+        case "CharacterExperienceChanged":
+        case "CharacterNameSet":
+        case "CharacterActionGain":
+        case "CharacterDespawn":
+        case "CharacterMovement":
+        case "CharacterEndRound":
+        case "CharacterInventoryItemGain":
+        case "CharacterInventoryItemLoss":
+        case "CharacterInventoryItemEquip":
+        case "CharacterEquipmentSlotGain":
+        case "CharacterPositionSet":
+        case "CharacterResourceGain":
+        case "CharacterResourceLoss":
+        case "CharacterStatusGain":
+        case "CharacterAttackAttackerHit":
+        case "CharacterAttackAttackerMiss":
+        case "CharacterAttackDefenderHit":
+        case "CharacterAttackDefenderDodge":
+        case "CharacterAttackDefenderParry":
+        case "CharacterClassReset":
+        case "CharacterBattleCharacterOrderSet":
+        case "CharacterClassLevelGain":
+          {
+            const character = campaignState.characters.find((c) => c.id === event.characterId);
+            if (!character) {
+              throw new Error(`Character ${event.characterId} not found when processing ${event.type}`);
+            }
+
+            this.applyCharacterEvent(character, campaignState, event);
+          }
+          break;
+
+        default:
+          console.warn(`Unknown event type ${event.type}`);
+      }
+    } catch (e) {
+      this.debugEvent(event);
+      throw e;
     }
   }
 
@@ -685,13 +704,13 @@ export class Campaign {
         break;
       }
 
-      case "CharacterItemGain": {
-        const item = this.world!.itemDefinitions.find((eq) => eq.id === event.itemId);
+      case "CharacterInventoryItemGain": {
+        const item = this.world!.itemDefinitions.find((eq) => eq.id === event.itemDefinitionId);
         if (!item) {
-          throw new Error(`Could not find item with id ${event.itemId} for CharacterGainItem`);
+          throw new Error(`Could not find item with id ${event.itemDefinitionId} for CharacterGainItem`);
         }
 
-        character.inventory.push({ id: dangerousGenerateId(), definition: item });
+        character.inventory.push({ id: event.itemInstanceId, definition: item });
         break;
       }
 
@@ -715,12 +734,7 @@ export class Campaign {
         break;
       }
 
-      case "CharacterItemEquip": {
-        const item = this.world!.itemDefinitions.find((eq) => eq.id === event.itemId);
-        if (!item) {
-          throw new Error(`Could not find item on world`);
-        }
-
+      case "CharacterInventoryItemEquip": {
         const characterHasItem = character.inventory.find((eq) => eq.id === event.itemId);
         if (!characterHasItem) {
           throw new Error(`Could not find item on character`);
@@ -731,7 +745,7 @@ export class Campaign {
           throw new Error(`Could not find slot on event`);
         }
 
-        slot.item = { id: dangerousGenerateId(), definition: item };
+        slot.item = characterHasItem;
 
         break;
       }
@@ -780,5 +794,13 @@ export class Campaign {
         console.warn(`Unhandled event ${event.id}, type ${event.type}`);
         throw new Error(`Unhandled event type ${event.type}`);
     }
+  }
+
+  debugEvent(event: RoleplayerEvent) {
+    console.table(event);
+  }
+
+  debugEventProcessing(campaignState: CampaignState, events: CampaignEventWithRound[]) {
+    console.table(this.world.itemDefinitions);
   }
 }

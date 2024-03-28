@@ -248,10 +248,11 @@ describe("Character", () => {
           characterId: characterId,
         },
         {
-          type: "CharacterItemGain",
+          type: "CharacterInventoryItemGain",
           id: dangerousGenerateId(),
+          itemInstanceId: dangerousGenerateId(),
           characterId: characterId,
-          itemId: itemId,
+          itemDefinitionId: itemId,
         },
       ];
 

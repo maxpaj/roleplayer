@@ -73,7 +73,7 @@ export const EventIconMap: {
     alt: "",
     icon: defaultIcon,
   },
-  CharacterItemGain: {
+  CharacterInventoryItemGain: {
     alt: "",
     icon: defaultIcon,
   },
@@ -129,7 +129,7 @@ export const EventIconMap: {
     alt: "",
     icon: defaultIcon,
   },
-  CharacterItemEquip: {
+  CharacterInventoryItemEquip: {
     alt: "",
     icon: defaultIcon,
   },

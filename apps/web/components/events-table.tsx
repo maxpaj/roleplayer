@@ -20,7 +20,7 @@ export function EventsTable({ events }: { events: EventRecord[] }) {
         </TableHeader>
         <TableBody>
           {events
-            .sort((a, b) => a.serialNumber - b.serialNumber)
+            .toSorted((a, b) => a.serialNumber - b.serialNumber)
             .map((e) => (
               <TableRow key={e.id}>
                 <TableCell>{e.id.slice(-8)}</TableCell>

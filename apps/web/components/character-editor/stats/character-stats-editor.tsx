@@ -23,7 +23,7 @@ export function CharacterStatsEditor({ world, character, onChange }: CharacterSt
           statType: world.ruleset.getCharacterStatTypes().find((st) => st.id === s.statId),
           characterStat: s,
         }))
-        .sort((a, b) => (a.statType!.name > b.statType!.name ? 1 : -1))
+        .toSorted((a, b) => (a.statType!.name > b.statType!.name ? 1 : -1))
         .map((s) => {
           if (!s.statType) {
             throw new Error("No such stat type");

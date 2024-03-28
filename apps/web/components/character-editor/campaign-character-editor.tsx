@@ -1,12 +1,10 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable";
 import { Input } from "@/components/ui/input";
 import { Divider } from "@/components/ui/divider";
 import { H4, H5, Muted } from "@/components/ui/typography";
-import { useState } from "react";
-import { Actor, Campaign, CharacterInventoryItem, World } from "roleplayer";
+import { Actor, Campaign, CharacterInventoryItem, ItemDefinition, World } from "roleplayer";
 import { CharacterInventoryEditor } from "./inventory/character-inventory-editor";
 import { CharacterStatsEditor } from "./stats/character-stats-editor";
 import { CharacterLevelEditor } from "./classes/character-level-editor";
@@ -14,20 +12,20 @@ import { ScrollArea } from "../ui/scroll-area";
 
 type CharacterEditorProps = {
   onSaveCharacter?: (character: Actor) => void;
-  onSaveCampaign?: (campaign: Campaign) => void;
+  onSaveCampaign: (campaign: Campaign) => void;
 
   world: World;
   character: Actor;
   campaign: Campaign;
 };
 
-export function CharacterEditor({ campaign, onSaveCharacter, onSaveCampaign, world, character }: CharacterEditorProps) {
-  const [update, setUpdate] = useState(character);
-
-  if (!character) {
-    throw new Error("Character not found in campaign state");
-  }
-
+export function CampaignCharacterEditor({
+  campaign,
+  onSaveCharacter,
+  onSaveCampaign,
+  world,
+  character,
+}: CharacterEditorProps) {
   return (
     <>
       <H4>
@@ -38,21 +36,11 @@ export function CharacterEditor({ campaign, onSaveCharacter, onSaveCampaign, wor
             className="scroll-m-20 border-none px-0 text-xl font-semibold tracking-tight focus-visible:ring-0 focus-visible:ring-offset-0"
             name="name"
             placeholder="Name"
-            value={update.name}
+            value={character.name}
             onChange={(e) => {
-              setUpdate((prev) => {
-                prev.name = e.target.value;
-                return prev;
-              });
+              throw new Error("Not implemented");
             }}
           />
-          <Button
-            variant="outline"
-            className="h-4 px-3 py-4 text-xs"
-            onClick={() => onSaveCampaign && onSaveCampaign(campaign)}
-          >
-            Save
-          </Button>
         </div>
       </H4>
 
@@ -69,13 +57,14 @@ export function CharacterEditor({ campaign, onSaveCharacter, onSaveCampaign, wor
                   <CharacterLevelEditor
                     campaign={campaign}
                     character={character}
-                    onAddClass={(clazz) => {}}
-                    onRemoveClass={(clazz) => {}}
+                    onAddClass={(clazz) => {
+                      throw new Error("Not implemented");
+                    }}
+                    onRemoveClass={(clazz) => {
+                      throw new Error("Not implemented");
+                    }}
                     onChange={(classes) => {
-                      setUpdate((prev) => {
-                        prev.classes = [...classes];
-                        return prev;
-                      });
+                      throw new Error("Not implemented");
                     }}
                     world={world}
                   />
@@ -87,19 +76,23 @@ export function CharacterEditor({ campaign, onSaveCharacter, onSaveCampaign, wor
                   <H5 className="my-2">Equipment/inventory</H5>
                   <Muted>Stuff your character with swords, axes, armors, potions, and more</Muted>
                   <CharacterInventoryEditor
-                    character={update}
+                    character={character}
                     world={world}
                     onEquipmentAdd={(slot, addedItem) => {
                       campaign.characterEquipItem(character.id, slot, addedItem!.id);
+                      onSaveCampaign(campaign);
                     }}
                     onEquipmentRemove={(slot, removedItem) => {
                       campaign.characterUnEquipItem(character.id, slot, removedItem?.id);
+                      onSaveCampaign(campaign);
                     }}
-                    onInventoryAdd={(inventory: CharacterInventoryItem) => {
-                      campaign.addCharacterItem(character.id, inventory.id);
+                    onInventoryAdd={(item: ItemDefinition) => {
+                      campaign.addCharacterItem(character.id, item.id);
+                      onSaveCampaign(campaign);
                     }}
                     onInventoryRemove={(inventory: CharacterInventoryItem) => {
                       campaign.removeCharacterItem(character.id, inventory.id);
+                      onSaveCampaign(campaign);
                     }}
                   />
                 </ScrollArea>
@@ -112,13 +105,10 @@ export function CharacterEditor({ campaign, onSaveCharacter, onSaveCampaign, wor
               <H5 className="my-2">Stats</H5>
               <Muted>Stats determine the strengths and weaknesses of your character</Muted>
               <CharacterStatsEditor
-                character={update}
+                character={character}
                 world={world}
                 onChange={(stats) => {
-                  setUpdate((prev) => {
-                    prev.stats = [...stats];
-                    return prev;
-                  });
+                  throw new Error("Not implemented");
                 }}
               />
             </ScrollArea>

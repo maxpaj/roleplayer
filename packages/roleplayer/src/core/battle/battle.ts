@@ -35,7 +35,7 @@ export class Battle {
       return !hasActed;
     });
 
-    const sorted = charactersNotActedCurrentRound.sort((a, b) => b.actingOrder - a.actingOrder);
+    const sorted = charactersNotActedCurrentRound.toSorted((a, b) => b.actingOrder - a.actingOrder);
 
     return sorted[0] as BattleActor;
   }

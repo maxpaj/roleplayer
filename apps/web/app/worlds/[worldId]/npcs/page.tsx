@@ -25,7 +25,7 @@ export default async function NpcPage({ params }: { params: { worldId: string } 
 
       <div className="my-2 flex gap-2">
         {characters
-          .sort((a, b) => (a.name < b.name ? -1 : 1))
+          .toSorted((a, b) => (a.name < b.name ? -1 : 1))
           .map((character) => (
             <CharacterCard key={character.id} worldId={world.id} character={character} />
           ))}

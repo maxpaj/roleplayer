@@ -6,6 +6,7 @@
   :root {
     --background: 0 0% 100%;
     --foreground: 20 14.3% 4.1%;
+    --foregroundunderscored: 20_14.3%_4.1%;
     --card: 0 0% 100%;
     --card-foreground: 20 14.3% 4.1%;
     --popover: 0 0% 100%;
@@ -72,4 +73,8 @@
   100% {
     opacity: var(--background-opacity);
   }
+}
+
+.drop-shadow-background {
+  text-shadow: 0 0px 3px hsl(var(--background));
 }

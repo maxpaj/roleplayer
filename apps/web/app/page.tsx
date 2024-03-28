@@ -1,5 +1,5 @@
 import { ButtonLink } from "@/components/ui/button-link";
-import { H1, H2, H4, Lead, Muted } from "@/components/ui/typography";
+import { H1, H2, H4, Lead, Paragraph } from "@/components/ui/typography";
 import { ArrowRight, HammerIcon, HeartIcon, PuzzleIcon, SwordsIcon } from "lucide-react";
 import { HomeBackground } from "./home-background";
 import combat from "@/assets/frontpage/battle.webp";
@@ -42,7 +42,9 @@ export default function Home() {
                 <H4 className="mb-1 flex items-start gap-2">
                   <SwordsIcon /> Combat tracker
                 </H4>
-                <Muted>Keep track of character actions and conditions in combat.</Muted>
+                <Paragraph className="text-color-gray drop-shadow-background md:w-[50%]">
+                  Keep track of character actions and conditions in combat.
+                </Paragraph>
               </div>
               <div
                 className="absolute right-0 top-0 z-0 h-full w-full bg-cover bg-no-repeat opacity-40"
@@ -58,10 +60,10 @@ export default function Home() {
                 <H4 className="mb-1 flex items-start gap-2">
                   <HeartIcon /> Story and relationships system
                 </H4>
-                <Muted>
+                <Paragraph className="text-color-gray drop-shadow-background md:w-[50%]">
                   Keep track of the path that your party has paved through the world, which characters and factions
                   they've interacted with, etc.
-                </Muted>
+                </Paragraph>
               </div>
               <div
                 className="absolute right-0 top-0 z-0 h-full w-full bg-cover bg-no-repeat opacity-40"
@@ -77,7 +79,9 @@ export default function Home() {
                 <H4 className="mb-1 flex items-start gap-2">
                   <HammerIcon /> World builder
                 </H4>
-                <Muted>Design a world for your campaign. Use AI to generate content.</Muted>
+                <Paragraph className="text-color-gray drop-shadow-background md:w-[50%]">
+                  Design a world for your campaign. Use AI to generate content.
+                </Paragraph>
               </div>
               <div
                 className="absolute right-0 top-0 z-0 h-full w-full bg-cover bg-no-repeat opacity-40"
@@ -93,13 +97,15 @@ export default function Home() {
                 <H4 className="mb-1 flex items-start gap-2">
                   <PuzzleIcon /> Make your own rules
                 </H4>
-                <Muted>For the hard core TTRPG nerds. Design rules for a your own role playing game.</Muted>
+                <Paragraph className="text-color-gray drop-shadow-background md:w-[50%]">
+                  For the hard core TTRPG nerds. Design rules for a your own role playing game.
+                </Paragraph>
               </div>
               <div
                 className="absolute right-0 top-0 z-0 h-full w-full bg-cover bg-no-repeat opacity-40"
                 style={{
                   backgroundImage: `linear-gradient(to left, transparent 0, transparent, hsl(var(--background)) 90%), url(${rulebook.src})`,
-                  backgroundPosition: "100% 75%",
+                  backgroundPosition: "100% 35%",
                 }}
               />
             </div>

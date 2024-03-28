@@ -1,10 +1,10 @@
 "use client";
 
-import bgdark from "assets/bg-dark.webp";
-import bglight from "assets/bg-light.webp";
+import bgdark from "assets/frontpage/bg-dark.webp";
+import bglight from "assets/frontpage/bg-light2.webp";
 import { useTheme } from "next-themes";
 
-export function HomeBackground() {
+export function ThemeBackground() {
   const theme = useTheme();
 
   return (

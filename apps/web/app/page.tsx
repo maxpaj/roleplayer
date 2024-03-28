@@ -1,16 +1,16 @@
 import { ButtonLink } from "@/components/ui/button-link";
 import { H1, H2, H4, Lead, Paragraph } from "@/components/ui/typography";
 import { ArrowRight, HammerIcon, HeartIcon, PuzzleIcon, SwordsIcon } from "lucide-react";
-import { HomeBackground } from "./home-background";
+import { ThemeBackground } from "./theme-background";
 import combat from "@/assets/frontpage/battle.webp";
-import relationship from "@/assets/frontpage/relationship.webp";
+import relationship from "@/assets/frontpage/laughing.webp";
 import worldbuilder from "@/assets/frontpage/worldbuilder.webp";
 import rulebook from "@/assets/frontpage/rulebook.webp";
 
 export default function Home() {
   return (
     <>
-      <HomeBackground />
+      <ThemeBackground />
 
       <section className="z-1 relative mb-[25vh] space-y-6 pb-8 pt-6 md:pb-12 md:pt-10 lg:py-32">
         <div className="container flex flex-col items-center gap-4 text-center">
@@ -58,7 +58,7 @@ export default function Home() {
             <div className="bg-card text-card-foreground relative h-44 overflow-hidden rounded-xl border px-6 py-6 shadow">
               <div className="relative bottom-0 z-10">
                 <H4 className="mb-1 flex items-start gap-2">
-                  <HeartIcon /> Story and relationships system
+                  <HeartIcon /> Story and relationships
                 </H4>
                 <Paragraph className="text-color-gray drop-shadow-background md:w-[50%]">
                   Keep track of the path that your party has paved through the world, which characters and factions
@@ -69,7 +69,7 @@ export default function Home() {
                 className="absolute right-0 top-0 z-0 h-full w-full bg-cover bg-no-repeat opacity-40"
                 style={{
                   backgroundImage: `linear-gradient(to left, transparent 0, transparent, hsl(var(--background)) 90%), url(${relationship.src})`,
-                  backgroundPosition: "100% 75%",
+                  backgroundPosition: "100% 20%",
                 }}
               />
             </div>
@@ -80,7 +80,8 @@ export default function Home() {
                   <HammerIcon /> World builder
                 </H4>
                 <Paragraph className="text-color-gray drop-shadow-background md:w-[50%]">
-                  Design a world for your campaign. Use AI to generate content.
+                  Design a world for your campaign. Optionally use our AI service integrations to help with generating
+                  content.
                 </Paragraph>
               </div>
               <div
@@ -95,7 +96,7 @@ export default function Home() {
             <div className="bg-card text-card-foreground relative h-44 overflow-hidden rounded-xl border px-6 py-6 shadow">
               <div className="relative bottom-0 z-10">
                 <H4 className="mb-1 flex items-start gap-2">
-                  <PuzzleIcon /> Make your own rules
+                  <PuzzleIcon /> Rich and customizable rule system
                 </H4>
                 <Paragraph className="text-color-gray drop-shadow-background md:w-[50%]">
                   For the hard core TTRPG nerds. Design rules for a your own role playing game.

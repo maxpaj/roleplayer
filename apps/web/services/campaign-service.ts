@@ -137,8 +137,6 @@ export class CampaignService {
       .leftJoin(eventsSchema, eq(eventsSchema.campaignId, campaignsSchema.id))
       .where(eq(campaignsSchema.worldId, worldId));
 
-    console.log(`Read world, ${rows.length} rows`);
-
     const result = rows.reduce<Record<CampaignRecord["id"], { campaign: CampaignRecord; events: EventRecord[] }>>(
       (acc, row) => {
         const campaign = row.campaigns;

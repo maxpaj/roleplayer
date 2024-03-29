@@ -1,9 +1,8 @@
 import { Id } from "../../lib/generate-id";
 import { Battle } from "../battle/battle";
 import { Round } from "./round";
-import { Actor, isCharacterEvent } from "../actor/character";
-import { Campaign } from "./campaign";
-import { RoleplayerEvent, CampaignEventWithRound } from "../events/events";
+import { Actor } from "../actor/character";
+import { CampaignEventWithRound } from "../events/events";
 import { CharacterResourceDefinition } from "../ruleset/ruleset";
 
 /**
@@ -13,10 +12,8 @@ export class CampaignState {
   battles: Battle[];
   rounds: Round[];
   characters: Actor[];
-  campaign: Campaign;
 
-  constructor(campaign: Campaign, battles: Battle[] = [], rounds: Round[] = [], characters: Actor[] = []) {
-    this.campaign = campaign;
+  constructor(battles: Battle[] = [], rounds: Round[] = [], characters: Actor[] = []) {
     this.battles = battles;
     this.rounds = rounds;
     this.characters = characters;
@@ -46,13 +43,6 @@ export class CampaignState {
 
   characterHasResource(round: Round, characterId: Id, resourceType: CharacterResourceDefinition["id"]) {
     return false;
-  }
-
-  characterHasRoundEvent(round: Round, characterId: Id, type: RoleplayerEvent["type"]) {
-    const roundCharacterEvents = this.campaign.getCharacterRoundEvents(round, characterId);
-    return roundCharacterEvents.some(
-      (event) => isCharacterEvent(event) && event.characterId === characterId && event.type === type
-    );
   }
 
   allCharactersHaveActed(events: CampaignEventWithRound[]) {

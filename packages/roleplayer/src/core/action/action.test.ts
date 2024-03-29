@@ -6,6 +6,10 @@ import { World } from "../world/world";
 import { CharacterResourceLossEffect, CharacterStatusGainEffect } from "./effect";
 import { TargetType } from "./action";
 import { StatusDefinition, StatusApplicationTrigger, StatusDurationType, StatusType } from "./status";
+import { Console } from "console";
+import { createWriteStream } from "node:fs";
+
+const debugConsole = new Console(createWriteStream("test-debug.log.json", { start: 0 }));
 
 describe("actions", () => {
   const defaultRuleSet = new DnDRuleset(() => 2);
@@ -63,13 +67,16 @@ describe("actions", () => {
     const world = new World(defaultRuleSet, "Test world", {});
     world.statuses = [frozenStatus];
     world.itemDefinitions = [frostSword];
-    world.actions = frostSword.actions;
 
-    const campaign = new Campaign({
-      id: "00000000-0000-0000-0000-000000000000" as const,
-      name: "Test campaign",
-      world,
-    });
+    const campaign = new Campaign(
+      {
+        id: "00000000-0000-0000-0000-000000000000" as const,
+        name: "Test campaign",
+        world,
+      },
+      debugConsole
+    );
+
     campaign.nextRound();
 
     const attackerId = "attacker-id";
@@ -77,13 +84,15 @@ describe("actions", () => {
 
     // Setup attacker
     campaign.createCharacter(attackerId, "Attacker");
-    campaign.addCharacterEquipmentSlot(attackerId, mainHandEquipmentSlot.id);
     campaign.addCharacterItem(attackerId, frostSword.id);
+    campaign.characterEquipItem(attackerId, mainHandEquipmentSlot.id, frostSword.id);
 
     // Setup defender
     campaign.createCharacter(defenderId, "Defender");
 
     campaign.nextRound();
+
+    console.table(campaign.events);
 
     const beforeAttack = campaign.getCampaignStateFromEvents();
     const attacker = beforeAttack.characters.find((c) => c.id === attackerId);

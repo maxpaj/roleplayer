@@ -1,18 +1,21 @@
+import { Logger } from "../../lib/logger";
 import { RoleplayerEvent } from "./events";
 import { Middleware } from "./middleware";
+
+const logger = new Logger();
 
 const terminate: Middleware = {
   name: "Terminate",
   async handle(event: RoleplayerEvent, next: () => void) {
-    console.log("Terminating event processing");
+    logger.info("Terminating event processing");
     next();
   },
 };
 
-const logger: Middleware = {
+const loggerMiddleware: Middleware = {
   name: "Logger",
   async handle(event: RoleplayerEvent, next: () => void) {
-    console.log(`Processing event ${event.type}`);
+    logger.info(`Processing event ${event.type}`);
     next();
   },
 };
@@ -29,7 +32,7 @@ const transformUnknownToRoundStarted: Middleware = {
 };
 
 export class EventProcessor {
-  middleware: Middleware[] = [logger, transformUnknownToRoundStarted, terminate];
+  middleware: Middleware[] = [loggerMiddleware, transformUnknownToRoundStarted, terminate];
 
   async process(event: RoleplayerEvent) {
     let i = 0;

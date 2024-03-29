@@ -16,6 +16,8 @@
 # production
 /build
 
+CPU.main*
+
 # misc
 .DS_Store
 *.pem

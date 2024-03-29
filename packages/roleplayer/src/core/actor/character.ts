@@ -2,7 +2,7 @@ import { Id } from "../../lib/generate-id";
 import { CampaignEvent, RoleplayerEvent, CampaignEventWithRound } from "../events/events";
 import { ActionDefinition } from "../action/action";
 import { StatusDefinition } from "../action/status";
-import { EquipmentSlotDefinition, ItemDefinition } from "../inventory/item";
+import { EquipmentSlotDefinition, ItemDefinition, ItemEquipmentType, ItemType } from "../inventory/item";
 import { Party } from "../campaign/party";
 import { World } from "../world/world";
 import {
@@ -201,13 +201,15 @@ export class Actor {
    * @returns A list of available actions
    */
   getAvailableActions(): ActionDefinition[] {
+    const consumables = this.inventory.filter((it) => it.definition.type === ItemType.Consumable);
+
     return [
       ...this.actions,
       ...this.equipment
         .flatMap((eq) => eq.item)
         .filter((i) => i)
         .flatMap((i) => i!.definition.actions),
-      ...this.inventory.flatMap((i) => i.definition.actions),
+      ...consumables.flatMap((i) => i.definition.actions),
     ];
   }
 

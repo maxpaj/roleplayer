@@ -57,14 +57,11 @@ export function CampaignCharacterEditor({
                   <CharacterLevelEditor
                     campaign={campaign}
                     character={character}
-                    onAddClass={(clazz) => {
-                      throw new Error("Not implemented");
-                    }}
-                    onRemoveClass={(clazz) => {
-                      throw new Error("Not implemented");
-                    }}
+                    onAddClass={(clazz) => {}}
+                    onRemoveClass={(clazz) => {}}
                     onChange={(classes) => {
-                      throw new Error("Not implemented");
+                      campaign.setCharacterClasses(character.id, classes);
+                      onSaveCampaign(campaign);
                     }}
                     world={world}
                   />
@@ -75,6 +72,7 @@ export function CampaignCharacterEditor({
                 <ScrollArea className="h-full w-full">
                   <H5 className="my-2">Equipment/inventory</H5>
                   <Muted>Stuff your character with swords, axes, armors, potions, and more</Muted>
+
                   <CharacterInventoryEditor
                     character={character}
                     world={world}

@@ -6,17 +6,17 @@ import { ActionDefinition } from "../action/action";
 import { ItemDefinition } from "../inventory/item";
 import { Round } from "../campaign/round";
 
-export type RoleplayerEvent = SystemEventType | CharacterEventType;
-
-export type CampaignEvent = RoleplayerEvent & {
-  id: Id;
-};
-
 export type CampaignEventWithRound = CampaignEvent & {
   roundId: Round["id"];
   battleId?: Battle["id"];
   serialNumber: number;
 };
+
+export type CampaignEvent = RoleplayerEvent & {
+  id: Id;
+};
+
+export type RoleplayerEvent = SystemEventType | CharacterEventType;
 
 export const RoleplayerEventTypes: RoleplayerEvent["type"][] = [
   "Unknown",

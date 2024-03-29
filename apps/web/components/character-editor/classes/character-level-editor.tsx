@@ -7,12 +7,19 @@ type CharacterLevelEditorProps = {
   character: Actor;
   campaign: Campaign;
   world: World;
-  onAddClass: (classId: string) => void;
-  onRemoveClass: (classId: string) => void;
+  onAddClass: (clazz: CharacterClass) => void;
+  onRemoveClass: (clazz: CharacterClass) => void;
   onChange: (classes: CharacterClass[]) => void;
 };
 
-export function CharacterLevelEditor({ campaign, character, world, onChange }: CharacterLevelEditorProps) {
+export function CharacterLevelEditor({
+  campaign,
+  character,
+  world,
+  onAddClass,
+  onRemoveClass,
+  onChange,
+}: CharacterLevelEditorProps) {
   const characterLevel = campaign.getCharacterLevel(character);
 
   return (
@@ -27,8 +34,8 @@ export function CharacterLevelEditor({ campaign, character, world, onChange }: C
           characterLevel={characterLevel}
           availableClasses={world.classes}
           character={character}
-          onAdd={(clazz) => {}}
-          onRemove={(clazz) => {}}
+          onAdd={(clazz) => onAddClass(clazz)}
+          onRemove={(clazz) => onRemoveClass(clazz)}
           onChange={(classes) => {
             onChange(classes);
           }}

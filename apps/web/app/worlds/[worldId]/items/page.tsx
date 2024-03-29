@@ -2,7 +2,7 @@ import { Divider } from "@/components/ui/divider";
 import { H3, H5, Muted } from "@/components/ui/typography";
 import { getWorldData } from "../actions";
 import { ItemCard } from "@/components/item-card";
-import { ItemType, Rarity } from "roleplayer";
+import { ItemDefinition, ItemEquipmentType, ItemType, Rarity } from "roleplayer";
 import { CreateItemForm } from "./components/create-item-form";
 import Link from "next/link";
 
@@ -16,12 +16,17 @@ export default async function ItemsPage({ params }: { params: { worldId: string 
 
   const { itemDefinitions: items } = worldData;
 
-  const itemsMapped = items.map((item) => ({
+  const itemsMapped: ItemDefinition[] = items.map((item) => ({
     id: item.id,
     name: item.name,
-    description: item.description || "",
     type: ItemType[item.type],
+    stats: [],
     rarity: Rarity[item.rarity],
+    actions: [],
+    weightUnits: 0,
+    description: item.description || "",
+    occupiesSlots: [],
+    equipmentType: ItemEquipmentType[item.equipmentType],
   }));
 
   const equipment = itemsMapped.filter((item) => item.type === ItemType.Equipment);

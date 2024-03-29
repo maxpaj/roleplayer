@@ -33,7 +33,7 @@ export function CreateBattleForm({ campaignId }: CreateBattleFormProps) {
       <form action={createNewBattle}>
         <Input type="name" id="name" name="name" placeholder="New Battle name" />
 
-        <Button type="submit">Create new Battle</Button>
+        <Button type="submit">Create new battle</Button>
       </form>
     </>
   );

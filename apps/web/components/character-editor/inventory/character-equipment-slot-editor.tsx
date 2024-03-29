@@ -1,6 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { CharacterEquipmentSlot, CharacterInventoryItem, EquipmentSlotDefinition, ItemDefinition } from "roleplayer";
 import { ItemSelector } from "./item-selector";
+import { Button } from "@/components/ui/button";
 
 type CharacterSlotEquipmentSelectorProps = {
   slot: EquipmentSlotDefinition;
@@ -22,13 +23,18 @@ export function CharacterSlotEquipmentSelector({
       <CardHeader>
         <CardTitle>{slot.name || "Slot?"}</CardTitle>
         <CardDescription>{existingEquipment?.item?.definition.name}</CardDescription>
+        {existingEquipment?.item?.definition && (
+          <Button onClick={() => onEquipRemove(slot.id, existingEquipment.item!.definition)}>Remove equipment</Button>
+        )}
       </CardHeader>
 
       <CardContent>
-        <ItemSelector
-          availableItems={eligibleEquipment.map((e) => ({ id: e.id, item: e.definition }))}
-          onSelect={(option) => onEquipAdd(option.id, option.item)}
-        />
+        {!existingEquipment?.item?.definition && (
+          <ItemSelector
+            availableItems={eligibleEquipment.map((e) => ({ id: e.id, item: e.definition }))}
+            onSelect={(option) => onEquipAdd(option.id, option.item)}
+          />
+        )}
       </CardContent>
     </Card>
   );

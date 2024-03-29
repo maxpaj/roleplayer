@@ -15,7 +15,7 @@ type ComboboxProps = {
   onChange?: (value: string) => void;
 };
 
-export function Combobox({ options, placeholder = "Select item", onChange }: ComboboxProps) {
+export function Combobox({ options, placeholder = "Select option", onChange }: ComboboxProps) {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
 

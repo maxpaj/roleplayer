@@ -26,9 +26,9 @@ export function CampaignCharacterCard({ world, campaignId, character }: Campaign
               }
 
               return (
-                <>
+                <span key={clazz.id}>
                   {clazz.name} Level {c.level}
-                </>
+                </span>
               );
             })}
           </CardDescription>

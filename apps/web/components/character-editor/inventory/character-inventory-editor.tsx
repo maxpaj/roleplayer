@@ -3,6 +3,7 @@ import { ItemSelector } from "./item-selector";
 import { ItemCard } from "@/components/item-card";
 import { H5, Muted } from "@/components/ui/typography";
 import { CharacterSlotEquipmentSelector } from "./character-equipment-slot-editor";
+import { InventoryItemCard } from "./character-inventory-item-card";
 
 type CharacterInventoryEditorProps = {
   character: Actor;
@@ -36,8 +37,13 @@ export function CharacterInventoryEditor({
     <>
       <H5>Equipment</H5>
       <div className="my-2">
-        {worldEquipmentSlots.length === 0 && <Muted>Nothing equipped</Muted>}
-        {worldEquipmentSlots.map((slot) => {
+        {character.equipment.length === 0 && <Muted>No equipment slots available</Muted>}
+        {character.equipment.map((cslot) => {
+          const slot = worldEquipmentSlots.find((weq) => weq.id === cslot.slotId);
+          if (!slot) {
+            throw new Error("Cannot find character equipment slot in world");
+          }
+
           const characterEligibleEquipment = character.inventory.filter((i) =>
             slot.eligibleEquipmentTypes.includes(i.definition.equipmentType)
           );
@@ -78,7 +84,7 @@ export function CharacterInventoryEditor({
       <H5>Inventory</H5>
       <div className="my-2 flex flex-wrap gap-2">
         {character.inventory.map((item) => (
-          <ItemCard key={item.id} item={item.definition} onClick={() => onInventoryRemove(item)} />
+          <InventoryItemCard key={item.id} item={item.definition} onRemove={() => onInventoryRemove(item)} />
         ))}
       </div>
 

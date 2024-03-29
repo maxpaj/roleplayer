@@ -93,11 +93,11 @@ export class Campaign {
     itemId: ItemDefinition["id"]
   ) {
     const equipEvent: CampaignEvent = {
+      type: "CharacterInventoryItemEquip",
       characterId,
       itemId,
       equipmentSlotId,
       id: dangerousGenerateId(),
-      type: "CharacterInventoryItemEquip",
     };
 
     this.publishCampaignEvent(equipEvent);
@@ -105,10 +105,10 @@ export class Campaign {
 
   addActionToCharacter(characterId: Actor["id"], actionId: ActionDefinition["id"]) {
     const actionGain: CampaignEvent = {
+      type: "CharacterActionGain",
       characterId,
       actionId,
       id: dangerousGenerateId(),
-      type: "CharacterActionGain",
     };
 
     this.publishCampaignEvent(actionGain);
@@ -128,15 +128,15 @@ export class Campaign {
 
   setCharacterClasses(characterId: Actor["id"], classes: CharacterClass[]) {
     const classResetEvent: CampaignEvent = {
+      type: "CharacterClassReset",
       characterId,
       id: dangerousGenerateId(),
-      type: "CharacterClassReset",
     };
 
     const classUpdates: CampaignEvent[] = classes.map((c) => ({
+      type: "CharacterClassLevelGain",
       characterId,
       id: dangerousGenerateId(),
-      type: "CharacterClassLevelGain",
       classId: c.classId,
     }));
 
@@ -145,9 +145,9 @@ export class Campaign {
 
   setCharacterName(characterId: Actor["id"], name: string) {
     const characterUpdate: CampaignEvent = {
+      type: "CharacterNameSet",
       characterId,
       id: dangerousGenerateId(),
-      type: "CharacterNameSet",
       name,
     };
 
@@ -158,9 +158,9 @@ export class Campaign {
   setCharacterBaseDefense(characterId: Actor["id"], defense: number) {
     const defenseStatId = this.world.ruleset.getCharacterStatTypes().find((st) => st.name === "Defense")!.id;
     const characterUpdate: CampaignEvent = {
+      type: "CharacterStatChange",
       characterId,
       id: dangerousGenerateId(),
-      type: "CharacterStatChange",
       amount: defense,
       statId: defenseStatId,
     };
@@ -170,9 +170,9 @@ export class Campaign {
 
   characterGainExperience(characterId: Actor["id"], experience: number) {
     const characterUpdate: CampaignEvent = {
+      type: "CharacterExperienceChanged",
       characterId,
       id: dangerousGenerateId(),
-      type: "CharacterExperienceChanged",
       experience,
     };
 
@@ -188,14 +188,14 @@ export class Campaign {
     const order = this.world.ruleset.characterBattleActionOrder(actor);
     const characterBattleEnter: CampaignEvent[] = [
       {
+        type: "CharacterBattleEnter",
         characterId,
         id: dangerousGenerateId(),
-        type: "CharacterBattleEnter",
       },
       {
+        type: "CharacterBattleCharacterOrderSet",
         characterId,
         id: dangerousGenerateId(),
-        type: "CharacterBattleCharacterOrderSet",
         order: order,
       },
     ];
@@ -293,8 +293,8 @@ export class Campaign {
     const battleId = dangerousGenerateId();
 
     this.events.push({
-      id: dangerousGenerateId(),
       type: "BattleStarted",
+      id: dangerousGenerateId(),
       battleId,
       roundId: dangerousGenerateId(),
       serialNumber: this.events[this.events.length - 1]!.serialNumber + 1,
@@ -387,6 +387,10 @@ export class Campaign {
     return roundEvents.filter((re) => isCharacterEvent(re) && re.characterId === characterId);
   }
 
+  getCharacterEvents(characterId: Actor["id"]) {
+    return this.events.filter((re) => isCharacterEvent(re) && re.characterId === characterId);
+  }
+
   getCharacterLevel(character: Actor) {
     const levelProgression = this.world!.ruleset.getLevelProgression().slice();
     const levelInfo = levelProgression.find((l) => l.requiredXp >= character.xp);
@@ -464,6 +468,7 @@ export class Campaign {
         case "CharacterInventoryItemGain":
         case "CharacterInventoryItemLoss":
         case "CharacterInventoryItemEquip":
+        case "CharacterInventoryItemUnEquip":
         case "CharacterEquipmentSlotGain":
         case "CharacterPositionSet":
         case "CharacterResourceGain":
@@ -745,7 +750,22 @@ export class Campaign {
           throw new Error(`Could not find slot on event`);
         }
 
+        if (slot.item) {
+          throw new Error("Slot already has item");
+        }
+
         slot.item = characterHasItem;
+
+        break;
+      }
+
+      case "CharacterInventoryItemUnEquip": {
+        const slot = character.equipment.find((e) => e.slotId === event.equipmentSlotId);
+        if (!slot) {
+          throw new Error(`Could not find slot on event`);
+        }
+
+        slot.item = undefined;
 
         break;
       }

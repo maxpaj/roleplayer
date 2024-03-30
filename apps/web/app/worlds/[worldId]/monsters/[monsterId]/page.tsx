@@ -11,8 +11,8 @@ export default async function MonsterDetailsPage({ params }: { params: { monster
     return <>World not found!</>;
   }
 
-  const { monsters } = worldData;
-  const monster = monsters.find((m) => m.id === monsterId);
+  const { characters } = worldData;
+  const monster = characters.find((m) => m.id === monsterId);
 
   if (!monster) {
     return <>Monster not found!</>;

@@ -145,10 +145,6 @@ export class Actor {
     this.ruleset = ruleset;
   }
 
-  getEligibleTargets(action: ActionDefinition): Actor[] {
-    throw new Error("Method not implemented.");
-  }
-
   performAction(): CampaignEventWithRound[] {
     throw new Error("Method not implemented.");
   }

@@ -80,7 +80,6 @@ export function getWorldFromCampaignData(campaignData: CampaignAggregated) {
       ...campaignData.world,
       itemDefinitions: [],
       characters: [],
-      monsters: [],
       actions: [],
       statuses: [],
       classes: [],
@@ -218,7 +217,6 @@ export class CampaignService {
         actions: [],
         classes: [],
         itemDefinitions: [],
-        monsters: [],
         statuses: [],
       }),
     });
@@ -262,7 +260,6 @@ export class CampaignService {
             races: [],
             classes: [],
             itemDefinitions: [],
-            monsters: [],
             statuses: [],
           },
           events: [],
@@ -342,7 +339,6 @@ export class CampaignService {
       actions: [],
       classes: [],
       itemDefinitions: [],
-      monsters: [],
       statuses: [],
     });
 

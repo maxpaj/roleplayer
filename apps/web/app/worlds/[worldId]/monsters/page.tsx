@@ -8,11 +8,13 @@ export default async function MonstersPage({ params }: { params: { worldId: stri
   const { worldId: id } = params;
   const worldId = id;
   const worldData = await getWorldData(worldId);
+
   if (!worldData) {
     return <>World not found!</>;
   }
 
-  const { monsters } = worldData;
+  const { characters } = worldData;
+  const monsters = characters.filter((c) => c.type === "Monster");
 
   return (
     <>

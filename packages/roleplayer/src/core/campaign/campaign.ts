@@ -207,6 +207,19 @@ export class Campaign {
     this.publishCampaignEvent(...characterBattleEnter);
   }
 
+  spawnCharacter(templateId: Actor["id"]) {
+    const characterSpawnEvents: CampaignEvent[] = [
+      {
+        type: "CharacterSpawned",
+        characterId: dangerousGenerateId(),
+        templateId,
+        id: dangerousGenerateId(),
+      },
+    ];
+
+    this.publishCampaignEvent(...characterSpawnEvents);
+  }
+
   createCharacter(characterId: Actor["id"], name: string) {
     const defaultResourcesEvents: CampaignEvent[] = this.world!.ruleset.getCharacterResourceTypes().map((cr) => ({
       type: "CharacterResourceMaxSet",
@@ -265,17 +278,20 @@ export class Campaign {
   }
 
   nextRound(battleId?: Battle["id"]) {
+    const newRoundId = dangerousGenerateId();
     const events: CampaignEventWithRound[] = [
       {
         type: "RoundStarted",
         id: dangerousGenerateId(),
-        roundId: dangerousGenerateId(),
+        roundId: newRoundId,
         battleId,
         serialNumber: this.nextSerialNumber(),
       },
     ];
 
-    this.publishCampaignEvent(...events);
+    this.events.push(...events);
+
+    return newRoundId;
   }
 
   endRound() {
@@ -311,6 +327,7 @@ export class Campaign {
 
   performCharacterAttack(attacker: Actor, actionDef: ActionDefinition, targets: Actor[]) {
     const characterAction = attacker.action(actionDef);
+
     const characterActionHitRoll = characterAction.rolls.find((r) => r.name === "Hit");
     if (!characterActionHitRoll) {
       throw new Error("Hit roll not defined for character action");
@@ -319,11 +336,6 @@ export class Campaign {
     const healthResource = this.world.ruleset.getCharacterResourceTypes().find((rt) => rt.name === "Health");
     if (!healthResource) {
       throw new Error("Health resource not defined in world, cannot perform attack");
-    }
-
-    const actionResource = this.world.ruleset.getCharacterResourceTypes().find((rt) => rt.name === "Primary action");
-    if (!actionResource) {
-      throw new Error("Primary action resource not defined in world, cannot perform attack");
     }
 
     const targetReceiveAttackEvents = targets.flatMap((target) => {
@@ -358,10 +370,11 @@ export class Campaign {
     const currentRound = currentCampaignState.getCurrentRound();
 
     const eventsWithRoundAndBattle = newEvents.map((e, i) => {
+      const eventSerialNumber = this.nextSerialNumber() + i;
       return {
         ...e,
         roundId: currentRound.id,
-        serialNumber: this.nextSerialNumber(),
+        serialNumber: eventSerialNumber,
       };
     });
 
@@ -370,7 +383,7 @@ export class Campaign {
   }
 
   nextSerialNumber() {
-    const sortedEvents = this.events.filter(this.isValidEvent).toSorted((a, b) => a.serialNumber - b.serialNumber);
+    const sortedEvents = this.events.toSorted((a, b) => a.serialNumber - b.serialNumber);
     const lastSerialNumber = sortedEvents[sortedEvents.length - 1]?.serialNumber || 0;
     return lastSerialNumber + 1;
   }
@@ -381,11 +394,13 @@ export class Campaign {
     const currentRound = currentCampaignState.getCurrentRound();
 
     const eventsWithRoundAndBattle = newEvents.map((e, i) => {
+      const eventSerialNumber = this.nextSerialNumber() + i;
+
       return {
         ...e,
         battleId: currentBattle?.id,
         roundId: currentRound.id,
-        serialNumber: this.nextSerialNumber(),
+        serialNumber: eventSerialNumber,
       };
     });
 
@@ -413,13 +428,16 @@ export class Campaign {
     return this.events.filter((e) => e.battleId === battleId);
   }
 
-  isValidEvent(event: CampaignEventWithRound) {
-    return event.serialNumber !== undefined;
+  getCharacterEligibleTargets(actor: Actor, action: ActionDefinition): Actor[] {
+    const campaignState = this.getCampaignStateFromEvents();
+
+    // TODO: Make sure the target is eligible
+    return campaignState.characters;
   }
 
   getCampaignStateFromEvents() {
     const campaignState = new CampaignState([], [], []);
-    const sorted = this.events.filter(this.isValidEvent).toSorted((a, b) => a.serialNumber - b.serialNumber);
+    const sorted = this.events.toSorted((a, b) => a.serialNumber - b.serialNumber);
 
     try {
       sorted.forEach((e) => {
@@ -434,11 +452,9 @@ export class Campaign {
     }
   }
 
-  characterHasRoundEvent(round: Round, characterId: Id, type: RoleplayerEvent["type"]) {
-    const roundCharacterEvents = this.getCharacterRoundEvents(round, characterId);
-    return roundCharacterEvents.some(
-      (event) => isCharacterEvent(event) && event.characterId === characterId && event.type === type
-    );
+  characterHasRoundEvent(round: Round, character: Actor, type: RoleplayerEvent["type"]) {
+    const roundCharacterEvents = this.getCharacterRoundEvents(round, character.id);
+    return roundCharacterEvents.some((event) => event.type === type);
   }
 
   applyEvent(event: CampaignEventWithRound, campaignState: CampaignState) {
@@ -451,7 +467,9 @@ export class Campaign {
         case "RoundStarted": {
           campaignState.rounds.push({
             id: event.roundId,
+            serialNumber: event.serialNumber,
           });
+
           campaignState.characters.forEach((c) => c.resetResources());
           break;
         }
@@ -468,7 +486,12 @@ export class Campaign {
         }
 
         case "CharacterSpawned": {
-          campaignState.characters.push(new Actor(this.world.ruleset, { id: event.characterId }));
+          const template = this.world.characters.find((c) => c.id === event.templateId);
+          if (!template) {
+            campaignState.characters.push(new Actor(this.world.ruleset, { id: event.characterId }));
+          } else {
+            campaignState.characters.push(new Actor(this.world.ruleset, template));
+          }
           break;
         }
 
@@ -536,7 +559,7 @@ export class Campaign {
           throw new Error("Cannot find battle");
         }
 
-        const characterBattle = battle.entities.find((e) => e.actor.id === event.characterId);
+        const characterBattle = battle.actors.find((e) => e.actor.id === event.characterId);
         if (!characterBattle) {
           throw new Error("Cannot find battle character");
         }
@@ -551,7 +574,7 @@ export class Campaign {
           throw new Error("Cannot find battle");
         }
 
-        const characterBattle = battle.entities.find((e) => e.actor.id === event.characterId);
+        const characterBattle = battle.actors.find((e) => e.actor.id === event.characterId);
 
         if (!characterBattle) {
           throw new Error("Cannot find battle character");

@@ -6,6 +6,7 @@ import {
   TargetTypeEnum,
   actionsSchema,
   actionsToEffectSchema,
+  actionsToResourceRequirementSchema,
 } from "../db/schema/actions";
 import { CampaignRecord, campaignsSchema } from "../db/schema/campaigns";
 import {
@@ -33,10 +34,10 @@ import { alias } from "drizzle-orm/pg-core";
 import { EffectRecord, effectsSchema } from "@/db/schema/effects";
 import { CharacterResource } from "roleplayer";
 import { RaceRecord } from "@/db/schema/races";
+import { resourceTypesSchema } from "@/db/schema/resources";
 
 export type WorldAggregated = WorldRecord & {
   campaigns: CampaignRecord[];
-  monsters: ActorAggregated[];
   characters: ActorAggregated[];
   statuses: StatusAggregated[];
   itemDefinitions: ItemAggregated[];
@@ -86,6 +87,7 @@ export class WorldService {
     const itemsActionsAlias = alias(actionsSchema, "itemsActionsAlias");
     const itemsActionsToEffectsAlias = alias(actionsToEffectSchema, "itemsActionsToEffectsAlias");
     const itemsActionsEffectAlias = alias(effectsSchema, "itemsActionsEffectAlias");
+    const itemsActionsResourceRequirementsAlias = alias(resourceTypesSchema, "itemsActionsResourceRequirementsAlias");
 
     const statusesToEffectsAlias = alias(statusesToEffectsSchema, "statusesToEffectsAlias");
     const statusesEffectsAlias = alias(effectsSchema, "statusesEffectsAlias");
@@ -107,6 +109,14 @@ export class WorldService {
       .leftJoin(itemsActionsAlias, eq(itemsActionsAlias.id, itemsToActionsSchema.actionId))
       .leftJoin(itemsActionsToEffectsAlias, eq(itemsActionsToEffectsAlias.actionId, itemsActionsAlias.id))
       .leftJoin(itemsActionsEffectAlias, eq(itemsActionsEffectAlias.id, itemsActionsToEffectsAlias.effectId))
+      .leftJoin(
+        actionsToResourceRequirementSchema,
+        eq(actionsToResourceRequirementSchema.actionId, itemsActionsAlias.id)
+      )
+      .leftJoin(
+        itemsActionsResourceRequirementsAlias,
+        eq(actionsToResourceRequirementSchema.resourceTypeId, itemsActionsResourceRequirementsAlias.id)
+      )
 
       // Join actions
       .leftJoin(worldActionsAlias, eq(worldActionsAlias.worldId, worldsSchema.id))
@@ -214,6 +224,7 @@ export class WorldService {
           actions: existingItem?.actions || [],
         };
 
+        // Add item actions
         if (row.itemsActionsAlias) {
           const existingItemAction = itemToAdd.actions.filter((c) => c.id === row.itemsActionsAlias!.id)[0];
           const actionToAdd: ActionAggregated = {
@@ -223,6 +234,17 @@ export class WorldService {
             requiresResources: existingItemAction?.requiresResources || [],
           };
 
+          // Add required resources for action
+          if (row.actionsToResourceRequirement) {
+            actionToAdd.requiresResources = [
+              ...actionToAdd.requiresResources.filter(
+                (r) => r.resourceTypeId !== row.actionsToResourceRequirement?.resourceTypeId
+              ),
+              row.actionsToResourceRequirement,
+            ];
+          }
+
+          // Add effects for action
           if (row.itemsActionsEffectAlias) {
             const existingEffect = actionToAdd.appliesEffects.filter(
               (e) => e.id === row.itemsActionsEffectAlias!.id
@@ -252,7 +274,6 @@ export class WorldService {
       if (!acc[world.id]) {
         acc[world.id] = {
           ...world,
-          monsters: [],
           actions: [],
           campaigns: [],
           characters: [],

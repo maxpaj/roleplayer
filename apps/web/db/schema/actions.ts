@@ -30,7 +30,7 @@ export const actionsToResourceRequirementSchema = pgTable("actionsToResourceRequ
     .notNull()
     .references(() => actionsSchema.id),
 
-  resourceType: uuid("resourceTypeId")
+  resourceTypeId: uuid("resourceTypeId")
     .notNull()
     .references(() => resourceTypesSchema.id),
 });

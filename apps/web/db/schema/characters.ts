@@ -12,7 +12,7 @@ export const characterTypeEnum = pgEnum("characterType", ["Monster", "Player", "
 export const charactersSchema = pgTable("characters", {
   id: uuid("id").defaultRandom().primaryKey(),
   name: varchar("name", { length: 256 }).notNull(),
-  type: characterTypeEnum("type").default("Player").notNull(),
+  characterType: characterTypeEnum("characterType").default("Player").notNull(),
   createdUtc: timestamp("createdUtc").defaultNow(),
   imageUrl: varchar("imageUrl", { length: 2048 }),
   description: varchar("description", { length: 8192 }).default("").notNull(),

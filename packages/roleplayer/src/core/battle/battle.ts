@@ -9,7 +9,8 @@ export class Battle {
   id!: Id;
   name!: string;
   finished!: boolean;
-  entities: BattleActor[] = [];
+
+  actors: BattleActor[] = [];
 
   constructor(b: AugmentedRequired<Partial<Battle>, "name">) {
     Object.assign(this, b);
@@ -17,26 +18,25 @@ export class Battle {
   }
 
   hasActionOrder() {
-    return this.entities.every((c) => c.actingOrder !== 0);
+    return this.actors.every((c) => c.actingOrder !== 0);
   }
 
   addBattleActor(actor: Actor) {
     const added = { actor, actingOrder: 0 };
-    this.entities.push(added);
+    this.actors.push(added);
     return added;
   }
 
   currentActorTurn(events: CampaignEvent[]) {
-    const charactersNotActedCurrentRound = this.entities.filter((battleChar) => {
+    const charactersNotActedCurrentRound = this.actors.filter((battleChar) => {
       const hasActed = events.some(
-        (e) => isCharacterEvent(e) && e.id === battleChar.actor.id && e.type === "CharacterEndRound"
+        (e) => isCharacterEvent(e) && e.characterId === battleChar.actor.id && e.type === "CharacterEndRound"
       );
 
       return !hasActed;
     });
 
     const sorted = charactersNotActedCurrentRound.toSorted((a, b) => b.actingOrder - a.actingOrder);
-
     return sorted[0] as BattleActor;
   }
 }

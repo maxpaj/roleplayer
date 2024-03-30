@@ -1,7 +1,6 @@
 "use client";
 
 import { CampaignCharacterEditor } from "@/components/character-editor/campaign-character-editor";
-import { EventsTable } from "@/components/events-table";
 import { Button } from "@/components/ui/button";
 import { H4, Muted } from "@/components/ui/typography";
 import { saveCampaignEvents } from "app/campaigns/actions";
@@ -11,8 +10,8 @@ import { Campaign, World, DnDRuleset, CampaignEventWithRound } from "roleplayer"
 import { CampaignAggregated } from "services/campaign-service";
 import { WorldAggregated } from "services/world-service";
 import { CharacterEventsTable } from "./character-events-table";
-import { ActionCard } from "@/components/action-card";
 import { CharacterActionCard } from "./character-action-card";
+import { CharacterResources } from "./character-resources";
 
 export function getWorldCampaignState(worldData: WorldAggregated, campaignData: CampaignAggregated) {
   const world = new World(
@@ -81,6 +80,9 @@ export function ClientCharacterEditor({
           <CharacterActionCard action={action} />
         ))}
       </div>
+
+      <H4 className="my-2">Resources</H4>
+      <CharacterResources character={character} resourceTypes={world.ruleset.getCharacterResourceTypes()} />
 
       <H4 className="my-2">History</H4>
       <CharacterEventsTable events={characterEvents} />

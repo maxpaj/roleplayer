@@ -1,4 +1,3 @@
-import { Id } from "../../lib/generate-id";
 import { Battle } from "../battle/battle";
 import { Round } from "./round";
 import { Actor } from "../actor/character";
@@ -32,17 +31,17 @@ export class CampaignState {
     return this.battles[this.battles.length - 1];
   }
 
+  characterHasResource(actor: Actor, resourceType: CharacterResourceDefinition["id"]) {
+    return actor.resources.some((r) => r.resourceTypeId === resourceType && r.amount > 0);
+  }
+
   getCurrentRound(): Round {
-    const round = this.rounds[this.rounds.length - 1];
+    const round = this.rounds.toSorted((a, b) => a.serialNumber - b.serialNumber)[this.rounds.length - 1];
     if (!round) {
       throw new Error("No current round");
     }
 
     return round;
-  }
-
-  characterHasResource(round: Round, characterId: Id, resourceType: CharacterResourceDefinition["id"]) {
-    return false;
   }
 
   allCharactersHaveActed(events: CampaignEventWithRound[]) {

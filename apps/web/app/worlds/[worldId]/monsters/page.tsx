@@ -14,7 +14,7 @@ export default async function MonstersPage({ params }: { params: { worldId: stri
   }
 
   const { characters } = worldData;
-  const monsters = characters.filter((c) => c.type === "Monster");
+  const monsters = characters.filter((c) => c.characterType === "Monster");
 
   return (
     <>

@@ -23,7 +23,7 @@ export async function CreateMonsterForm({ worldId }: { worldId: WorldRecord["id"
 
     const stored = await new WorldService().createCharacter({
       name: monsterInput.name!.toString(),
-      type: "Monster",
+      characterType: "Monster",
       userId: DEFAULT_USER_ID,
       worldId,
     });

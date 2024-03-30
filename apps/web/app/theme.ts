@@ -169,4 +169,12 @@ export const EventIconMap: {
     alt: "",
     icon: defaultIcon,
   },
+  CharacterInventoryItemLoss: {
+    alt: "",
+    icon: defaultIcon,
+  },
+  CharacterInventoryItemUnEquip: {
+    alt: "",
+    icon: defaultIcon,
+  },
 };

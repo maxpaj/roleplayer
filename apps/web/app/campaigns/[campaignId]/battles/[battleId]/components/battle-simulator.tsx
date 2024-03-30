@@ -184,7 +184,7 @@ export function BattleSimulator({ campaignData, battleId, worldData }: BattleSim
       ...battleEntityRecord,
       renderPortrait: () => (
         <>
-          {battleEntityRecord.type}
+          {battleEntityRecord.characterType}
 
           <div
             className="absolute z-0 h-full w-full"
@@ -275,7 +275,7 @@ export function BattleSimulator({ campaignData, battleId, worldData }: BattleSim
       <div className="mb-4 flex flex-wrap gap-2">
         <AddBattleCharacterButton
           campaignId={tempCampaign.id}
-          availableCharacters={campaignState.characters.filter((c) => c.type === "Player")}
+          availableCharacters={campaignState.characters.filter((c) => c.characterType === "Player")}
           onAddCharacter={addCharacter}
         />
 

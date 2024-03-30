@@ -31,7 +31,7 @@ export function CreateCharacterForm({ worldId, campaignId }: NewCharacterProps) 
     const characterId = await new WorldService().createCharacter(
       {
         name: validationResult.data.name,
-        type: "Player",
+        characterType: "Player",
         worldId: worldId,
         userId: DEFAULT_USER_ID,
       },

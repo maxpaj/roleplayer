@@ -2,9 +2,8 @@ import { Id } from "../../lib/generate-id";
 import { CampaignEvent, RoleplayerEvent, CampaignEventWithRound } from "../events/events";
 import { ActionDefinition } from "../action/action";
 import { StatusDefinition } from "../action/status";
-import { EquipmentSlotDefinition, ItemDefinition, ItemEquipmentType, ItemType } from "../inventory/item";
+import { EquipmentSlotDefinition, ItemDefinition, ItemType } from "../inventory/item";
 import { Party } from "../campaign/party";
-import { World } from "../world/world";
 import {
   Alignment,
   CharacterResourceDefinition,
@@ -12,6 +11,7 @@ import {
   Clazz,
   ElementDefinition,
   Race,
+  Ruleset,
 } from "../ruleset/ruleset";
 
 /**
@@ -138,11 +138,11 @@ export class Actor {
   reactionsRemaining: ReactionResource[] = [];
   reactions: Reaction[] = [];
 
-  world: World;
+  ruleset: Ruleset;
 
-  constructor(world: World, init?: Partial<Actor>) {
+  constructor(ruleset: Ruleset, init?: Partial<Actor>) {
     Object.assign(this, init);
-    this.world = world;
+    this.ruleset = ruleset;
   }
 
   getEligibleTargets(action: ActionDefinition): Actor[] {
@@ -162,7 +162,7 @@ export class Actor {
   }
 
   getResourceGeneration(): CharacterResourceGeneration[] {
-    return this.world.ruleset.characterResourceGeneration(this);
+    return this.ruleset.characterResourceGeneration(this);
   }
 
   resetResources() {
@@ -170,7 +170,7 @@ export class Actor {
   }
 
   getBattleActionOrder() {
-    return this.world.ruleset.characterBattleActionOrder(this);
+    return this.ruleset.characterBattleActionOrder(this);
   }
 
   action(actionDefinition: ActionDefinition) {
@@ -189,11 +189,11 @@ export class Actor {
   }
 
   getResistanceMultiplier(damageType: ElementDefinition) {
-    return this.world.ruleset.characterResistanceMultiplier(this, damageType);
+    return this.ruleset.characterResistanceMultiplier(this, damageType);
   }
 
   getResistanceAbsolute(damageType: ElementDefinition) {
-    return this.world.ruleset.characterResistanceAbsolute(this, damageType);
+    return this.ruleset.characterResistanceAbsolute(this, damageType);
   }
 
   /**
@@ -216,6 +216,7 @@ export class Actor {
   getDamage(element: ElementDefinition) {
     return 2;
   }
+
   getResistance(element: ElementDefinition) {
     return 2;
   }
@@ -229,7 +230,7 @@ export class Actor {
   }
 
   getElementDamageTaken(element: ElementDefinition, damageAmount: number) {
-    return this.world.ruleset.characterResistanceMultiplier(this, element) * damageAmount;
+    return this.ruleset.characterResistanceMultiplier(this, element) * damageAmount;
   }
 
   getCharacterHitModifierWithAction(action: ActionDefinition) {

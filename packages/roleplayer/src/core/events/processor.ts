@@ -1,8 +1,8 @@
-import { Logger } from "../../lib/logger";
+import { FileLogger } from "../../lib/logging/file-logger";
 import { RoleplayerEvent } from "./events";
 import { Middleware } from "./middleware";
 
-const logger = new Logger();
+const logger = new FileLogger();
 
 const terminate: Middleware = {
   name: "Terminate",

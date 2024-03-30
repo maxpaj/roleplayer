@@ -8,16 +8,16 @@ import { World } from "../world/world";
 import { CampaignEvent, CampaignEventWithRound, RoleplayerEvent } from "../events/events";
 import { CampaignState } from "./campaign-state";
 import { Round } from "./round";
-import { Logger } from "../../lib/logger";
+import { Logger } from "../../lib/logging/logger";
 
 export class Campaign {
   id: Id;
   name: string;
   world: World;
   events: CampaignEventWithRound[] = [];
-  logger: Logger;
+  logger?: Logger;
 
-  constructor(c: AugmentedRequired<Partial<Campaign>, "id" | "name" | "world">, logger: Logger = new Logger()) {
+  constructor(c: AugmentedRequired<Partial<Campaign>, "id" | "name" | "world">, logger?: Logger) {
     Object.assign(this, c);
 
     this.id = c.id;
@@ -424,7 +424,7 @@ export class Campaign {
     try {
       sorted.forEach((e) => {
         this.applyEvent(e, campaignState);
-        this.logger.debug(JSON.stringify({ event: e, campaignState: campaignState }, null, 4));
+        this.logger?.debug({ event: e, campaignState: campaignState });
       });
 
       return campaignState;
@@ -468,7 +468,7 @@ export class Campaign {
         }
 
         case "CharacterSpawned": {
-          campaignState.characters.push(new Actor(this.world, { id: event.characterId }));
+          campaignState.characters.push(new Actor(this.world.ruleset, { id: event.characterId }));
           break;
         }
 
@@ -514,7 +514,7 @@ export class Campaign {
           break;
 
         default:
-          this.logger.warn(`Unknown event type ${event.type}`);
+          this.logger?.warn(`Unknown event type ${event.type}`);
       }
     } catch (e) {
       this.debugEvent(event);
@@ -832,7 +832,7 @@ export class Campaign {
       }
 
       default:
-        this.logger.warn(`Unhandled event ${event.id}, type ${event.type}`);
+        this.logger?.warn(`Unhandled event ${event.id}, type ${event.type}`);
         throw new Error(`Unhandled event type ${event.type}`);
     }
   }

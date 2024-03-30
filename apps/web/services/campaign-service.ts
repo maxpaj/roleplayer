@@ -50,7 +50,7 @@ function mapEffect(effect: EffectRecord) {
 }
 
 function mapCharacterRecordToRoleplayerCharacter(world: World, m: ActorAggregated) {
-  return new Actor(world, {
+  return new Actor(world.ruleset, {
     ...m,
     resources: m.resourceTypes,
     classes: m.classes.map((c) => ({

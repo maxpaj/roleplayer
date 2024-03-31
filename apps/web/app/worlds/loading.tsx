@@ -1,8 +1,11 @@
 import { Skeleton } from "@/components/ui/skeleton";
+import { WorldLayoutHeader } from "./components/world-layout-header";
 
 export default function Loading() {
   return (
     <div className="space-y-2">
+      <WorldLayoutHeader />
+
       <div className="flex gap-2">
         <Skeleton className="h-[2.5rem] w-full" />
         <Skeleton className="h-[2.5rem] w-[100px]" />

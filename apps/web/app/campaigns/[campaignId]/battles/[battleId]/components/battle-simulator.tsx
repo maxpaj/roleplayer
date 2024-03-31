@@ -94,14 +94,14 @@ export function BattleSimulator({ campaignData, battleId, worldData }: BattleSim
     const hasFinished = tempCampaign.characterHasRoundEvent(currentRound, battleCharacter.actor, "CharacterEndRound");
     const currentCharacterActionClasses = isCharacterTurnToAct
       ? "shadow-[inset_0px_0px_30px_0px_rgba(0,0,0,0.25)] shadow-primary/40"
-      : "opacity-50";
+      : "";
 
     return (
       <div
         key={battleCharacter.actor.id}
         className={`relative flex w-full flex-col justify-between overflow-hidden border border-slate-700 ${currentCharacterActionClasses || ""}`}
       >
-        <div className="w-full p-2">
+        <div className={`${isCharacterTurnToAct ? "" : "opacity-50"} w-full p-2`}>
           <div className="flex justify-between gap-2">
             <div className="w-full">
               <H5>
@@ -122,34 +122,37 @@ export function BattleSimulator({ campaignData, battleId, worldData }: BattleSim
             ))}
           </div>
 
-          <H5>Actions</H5>
-          {!isCharacterTurnToAct && <Muted>Not your turn</Muted>}
-          <div className="relative flex w-full flex-wrap justify-between p-4">
-            {isCharacterTurnToAct && (
-              <div className="flex flex-wrap gap-2 ">
-                <ActorEligibleActions actor={battleCharacter.actor} onSelectedAction={setSelectedAction} />
-                <ActorActionEligibleTargets
-                  campaign={tempCampaign}
-                  action={selectedAction!}
-                  actor={battleCharacter.actor}
-                  onSelectedTargets={(targets) => {
-                    tempCampaign.performCharacterAttack(battleCharacter.actor, selectedAction!, targets);
-                    setCampaign(tempCampaign);
-                  }}
-                />
+          {isCharacterTurnToAct && (
+            <>
+              <H5>Actions</H5>
+              <div className="relative flex w-full flex-wrap justify-between p-4">
+                {isCharacterTurnToAct && (
+                  <div className="flex flex-wrap gap-2 ">
+                    <ActorEligibleActions actor={battleCharacter.actor} onSelectedAction={setSelectedAction} />
+                    <ActorActionEligibleTargets
+                      campaign={tempCampaign}
+                      action={selectedAction!}
+                      actor={battleCharacter.actor}
+                      onSelectedTargets={(targets) => {
+                        tempCampaign.performCharacterAttack(battleCharacter.actor, selectedAction!, targets);
+                        setCampaign(tempCampaign);
+                      }}
+                    />
 
-                <Button
-                  disabled={hasFinished}
-                  onClick={() => {
-                    tempCampaign.endCharacterTurn(battleCharacter.actor);
-                    setCampaign(tempCampaign);
-                  }}
-                >
-                  End round
-                </Button>
+                    <Button
+                      disabled={hasFinished}
+                      onClick={() => {
+                        tempCampaign.endCharacterTurn(battleCharacter.actor);
+                        setCampaign(tempCampaign);
+                      }}
+                    >
+                      End round
+                    </Button>
+                  </div>
+                )}
               </div>
-            )}
-          </div>
+            </>
+          )}
         </div>
 
         <div className="flex flex-wrap p-2 text-sm">

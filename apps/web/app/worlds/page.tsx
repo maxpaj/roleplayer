@@ -3,6 +3,7 @@ import { WorldCard } from "../../components/world-card";
 import { WorldService } from "services/world-service";
 import { DEFAULT_USER_ID } from "@/db/data";
 import { UserRecord } from "@/db/schema/users";
+import { WorldLayoutHeader } from "./components/world-layout-header";
 
 export const dynamic = "force-dynamic";
 
@@ -16,6 +17,8 @@ export default async function WorldsPage({ params }: { params: {} }) {
 
   return (
     <div>
+      <WorldLayoutHeader />
+
       <CreateWorldForm />
 
       <div className="my-3 flex flex-wrap gap-2">

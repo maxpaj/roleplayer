@@ -63,7 +63,7 @@ export type ItemAggregated = ItemDefinitionRecord & {
 export type CharacterClassAggregated = CharacterClassRecord;
 
 export type ActorAggregated = CharacterRecord & {
-  resourceTypes: CharacterResource[];
+  resources: CharacterResource[];
   actions: ActionAggregated[];
   classes: CharacterClassAggregated[];
 };
@@ -140,13 +140,13 @@ export class WorldService {
         const existingCharacter = acc[world.id]!.characters.filter((c) => c.id === row.characters!.id)[0];
         const characterToAdd: ActorAggregated = {
           actions: existingCharacter?.actions || [],
-          resourceTypes: existingCharacter?.resourceTypes || [],
+          resources: existingCharacter?.resources || [],
           classes: existingCharacter?.classes || [],
           ...(existingCharacter || row.characters),
         };
 
         if (row.characterToResources) {
-          const existingResource = characterToAdd.resourceTypes.filter(
+          const existingResource = characterToAdd.resources.filter(
             (r) => r.resourceTypeId === row.characterToResources!.resourceTypeId
           )[0];
 
@@ -158,10 +158,8 @@ export class WorldService {
             min: 0,
           };
 
-          characterToAdd.resourceTypes = [
-            ...characterToAdd.resourceTypes.filter(
-              (a) => a.resourceTypeId !== row.characterToResources!.resourceTypeId
-            ),
+          characterToAdd.resources = [
+            ...characterToAdd.resources.filter((a) => a.resourceTypeId !== row.characterToResources!.resourceTypeId),
             resourceToAdd,
           ];
         }

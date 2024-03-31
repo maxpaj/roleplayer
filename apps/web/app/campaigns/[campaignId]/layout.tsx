@@ -2,6 +2,14 @@ import { H2 } from "@/components/ui/typography";
 import { BadgeLink } from "@/components/ui/button-link";
 import { getCampaign } from "../actions";
 import Image from "next/image";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import { CampaignBreadCrumb } from "./breadcrumb";
 
 export default async function CampaignLayout({
   params,
@@ -21,6 +29,8 @@ export default async function CampaignLayout({
 
   return (
     <div>
+      <CampaignBreadCrumb campaign={campaign} />
+
       <div className="mb-4 flex flex-wrap justify-between gap-x-4">
         <H2>{campaign.name}</H2>
       </div>

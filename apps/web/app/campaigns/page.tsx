@@ -1,6 +1,7 @@
 import { H2, Muted, Paragraph } from "@/components/ui/typography";
 import { getCampaigns } from "./actions";
 import { CampaignCard } from "@/components/campaign-card";
+import { CampaignLayoutHeader } from "./components/campaign-layout-header";
 
 export const dynamic = "force-dynamic";
 
@@ -9,6 +10,8 @@ export default async function CampaignPage() {
 
   return (
     <div>
+      <CampaignLayoutHeader />
+
       {campaigns.length === 0 && (
         <Paragraph>Browse through the available worlds and start a new campaign from there!</Paragraph>
       )}

@@ -22,7 +22,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={cn("bg-background min-h-screen font-sans antialiased", fontSans.variable)}>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false} disableTransitionOnChange>
           <Header />
-          <main className="flex min-h-screen flex-col items-center">{children}</main>
+          <main className="my-4 flex min-h-screen flex-col items-center">{children}</main>
           <Footer />
         </ThemeProvider>
       </body>

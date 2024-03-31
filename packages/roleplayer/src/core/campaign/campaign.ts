@@ -207,7 +207,7 @@ export class Campaign {
     this.publishCampaignEvent(...characterBattleEnter);
   }
 
-  spawnCharacter(templateId: Actor["id"]) {
+  spawnCharacterFromTemplate(templateId: Actor["id"]) {
     const characterSpawnEvents: CampaignEvent[] = [
       {
         type: "CharacterSpawned",
@@ -487,6 +487,8 @@ export class Campaign {
 
         case "CharacterSpawned": {
           const template = this.world.characters.find((c) => c.id === event.templateId);
+          console.log(template);
+
           if (!template) {
             campaignState.characters.push(new Actor(this.world.ruleset, { id: event.characterId }));
           } else {

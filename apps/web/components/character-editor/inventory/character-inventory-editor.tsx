@@ -36,7 +36,7 @@ export function CharacterInventoryEditor({
   return (
     <>
       <H5>Equipment</H5>
-      <div className="my-2">
+      <div className="my-2 flex flex-wrap gap-2">
         {character.equipment.length === 0 && <Muted>No equipment slots available</Muted>}
         {character.equipment.map((cslot) => {
           const slot = worldEquipmentSlots.find((weq) => weq.id === cslot.slotId);

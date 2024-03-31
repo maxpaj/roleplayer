@@ -3,6 +3,7 @@ import { H2 } from "@/components/ui/typography";
 import { BadgeLink, ButtonLink } from "@/components/ui/button-link";
 import { GitForkIcon } from "lucide-react";
 import Image from "next/image";
+import { WorldBreadcrumb } from "./breadcrumb";
 
 export default async function WorldLayout({
   params,
@@ -21,6 +22,8 @@ export default async function WorldLayout({
 
   return (
     <div>
+      <WorldBreadcrumb world={world} />
+
       {world.imageUrl && (
         <div className="fixed left-0 top-0 -z-10 h-[800px] w-full opacity-15">
           <div

@@ -24,7 +24,7 @@ export default async function MonsterDetailsPage({ params }: { params: { monster
       <Divider />
 
       <div className="flex gap-4 py-3">
-        {monster.resourceTypes.map((r) => (
+        {monster.resources.map((r) => (
           <span>
             {r.max} {r.resourceTypeId}
           </span>

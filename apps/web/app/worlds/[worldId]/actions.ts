@@ -5,7 +5,8 @@ import { NewCampaignRecord } from "@/db/schema/campaigns";
 import { redirect } from "next/navigation";
 import { World } from "roleplayer";
 import { CampaignService } from "services/campaign-service";
-import { WorldAggregated, WorldService } from "services/world-service";
+import { WorldAggregated } from "services/data-mapper";
+import { WorldService } from "services/world-service";
 
 export async function getWorldData(id: World["id"]): Promise<WorldAggregated | undefined> {
   return await new WorldService().getWorld(DEFAULT_USER_ID, id);

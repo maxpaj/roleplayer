@@ -10,25 +10,21 @@ import {
   Campaign,
   ActionDefinition,
   BattleActor,
-  World,
-  DnDRuleset,
-  CampaignEventWithRound,
   RoleplayerEvent,
   isCharacterEvent,
 } from "roleplayer";
 import { EventIconMap } from "../../../../../theme";
 import { Button } from "@/components/ui/button";
-import { H3, H4, H5, Muted } from "@/components/ui/typography";
+import { H3, H5, Muted } from "@/components/ui/typography";
 import { AddBattleCharacterButton } from "./add-battle-character-button";
 import { AddBattleMonsterButton } from "./add-battle-monster-button";
 import { saveCampaignEvents } from "app/campaigns/actions";
 import { DiceRollCard } from "./dice-roll-card";
 import { Divider } from "@/components/ui/divider";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { WorldAggregated } from "services/world-service";
-import { CampaignAggregated } from "services/campaign-service";
 import { ActorEligibleActions } from "./battle-actor-eligible-actions";
 import { ActorActionEligibleTargets } from "./battle-actor-eligible-targets";
+import { CampaignAggregated, WorldAggregated, mapCampaignWorldData } from "services/data-mapper";
 
 const DEBUG = false;
 
@@ -41,18 +37,11 @@ type BattleSimulatorProps = {
 };
 
 export function BattleSimulator({ campaignData, battleId, worldData }: BattleSimulatorProps) {
-  const [tempCampaign, setTempCampaignReact] = useState<Campaign>(
-    new Campaign({
-      ...campaignData,
-      world: new World(new DnDRuleset(), worldData.name, worldData as unknown as Partial<World>),
-      events: campaignData.events.map((e) => e.eventData as CampaignEventWithRound),
-    })
-  );
-
+  const { campaign } = mapCampaignWorldData(worldData, campaignData);
+  const [tempCampaign, setTempCampaignReact] = useState<Campaign>(campaign);
   const [, updateState] = useState({});
   const [selectedAction, setSelectedAction] = useState<ActionDefinition | undefined>(undefined);
   const forceUpdate = useCallback(() => updateState({}), []);
-  const tempCampaignState = tempCampaign.getCampaignStateFromEvents();
 
   async function setCampaign(campaign: Campaign) {
     setTempCampaignReact(campaign);
@@ -87,6 +76,8 @@ export function BattleSimulator({ campaignData, battleId, worldData }: BattleSim
         return "Battle started";
       case "CharacterBattleEnter":
         return "Character entered battle";
+      default:
+        return event.type;
     }
   }
 
@@ -114,12 +105,22 @@ export function BattleSimulator({ campaignData, battleId, worldData }: BattleSim
           </div>
 
           <H5>Resources remaining</H5>
-          <div className="flex gap-2">
-            {battleCharacter.actor.resources.map((r) => (
-              <div key={r.resourceTypeId}>
-                {r.amount}/{r.max}
-              </div>
-            ))}
+          <div className="flex gap-2 text-sm">
+            {battleCharacter.actor.resources.map((r) => {
+              const resourceType = tempCampaign.world.ruleset
+                .getCharacterResourceTypes()
+                .find((rt) => rt.id === r.resourceTypeId);
+
+              if (!resourceType) {
+                throw new Error("No such resource type");
+              }
+
+              return (
+                <div key={r.resourceTypeId}>
+                  {r.amount}/{r.max} ({resourceType.name})
+                </div>
+              );
+            })}
           </div>
 
           {isCharacterTurnToAct && (
@@ -249,12 +250,12 @@ export function BattleSimulator({ campaignData, battleId, worldData }: BattleSim
     );
   }
 
-  const battleState = tempCampaignState.battles.find((b) => b.id === battleId);
+  const campaignState = tempCampaign.getCampaignStateFromEvents();
+  const battleState = campaignState.battles.find((b) => b.id === battleId);
   if (!battleState) {
     return <>Battle state not found</>;
   }
 
-  const campaignState = tempCampaign.getCampaignStateFromEvents();
   const currentRound = campaignState.getCurrentRound();
 
   if (!currentRound) {
@@ -301,7 +302,6 @@ export function BattleSimulator({ campaignData, battleId, worldData }: BattleSim
       <H3>Round {battleEvents.filter((e) => e.type === "RoundStarted").length}</H3>
 
       {battleState.actors.length === 0 && <Muted>No characters added to battle yet</Muted>}
-
       {battleState.actors.length > 0 && (
         <div className="mb-4 flex w-full flex-col gap-3">
           {battleState.actors

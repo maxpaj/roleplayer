@@ -38,7 +38,6 @@ export class FileLogger implements Logger {
   }
 
   writeToFile() {
-    console.log(this.buffer);
     this.stream.write(JSON.stringify(this.buffer));
     this.stream.close();
     this.buffer = [];

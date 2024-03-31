@@ -229,6 +229,14 @@ export class Campaign {
       id: dangerousGenerateId(),
     }));
 
+    const resourcesGainEvents: CampaignEvent[] = this.world!.ruleset.getCharacterResourceTypes().map((cr) => ({
+      type: "CharacterResourceGain",
+      amount: cr.defaultMax || 0,
+      characterId,
+      resourceTypeId: cr.id,
+      id: dangerousGenerateId(),
+    }));
+
     const defaultStatsEvents: CampaignEvent[] = this.world!.ruleset.getCharacterStatTypes().map((st) => ({
       type: "CharacterStatChange",
       amount: 0,
@@ -272,6 +280,7 @@ export class Campaign {
       ...defaultEquipmentSlotEvents,
       ...defaultResourcesEvents,
       ...defaultStatsEvents,
+      ...resourcesGainEvents,
     ];
 
     this.publishRoundEvent(...characterSpawnEvents);
@@ -340,7 +349,9 @@ export class Campaign {
 
     const targetReceiveAttackEvents = targets.flatMap((target) => {
       if (attacker.tryHit(target)) {
-        return actionDef.appliesEffects.map((effect) => effect.instantiate(actionDef, attacker, target, this.world));
+        return actionDef.appliesEffects.map((effect) =>
+          effect.instantiateEffect(actionDef, attacker, target, this.world)
+        );
       }
 
       return [];
@@ -486,13 +497,12 @@ export class Campaign {
         }
 
         case "CharacterSpawned": {
-          const template = this.world.characters.find((c) => c.id === event.templateId);
-          console.log(template);
+          const templateCharacter = this.world.characters.find((c) => c.id === event.templateId);
 
-          if (!template) {
+          if (!templateCharacter) {
             campaignState.characters.push(new Actor(this.world.ruleset, { id: event.characterId }));
           } else {
-            campaignState.characters.push(new Actor(this.world.ruleset, template));
+            campaignState.characters.push(templateCharacter);
           }
           break;
         }

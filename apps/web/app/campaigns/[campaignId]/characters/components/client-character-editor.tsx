@@ -7,29 +7,10 @@ import { saveCampaignEvents } from "app/campaigns/actions";
 import { ActorRecord } from "models/actor";
 import { useState } from "react";
 import { Campaign, World, DnDRuleset, CampaignEventWithRound } from "roleplayer";
-import { CampaignAggregated } from "services/campaign-service";
-import { WorldAggregated } from "services/world-service";
 import { CharacterEventsTable } from "./character-events-table";
 import { CharacterActionCard } from "./character-action-card";
 import { CharacterResources } from "./character-resources";
-
-export function getWorldCampaignState(worldData: WorldAggregated, campaignData: CampaignAggregated) {
-  const world = new World(
-    new DnDRuleset(() => {
-      throw new Error("Rolling not allowed");
-    }),
-    worldData.name,
-    worldData as unknown as Partial<World>
-  );
-
-  const campaign = new Campaign({
-    ...campaignData,
-    world,
-    events: campaignData.events.map((e) => e.eventData as CampaignEventWithRound),
-  });
-
-  return { world, campaign };
-}
+import { WorldAggregated, CampaignAggregated, mapCampaignWorldData } from "services/data-mapper";
 
 export function ClientCharacterEditor({
   campaignData,
@@ -40,7 +21,7 @@ export function ClientCharacterEditor({
   worldData: WorldAggregated;
   characterId: ActorRecord["id"];
 }) {
-  const { world, campaign } = getWorldCampaignState(worldData, campaignData);
+  const { world, campaign } = mapCampaignWorldData(worldData, campaignData);
   const [update, setUpdate] = useState(campaign);
 
   const campaignState = update.getCampaignStateFromEvents();

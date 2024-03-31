@@ -13,7 +13,7 @@ export function CharacterResources({ resourceTypes, character }: CharacterResour
 
         return (
           <div key={r.resourceTypeId}>
-            {resource.name} {r.amount}/{r.max}
+            {resource.name} {r.amount}/{r.max} (+{r.baseGeneration}/round)
           </div>
         );
       })}

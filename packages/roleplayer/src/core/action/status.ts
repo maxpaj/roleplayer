@@ -1,5 +1,5 @@
 import { Id } from "../../lib/generate-id";
-import { EventGenerator } from "./effect";
+import { EffectGenerator } from "./effect";
 
 /**
  * @module core/actions
@@ -18,7 +18,7 @@ export type StatusDefinition = {
   name: string;
   type: StatusType;
   appliesEffects: {
-    effect: EventGenerator;
+    effect: EffectGenerator;
     appliesAt: StatusApplicationTrigger;
   }[];
   durationType: StatusDurationType;

@@ -45,8 +45,9 @@ export type CharacterResource = {
 /**
  * @module core/actor
  */
-export type CharacterResourceGeneration = CharacterResource & {
-  onEvent: RoleplayerEvent;
+export type CharacterResourceGeneration = {
+  resourceTypeId: CharacterResourceDefinition["id"];
+  amount: number;
 };
 
 /**
@@ -162,7 +163,18 @@ export class Actor {
   }
 
   resetResources() {
-    this.resources = this.resources.map((r) => ({ ...r, amount: r.max }));
+    const generation = this.getResourceGeneration();
+    this.resources = this.resources.map((r) => {
+      const resourceGeneration = generation.find((g) => g.resourceTypeId === r.resourceTypeId);
+      if (!resourceGeneration) {
+        return r;
+      }
+
+      return {
+        ...r,
+        amount: Math.min(r.max, r.amount + resourceGeneration.amount),
+      };
+    });
   }
 
   getBattleActionOrder() {
@@ -197,16 +209,16 @@ export class Actor {
    * @returns A list of available actions
    */
   getAvailableActions(): ActionDefinition[] {
-    const consumables = this.inventory.filter((it) => it.definition.type === ItemType.Consumable);
+    const consumables = this.inventory
+      .filter((it) => it.definition.type === ItemType.Consumable)
+      .flatMap((i) => i.definition.actions);
 
-    return [
-      ...this.actions,
-      ...this.equipment
-        .flatMap((eq) => eq.item)
-        .filter((i) => i)
-        .flatMap((i) => i!.definition.actions),
-      ...consumables.flatMap((i) => i.definition.actions),
-    ];
+    const equipmentActions = this.equipment
+      .flatMap((eq) => eq.item)
+      .filter((i) => i)
+      .flatMap((i) => i!.definition.actions);
+
+    return [...this.actions, ...equipmentActions, ...consumables];
   }
 
   getDamage(element: ElementDefinition) {

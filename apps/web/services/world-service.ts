@@ -1,31 +1,22 @@
 import { eq } from "drizzle-orm";
 import { db } from "../db";
-import {
-  ActionRecord,
-  RequiredResourceRecord,
-  TargetTypeEnum,
-  actionsSchema,
-  actionsToEffectSchema,
-  actionsToResourceRequirementSchema,
-} from "../db/schema/actions";
+import { actionsSchema, actionsToEffectSchema, actionsToResourceRequirementSchema } from "../db/schema/actions";
 import { CampaignRecord, campaignsSchema } from "../db/schema/campaigns";
 import {
-  CharacterClassRecord,
-  CharacterRecord,
   NewCharacterRecord,
   charactersSchema,
   charactersToActionsSchema,
   charactersToClassesSchema,
   charactersToResourcesSchema,
 } from "../db/schema/characters";
-import { ClazzRecord, NewClazzRecord, classesSchema } from "../db/schema/classes";
+import { NewClazzRecord, classesSchema } from "../db/schema/classes";
 import {
   ItemDefinitionRecord,
   NewItemDefinitionRecord,
   itemDefinitionsSchema,
   itemsToActionsSchema,
 } from "../db/schema/items";
-import { StatusRecord, statusesSchema, statusesToEffectsSchema } from "../db/schema/statuses";
+import { statusesSchema, statusesToEffectsSchema } from "../db/schema/statuses";
 import { UserRecord } from "../db/schema/users";
 import { NewWorldRecord, WorldRecord, worldsSchema } from "../db/schema/worlds";
 import { CampaignService } from "./campaign-service";
@@ -33,40 +24,15 @@ import { DEFAULT_USER_ID } from "@/db/data";
 import { alias } from "drizzle-orm/pg-core";
 import { EffectRecord, effectsSchema } from "@/db/schema/effects";
 import { CharacterResource } from "roleplayer";
-import { RaceRecord } from "@/db/schema/races";
 import { resourceTypesSchema } from "@/db/schema/resources";
-
-export type WorldAggregated = WorldRecord & {
-  campaigns: CampaignRecord[];
-  characters: ActorAggregated[];
-  statuses: StatusAggregated[];
-  itemDefinitions: ItemAggregated[];
-  classes: ClazzRecord[];
-  actions: ActionAggregated[];
-  races: RaceRecord[];
-};
-
-export type StatusAggregated = StatusRecord & {
-  appliesEffects: EffectRecord[];
-};
-
-export type ActionAggregated = ActionRecord & {
-  appliesEffects: EffectRecord[];
-  eligibleTargets: TargetTypeEnum[];
-  requiresResources: RequiredResourceRecord[];
-};
-
-export type ItemAggregated = ItemDefinitionRecord & {
-  actions: ActionAggregated[];
-};
-
-export type CharacterClassAggregated = CharacterClassRecord;
-
-export type ActorAggregated = CharacterRecord & {
-  resources: CharacterResource[];
-  actions: ActionAggregated[];
-  classes: CharacterClassAggregated[];
-};
+import {
+  WorldAggregated,
+  ActorAggregated,
+  CharacterClassAggregated,
+  ActionAggregated,
+  ItemAggregated,
+  StatusAggregated,
+} from "./data-mapper";
 
 export class WorldService {
   async getAll(userId: UserRecord["id"] = DEFAULT_USER_ID): Promise<WorldRecord[]> {

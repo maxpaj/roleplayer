@@ -4,12 +4,12 @@ import { CampaignEvent, RoleplayerEvent } from "../events/events";
 import { World } from "../world/world";
 import { StatusDefinition } from "./status";
 
-export interface EventGenerator {
+export interface EffectGenerator {
   eventType: RoleplayerEvent["type"];
-  instantiate(action: ActionDefinition, source: Actor, target: Actor, world: World): CampaignEvent;
+  instantiateEffect(action: ActionDefinition, source: Actor, target: Actor, world: World): CampaignEvent;
 }
 
-export class CharacterResourceLossEffect implements EventGenerator {
+export class CharacterResourceLossEffect implements EffectGenerator {
   element: ElementDefinition;
   eventType: "CharacterResourceLoss";
   resourceTypeId: CharacterResourceDefinition["id"];
@@ -29,7 +29,7 @@ export class CharacterResourceLossEffect implements EventGenerator {
     this.staticValue = staticValue;
   }
 
-  instantiate(action: ActionDefinition, source: Actor, target: Actor, world: World): CampaignEvent {
+  instantiateEffect(action: ActionDefinition, source: Actor, target: Actor, world: World): CampaignEvent {
     return {
       type: this.eventType,
       amount: world.ruleset.characterHitDamage(
@@ -48,7 +48,7 @@ export class CharacterResourceLossEffect implements EventGenerator {
   }
 }
 
-export class CharacterStatusGainEffect implements EventGenerator {
+export class CharacterStatusGainEffect implements EffectGenerator {
   status: StatusDefinition;
   eventType: "CharacterStatusGain";
 
@@ -57,7 +57,7 @@ export class CharacterStatusGainEffect implements EventGenerator {
     this.status = status;
   }
 
-  instantiate(action: ActionDefinition, source: Actor, target: Actor, world: World): CampaignEvent {
+  instantiateEffect(action: ActionDefinition, source: Actor, target: Actor, world: World): CampaignEvent {
     return {
       type: this.eventType,
       characterId: target.id,

@@ -7,7 +7,7 @@ import { useState } from "react";
 import { EMPTY_GUID } from "@/lib/guid";
 import { ButtonLink } from "@/components/ui/button-link";
 import { WorldRecord } from "@/db/schema/worlds";
-import { ActorAggregated } from "services/world-service";
+import { ActorAggregated } from "services/data-mapper";
 
 export function AddBattleMonsterButton({
   monsters,

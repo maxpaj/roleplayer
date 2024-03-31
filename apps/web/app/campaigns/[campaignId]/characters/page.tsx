@@ -1,11 +1,10 @@
 import { ButtonLink } from "@/components/ui/button-link";
-import { Divider } from "@/components/ui/divider";
-import { H3, H4, Muted } from "@/components/ui/typography";
+import { H4, Muted } from "@/components/ui/typography";
 import { getCampaign } from "app/campaigns/actions";
 import { CreateCharacterForm } from "app/characters/components/create-character-form";
 import { CampaignCharacterCard } from "./components/campaign-character-card";
 import { getWorldData } from "app/worlds/[worldId]/actions";
-import { Campaign, CampaignEventWithRound, DnDRuleset, World } from "roleplayer";
+import { mapCampaignWorldData } from "services/data-mapper";
 
 export default async function CampaignCharactersPage({ params }: { params: { campaignId: string } }) {
   const { campaignId: id } = params;
@@ -20,12 +19,7 @@ export default async function CampaignCharactersPage({ params }: { params: { cam
     return <>World not found</>;
   }
 
-  const campaign = new Campaign({
-    ...campaignData,
-    world: new World(new DnDRuleset(), worldData.name, worldData as unknown as Partial<World>),
-    events: campaignData.events.map((e) => e.eventData as CampaignEventWithRound),
-  });
-
+  const { campaign } = mapCampaignWorldData(worldData, campaignData);
   const campaignState = campaign.getCampaignStateFromEvents();
 
   return (

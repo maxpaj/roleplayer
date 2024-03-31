@@ -39,7 +39,8 @@ export function ActorEligibleActions({ actor, onSelectedAction }: ActorEligibleA
 
           return (
             <SelectItem disabled={!hasActionsResources} key={action.name} value={action.id}>
-              {action.name} {!hasActionsResources && "(Not enough resources)"} (
+              {action.name} ({action.appliesEffects.map((ae) => ae.eventType)})
+              {!hasActionsResources && "(Not enough resources)"} (
               {action.requiresResources.map((res) => res.resourceTypeId).join(", ")})
             </SelectItem>
           );

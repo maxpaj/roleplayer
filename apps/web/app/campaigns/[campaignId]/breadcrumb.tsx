@@ -5,7 +5,7 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { CampaignAggregated } from "services/campaign-service";
+import { CampaignAggregated } from "services/data-mapper";
 
 export function CampaignBreadCrumb({ campaign }: { campaign?: CampaignAggregated }) {
   return (

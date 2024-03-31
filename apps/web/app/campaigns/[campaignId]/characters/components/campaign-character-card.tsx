@@ -1,9 +1,9 @@
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
 import { CampaignRecord } from "@/db/schema/campaigns";
-import { WorldAggregated } from "services/world-service";
 import { Actor } from "roleplayer";
 import { RemoveFunctions } from "types/without-functions";
+import { WorldAggregated } from "services/data-mapper";
 
 type CampaignCharacterCardProps = {
   character: RemoveFunctions<Actor>;

@@ -58,6 +58,10 @@ export class DnDRuleset implements Ruleset {
         id: "00000000-0000-0000-0000-000000002006" as const,
         name: "Defense",
       },
+      {
+        id: "00000000-0000-0000-0000-000000001001" as const,
+        name: "Armor class",
+      },
     ];
   }
 
@@ -71,11 +75,6 @@ export class DnDRuleset implements Ruleset {
       {
         id: "00000000-0000-0000-0000-000000001001" as const,
         name: "Health",
-        defaultMax: 20,
-      },
-      {
-        id: "00000000-0000-0000-0000-000000001001" as const,
-        name: "Armor class",
         defaultMax: 10,
       },
       { id: "00000000-0000-0000-0000-000000001002" as const, name: "Primary action", defaultMax: 1 },
@@ -149,10 +148,6 @@ export class DnDRuleset implements Ruleset {
     return [];
   }
 
-  addEquipmentSlot(equipmentSlot: { eligibleEquipmentTypes: ItemEquipmentType[]; id: string; name: string }) {
-    throw new Error("Method not implemented.");
-  }
-
   characterHitDamage(
     source: Actor,
     action: ActionDefinition,
@@ -188,7 +183,16 @@ export class DnDRuleset implements Ruleset {
   }
 
   characterResourceGeneration(actor: Actor): CharacterResourceGeneration[] {
-    return [];
+    return [
+      {
+        amount: 1,
+        resourceTypeId: "00000000-0000-0000-0000-000000001002" as const,
+      },
+      {
+        amount: 35,
+        resourceTypeId: "00000000-0000-0000-0000-000000001003" as const,
+      },
+    ];
   }
 
   characterBattleActionOrder(actor: Actor): number {

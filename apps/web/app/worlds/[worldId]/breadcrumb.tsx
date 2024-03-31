@@ -5,7 +5,7 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { WorldAggregated } from "services/world-service";
+import { WorldAggregated } from "services/data-mapper";
 
 export function WorldBreadcrumb({ world }: { world?: WorldAggregated }) {
   return (

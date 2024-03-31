@@ -3,7 +3,7 @@ import { DnDRuleset } from "roleplayer";
 import { EffectParameters } from "./effect-parameters";
 import { EffectType } from "./effect-type";
 import { H5 } from "./ui/typography";
-import { WorldAggregated } from "services/world-service";
+import { WorldAggregated } from "services/data-mapper";
 
 export function EffectDetails({ effect, world }: { effect: EffectRecord; world: WorldAggregated }) {
   const params = effect.parameters as { parameters: Record<string, any> };

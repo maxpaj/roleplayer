@@ -32,7 +32,7 @@ export class CharacterResourceLossEffect implements EffectGenerator {
   instantiateEffect(action: ActionDefinition, source: Actor, target: Actor, world: World): CampaignEvent {
     return {
       type: this.eventType,
-      amount: world.ruleset.characterHitDamage(
+      amount: world.ruleset.getCharacterHitDamage(
         source,
         action,
         target,

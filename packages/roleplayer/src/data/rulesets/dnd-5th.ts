@@ -1,16 +1,16 @@
 import {
-  defaultRoll,
-  Actor,
-  D20,
-  World,
-  ElementDefinition,
-  CharacterResourceGeneration,
   ActionDefinition,
+  Actor,
   CharacterResourceDefinition,
+  CharacterResourceGeneration,
+  D20,
   Dice,
+  ElementDefinition,
+  World,
+  defaultRoll,
 } from "../..";
-import { CharacterStatType, Clazz, LevelProgression, Ruleset } from "../../core/ruleset/ruleset";
 import { EquipmentSlotDefinition, ItemEquipmentType } from "../../core/inventory/item";
+import { CharacterStatType, Clazz, LevelProgression, Ruleset } from "../../core/ruleset/ruleset";
 import { dangerousGenerateId } from "../../lib/generate-id";
 
 export class DnDRuleset implements Ruleset {
@@ -148,7 +148,7 @@ export class DnDRuleset implements Ruleset {
     return [];
   }
 
-  characterHitDamage(
+  getCharacterHitDamage(
     source: Actor,
     action: ActionDefinition,
     target: Actor,
@@ -161,7 +161,7 @@ export class DnDRuleset implements Ruleset {
     return sourceDamage * targetResistance;
   }
 
-  characterHit(world: World, attacker: Actor, defender: Actor) {
+  onCharacterHit(world: World, attacker: Actor, defender: Actor) {
     const attackerHit = attacker.stats.find((s) => s.statId === "character-stats-hit");
     if (!attackerHit) throw new Error("Character hit not found");
 
@@ -170,19 +170,19 @@ export class DnDRuleset implements Ruleset {
     return defaultRoll(D20) + attackerHit.amount > defenderArmorClass.amount;
   }
 
-  characterElementDamageMultiplier(actor: Actor, damageType: ElementDefinition): number {
+  getCharacterElementDamageMultiplier(actor: Actor, damageType: ElementDefinition): number {
     return 1;
   }
 
-  characterResistanceMultiplier(actor: Actor, damageType: ElementDefinition): number {
+  getCharacterResistanceMultiplier(actor: Actor, damageType: ElementDefinition): number {
     return 1;
   }
 
-  characterResistanceAbsolute(actor: Actor, damageType: ElementDefinition): number {
+  getCharacterResistanceAbsolute(actor: Actor, damageType: ElementDefinition): number {
     return 1;
   }
 
-  characterResourceGeneration(actor: Actor): CharacterResourceGeneration[] {
+  getCharacterResourceGeneration(actor: Actor): CharacterResourceGeneration[] {
     return [
       {
         amount: 1,
@@ -195,7 +195,7 @@ export class DnDRuleset implements Ruleset {
     ];
   }
 
-  characterBattleActionOrder(actor: Actor): number {
+  getCharacterBattleActionOrder(actor: Actor): number {
     return this.roll(D20);
   }
 

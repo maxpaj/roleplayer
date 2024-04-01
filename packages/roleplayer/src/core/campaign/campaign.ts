@@ -1,14 +1,14 @@
 import { Id, dangerousGenerateId } from "../../lib/generate-id";
+import { Logger } from "../../lib/logging/logger";
 import { AugmentedRequired } from "../../types/with-required";
+import { ActionDefinition } from "../action/action";
 import { Actor, CharacterClass, CharacterInventoryItem, CharacterStat, isCharacterEvent } from "../actor/character";
 import { Battle } from "../battle/battle";
-import { ActionDefinition } from "../action/action";
+import { CampaignEvent, CampaignEventWithRound, RoleplayerEvent } from "../events/events";
 import { EquipmentSlotDefinition, ItemDefinition } from "../inventory/item";
 import { World } from "../world/world";
-import { CampaignEvent, CampaignEventWithRound, RoleplayerEvent } from "../events/events";
 import { CampaignState } from "./campaign-state";
 import { Round } from "./round";
-import { Logger } from "../../lib/logging/logger";
 
 export class Campaign {
   id: Id;
@@ -189,7 +189,7 @@ export class Campaign {
       throw new Error("Actor not found");
     }
 
-    const order = this.world.ruleset.characterBattleActionOrder(actor);
+    const order = this.world.ruleset.getCharacterBattleActionOrder(actor);
     const characterBattleEnter: CampaignEvent[] = [
       {
         type: "CharacterBattleEnter",

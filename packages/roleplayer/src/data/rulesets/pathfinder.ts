@@ -1,4 +1,4 @@
-import { EquipmentSlotDefinition, Actor, World, ActionDefinition, CharacterResourceGeneration } from "../..";
+import { ActionDefinition, Actor, CharacterResourceGeneration, EquipmentSlotDefinition, World } from "../..";
 import {
   CharacterResourceDefinition,
   CharacterStatType,
@@ -30,13 +30,13 @@ export class PathfinderRuleset implements Ruleset {
   getElementDefinitions(): ElementDefinition[] {
     throw new Error("Method not implemented.");
   }
-  characterBattleActionOrder(actor: Actor): number {
+  getCharacterBattleActionOrder(actor: Actor): number {
     throw new Error("Method not implemented.");
   }
-  characterHit(world: World, attacker: Actor, defender: Actor): boolean {
+  onCharacterHit(world: World, attacker: Actor, defender: Actor): boolean {
     throw new Error("Method not implemented.");
   }
-  characterHitDamage(
+  getCharacterHitDamage(
     source: Actor,
     action: ActionDefinition,
     target: Actor,
@@ -46,16 +46,16 @@ export class PathfinderRuleset implements Ruleset {
   ): number {
     throw new Error("Method not implemented.");
   }
-  characterResistanceMultiplier(actor: Actor, damageType: ElementDefinition): number {
+  getCharacterResistanceMultiplier(actor: Actor, damageType: ElementDefinition): number {
     throw new Error("Method not implemented.");
   }
-  characterResistanceAbsolute(actor: Actor, damageType: ElementDefinition): number {
+  getCharacterResistanceAbsolute(actor: Actor, damageType: ElementDefinition): number {
     throw new Error("Method not implemented.");
   }
-  characterResourceGeneration(actor: Actor): CharacterResourceGeneration[] {
+  getCharacterResourceGeneration(actor: Actor): CharacterResourceGeneration[] {
     throw new Error("Method not implemented.");
   }
-  characterElementDamageMultiplier(actor: Actor, damageType: ElementDefinition): number {
+  getCharacterElementDamageMultiplier(actor: Actor, damageType: ElementDefinition): number {
     throw new Error("Method not implemented.");
   }
 }

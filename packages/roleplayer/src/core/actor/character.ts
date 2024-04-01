@@ -1,9 +1,9 @@
 import { Id } from "../../lib/generate-id";
-import { CampaignEvent, RoleplayerEvent, CampaignEventWithRound } from "../events/events";
 import { ActionDefinition } from "../action/action";
 import { StatusDefinition } from "../action/status";
-import { EquipmentSlotDefinition, ItemDefinition, ItemType } from "../inventory/item";
 import { Party } from "../campaign/party";
+import { CampaignEvent, CampaignEventWithRound, RoleplayerEvent } from "../events/events";
+import { EquipmentSlotDefinition, ItemDefinition, ItemType } from "../inventory/item";
 import {
   Alignment,
   CharacterResourceDefinition,
@@ -159,7 +159,7 @@ export class Actor {
   }
 
   getResourceGeneration(): CharacterResourceGeneration[] {
-    return this.ruleset.characterResourceGeneration(this);
+    return this.ruleset.getCharacterResourceGeneration(this);
   }
 
   resetResources() {
@@ -178,7 +178,7 @@ export class Actor {
   }
 
   getBattleActionOrder() {
-    return this.ruleset.characterBattleActionOrder(this);
+    return this.ruleset.getCharacterBattleActionOrder(this);
   }
 
   action(actionDefinition: ActionDefinition) {
@@ -197,11 +197,11 @@ export class Actor {
   }
 
   getResistanceMultiplier(damageType: ElementDefinition) {
-    return this.ruleset.characterResistanceMultiplier(this, damageType);
+    return this.ruleset.getCharacterResistanceMultiplier(this, damageType);
   }
 
   getResistanceAbsolute(damageType: ElementDefinition) {
-    return this.ruleset.characterResistanceAbsolute(this, damageType);
+    return this.ruleset.getCharacterResistanceAbsolute(this, damageType);
   }
 
   /**
@@ -238,7 +238,7 @@ export class Actor {
   }
 
   getElementDamageTaken(element: ElementDefinition, damageAmount: number) {
-    return this.ruleset.characterResistanceMultiplier(this, element) * damageAmount;
+    return this.ruleset.getCharacterResistanceMultiplier(this, element) * damageAmount;
   }
 
   getCharacterHitModifierWithAction(action: ActionDefinition) {

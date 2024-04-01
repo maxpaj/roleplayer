@@ -1,8 +1,8 @@
 import { World } from "../..";
 import { Id } from "../../lib/generate-id";
+import { ActionDefinition } from "../action/action";
 import { Actor, CharacterResourceGeneration } from "../actor/character";
 import { Dice } from "../dice/dice";
-import { ActionDefinition } from "../action/action";
 import { EquipmentSlotDefinition } from "../inventory/item";
 
 export enum ActionResourceType {
@@ -83,9 +83,9 @@ export interface Ruleset {
   getClassDefinitions(): Clazz[];
   getElementDefinitions(): ElementDefinition[];
 
-  characterBattleActionOrder(actor: Actor): number;
-  characterHit(world: World, attacker: Actor, defender: Actor): boolean;
-  characterHitDamage(
+  getCharacterBattleActionOrder(actor: Actor): number;
+  onCharacterHit(world: World, attacker: Actor, defender: Actor): boolean;
+  getCharacterHitDamage(
     source: Actor,
     action: ActionDefinition,
     target: Actor,
@@ -93,8 +93,8 @@ export interface Ruleset {
     variableValue: Dice,
     staticValue: number
   ): number;
-  characterResistanceMultiplier(actor: Actor, damageType: ElementDefinition): number;
-  characterResistanceAbsolute(actor: Actor, damageType: ElementDefinition): number;
-  characterResourceGeneration(actor: Actor): CharacterResourceGeneration[];
-  characterElementDamageMultiplier(actor: Actor, damageType: ElementDefinition): number;
+  getCharacterResistanceMultiplier(actor: Actor, damageType: ElementDefinition): number;
+  getCharacterResistanceAbsolute(actor: Actor, damageType: ElementDefinition): number;
+  getCharacterResourceGeneration(actor: Actor): CharacterResourceGeneration[];
+  getCharacterElementDamageMultiplier(actor: Actor, damageType: ElementDefinition): number;
 }

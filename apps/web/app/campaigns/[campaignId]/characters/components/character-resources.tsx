@@ -11,9 +11,11 @@ export function CharacterResources({ resourceTypes, character }: CharacterResour
           throw new Error("Cannot find resource type");
         }
 
+        const generation = character.getResourceGeneration().find((r) => r.resourceTypeId);
+
         return (
           <div key={r.resourceTypeId}>
-            {resource.name} {r.amount}/{r.max} (+{r.baseGeneration}/round)
+            {resource.name} {r.amount}/{r.max} {generation && <>+{generation.amount}</>}
           </div>
         );
       })}

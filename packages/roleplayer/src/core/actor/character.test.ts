@@ -118,7 +118,7 @@ describe("Character", () => {
       const campaign = new Campaign({ id: dangerousGenerateId(), name: "Campaign", world });
 
       const characterId = dangerousGenerateId();
-      const character = new Actor(world.ruleset, {
+      const character = new Actor({
         resources: [
           {
             amount: 35,
@@ -365,7 +365,7 @@ describe("Character", () => {
         description: "",
       };
 
-      const char = new Actor(world.ruleset, {});
+      const char = new Actor({});
       char.equipment = [
         {
           slotId: dangerousGenerateId(),

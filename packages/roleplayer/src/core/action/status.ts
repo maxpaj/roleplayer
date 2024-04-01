@@ -1,14 +1,6 @@
+import { CampaignEvent } from "../..";
 import { Id } from "../../lib/generate-id";
-import { EffectGenerator } from "./effect";
-
-/**
- * @module core/actions
- */
-export enum StatusApplicationTrigger {
-  Always = "Always",
-  RoundStart = "RoundStart",
-  RoundEnd = "RoundEnd",
-}
+import { EffectEventGenerator } from "./effect";
 
 /**
  * @module core/actions
@@ -18,8 +10,8 @@ export type StatusDefinition = {
   name: string;
   type: StatusType;
   appliesEffects: {
-    effect: EffectGenerator;
-    appliesAt: StatusApplicationTrigger;
+    effect: EffectEventGenerator;
+    appliesAt: CampaignEvent["type"];
   }[];
   durationType: StatusDurationType;
   duration?: number;

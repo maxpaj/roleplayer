@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Card, CardDescription, CardHeader, CardTitle } from "./ui/card";
-import { ActionAggregated } from "services/world-service";
 import { WorldRecord } from "@/db/schema/worlds";
+import { ActionAggregated } from "services/data-mapper";
 
 type ActionCardProps = {
   action: ActionAggregated;

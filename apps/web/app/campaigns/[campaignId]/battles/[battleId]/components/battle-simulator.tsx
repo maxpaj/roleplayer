@@ -15,7 +15,7 @@ import {
 } from "roleplayer";
 import { EventIconMap } from "../../../../../theme";
 import { Button } from "@/components/ui/button";
-import { H3, H5, Muted } from "@/components/ui/typography";
+import { H2, H3, H5, Muted } from "@/components/ui/typography";
 import { AddBattleCharacterButton } from "./add-battle-character-button";
 import { AddBattleMonsterButton } from "./add-battle-monster-button";
 import { saveCampaignEvents } from "app/campaigns/actions";
@@ -25,6 +25,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { ActorEligibleActions } from "./battle-actor-eligible-actions";
 import { ActorActionEligibleTargets } from "./battle-actor-eligible-targets";
 import { CampaignAggregated, WorldAggregated, mapCampaignWorldData } from "services/data-mapper";
+import { ResourceIndicator } from "@/components/character-editor/resources/resource-indicator";
 
 const DEBUG = false;
 
@@ -65,8 +66,8 @@ export function BattleSimulator({ campaignData, battleId, worldData }: BattleSim
       throw new Error("Not such monster");
     }
 
-    tempCampaign.createCharacter(monster.id, "Bandit");
-    tempCampaign.addCharacterToCurrentBattle(monsterId);
+    const monsterCharacterId = tempCampaign.spawnCharacterFromTemplate(monster.id);
+    tempCampaign.addCharacterToCurrentBattle(monsterCharacterId);
     setCampaign(tempCampaign);
   }
 
@@ -82,15 +83,17 @@ export function BattleSimulator({ campaignData, battleId, worldData }: BattleSim
   }
 
   function renderCharacter(currentRound: Round, battleCharacter: BattleActor, isCharacterTurnToAct: boolean) {
+    const isDead = tempCampaign.characterIsDead(battleCharacter.actor);
     const hasFinished = tempCampaign.characterHasRoundEvent(currentRound, battleCharacter.actor, "CharacterEndRound");
     const currentCharacterActionClasses = isCharacterTurnToAct
       ? "shadow-[inset_0px_0px_30px_0px_rgba(0,0,0,0.25)] shadow-primary/40"
       : "";
+    const characterDeadStateClasses = isDead ? "opacity-25" : "";
 
     return (
       <div
         key={battleCharacter.actor.id}
-        className={`relative flex w-full flex-col justify-between overflow-hidden border border-slate-700 ${currentCharacterActionClasses || ""}`}
+        className={`relative flex w-full flex-col justify-between overflow-hidden border border-slate-700 ${characterDeadStateClasses} ${currentCharacterActionClasses || ""}`}
       >
         <div className={`${isCharacterTurnToAct ? "" : "opacity-50"} w-full p-2`}>
           <div className="flex justify-between gap-2">
@@ -116,9 +119,13 @@ export function BattleSimulator({ campaignData, battleId, worldData }: BattleSim
               }
 
               return (
-                <div key={r.resourceTypeId}>
-                  {r.amount}/{r.max} ({resourceType.name})
-                </div>
+                <ResourceIndicator
+                  key={r.resourceTypeId}
+                  resource={r}
+                  resourceType={
+                    tempCampaign.world.ruleset.getCharacterResourceTypes().find((rt) => rt.id === r.resourceTypeId)!
+                  }
+                />
               );
             })}
           </div>
@@ -299,8 +306,13 @@ export function BattleSimulator({ campaignData, battleId, worldData }: BattleSim
         </Button>
       </div>
 
-      <H3>Round {battleEvents.filter((e) => e.type === "RoundStarted").length}</H3>
+      {battleState.isBattleOver() && (
+        <div className="flex items-center justify-center p-16">
+          <H2 className="tracking-[4px]">BATTLE OVER</H2>
+        </div>
+      )}
 
+      <H3>Round {battleEvents.filter((e) => e.type === "RoundStarted").length}</H3>
       {battleState.actors.length === 0 && <Muted>No characters added to battle yet</Muted>}
       {battleState.actors.length > 0 && (
         <div className="mb-4 flex w-full flex-col gap-3">

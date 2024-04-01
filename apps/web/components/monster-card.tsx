@@ -1,6 +1,6 @@
+import { ActorAggregated } from "services/data-mapper";
 import { Card, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import Link from "next/link";
-import { ActorAggregated } from "services/world-service";
 
 type MonsterCardProps = {
   monster: ActorAggregated;

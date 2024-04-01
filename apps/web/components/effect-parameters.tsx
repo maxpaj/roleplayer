@@ -2,7 +2,9 @@
 
 import { CharacterResourceDefinition } from "roleplayer";
 import { Table, TableBody, TableCell, TableRow } from "./ui/table";
-import { StatusAggregated } from "services/world-service";
+import { StatusAggregated } from "services/data-mapper";
+import Image from "next/image";
+import dice from "@/assets/dice.svg";
 
 export function EffectParameters({
   resourceDefinitions,
@@ -16,7 +18,7 @@ export function EffectParameters({
   function renderParameterType(key: string) {
     switch (key) {
       case "variableValue":
-        return "Variable";
+        return <Image width={16} height={16} alt="Dice" src={dice} />;
       case "staticValue":
         return "Static";
       case "resourceTypeId":

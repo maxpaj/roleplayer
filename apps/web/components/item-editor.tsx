@@ -1,6 +1,5 @@
 "use client";
 
-import { ItemAggregated, WorldAggregated } from "services/world-service";
 import { EffectDetails } from "./effect-details";
 import { Divider } from "./ui/divider";
 import { Paragraph, H4 } from "./ui/typography";
@@ -8,6 +7,7 @@ import { useState } from "react";
 import { generateItemDescription, saveItem } from "app/worlds/actions";
 import { TextareaGenerate } from "./textarea-generate";
 import { UserRecord } from "@/db/schema/users";
+import { ItemAggregated, WorldAggregated } from "services/data-mapper";
 
 export function ItemEditor({
   user,

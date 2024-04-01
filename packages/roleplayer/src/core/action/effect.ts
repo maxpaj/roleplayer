@@ -1,69 +1,91 @@
-import { ActionDefinition, CharacterResourceDefinition, Dice, ElementDefinition, dangerousGenerateId } from "../..";
+import {
+  ActionDefinition,
+  CharacterResourceDefinition,
+  Dice,
+  EffectApply,
+  ElementDefinition,
+  dangerousGenerateId,
+} from "../..";
 import { Actor } from "../actor/character";
-import { CampaignEvent, RoleplayerEvent } from "../events/events";
+import { CampaignEvent } from "../events/events";
 import { World } from "../world/world";
 import { StatusDefinition } from "./status";
 
-export interface EffectGenerator {
-  eventType: RoleplayerEvent["type"];
-  instantiateEffect(action: ActionDefinition, source: Actor, target: Actor, world: World): CampaignEvent;
-}
-
-export class CharacterResourceLossEffect implements EffectGenerator {
-  element: ElementDefinition;
+export type CharacterResourceLossEffect = {
   eventType: "CharacterResourceLoss";
-  resourceTypeId: CharacterResourceDefinition["id"];
   variableValue: Dice;
   staticValue: number;
+  resourceTypeId: CharacterResourceDefinition["id"];
+  elementTypeId: ElementDefinition["id"];
+};
 
-  constructor(
-    element: ElementDefinition,
-    variableValue: Dice,
-    staticValue: number,
-    resourceTypeId: CharacterResourceDefinition["id"]
-  ) {
-    this.element = element;
-    this.eventType = "CharacterResourceLoss";
-    this.resourceTypeId = resourceTypeId;
-    this.variableValue = variableValue;
-    this.staticValue = staticValue;
-  }
+export type CharacterStatusGainEffect = {
+  eventType: "CharacterStatusGain";
+  statusId: StatusDefinition["id"];
+};
 
-  instantiateEffect(action: ActionDefinition, source: Actor, target: Actor, world: World): CampaignEvent {
-    return {
-      type: this.eventType,
-      amount: world.ruleset.characterHitDamage(
-        source,
-        action,
-        target,
-        this.element,
-        this.variableValue,
-        this.staticValue
-      ),
-      characterId: target.id,
-      id: dangerousGenerateId(),
-      resourceTypeId: this.resourceTypeId,
-      actionId: action.id,
-    };
+export type EffectEventGenerator = CharacterResourceLossEffect | CharacterStatusGainEffect;
+export type EffectEventGeneratorType = EffectEventGenerator["eventType"];
+
+export function mapEffect(
+  effect: EffectApply,
+  actionDef: ActionDefinition,
+  attacker: Actor,
+  target: Actor,
+  world: World
+) {
+  switch (effect.eventType) {
+    case "CharacterResourceLoss": {
+      return instantiateResourceLossEffect(actionDef, effect, attacker, target, world);
+    }
+
+    case "CharacterStatusGain": {
+      return instantiateStatusGainEffect(actionDef, effect, attacker, target, world);
+    }
+    default:
+      throw new Error("Cannot map applied effect");
   }
 }
 
-export class CharacterStatusGainEffect implements EffectGenerator {
-  status: StatusDefinition;
-  eventType: "CharacterStatusGain";
-
-  constructor(status: StatusDefinition) {
-    this.eventType = "CharacterStatusGain";
-    this.status = status;
+function instantiateResourceLossEffect(
+  action: ActionDefinition,
+  effect: EffectApply,
+  source: Actor,
+  target: Actor,
+  world: World
+): CampaignEvent {
+  if (effect.eventType !== "CharacterResourceLoss") {
+    throw new Error("Not CharacterResourceLoss effect type");
   }
 
-  instantiateEffect(action: ActionDefinition, source: Actor, target: Actor, world: World): CampaignEvent {
-    return {
-      type: this.eventType,
-      characterId: target.id,
-      id: dangerousGenerateId(),
-      actionId: action.id,
-      statusId: this.status.id,
-    };
+  return {
+    type: "CharacterResourceLoss",
+    amount: world.ruleset.characterHitDamage(source, action, target, effect),
+    characterId: target.id,
+    id: dangerousGenerateId(),
+    resourceTypeId: effect.parameters.resourceTypeId as CharacterResourceDefinition["id"],
+    actionId: action.id,
+    sourceId: source.id,
+  };
+}
+
+function instantiateStatusGainEffect(
+  action: ActionDefinition,
+  effect: EffectApply,
+  source: Actor,
+  target: Actor,
+  world: World
+): CampaignEvent {
+  if (effect.eventType !== "CharacterStatusGain") {
+    throw new Error("Not CharacterStatusGain effect type");
   }
+
+  return {
+    type: "CharacterStatusGain",
+    characterId: target.id,
+    id: dangerousGenerateId(),
+    actionId: action.id,
+    sourceId: source.id,
+    statusId: effect.parameters.statusId as StatusDefinition["id"],
+  };
 }

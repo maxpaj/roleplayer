@@ -2,7 +2,9 @@ import defaultIcon from "../assets/logo.svg";
 import moveIcon from "../assets/icons/lorc/boot-prints.svg";
 import newRoundIcon from "../assets/icons/lorc/time-trap.svg";
 import dodgeEvent from "../assets/icons/felbrigg/dodge.svg";
-import { RoleplayerEvent } from "roleplayer";
+import { CharacterResourceDefinition, RoleplayerEvent } from "roleplayer";
+
+export { defaultIcon };
 
 type ClassColors = {
   [key: string]: string;
@@ -174,6 +176,27 @@ export const EventIconMap: {
     icon: defaultIcon,
   },
   CharacterInventoryItemUnEquip: {
+    alt: "",
+    icon: defaultIcon,
+  },
+};
+
+export const CharacterResourceTypesIconMap: {
+  [key in CharacterResourceDefinition["name"]]: { alt: string; icon: any };
+} = {
+  "Movement speed": {
+    alt: "Movement speed",
+    icon: moveIcon,
+  },
+  Health: {
+    alt: "Health",
+    icon: defaultIcon,
+  },
+  "Primary actions": {
+    alt: "Primary actions",
+    icon: defaultIcon,
+  },
+  Unknown: {
     alt: "",
     icon: defaultIcon,
   },

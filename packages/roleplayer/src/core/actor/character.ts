@@ -1,5 +1,5 @@
 import { Id } from "../../lib/generate-id";
-import { CampaignEvent, RoleplayerEvent, CampaignEventWithRound } from "../events/events";
+import { CampaignEvent, RoleplayerEvent } from "../events/events";
 import { ActionDefinition } from "../action/action";
 import { StatusDefinition } from "../action/status";
 import { EquipmentSlotDefinition, ItemDefinition, ItemType } from "../inventory/item";
@@ -11,17 +11,7 @@ import {
   Clazz,
   ElementDefinition,
   Race,
-  Ruleset,
 } from "../ruleset/ruleset";
-
-/**
- * @module core/actor
- */
-export enum ActorType {
-  Monster = "Monster",
-  Character = "Character",
-  World = "World",
-}
 
 /**
  * @module core/actor
@@ -139,31 +129,11 @@ export class Actor {
   reactionsRemaining: ReactionResource[] = [];
   reactions: Reaction[] = [];
 
-  ruleset: Ruleset;
-
-  constructor(ruleset: Ruleset, init?: Partial<Actor>) {
+  constructor(init?: Partial<Actor>) {
     Object.assign(this, init);
-    this.ruleset = ruleset;
   }
 
-  performAction(): CampaignEventWithRound[] {
-    throw new Error("Method not implemented.");
-  }
-
-  getActions(): ActionDefinition[] {
-    return this.actions;
-  }
-
-  getAbilityModifier() {
-    return 0;
-  }
-
-  getResourceGeneration(): CharacterResourceGeneration[] {
-    return this.ruleset.characterResourceGeneration(this);
-  }
-
-  resetResources() {
-    const generation = this.getResourceGeneration();
+  resetResources(generation: CharacterResourceGeneration[]) {
     this.resources = this.resources.map((r) => {
       const resourceGeneration = generation.find((g) => g.resourceTypeId === r.resourceTypeId);
       if (!resourceGeneration) {
@@ -177,10 +147,6 @@ export class Actor {
     });
   }
 
-  getBattleActionOrder() {
-    return this.ruleset.characterBattleActionOrder(this);
-  }
-
   action(actionDefinition: ActionDefinition) {
     return {
       rolls: [
@@ -190,18 +156,6 @@ export class Actor {
         },
       ],
     };
-  }
-
-  getStats() {
-    return this.stats;
-  }
-
-  getResistanceMultiplier(damageType: ElementDefinition) {
-    return this.ruleset.characterResistanceMultiplier(this, damageType);
-  }
-
-  getResistanceAbsolute(damageType: ElementDefinition) {
-    return this.ruleset.characterResistanceAbsolute(this, damageType);
   }
 
   /**
@@ -221,27 +175,11 @@ export class Actor {
     return [...this.actions, ...equipmentActions, ...consumables];
   }
 
-  getDamage(element: ElementDefinition) {
-    return 2;
-  }
-
-  getResistance(element: ElementDefinition) {
-    return 2;
-  }
-
-  getElementDamageMultiplier() {
+  getDamageAmplify(elementType: ElementDefinition) {
     return 1;
   }
 
-  getEffectAppliedStatuses(status: StatusDefinition | undefined) {
-    return status;
-  }
-
-  getElementDamageTaken(element: ElementDefinition, damageAmount: number) {
-    return this.ruleset.characterResistanceMultiplier(this, element) * damageAmount;
-  }
-
-  getCharacterHitModifierWithAction(action: ActionDefinition) {
+  getResistance(element: ElementDefinition, damage: number) {
     return 0;
   }
 

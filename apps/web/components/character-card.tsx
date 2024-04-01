@@ -1,7 +1,7 @@
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
 import { WorldRecord } from "@/db/schema/worlds";
-import { ActorAggregated } from "services/world-service";
+import { ActorAggregated } from "services/data-mapper";
 
 type CharacterCardProps = {
   worldId: WorldRecord["id"];

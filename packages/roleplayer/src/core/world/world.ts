@@ -45,7 +45,7 @@ export class World {
       throw new Error("Cannot create character, duplicate exists");
     }
 
-    this.characters.push(new Actor(this.ruleset, { id: characterId, name }));
+    this.characters.push(new Actor({ id: characterId, name }));
   }
 
   setCharacterName(characterId: Actor["id"], name: string) {

@@ -9,6 +9,7 @@ import { CampaignEvent, CampaignEventWithRound, RoleplayerEvent } from "../event
 import { CampaignState } from "./campaign-state";
 import { Round } from "./round";
 import { Logger } from "../../lib/logging/logger";
+import { mapEffect } from "../action/effect";
 
 export class Campaign {
   id: Id;
@@ -184,7 +185,9 @@ export class Campaign {
   }
 
   addCharacterToCurrentBattle(characterId: Actor["id"]) {
-    const actor = this.world.characters.find((c) => c.id === characterId);
+    const campaignState = this.getCampaignStateFromEvents();
+    const actor = campaignState.characters.find((c) => c.id === characterId);
+
     if (!actor) {
       throw new Error("Actor not found");
     }
@@ -208,16 +211,43 @@ export class Campaign {
   }
 
   spawnCharacterFromTemplate(templateId: Actor["id"]) {
+    const template = this.world.characters.find((c) => c.id === templateId);
+    if (!template) {
+      throw new Error("Template character not found");
+    }
+
+    const campaignState = this.getCampaignStateFromEvents();
+    const alreadySpawned = campaignState.characters.filter((c) => c.name === template.name);
+
+    const characterId = dangerousGenerateId();
     const characterSpawnEvents: CampaignEvent[] = [
       {
         type: "CharacterSpawned",
-        characterId: dangerousGenerateId(),
+        characterId,
         templateId,
         id: dangerousGenerateId(),
       },
+      {
+        type: "CharacterNameSet",
+        characterId,
+        id: dangerousGenerateId(),
+        name: template.name + (alreadySpawned ? ` (${alreadySpawned.length})` : ""),
+      },
     ];
 
-    this.publishCampaignEvent(...characterSpawnEvents);
+    const characterResourceEvents: CampaignEvent[] = template.resources.map((r) => ({
+      type: "CharacterResourceGain",
+      characterId,
+      amount: r.max,
+      id: dangerousGenerateId(),
+      resourceTypeId: r.resourceTypeId,
+    }));
+
+    const events = [...characterSpawnEvents, ...characterResourceEvents];
+
+    this.publishCampaignEvent(...events);
+
+    return characterId;
   }
 
   createCharacter(characterId: Actor["id"], name: string) {
@@ -349,9 +379,7 @@ export class Campaign {
 
     const targetReceiveAttackEvents = targets.flatMap((target) => {
       if (attacker.tryHit(target)) {
-        return actionDef.appliesEffects.map((effect) =>
-          effect.instantiateEffect(actionDef, attacker, target, this.world)
-        );
+        return actionDef.appliesEffects.map((effect) => mapEffect(effect, actionDef, attacker, target, this.world));
       }
 
       return [];
@@ -463,6 +491,10 @@ export class Campaign {
     }
   }
 
+  characterIsDead(actor: Actor) {
+    return this.world.ruleset.characterIsDead(actor);
+  }
+
   characterHasRoundEvent(round: Round, character: Actor, type: RoleplayerEvent["type"]) {
     const roundCharacterEvents = this.getCharacterRoundEvents(round, character.id);
     return roundCharacterEvents.some((event) => event.type === type);
@@ -481,13 +513,16 @@ export class Campaign {
             serialNumber: event.serialNumber,
           });
 
-          campaignState.characters.forEach((c) => c.resetResources());
+          campaignState.characters.forEach((c) => {
+            const characterResourceGeneration = this.world.ruleset.characterResourceGeneration(c);
+            c.resetResources(characterResourceGeneration);
+          });
           break;
         }
 
         case "BattleStarted": {
           campaignState.battles.push(
-            new Battle({
+            new Battle(this, {
               id: event.battleId,
               name: "Battle",
             })
@@ -500,9 +535,9 @@ export class Campaign {
           const templateCharacter = this.world.characters.find((c) => c.id === event.templateId);
 
           if (!templateCharacter) {
-            campaignState.characters.push(new Actor(this.world.ruleset, { id: event.characterId }));
+            campaignState.characters.push(new Actor({ id: event.characterId }));
           } else {
-            campaignState.characters.push(templateCharacter);
+            campaignState.characters.push(new Actor({ ...structuredClone(templateCharacter), id: event.characterId }));
           }
           break;
         }
@@ -559,11 +594,6 @@ export class Campaign {
 
   applyCharacterEvent(character: Actor, campaignState: CampaignState, event: CampaignEventWithRound) {
     switch (event.type) {
-      case "RoundStarted": {
-        character.resetResources();
-        break;
-      }
-
       case "CharacterEndRound": {
         const battle = campaignState.battles.find((b) => b.id === event.battleId);
 
@@ -676,16 +706,6 @@ export class Campaign {
         }
 
         stat.amount = event.amount;
-        break;
-      }
-
-      case "CharacterSpawned": {
-        character.exists = true;
-        break;
-      }
-
-      case "CharacterDespawn": {
-        character.exists = false;
         break;
       }
 

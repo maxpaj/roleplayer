@@ -2,6 +2,7 @@ import { Id } from "../../lib/generate-id";
 import { Actor, isCharacterEvent } from "../actor/character";
 import { CampaignEvent } from "../events/events";
 import { AugmentedRequired } from "../../types/with-required";
+import { Campaign } from "../..";
 
 export type BattleActor = { actingOrder: number; actor: Actor };
 
@@ -10,11 +11,25 @@ export class Battle {
   name!: string;
   finished!: boolean;
 
+  campaign: Campaign;
   actors: BattleActor[] = [];
 
-  constructor(b: AugmentedRequired<Partial<Battle>, "name">) {
+  constructor(campaign: Campaign, b: AugmentedRequired<Partial<Battle>, "name">) {
     Object.assign(this, b);
     this.finished = this.finished || false;
+    this.campaign = campaign;
+  }
+
+  isBattleOver() {
+    const aliveCharacters = this.actors.filter((a) => this.campaign.characterIsDead(a.actor));
+    const oneCharacterRemaining = aliveCharacters.length === 1;
+    if (oneCharacterRemaining) {
+      return true;
+    }
+
+    const party = aliveCharacters[0]!.actor.party;
+    const alliedPartiesRemaining = aliveCharacters.every((a) => a.actor.party === party && party !== undefined);
+    return alliedPartiesRemaining;
   }
 
   hasActionOrder() {
@@ -29,11 +44,13 @@ export class Battle {
 
   currentActorTurn(events: CampaignEvent[]) {
     const charactersNotActedCurrentRound = this.actors.filter((battleChar) => {
-      const hasActed = events.some(
+      const hasEndedTurn = events.some(
         (e) => isCharacterEvent(e) && e.characterId === battleChar.actor.id && e.type === "CharacterEndRound"
       );
 
-      return !hasActed;
+      const isDead = this.campaign.world.ruleset.characterIsDead(battleChar.actor);
+
+      return !hasEndedTurn && !isDead;
     });
 
     const sorted = charactersNotActedCurrentRound.toSorted((a, b) => b.actingOrder - a.actingOrder);

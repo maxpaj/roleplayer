@@ -1,4 +1,11 @@
-import { EquipmentSlotDefinition, Actor, World, ActionDefinition, CharacterResourceGeneration } from "../..";
+import {
+  EquipmentSlotDefinition,
+  Actor,
+  World,
+  ActionDefinition,
+  CharacterResourceGeneration,
+  EffectApply,
+} from "../..";
 import {
   CharacterResourceDefinition,
   CharacterStatType,
@@ -8,7 +15,10 @@ import {
   Ruleset,
 } from "../../core/ruleset/ruleset";
 
-export class LoDRuleset implements Ruleset {
+export class LeagueOfDungeoneersRuleset implements Ruleset {
+  characterIsDead(actor: Actor): boolean {
+    throw new Error("Method not implemented.");
+  }
   roll(dice: number): number {
     throw new Error("Method not implemented.");
   }
@@ -36,14 +46,7 @@ export class LoDRuleset implements Ruleset {
   characterHit(world: World, attacker: Actor, defender: Actor): boolean {
     throw new Error("Method not implemented.");
   }
-  characterHitDamage(
-    source: Actor,
-    action: ActionDefinition,
-    target: Actor,
-    element: ElementDefinition,
-    variableValue: number,
-    staticValue: number
-  ): number {
+  characterHitDamage(source: Actor, action: ActionDefinition, target: Actor, effect: EffectApply): number {
     throw new Error("Method not implemented.");
   }
   characterResistanceMultiplier(actor: Actor, damageType: ElementDefinition): number {

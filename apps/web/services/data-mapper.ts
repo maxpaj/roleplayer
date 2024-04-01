@@ -8,9 +8,7 @@ import { ItemDefinitionRecord } from "@/db/schema/items";
 import { RaceRecord } from "@/db/schema/races";
 import { StatusRecord } from "@/db/schema/statuses";
 import { WorldRecord } from "@/db/schema/worlds";
-import { Item } from "@radix-ui/react-select";
 import {
-  CharacterResourceLossEffect,
   Ruleset,
   Actor,
   TargetType,
@@ -21,11 +19,11 @@ import {
   ItemType,
   Rarity,
   ItemEquipmentType,
-  CharacterStatusGainEffect,
   Campaign,
   CampaignEventWithRound,
+  EffectApply,
+  EffectParameters,
 } from "roleplayer";
-import { effect } from "zod";
 
 export type CampaignAggregated = CampaignRecord & {
   events: EventRecord[];
@@ -65,32 +63,10 @@ export type ActorAggregated = CharacterRecord & {
   classes: CharacterClassAggregated[];
 };
 
-function mapActionEffect(effect: EffectRecord) {
-  const parameters = effect.parameters as any; // TODO: How can we type this based on CharacterResourceLoss?
-
-  switch (effect.type) {
-    case "CharacterResourceLoss": {
-      return new CharacterResourceLossEffect(
-        parameters.element,
-        parameters.variableValue,
-        parameters.staticValue,
-        parameters.resourceTypeId
-      );
-    }
-
-    case "CharacterStatusGain": {
-      return new CharacterStatusGainEffect(parameters.statusId);
-    }
-
-    default:
-      throw new Error("Unknown effect type");
-  }
-}
-
 export function mapCampaignWorldData(worldData: WorldAggregated, campaignData: CampaignAggregated) {
   const Ruleset = new DnDRuleset();
-  const worldMappedCharacters = worldData.characters.map((c) => mapCharacterRecordToActor(Ruleset, c));
-  const worldMappedItems = worldData.itemDefinitions.map((i) => mapItemDefinition(Ruleset, i));
+  const worldMappedCharacters = worldData.characters.map(mapCharacterRecordToActor);
+  const worldMappedItems = worldData.itemDefinitions.map(mapItemDefinition);
   const world = new World(Ruleset, worldData.name, {
     ...(worldData as unknown as Partial<World>),
     characters: worldMappedCharacters,
@@ -106,11 +82,18 @@ export function mapCampaignWorldData(worldData: WorldAggregated, campaignData: C
   return { world, campaign };
 }
 
-export function mapItemDefinition(ruleset: Ruleset, item: ItemAggregated): ItemDefinition {
+export function mapEffectApply(effect: EffectRecord) {
+  return {
+    eventType: effect.type as EffectApply["eventType"],
+    parameters: effect.parameters as EffectParameters<EffectApply["eventType"]>,
+  };
+}
+
+export function mapItemDefinition(item: ItemAggregated): ItemDefinition {
   const actionsMapped = item.actions.map((a) => ({
     ...a,
     eligibleTargets: a.eligibleTargets.map((t) => TargetType[t.enumName as TargetType]),
-    appliesEffects: a.appliesEffects.map(mapActionEffect),
+    appliesEffects: a.appliesEffects.map(mapEffectApply),
   }));
 
   return {
@@ -125,8 +108,8 @@ export function mapItemDefinition(ruleset: Ruleset, item: ItemAggregated): ItemD
   };
 }
 
-export function mapCharacterRecordToActor(ruleset: Ruleset, actor: ActorAggregated): Actor {
-  return new Actor(ruleset, {
+export function mapCharacterRecordToActor(actor: ActorAggregated): Actor {
+  return new Actor({
     ...actor,
     resources: actor.resources,
     classes: actor.classes.map((c) => ({
@@ -140,14 +123,14 @@ export function mapCharacterRecordToActor(ruleset: Ruleset, actor: ActorAggregat
         resourceTypeId: r.resourceTypeId!,
         amount: r.amount,
       })),
-      appliesEffects: a.appliesEffects.map(mapActionEffect),
+      appliesEffects: a.appliesEffects.map(mapEffectApply),
       eligibleTargets: a.eligibleTargets.map((t) => TargetType[t.enumName as TargetType]),
     })),
   });
 }
 
 export function mapCharactersFromCampaignData(ruleset: Ruleset, characters: ActorAggregated[]) {
-  return characters.map((char) => mapCharacterRecordToActor(ruleset, char));
+  return characters.map(mapCharacterRecordToActor);
 }
 
 export function mapWorldFromCampaignData(campaignData: CampaignAggregated) {

@@ -83,6 +83,7 @@ export type CharacterEventType =
       amount: number;
       resourceTypeId: CharacterResourceDefinition["id"];
       actionId?: ActionDefinition["id"];
+      sourceId?: Actor["id"];
     }
   | {
       type: "CharacterResourceLoss";
@@ -90,6 +91,7 @@ export type CharacterEventType =
       amount: number;
       resourceTypeId: CharacterResourceDefinition["id"];
       actionId?: ActionDefinition["id"];
+      sourceId?: Actor["id"];
     }
   | {
       type: "CharacterStatChange";
@@ -112,6 +114,7 @@ export type CharacterEventType =
       type: "CharacterMovement";
       characterId: Actor["id"];
       targetPosition: Position;
+      sourceId?: Actor["id"];
     }
   | { type: "CharacterEndRound"; characterId: Actor["id"] }
   | { type: "CharacterActionGain"; characterId: Actor["id"]; actionId: Id }
@@ -152,6 +155,7 @@ export type CharacterEventType =
       type: "CharacterStatusGain";
       characterId: Actor["id"];
       actionId: ActionDefinition["id"];
+      sourceId?: Actor["id"];
       statusId: Id;
     }
   | { type: "CharacterAttackAttackerHit"; characterId: Actor["id"] }

@@ -1,5 +1,7 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
+import { H5 } from "@/components/ui/typography";
 import * as Sentry from "@sentry/nextjs";
 import Error from "next/error";
 import { useEffect } from "react";
@@ -12,8 +14,8 @@ export default function GlobalError({ error, reset }: { error: Error & { digest?
   return (
     <html>
       <body>
-        <h2>Something went wrong!</h2>
-        <button onClick={() => reset()}>Try again</button>
+        <H5>Something went wrong!</H5>
+        <Button onClick={() => reset()}>Try again</Button>
       </body>
     </html>
   );

@@ -2,13 +2,8 @@ import { World } from "../..";
 import { Id } from "../../lib/generate-id";
 import { Actor, CharacterResourceGeneration } from "../actor/character";
 import { Dice } from "../dice/dice";
-import { ActionDefinition } from "../action/action";
+import { ActionDefinition, EffectApply } from "../action/action";
 import { EquipmentSlotDefinition } from "../inventory/item";
-
-export enum ActionResourceType {
-  Primary = "Primary",
-  Secondary = "Secondary",
-}
 
 export enum Alignment {
   NeutralEvil = "NeutralEvil",
@@ -85,16 +80,10 @@ export interface Ruleset {
 
   characterBattleActionOrder(actor: Actor): number;
   characterHit(world: World, attacker: Actor, defender: Actor): boolean;
-  characterHitDamage(
-    source: Actor,
-    action: ActionDefinition,
-    target: Actor,
-    element: ElementDefinition,
-    variableValue: Dice,
-    staticValue: number
-  ): number;
+  characterHitDamage(source: Actor, action: ActionDefinition, target: Actor, effect: EffectApply): number;
   characterResistanceMultiplier(actor: Actor, damageType: ElementDefinition): number;
   characterResistanceAbsolute(actor: Actor, damageType: ElementDefinition): number;
   characterResourceGeneration(actor: Actor): CharacterResourceGeneration[];
   characterElementDamageMultiplier(actor: Actor, damageType: ElementDefinition): number;
+  characterIsDead(actor: Actor): boolean;
 }

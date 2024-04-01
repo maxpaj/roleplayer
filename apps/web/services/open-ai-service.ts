@@ -1,7 +1,7 @@
 import OpenAI from "openai";
 import { ItemDefinitionRecord } from "@/db/schema/items";
-import { WorldAggregated } from "./world-service";
 import { UserRecord } from "@/db/schema/users";
+import { WorldAggregated } from "./data-mapper";
 
 export class GenerationService {
   async getItemDescription(world: WorldAggregated, item: ItemDefinitionRecord, user: UserRecord) {

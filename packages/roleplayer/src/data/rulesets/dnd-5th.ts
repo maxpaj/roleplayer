@@ -8,6 +8,7 @@ import {
   ActionDefinition,
   CharacterResourceDefinition,
   Dice,
+  EffectApply,
 } from "../..";
 import { CharacterStatType, Clazz, LevelProgression, Ruleset } from "../../core/ruleset/ruleset";
 import { EquipmentSlotDefinition, ItemEquipmentType } from "../../core/inventory/item";
@@ -116,27 +117,27 @@ export class DnDRuleset implements Ruleset {
         name: "Rogue",
         levelProgression: [
           {
-            actionDefinitionId: "00000000-0000-0000-0000-000000005000" as const,
+            actionDefinitionId: "00000000-0000-0000-0000-000000004100" as const,
             unlockedAtLevel: 1,
           },
         ],
       },
       {
-        id: "00000000-0000-0000-0000-000000004000" as const,
+        id: "00000000-0000-0000-0000-000000005000" as const,
         name: "Bard",
         levelProgression: [
           {
-            actionDefinitionId: "00000000-0000-0000-0000-000000005000" as const,
+            actionDefinitionId: "00000000-0000-0000-0000-000000005100" as const,
             unlockedAtLevel: 1,
           },
         ],
       },
       {
-        id: "00000000-0000-0000-0000-000000004000" as const,
+        id: "00000000-0000-0000-0000-000000006000" as const,
         name: "Wizard",
         levelProgression: [
           {
-            actionDefinitionId: "00000000-0000-0000-0000-000000005000" as const,
+            actionDefinitionId: "00000000-0000-0000-0000-000000006100" as const,
             unlockedAtLevel: 1,
           },
         ],
@@ -145,20 +146,47 @@ export class DnDRuleset implements Ruleset {
   }
 
   getElementDefinitions(): ElementDefinition[] {
-    return [];
+    return [
+      {
+        id: "00000000-0000-0000-0000-000000010000",
+        name: "Cold",
+      },
+      {
+        id: "00000000-0000-0000-0000-000000020000",
+        name: "Physical",
+      },
+      {
+        id: "00000000-0000-0000-0000-000000030000",
+        name: "Fire",
+      },
+      {
+        id: "00000000-0000-0000-0000-000000040000",
+        name: "Radiant",
+      },
+      {
+        id: "00000000-0000-0000-0000-000000050000",
+        name: "Necrotic",
+      },
+      {
+        id: "00000000-0000-0000-0000-000000060000",
+        name: "Thunder",
+      },
+    ];
   }
 
-  characterHitDamage(
-    source: Actor,
-    action: ActionDefinition,
-    target: Actor,
-    element: ElementDefinition,
-    variableValue: Dice,
-    staticValue: number
-  ) {
-    const targetResistance = target.getResistance(element);
-    const sourceDamage = this.roll(variableValue) + staticValue;
-    return sourceDamage * targetResistance;
+  characterHitDamage(source: Actor, action: ActionDefinition, target: Actor, effect: EffectApply) {
+    const elementTypes = this.getElementDefinitions();
+    const elementType = elementTypes.find((e) => e.id === effect.parameters.elementTypeId);
+    if (!elementType) {
+      throw new Error("Element type not found");
+    }
+
+    const sourceDamageRoll =
+      this.roll(effect.parameters.variableValue as number) + (effect.parameters.staticValue as number);
+    const sourceDamage = sourceDamageRoll * source.getDamageAmplify(elementType);
+    const targetDamageReduction = target.getResistance(elementType, sourceDamage);
+    const totalDamage = sourceDamage - targetDamageReduction;
+    return totalDamage;
   }
 
   characterHit(world: World, attacker: Actor, defender: Actor) {
@@ -193,6 +221,12 @@ export class DnDRuleset implements Ruleset {
         resourceTypeId: "00000000-0000-0000-0000-000000001003" as const,
       },
     ];
+  }
+
+  characterIsDead(actor: Actor): boolean {
+    const healthResource = this.getCharacterResourceTypes().find((r) => r.name === "Health")!;
+    const characterHealthResource = actor.resources.find((r) => r.resourceTypeId === healthResource.id);
+    return characterHealthResource!.amount <= 0;
   }
 
   characterBattleActionOrder(actor: Actor): number {

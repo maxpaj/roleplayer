@@ -47,6 +47,7 @@ export function CharacterInventoryEditor({
           const characterEligibleEquipment = character.inventory.filter((i) =>
             slot.eligibleEquipmentTypes.includes(i.definition.equipmentType)
           );
+
           const existingSlotEquipment = character.equipment.find((s) => s.slotId === slot.id);
 
           return (

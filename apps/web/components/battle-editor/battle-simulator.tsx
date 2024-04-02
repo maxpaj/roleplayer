@@ -13,7 +13,7 @@ import {
   RoleplayerEvent,
   isCharacterEvent,
 } from "roleplayer";
-import { EventIconMap } from "../../../../../theme";
+import { EventIconMap } from "../../app/theme";
 import { Button } from "@/components/ui/button";
 import { H2, H3, H5, Muted } from "@/components/ui/typography";
 import { AddBattleCharacterButton } from "./add-battle-character-button";
@@ -23,13 +23,13 @@ import { DiceRollCard } from "./dice-roll-card";
 import { Divider } from "@/components/ui/divider";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { ActorEligibleActions } from "./battle-actor-eligible-actions";
-import { ActorActionEligibleTargets } from "./battle-actor-eligible-targets";
+import { CharacterSelector } from "../character-selector";
 import { CampaignAggregated, WorldAggregated, mapCampaignWorldData } from "services/data-mapper";
 import { ResourceIndicator } from "@/components/character-editor/resources/resource-indicator";
 
 const DEBUG = false;
 
-const EventIconSize = 32;
+const BattleEventIconSize = 32;
 
 type BattleSimulatorProps = {
   campaignData: CampaignAggregated;
@@ -137,11 +137,10 @@ export function BattleSimulator({ campaignData, battleId, worldData }: BattleSim
                 {isCharacterTurnToAct && (
                   <div className="flex flex-wrap gap-2 ">
                     <ActorEligibleActions actor={battleCharacter.actor} onSelectedAction={setSelectedAction} />
-                    <ActorActionEligibleTargets
-                      campaign={tempCampaign}
-                      action={selectedAction!}
-                      actor={battleCharacter.actor}
-                      onSelectedTargets={(targets) => {
+                    <CharacterSelector
+                      disabled={!selectedAction!}
+                      characters={tempCampaign.getCharacterEligibleTargets(battleCharacter.actor, selectedAction!)}
+                      onSelectedCharacter={(targets) => {
                         tempCampaign.performCharacterAttack(battleCharacter.actor, selectedAction!, targets);
                         setCampaign(tempCampaign);
                       }}
@@ -240,8 +239,8 @@ export function BattleSimulator({ campaignData, battleId, worldData }: BattleSim
               <div className="flex gap-2">
                 <Image
                   className="invert"
-                  width={EventIconSize}
-                  height={EventIconSize}
+                  width={BattleEventIconSize}
+                  height={BattleEventIconSize}
                   alt={eventIcon.alt}
                   src={eventIcon.icon}
                 />

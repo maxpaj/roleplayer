@@ -1,5 +1,5 @@
 import { ErrorBoundary } from "@sentry/nextjs";
-import { BattleSimulator } from "./components/battle-simulator";
+import { BattleSimulator } from "../../../../../components/battle-editor/battle-simulator";
 import { getCampaign } from "app/campaigns/actions";
 import { getWorldData } from "app/worlds/[worldId]/actions";
 

@@ -24,7 +24,12 @@ export class Campaign {
     this.id = c.id;
     this.name = c.name;
     this.world = c.world;
-    this.events = c.events || [
+    this.events = c.events || [];
+    this.logger = logger;
+  }
+
+  startCampaign() {
+    this.events = [
       {
         id: dangerousGenerateId(),
         type: "CampaignStarted",
@@ -38,8 +43,6 @@ export class Campaign {
         serialNumber: 1,
       },
     ];
-
-    this.logger = logger;
   }
 
   addCharacterItem(characterId: Actor["id"], itemDefinitionId: ItemDefinition["id"]) {
@@ -216,22 +219,13 @@ export class Campaign {
       throw new Error("Template character not found");
     }
 
-    const campaignState = this.getCampaignStateFromEvents();
-    const alreadySpawned = campaignState.characters.filter((c) => c.name === template.name);
-
     const characterId = dangerousGenerateId();
     const characterSpawnEvents: CampaignEvent[] = [
       {
         type: "CharacterSpawned",
         characterId,
-        templateId,
+        templateCharacterId: templateId,
         id: dangerousGenerateId(),
-      },
-      {
-        type: "CharacterNameSet",
-        characterId,
-        id: dangerousGenerateId(),
-        name: template.name + (alreadySpawned ? ` (${alreadySpawned.length})` : ""),
       },
     ];
 
@@ -532,12 +526,22 @@ export class Campaign {
         }
 
         case "CharacterSpawned": {
-          const templateCharacter = this.world.characters.find((c) => c.id === event.templateId);
+          const templateCharacter = this.world.characters.find((c) => c.id === event.templateCharacterId);
+          const alreadySpawnedTemplateCharacters = campaignState.characters.filter(
+            (c) => c.templateCharacterId === event.templateCharacterId
+          );
 
           if (!templateCharacter) {
             campaignState.characters.push(new Actor({ id: event.characterId }));
           } else {
-            campaignState.characters.push(new Actor({ ...structuredClone(templateCharacter), id: event.characterId }));
+            campaignState.characters.push(
+              new Actor({
+                ...structuredClone(templateCharacter),
+                id: event.characterId,
+                templateCharacterId: event.templateCharacterId,
+                name: `${templateCharacter.name} #${alreadySpawnedTemplateCharacters.length}`,
+              })
+            );
           }
           break;
         }
@@ -782,6 +786,23 @@ export class Campaign {
         }
 
         character.statuses.push(status);
+        break;
+      }
+
+      case "CharacterInventoryItemLoss": {
+        // Remove equipped item if it was equipped
+        character.equipment = character.equipment.map((eq) => {
+          const equipped = eq.item!.id === event.characterInventoryItemId;
+          if (equipped) {
+            eq.item = undefined;
+          }
+
+          return eq;
+        });
+
+        // Remove from inventory
+        character.inventory = character.inventory.filter((eq) => eq.id === event.characterInventoryItemId);
+
         break;
       }
 

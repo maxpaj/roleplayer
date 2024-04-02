@@ -27,6 +27,10 @@ export class Battle {
       return true;
     }
 
+    if (aliveCharacters.length === 0) {
+      return false;
+    }
+
     const party = aliveCharacters[0]!.actor.party;
     const alliedPartiesRemaining = aliveCharacters.every((a) => a.actor.party === party && party !== undefined);
     return alliedPartiesRemaining;

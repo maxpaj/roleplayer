@@ -5,6 +5,7 @@ import { CreateCharacterForm } from "app/characters/components/create-character-
 import { CampaignCharacterCard } from "./components/campaign-character-card";
 import { getWorldData } from "app/worlds/[worldId]/actions";
 import { mapCampaignWorldData } from "services/data-mapper";
+import { AddCharacterForm } from "app/characters/components/add-character-form";
 
 export default async function CampaignCharactersPage({ params }: { params: { campaignId: string } }) {
   const { campaignId: id } = params;
@@ -26,6 +27,7 @@ export default async function CampaignCharactersPage({ params }: { params: { cam
     <>
       <div className="my-2 flex flex-wrap gap-2">
         <CreateCharacterForm worldId={campaignData.world.id} campaignId={campaignData.id} />
+        <AddCharacterForm campaignId={campaignData.id} characters={worldData.characters} />
 
         <ButtonLink href={`/campaigns/${campaignData.id}/invite-a-friend`} variant="outline">
           Invite a friend
@@ -39,7 +41,7 @@ export default async function CampaignCharactersPage({ params }: { params: { cam
         ))}
       </div>
 
-      {campaignData.characters.length === 0 && <Muted>No characters added yet.</Muted>}
+      {campaignState.characters.length === 0 && <Muted>No characters added yet.</Muted>}
     </>
   );
 }

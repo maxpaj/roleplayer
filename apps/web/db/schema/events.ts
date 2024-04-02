@@ -1,6 +1,5 @@
 import { integer, json, pgTable, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
 import { campaignsSchema } from "./campaigns";
-import { charactersSchema } from "./characters";
 
 export const eventsSchema = pgTable("events", {
   id: uuid("id").defaultRandom().primaryKey(),
@@ -12,7 +11,7 @@ export const eventsSchema = pgTable("events", {
   eventData: json("eventData").notNull(),
   createdUtc: timestamp("createdUtc").defaultNow(),
   updatedUtc: timestamp("updatedUtc").defaultNow(),
-  characterId: uuid("characterId").references(() => charactersSchema.id),
+  characterId: uuid("characterId"),
   campaignId: uuid("campaignId")
     .references(() => campaignsSchema.id)
     .notNull(),

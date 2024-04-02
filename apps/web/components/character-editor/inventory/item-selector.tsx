@@ -23,8 +23,8 @@ export function ItemSelector({ availableItems, placeholder = "Select item", onSe
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" className="flex gap-2 font-bold">
-          <span>{placeholder}</span>
+        <Button variant="outline" size="sm" className="flex gap-2">
+          {placeholder}
         </Button>
       </DropdownMenuTrigger>
 

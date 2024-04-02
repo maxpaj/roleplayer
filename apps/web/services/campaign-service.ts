@@ -134,6 +134,7 @@ export class CampaignService {
     }
 
     const { campaign } = mapCampaignWorldData(worldData, campaignData);
+    campaign.startCampaign();
 
     await this.saveCampaignEvents(campaign.id, campaign.events);
 

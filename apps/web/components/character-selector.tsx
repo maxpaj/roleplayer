@@ -1,38 +1,36 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ActionDefinition, Actor, Campaign } from "roleplayer";
+import { Actor } from "roleplayer";
 
 type ActorActionEligibleTargetsProps = {
-  campaign: Campaign;
-  actor: Actor;
-  action: ActionDefinition;
-  onSelectedTargets: (targets: Actor[]) => void;
+  characters: Actor[];
+  disabled?: boolean;
+  onSelectedCharacter: (targets: Actor[]) => void;
+  placeholder?: string;
 };
 
-export function ActorActionEligibleTargets({
-  campaign,
-  actor,
-  action,
-  onSelectedTargets,
+export function CharacterSelector({
+  placeholder,
+  characters,
+  onSelectedCharacter,
+  disabled = false,
 }: ActorActionEligibleTargetsProps) {
-  const targets = campaign.getCharacterEligibleTargets(actor, action);
-
   return (
     <Select
-      disabled={!action}
+      disabled={disabled}
       onValueChange={(targetId) => {
-        const target = targets.find((t) => t.id === targetId);
+        const target = characters.find((t) => t.id === targetId);
         if (!target) {
           throw new Error("Target not found");
         }
-        onSelectedTargets([target]);
+        onSelectedCharacter([target]);
       }}
     >
       <SelectTrigger className="w-[180px]">
-        <SelectValue placeholder="Select target" />
+        <SelectValue placeholder={placeholder || "Select character"} />
       </SelectTrigger>
 
       <SelectContent>
-        {targets.map((target) => (
+        {characters.map((target) => (
           <SelectItem key={target.id} value={target.id}>
             {target.name}
           </SelectItem>

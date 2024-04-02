@@ -108,6 +108,7 @@ export class Actor {
   party!: Party["id"];
   exists!: boolean;
 
+  templateCharacterId?: Actor["id"];
   characterType!: "Player" | "NPC" | "Monster";
 
   xp!: number;

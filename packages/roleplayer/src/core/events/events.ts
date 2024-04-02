@@ -69,7 +69,7 @@ export type SystemEventType =
     };
 
 export type CharacterEventType =
-  | { type: "CharacterSpawned"; characterId: Actor["id"]; templateId?: Actor["id"] }
+  | { type: "CharacterSpawned"; characterId: Actor["id"]; templateCharacterId?: Actor["id"] }
   | { type: "CharacterNameSet"; characterId: Actor["id"]; name: string }
   | {
       type: "CharacterResourceMaxSet";

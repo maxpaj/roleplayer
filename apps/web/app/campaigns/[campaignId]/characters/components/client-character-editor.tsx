@@ -5,8 +5,8 @@ import { Button } from "@/components/ui/button";
 import { H4, Muted } from "@/components/ui/typography";
 import { saveCampaignEvents } from "app/campaigns/actions";
 import { ActorRecord } from "models/actor";
-import { useState } from "react";
-import { Campaign, World, DnDRuleset, CampaignEventWithRound } from "roleplayer";
+import { useCallback, useState } from "react";
+import { Campaign } from "roleplayer";
 import { CharacterEventsTable } from "./character-events-table";
 import { CharacterActionCard } from "./character-action-card";
 import { CharacterResources } from "./character-resources";
@@ -23,6 +23,8 @@ export function ClientCharacterEditor({
 }) {
   const { world, campaign } = mapCampaignWorldData(worldData, campaignData);
   const [update, setUpdate] = useState(campaign);
+  const [, triggerUpdate] = useState({});
+  const forceUpdate = useCallback(() => triggerUpdate({}), []);
 
   const campaignState = update.getCampaignStateFromEvents();
   const character = campaignState.characters.find((c) => c.id === characterId);
@@ -34,19 +36,11 @@ export function ClientCharacterEditor({
 
   return (
     <>
-      <Button
-        variant="outline"
-        className="h-4 px-3 py-4 text-xs"
-        onClick={async () => {
-          await saveCampaignEvents(campaignData.id, update.events);
-        }}
-      >
-        Save
-      </Button>
-
       <CampaignCharacterEditor
-        onSaveCampaign={(campaign: Campaign) => {
-          setUpdate((prev) => campaign);
+        onSaveCampaign={async (campaign: Campaign) => {
+          setUpdate(campaign);
+          await saveCampaignEvents(campaign.id, campaign.events);
+          forceUpdate();
         }}
         world={world}
         character={character}
@@ -63,7 +57,11 @@ export function ClientCharacterEditor({
       </div>
 
       <H4 className="my-2">Resources</H4>
-      <CharacterResources character={character} resourceTypes={world.ruleset.getCharacterResourceTypes()} />
+      <CharacterResources
+        characterResources={character.resources}
+        characterResourceGeneration={world.ruleset.characterResourceGeneration(character)}
+        resourceTypes={world.ruleset.getCharacterResourceTypes()}
+      />
 
       <H4 className="my-2">History</H4>
       <CharacterEventsTable events={characterEvents} />

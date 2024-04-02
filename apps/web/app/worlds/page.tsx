@@ -18,7 +18,6 @@ export default async function WorldsPage({ params }: { params: {} }) {
   return (
     <div>
       <WorldLayoutHeader />
-
       <CreateWorldForm />
 
       <div className="my-3 flex flex-wrap gap-2">

@@ -24,13 +24,20 @@ export function CharacterSlotEquipmentSelector({
         <CardTitle>{slot.name || "Slot?"}</CardTitle>
         <CardDescription>{existingEquipment?.item?.definition.name}</CardDescription>
         {existingEquipment?.item?.definition && (
-          <Button onClick={() => onEquipRemove(slot.id, existingEquipment.item!.definition)}>Remove equipment</Button>
+          <Button
+            variant={"outline"}
+            size={"sm"}
+            onClick={() => onEquipRemove(slot.id, existingEquipment.item!.definition)}
+          >
+            Remove
+          </Button>
         )}
       </CardHeader>
 
       <CardContent>
         {!existingEquipment?.item?.definition && (
           <ItemSelector
+            placeholder={"Equip"}
             availableItems={eligibleEquipment.map((e) => ({ id: e.id, item: e.definition }))}
             onSelect={(option) => onEquipAdd(option.id, option.item)}
           />

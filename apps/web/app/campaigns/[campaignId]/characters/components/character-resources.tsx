@@ -1,17 +1,25 @@
-import { Actor, CharacterResourceDefinition, World } from "roleplayer";
+import { Actor, CharacterResource, CharacterResourceDefinition, CharacterResourceGeneration, World } from "roleplayer";
 
-type CharacterResourcesProps = { resourceTypes: CharacterResourceDefinition[]; character: Actor };
+type CharacterResourcesProps = {
+  resourceTypes: CharacterResourceDefinition[];
+  characterResources: CharacterResource[];
+  characterResourceGeneration: CharacterResourceGeneration[];
+};
 
-export function CharacterResources({ resourceTypes, character }: CharacterResourcesProps) {
+export function CharacterResources({
+  resourceTypes,
+  characterResources,
+  characterResourceGeneration,
+}: CharacterResourcesProps) {
   return (
     <div>
-      {character.resources.map((r) => {
+      {characterResources.map((r) => {
         const resource = resourceTypes.find((rt) => rt.id === r.resourceTypeId);
         if (!resource) {
           throw new Error("Cannot find resource type");
         }
 
-        const generation = character.getResourceGeneration().find((r) => r.resourceTypeId);
+        const generation = characterResourceGeneration.find((r) => r.resourceTypeId);
 
         return (
           <div key={r.resourceTypeId}>

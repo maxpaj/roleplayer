@@ -2,13 +2,6 @@ import { H2 } from "@/components/ui/typography";
 import { BadgeLink } from "@/components/ui/button-link";
 import { getCampaign } from "../actions";
 import Image from "next/image";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
 import { CampaignBreadCrumb } from "./breadcrumb";
 
 export default async function CampaignLayout({

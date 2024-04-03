@@ -6,7 +6,7 @@ import { Round } from "../campaign/round";
 import { ItemDefinition } from "../inventory/item";
 import { CharacterResourceDefinition, CharacterStatType, Clazz } from "../ruleset/ruleset";
 
-export type CampaignEventWithRound<T extends CampaignEvent = CampaignEvent> = T & {
+export type CampaignEventWithRound = CampaignEvent & {
   roundId: Round["id"];
   battleId?: Battle["id"];
   serialNumber: number;

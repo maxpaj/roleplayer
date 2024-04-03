@@ -36,7 +36,7 @@ const config: Config = {
         entryPoints: ["../../packages/roleplayer/src/index.ts"],
         tsconfig: "../../packages/roleplayer/tsconfig.json",
         expandObjects: true,
-        outputFileStrategy: "modules",
+        outputFileStrategy: "members",
         watch: process.env.TYPEDOC_WATCH,
       },
     ],

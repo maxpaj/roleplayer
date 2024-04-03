@@ -1,7 +1,9 @@
-import { Roll, Ruleset, World } from "..";
+import { Battle, Campaign, CampaignEventWithRound, Roll, Ruleset, World } from "..";
+import { AugmentedRequired } from "../types/with-required";
 
 type RoleplayerConfig = {
   roll: Roll;
+  events?: CampaignEventWithRound[];
 };
 
 /**
@@ -28,12 +30,21 @@ type RoleplayerConfig = {
  */
 export class Roleplayer {
   roll: Roll;
+  events: CampaignEventWithRound[] = [];
 
-  constructor(config: RoleplayerConfig) {
-    this.roll = config.roll;
+  constructor({ roll, ...rest }: AugmentedRequired<Partial<Roleplayer>, "roll">) {
+    Object.assign(this, rest);
+    this.roll = roll;
   }
 
   createWorld(name: string, world: Partial<World>, ruleset: Ruleset) {
     return new World(ruleset, name, world);
+  }
+  createCampaign(...args: ConstructorParameters<typeof Campaign>) {
+    return new Campaign(...args);
+  }
+
+  createBattle(...args: ConstructorParameters<typeof Battle>) {
+    return new Battle(...args);
   }
 }

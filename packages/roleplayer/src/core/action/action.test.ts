@@ -1,11 +1,13 @@
 import { D10, DnDRuleset } from "../..";
 import { Campaign } from "../campaign/campaign";
 import { ItemDefinition, ItemEquipmentType, ItemSlot, ItemType } from "../inventory/item";
+import { Roleplayer } from "../roleplayer";
 import { Rarity } from "../world/rarity";
 import { World } from "../world/world";
 import { TargetType } from "./action";
 import { StatusDefinition, StatusDurationType, StatusType } from "./status";
 
+const roleplayer = new Roleplayer({ roll: (dice) => 2 });
 describe("actions", () => {
   const defaultRuleSet = new DnDRuleset(() => 2);
   const coldElement = defaultRuleSet.getElementDefinitions().find((ed) => ed.name === "Cold")!;
@@ -80,6 +82,7 @@ describe("actions", () => {
       id: "00000000-0000-0000-0000-000000000000" as const,
       name: "Test campaign",
       world,
+      roleplayer,
     });
 
     campaign.nextRound();

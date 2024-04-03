@@ -51,10 +51,14 @@ export class Battle {
     return [] as Actor[];
   }
 
-  performAction(actor: Actor, action: ActionDefinition, targets: Actor[]) {
-    // 1. Check range
-    // 2. Check hit
-    // 3. Apply effects
+  performAction(actor: Actor, actionDef: ActionDefinition, targets: Actor[]) {
+    for (const target of targets) {
+      const didHit = this.ruleset.characterHit(actor, actionDef, target);
+      if (!didHit) continue;
+      actionDef.appliesEffects;
+    }
+    // 1. Check hit
+    // 2. Apply effects
     return true;
   }
 }

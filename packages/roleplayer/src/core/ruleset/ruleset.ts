@@ -1,9 +1,9 @@
-import { Battle, World } from "../..";
-import { Id } from "../../lib/generate-id";
-import { ActionDefinition, EffectApply } from "../action/action";
-import { Actor, CharacterResourceGeneration } from "../actor/character";
-import { Dice } from "../dice/dice";
-import { EquipmentSlotDefinition } from "../inventory/item";
+import type { Battle } from "../..";
+import type { Id } from "../../lib/generate-id";
+import type { ActionDefinition, EffectApply } from "../action/action";
+import type { Actor, CharacterResourceGeneration } from "../actor/character";
+import type { Dice } from "../dice/dice";
+import type { EquipmentSlotDefinition } from "../inventory/item";
 
 export enum Alignment {
   NeutralEvil = "NeutralEvil",
@@ -80,7 +80,7 @@ export interface Ruleset {
   getCurrentActorTurn(battle: Battle): Actor;
 
   characterBattleActionOrder(actor: Actor): number;
-  characterHit(world: World, attacker: Actor, defender: Actor): boolean;
+  characterHit(attacker: Actor, action: ActionDefinition, defender: Actor): boolean;
   characterHitDamage(source: Actor, action: ActionDefinition, target: Actor, effect: EffectApply): number;
   characterResistanceMultiplier(actor: Actor, damageType: ElementDefinition): number;
   characterResistanceAbsolute(actor: Actor, damageType: ElementDefinition): number;

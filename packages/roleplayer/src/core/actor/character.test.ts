@@ -1,16 +1,23 @@
 import { DnDRuleset } from "../../data/rulesets/dnd-5th";
 import { dangerousGenerateId } from "../../lib/generate-id";
+import { ActionDefinition, TargetType } from "../action/action";
 import { Campaign } from "../campaign/campaign";
 import { CampaignEvent } from "../events/events";
-import { CharacterResourceDefinition } from "../ruleset/ruleset";
-import { ActionDefinition, TargetType } from "../action/action";
 import { ItemDefinition, ItemEquipmentType, ItemSlot, ItemType } from "../inventory/item";
+import { Roleplayer } from "../roleplayer";
+import { CharacterResourceDefinition } from "../ruleset/ruleset";
 import { Rarity } from "../world/rarity";
 import { World } from "../world/world";
 import { Actor } from "./character";
 
+const roleplayer = new Roleplayer({ roll: (dice) => 2 });
+
 describe("Character", () => {
   const defaultRuleSet = new DnDRuleset(() => 2);
+
+  beforeEach(() => {
+    roleplayer.events = [];
+  });
 
   describe("Create character events", () => {
     it("should handle create character events", () => {
@@ -18,7 +25,7 @@ describe("Character", () => {
       const characterB = dangerousGenerateId();
 
       const world = new World(defaultRuleSet, "World", {});
-      const campaign = new Campaign({ id: dangerousGenerateId(), name: "Campaign", world });
+      const campaign = new Campaign({ id: dangerousGenerateId(), name: "Campaign", world, roleplayer });
 
       campaign.nextRound();
       campaign.createCharacter(characterA, "Character A");
@@ -32,7 +39,7 @@ describe("Character", () => {
       const characterId = dangerousGenerateId();
 
       const world = new World(defaultRuleSet, "World", {});
-      const campaign = new Campaign({ id: dangerousGenerateId(), name: "Campaign", world });
+      const campaign = new Campaign({ id: dangerousGenerateId(), name: "Campaign", world, roleplayer });
 
       campaign.nextRound();
       campaign.createCharacter(characterId, "Character");
@@ -63,7 +70,7 @@ describe("Character", () => {
     it("should apply movement events", () => {
       const characterId = dangerousGenerateId();
       const world = new World(defaultRuleSet, "World", {});
-      const campaign = new Campaign({ id: dangerousGenerateId(), name: "Campaign", world });
+      const campaign = new Campaign({ id: dangerousGenerateId(), name: "Campaign", world, roleplayer });
 
       campaign.nextRound();
       campaign.createCharacter(characterId, "Character");
@@ -115,7 +122,7 @@ describe("Character", () => {
       };
 
       const world = new World(defaultRuleSet, "World", {});
-      const campaign = new Campaign({ id: dangerousGenerateId(), name: "Campaign", world });
+      const campaign = new Campaign({ id: dangerousGenerateId(), name: "Campaign", world, roleplayer });
 
       const characterId = dangerousGenerateId();
       const character = new Actor({
@@ -175,7 +182,7 @@ describe("Character", () => {
     it("should apply temporary resource change events", () => {
       const characterId = dangerousGenerateId();
       const world = new World(defaultRuleSet, "World", {});
-      const campaign = new Campaign({ id: dangerousGenerateId(), name: "Campaign", world });
+      const campaign = new Campaign({ id: dangerousGenerateId(), name: "Campaign", world, roleplayer });
       campaign.nextRound();
       campaign.createCharacter(characterId, "Character");
 
@@ -236,7 +243,7 @@ describe("Character", () => {
           },
         ],
       });
-      const campaign = new Campaign({ id: dangerousGenerateId(), name: "Campaign", world });
+      const campaign = new Campaign({ id: dangerousGenerateId(), name: "Campaign", world, roleplayer });
       campaign.nextRound();
 
       campaign.createCharacter(characterId, "Character");
@@ -267,7 +274,7 @@ describe("Character", () => {
       const characterId = dangerousGenerateId();
 
       const world = new World(defaultRuleSet, "World", {});
-      const campaign = new Campaign({ id: dangerousGenerateId(), name: "Campaign", world });
+      const campaign = new Campaign({ id: dangerousGenerateId(), name: "Campaign", world, roleplayer });
       campaign.nextRound();
 
       const resourceType: CharacterResourceDefinition = {
@@ -297,7 +304,7 @@ describe("Character", () => {
 
     it("should handle unknown events gracefully", () => {
       const world = new World(defaultRuleSet, "World", {});
-      const campaign = new Campaign({ id: dangerousGenerateId(), name: "New campaign", world });
+      const campaign = new Campaign({ id: dangerousGenerateId(), name: "New campaign", world, roleplayer });
       const events: CampaignEvent[] = [
         {
           type: "Unknown",

@@ -13,6 +13,7 @@ import {
 import { Battle } from "../battle/battle";
 import type { CampaignEvent, CampaignEventWithRound, RoleplayerEvent } from "../events/events";
 import type { EquipmentSlotDefinition, ItemDefinition } from "../inventory/item";
+import { Roleplayer } from "../roleplayer";
 import type { World } from "../world/world";
 import { CampaignState } from "./campaign-state";
 import type { Round } from "./round";
@@ -21,21 +22,21 @@ export class Campaign {
   id: Id;
   name: string;
   world: World;
-  events: CampaignEventWithRound[] = [];
+  roleplayer: Roleplayer;
   logger?: Logger;
 
-  constructor(c: AugmentedRequired<Partial<Campaign>, "id" | "name" | "world">, logger?: Logger) {
+  constructor(c: AugmentedRequired<Partial<Campaign>, "id" | "name" | "world" | "roleplayer">, logger?: Logger) {
     Object.assign(this, c);
 
     this.id = c.id;
     this.name = c.name;
     this.world = c.world;
-    this.events = c.events || [];
+    this.roleplayer = c.roleplayer;
     this.logger = logger;
   }
 
   startCampaign() {
-    this.events = [
+    this.roleplayer.events = [
       {
         id: dangerousGenerateId(),
         type: "CampaignStarted",
@@ -322,7 +323,7 @@ export class Campaign {
       },
     ];
 
-    this.events.push(...events);
+    this.roleplayer.events.push(...events);
 
     return newRoundId;
   }
@@ -339,7 +340,7 @@ export class Campaign {
   }
 
   getRoundEvents(round: Round) {
-    return this.events.filter((e) => e.roundId === round.id);
+    return this.roleplayer.events.filter((e) => e.roundId === round.id);
   }
 
   startBattle() {
@@ -347,7 +348,7 @@ export class Campaign {
     const currentCampaignState = this.getCampaignStateFromEvents();
     const currentRound = currentCampaignState.getCurrentRound();
 
-    this.events.push({
+    this.roleplayer.events.push({
       type: "BattleStarted",
       id: dangerousGenerateId(),
       battleId,
@@ -411,12 +412,12 @@ export class Campaign {
       };
     });
 
-    this.events.push(...eventsWithRoundAndBattle);
+    this.roleplayer.events.push(...eventsWithRoundAndBattle);
     return newEvents;
   }
 
   nextSerialNumber() {
-    const sortedEvents = this.events.toSorted((a, b) => a.serialNumber - b.serialNumber);
+    const sortedEvents = this.roleplayer.events.toSorted((a, b) => a.serialNumber - b.serialNumber);
     const lastSerialNumber = sortedEvents[sortedEvents.length - 1]?.serialNumber ?? 0;
     return lastSerialNumber + 1;
   }
@@ -437,7 +438,7 @@ export class Campaign {
       };
     });
 
-    this.events.push(...eventsWithRoundAndBattle);
+    this.roleplayer.events.push(...eventsWithRoundAndBattle);
     return newEvents;
   }
 
@@ -447,7 +448,7 @@ export class Campaign {
   }
 
   getCharacterEvents(characterId: Actor["id"]) {
-    return this.events.filter((re) => isCharacterEvent(re) && re.characterId === characterId);
+    return this.roleplayer.events.filter((re) => isCharacterEvent(re) && re.characterId === characterId);
   }
 
   getCharacterLevel(character: Actor) {
@@ -458,7 +459,7 @@ export class Campaign {
   }
 
   getBattleEvents(battleId: Battle["id"]) {
-    return this.events.filter((e) => e.battleId === battleId);
+    return this.roleplayer.events.filter((e) => e.battleId === battleId);
   }
 
   getCharacterEligibleTargets(actor: Actor, action: ActionDefinition): Actor[] {
@@ -470,7 +471,7 @@ export class Campaign {
 
   getCampaignStateFromEvents() {
     const campaignState = new CampaignState([], [], []);
-    const sorted = this.events.toSorted((a, b) => a.serialNumber - b.serialNumber);
+    const sorted = this.roleplayer.events.toSorted((a, b) => a.serialNumber - b.serialNumber);
 
     try {
       sorted.forEach((e) => {

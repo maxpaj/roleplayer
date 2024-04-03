@@ -1,3 +1,7 @@
 {
-  "jest.jestCommandLine": "npm test"
+  "jest.jestCommandLine": "npm test",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit",
+    "source.organizeImports": "explicit"
+  },
 }

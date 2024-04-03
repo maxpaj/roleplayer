@@ -1,8 +1,8 @@
-import defaultIcon from "../assets/logo.svg";
+import { CharacterResourceDefinition, RoleplayerEvent } from "roleplayer";
+import dodgeEvent from "../assets/icons/felbrigg/dodge.svg";
 import moveIcon from "../assets/icons/lorc/boot-prints.svg";
 import newRoundIcon from "../assets/icons/lorc/time-trap.svg";
-import dodgeEvent from "../assets/icons/felbrigg/dodge.svg";
-import { CharacterResourceDefinition, RoleplayerEvent } from "roleplayer";
+import defaultIcon from "../assets/logo.svg";
 
 export { defaultIcon };
 
@@ -156,10 +156,6 @@ export const EventIconMap: {
     icon: defaultIcon,
   },
   CampaignStarted: {
-    alt: "",
-    icon: defaultIcon,
-  },
-  CharacterBattleCharacterOrderSet: {
     alt: "",
     icon: defaultIcon,
   },

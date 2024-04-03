@@ -1,8 +1,8 @@
-import { World } from "../..";
+import { Battle, World } from "../..";
 import { Id } from "../../lib/generate-id";
+import { ActionDefinition, EffectApply } from "../action/action";
 import { Actor, CharacterResourceGeneration } from "../actor/character";
 import { Dice } from "../dice/dice";
-import { ActionDefinition, EffectApply } from "../action/action";
 import { EquipmentSlotDefinition } from "../inventory/item";
 
 export enum Alignment {
@@ -77,6 +77,7 @@ export interface Ruleset {
   getCharacterEquipmentSlots(): EquipmentSlotDefinition[];
   getClassDefinitions(): Clazz[];
   getElementDefinitions(): ElementDefinition[];
+  getCurrentActorTurn(battle: Battle): Actor;
 
   characterBattleActionOrder(actor: Actor): number;
   characterHit(world: World, attacker: Actor, defender: Actor): boolean;

@@ -1,15 +1,21 @@
-import { Id, dangerousGenerateId } from "../../lib/generate-id";
-import { AugmentedRequired } from "../../types/with-required";
-import { Actor, CharacterClass, CharacterInventoryItem, CharacterStat, isCharacterEvent } from "../actor/character";
-import { Battle } from "../battle/battle";
-import { ActionDefinition } from "../action/action";
-import { EquipmentSlotDefinition, ItemDefinition } from "../inventory/item";
-import { World } from "../world/world";
-import { CampaignEvent, CampaignEventWithRound, RoleplayerEvent } from "../events/events";
-import { CampaignState } from "./campaign-state";
-import { Round } from "./round";
-import { Logger } from "../../lib/logging/logger";
+import { dangerousGenerateId, type Id } from "../../lib/generate-id";
+import type { Logger } from "../../lib/logging/logger";
+import type { AugmentedRequired } from "../../types/with-required";
+import type { ActionDefinition } from "../action/action";
 import { mapEffect } from "../action/effect";
+import {
+  Actor,
+  isCharacterEvent,
+  type CharacterClass,
+  type CharacterInventoryItem,
+  type CharacterStat,
+} from "../actor/character";
+import { Battle } from "../battle/battle";
+import type { CampaignEvent, CampaignEventWithRound, RoleplayerEvent } from "../events/events";
+import type { EquipmentSlotDefinition, ItemDefinition } from "../inventory/item";
+import type { World } from "../world/world";
+import { CampaignState } from "./campaign-state";
+import type { Round } from "./round";
 
 export class Campaign {
   id: Id;
@@ -201,12 +207,6 @@ export class Campaign {
         type: "CharacterBattleEnter",
         characterId,
         id: dangerousGenerateId(),
-      },
-      {
-        type: "CharacterBattleCharacterOrderSet",
-        characterId,
-        id: dangerousGenerateId(),
-        order: order,
       },
     ];
 
@@ -417,7 +417,7 @@ export class Campaign {
 
   nextSerialNumber() {
     const sortedEvents = this.events.toSorted((a, b) => a.serialNumber - b.serialNumber);
-    const lastSerialNumber = sortedEvents[sortedEvents.length - 1]?.serialNumber || 0;
+    const lastSerialNumber = sortedEvents[sortedEvents.length - 1]?.serialNumber ?? 0;
     return lastSerialNumber + 1;
   }
 
@@ -515,8 +515,9 @@ export class Campaign {
         }
 
         case "BattleStarted": {
+          if (!event.battleId) throw new Error("BattleStarted event missing battleId");
           campaignState.battles.push(
-            new Battle(this, {
+            new Battle(this.world.ruleset, {
               id: event.battleId,
               name: "Battle",
             })
@@ -575,7 +576,6 @@ export class Campaign {
         case "CharacterAttackDefenderDodge":
         case "CharacterAttackDefenderParry":
         case "CharacterClassReset":
-        case "CharacterBattleCharacterOrderSet":
         case "CharacterClassLevelGain":
           {
             const character = campaignState.characters.find((c) => c.id === event.characterId);
@@ -605,28 +605,11 @@ export class Campaign {
           throw new Error("Cannot find battle");
         }
 
-        const characterBattle = battle.actors.find((e) => e.actor.id === event.characterId);
+        const characterBattle = battle.actors.find((actor) => actor.id === event.characterId);
         if (!characterBattle) {
           throw new Error("Cannot find battle character");
         }
 
-        break;
-      }
-
-      case "CharacterBattleCharacterOrderSet": {
-        const battle = campaignState.battles.find((b) => b.id === event.battleId);
-
-        if (!battle) {
-          throw new Error("Cannot find battle");
-        }
-
-        const characterBattle = battle.actors.find((e) => e.actor.id === event.characterId);
-
-        if (!characterBattle) {
-          throw new Error("Cannot find battle character");
-        }
-
-        characterBattle.actingOrder = event.order;
         break;
       }
 

@@ -1,17 +1,18 @@
 import {
-  defaultRoll,
-  Actor,
-  D20,
-  World,
-  ElementDefinition,
-  CharacterResourceGeneration,
   ActionDefinition,
+  Actor,
+  Battle,
   CharacterResourceDefinition,
+  CharacterResourceGeneration,
+  D20,
   Dice,
   EffectApply,
+  ElementDefinition,
+  World,
+  defaultRoll,
 } from "../..";
-import { CharacterStatType, Clazz, LevelProgression, Ruleset } from "../../core/ruleset/ruleset";
 import { EquipmentSlotDefinition, ItemEquipmentType } from "../../core/inventory/item";
+import { CharacterStatType, Clazz, LevelProgression, Ruleset } from "../../core/ruleset/ruleset";
 import { dangerousGenerateId } from "../../lib/generate-id";
 
 export class DnDRuleset implements Ruleset {
@@ -235,6 +236,9 @@ export class DnDRuleset implements Ruleset {
 
   constructor(roll: (dice: Dice) => number = defaultRoll) {
     this.roll = roll;
+  }
+  getCurrentActorTurn(battle: Battle): Actor {
+    throw new Error("Method not implemented.");
   }
 }
 

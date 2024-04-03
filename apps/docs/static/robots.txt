@@ -1,0 +1,5 @@
+# Algolia-Crawler-Verif: 5D2966B0739C7E62
+
+User-agent: *
+Allow: /
+Sitemap: https://roleplayer-docs.maxpaj.com

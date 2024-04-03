@@ -67,6 +67,7 @@ const config: Config = {
 
   themeConfig: {
     algolia: {
+      // Powered by Algolia Crawler https://crawler.algolia.com/admin/crawlers/83449df9-aa26-42df-a72d-af37e4496180/getstarted
       appId: "WNDY4ZZ3VN",
       apiKey: "7803cc5dad49fdec71ef2e41cd9a2e0d",
       indexName: "roleplayer-maxpaj",

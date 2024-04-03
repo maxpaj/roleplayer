@@ -1,12 +1,12 @@
-import { CharacterResourceDefinition, CharacterStatType, Clazz } from "../ruleset/ruleset";
 import { Id } from "../../lib/generate-id";
+import { ActionDefinition } from "../action/action";
 import { Actor, CharacterInventoryItem, Position } from "../actor/character";
 import { Battle } from "../battle/battle";
-import { ActionDefinition } from "../action/action";
-import { ItemDefinition } from "../inventory/item";
 import { Round } from "../campaign/round";
+import { ItemDefinition } from "../inventory/item";
+import { CharacterResourceDefinition, CharacterStatType, Clazz } from "../ruleset/ruleset";
 
-export type CampaignEventWithRound = CampaignEvent & {
+export type CampaignEventWithRound<T extends CampaignEvent = CampaignEvent> = T & {
   roundId: Round["id"];
   battleId?: Battle["id"];
   serialNumber: number;
@@ -25,7 +25,6 @@ export const RoleplayerEventTypes: RoleplayerEvent["type"][] = [
   "RoundEnded",
   "BattleStarted",
   "CharacterBattleEnter",
-  "CharacterBattleCharacterOrderSet",
   "CharacterSpawned",
   "CharacterNameSet",
   "CharacterResourceMaxSet",
@@ -61,11 +60,6 @@ export type SystemEventType =
   | {
       type: "CharacterBattleEnter";
       characterId: Actor["id"];
-    }
-  | {
-      type: "CharacterBattleCharacterOrderSet";
-      characterId: Actor["id"];
-      order: number;
     };
 
 export type CharacterEventType =

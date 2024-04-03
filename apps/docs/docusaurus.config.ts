@@ -67,30 +67,9 @@ const config: Config = {
 
   themeConfig: {
     algolia: {
-      // Powered by Algolia Crawler https://crawler.algolia.com/admin/crawlers/83449df9-aa26-42df-a72d-af37e4496180/getstarted
       appId: "WNDY4ZZ3VN",
-      apiKey: "7803cc5dad49fdec71ef2e41cd9a2e0d",
+      apiKey: "fe6efb433509a14e07487f2312005e24", // 7803cc5dad49fdec71ef2e41cd9a2e0d",
       indexName: "roleplayer-maxpaj",
-
-      // Optional: see doc section below
-      contextualSearch: true,
-
-      // Optional: Specify domains where the navigation should occur through window.location instead on history.push. Useful when our Algolia config crawls multiple documentation sites and we want to navigate with window.location.href to them.
-      externalUrlRegex: "external\\.com|domain\\.com",
-
-      // Optional: Replace parts of the item URLs from Algolia. Useful when using the same search index for multiple deployments using a different baseUrl. You can use regexp or string in the `from` param. For example: localhost:3000 vs myCompany.com/docs
-      replaceSearchResultPathname: {
-        from: "/docs/", // or as RegExp: /\/docs\//
-        to: "/",
-      },
-
-      // Optional: Algolia search parameters
-      searchParameters: {},
-
-      // Optional: path for search page that enabled by default (`false` to disable it)
-      searchPagePath: "search",
-
-      //... other Algolia params
     },
     // Replace with your project's social card
     image: "img/docusaurus-social-card.jpg",

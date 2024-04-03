@@ -1,6 +1,6 @@
-import { ActionRecord, TargetTypeEnum, RequiredResourceRecord } from "@/db/schema/actions";
+import { ActionRecord, RequiredResourceRecord, TargetTypeEnum } from "@/db/schema/actions";
 import { CampaignRecord } from "@/db/schema/campaigns";
-import { CharacterRecord, CharacterClassRecord } from "@/db/schema/characters";
+import { CharacterClassRecord, CharacterRecord } from "@/db/schema/characters";
 import { ClazzRecord } from "@/db/schema/classes";
 import { EffectRecord } from "@/db/schema/effects";
 import { EventRecord } from "@/db/schema/events";
@@ -9,21 +9,22 @@ import { RaceRecord } from "@/db/schema/races";
 import { StatusRecord } from "@/db/schema/statuses";
 import { WorldRecord } from "@/db/schema/worlds";
 import {
-  Ruleset,
   Actor,
-  TargetType,
-  World,
-  DnDRuleset,
-  CharacterResource,
-  ItemDefinition,
-  ItemType,
-  Rarity,
-  ItemEquipmentType,
   Campaign,
   CampaignEventWithRound,
+  CharacterResource,
+  DnDRuleset,
   EffectApply,
   EffectParameters,
+  ItemDefinition,
+  ItemEquipmentType,
+  ItemType,
+  Rarity,
+  Ruleset,
+  TargetType,
+  World,
 } from "roleplayer";
+import { Roleplayer } from "../../../packages/roleplayer/src/core/roleplayer";
 
 export type CampaignAggregated = CampaignRecord & {
   events: EventRecord[];
@@ -73,10 +74,17 @@ export function mapCampaignWorldData(worldData: WorldAggregated, campaignData: C
     itemDefinitions: worldMappedItems,
   });
 
+  const roleplayer = new Roleplayer({
+    roll: () => {
+      throw new Error("No rolls allowed back end");
+    },
+    events: campaignData.events.map((e) => e.eventData as CampaignEventWithRound),
+  });
+
   const campaign = new Campaign({
     ...campaignData,
     world,
-    events: campaignData.events.map((e) => e.eventData as CampaignEventWithRound),
+    roleplayer,
   });
 
   return { world, campaign };

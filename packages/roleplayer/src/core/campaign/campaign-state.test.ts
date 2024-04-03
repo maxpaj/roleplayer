@@ -1,8 +1,11 @@
 import { DnDRuleset } from "../../data/rulesets/dnd-5th";
 import { dangerousGenerateId } from "../../lib/generate-id";
+import { CampaignEventWithRound } from "../events/events";
+import { Roleplayer } from "../roleplayer";
 import { World } from "../world/world";
 import { Campaign } from "./campaign";
-import { CampaignEventWithRound } from "../events/events";
+
+const roleplayer = new Roleplayer({ roll: (dice) => 2 });
 
 describe("Campaign state", () => {
   it("applies events", () => {
@@ -35,12 +38,12 @@ describe("Campaign state", () => {
         serialNumber: 0,
       },
     ];
-
+    roleplayer.events = events;
     const campaign = new Campaign({
       id: "00000000-0000-0000-0000-000000000000" as const,
       name: "Campaign",
       world,
-      events,
+      roleplayer,
     });
     const state = campaign.getCampaignStateFromEvents();
 

@@ -1,10 +1,10 @@
 import {
-  EquipmentSlotDefinition,
-  Actor,
-  World,
   ActionDefinition,
+  Actor,
+  Battle,
   CharacterResourceGeneration,
   EffectApply,
+  EquipmentSlotDefinition,
 } from "../..";
 import {
   CharacterResourceDefinition,
@@ -16,6 +16,12 @@ import {
 } from "../../core/ruleset/ruleset";
 
 export class LeagueOfDungeoneersRuleset implements Ruleset {
+  getCurrentActorTurn(battle: Battle): Actor {
+    throw new Error("Method not implemented.");
+  }
+  characterHit(attacker: Actor, action: ActionDefinition, defender: Actor): boolean {
+    throw new Error("Method not implemented.");
+  }
   characterIsDead(actor: Actor): boolean {
     throw new Error("Method not implemented.");
   }
@@ -41,9 +47,6 @@ export class LeagueOfDungeoneersRuleset implements Ruleset {
     throw new Error("Method not implemented.");
   }
   characterBattleActionOrder(actor: Actor): number {
-    throw new Error("Method not implemented.");
-  }
-  characterHit(world: World, attacker: Actor, defender: Actor): boolean {
     throw new Error("Method not implemented.");
   }
   characterHitDamage(source: Actor, action: ActionDefinition, target: Actor, effect: EffectApply): number {

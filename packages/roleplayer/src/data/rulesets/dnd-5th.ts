@@ -1,18 +1,17 @@
 import {
-  ActionDefinition,
-  Actor,
-  Battle,
-  CharacterResourceDefinition,
-  CharacterResourceGeneration,
   D20,
-  Dice,
-  EffectApply,
-  ElementDefinition,
-  World,
   defaultRoll,
+  type ActionDefinition,
+  type Actor,
+  type Battle,
+  type CharacterResourceDefinition,
+  type CharacterResourceGeneration,
+  type Dice,
+  type EffectApply,
+  type ElementDefinition,
 } from "../..";
-import { EquipmentSlotDefinition, ItemEquipmentType } from "../../core/inventory/item";
-import { CharacterStatType, Clazz, LevelProgression, Ruleset } from "../../core/ruleset/ruleset";
+import { ItemEquipmentType, type EquipmentSlotDefinition } from "../../core/inventory/item";
+import type { CharacterStatType, Clazz, LevelProgression, Ruleset } from "../../core/ruleset/ruleset";
 import { dangerousGenerateId } from "../../lib/generate-id";
 
 export class DnDRuleset implements Ruleset {
@@ -190,7 +189,7 @@ export class DnDRuleset implements Ruleset {
     return totalDamage;
   }
 
-  characterHit(world: World, attacker: Actor, defender: Actor) {
+  characterHit(attacker: Actor, actionDef: ActionDefinition, defender: Actor) {
     const attackerHit = attacker.stats.find((s) => s.statId === "character-stats-hit");
     if (!attackerHit) throw new Error("Character hit not found");
 

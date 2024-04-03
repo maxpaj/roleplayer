@@ -1,4 +1,4 @@
-import { Battle, Campaign, CampaignEventWithRound, Roll, Ruleset, World } from "..";
+import { Battle, Campaign, CampaignEventWithRound, Roll, World } from "..";
 import { AugmentedRequired } from "../types/with-required";
 
 type RoleplayerConfig = {
@@ -31,20 +31,29 @@ type RoleplayerConfig = {
 export class Roleplayer {
   roll: Roll;
   events: CampaignEventWithRound[] = [];
+  worlds: World[] = [];
+  campaigns: Campaign[] = [];
+  battles: Battle[] = [];
 
   constructor({ roll, ...rest }: AugmentedRequired<Partial<Roleplayer>, "roll">) {
     Object.assign(this, rest);
     this.roll = roll;
   }
 
-  createWorld(name: string, world: Partial<World>, ruleset: Ruleset) {
-    return new World(ruleset, name, world);
+  createWorld(...args: ConstructorParameters<typeof World>) {
+    const world = new World(...args);
+    this.worlds.push(world);
+    return world;
   }
   createCampaign(...args: ConstructorParameters<typeof Campaign>) {
+    const campaign = new Campaign(...args);
+    this.campaigns.push(campaign);
     return new Campaign(...args);
   }
 
   createBattle(...args: ConstructorParameters<typeof Battle>) {
-    return new Battle(...args);
+    const battle = new Battle(...args);
+    this.battles.push(battle);
+    return battle;
   }
 }

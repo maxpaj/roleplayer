@@ -60,7 +60,7 @@ describe("Character", () => {
         },
       ];
 
-      campaign.publishCampaignEvent(...events);
+      roleplayer.publishCampaignEvent(campaign, ...events);
 
       const data = campaign.getCampaignStateFromEvents();
       const characterFromEvents = data.characters.find((c) => c.id === characterId);
@@ -107,7 +107,7 @@ describe("Character", () => {
         },
       ];
 
-      campaign.publishCampaignEvent(...events);
+      roleplayer.publishCampaignEvent(campaign, ...events);
 
       const data = campaign.getCampaignStateFromEvents();
       const characterFromEvents = data.characters.find((c) => c.id === characterId);
@@ -174,7 +174,7 @@ describe("Character", () => {
         },
       ];
 
-      campaign.publishCampaignEvent(...events);
+      roleplayer.publishCampaignEvent(campaign, ...events);
 
       expect(campaign.getCampaignStateFromEvents).toThrow();
     });
@@ -216,7 +216,7 @@ describe("Character", () => {
         },
       ];
 
-      campaign.publishCampaignEvent(...events);
+      roleplayer.publishCampaignEvent(campaign, ...events);
 
       const data = campaign.getCampaignStateFromEvents();
       const characterFromEvents = data.characters.find((c) => c.id === characterId);
@@ -263,7 +263,7 @@ describe("Character", () => {
         },
       ];
 
-      campaign.publishCampaignEvent(...events);
+      roleplayer.publishCampaignEvent(campaign, ...events);
 
       const data = campaign.getCampaignStateFromEvents();
       const characterFromEvents = data.characters.find((c) => c.id === characterId);
@@ -293,7 +293,7 @@ describe("Character", () => {
         },
       ];
 
-      campaign.publishCampaignEvent(...events);
+      roleplayer.publishCampaignEvent(campaign, ...events);
 
       try {
         campaign.getCampaignStateFromEvents();
@@ -313,7 +313,7 @@ describe("Character", () => {
       ];
 
       campaign.nextRound();
-      campaign.publishCampaignEvent(...events);
+      roleplayer.publishCampaignEvent(campaign, ...events);
 
       const data = campaign.getCampaignStateFromEvents();
 

@@ -2,6 +2,7 @@ import { Id } from "../../lib/generate-id";
 import { ActionDefinition } from "../action/action";
 import { Actor, CharacterInventoryItem, Position } from "../actor/character";
 import { Battle } from "../battle/battle";
+import { Campaign } from "../campaign/campaign";
 import { Round } from "../campaign/round";
 import { ItemDefinition } from "../inventory/item";
 import { CharacterResourceDefinition, CharacterStatType, Clazz } from "../ruleset/ruleset";
@@ -10,6 +11,7 @@ export type CampaignEventWithRound = CampaignEvent & {
   roundId: Round["id"];
   battleId?: Battle["id"];
   serialNumber: number;
+  campaignId: Campaign["id"];
 };
 
 export type CampaignEvent = RoleplayerEvent & {

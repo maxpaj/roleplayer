@@ -36,20 +36,24 @@ export class Campaign {
   }
 
   startCampaign() {
-    this.roleplayer.events = [
+    const campaignStartEvents: CampaignEventWithRound[] = [
       {
         id: dangerousGenerateId(),
         type: "CampaignStarted",
         roundId: "00000000-0000-0000-0000-000000000000",
+        campaignId: this.id,
         serialNumber: 0,
       },
       {
         type: "RoundStarted",
+        campaignId: this.id,
         id: dangerousGenerateId(),
         roundId: dangerousGenerateId(),
         serialNumber: 1,
       },
     ];
+
+    this.roleplayer.publishCampaignEvent(this, ...campaignStartEvents);
   }
 
   addCharacterItem(characterId: Actor["id"], itemDefinitionId: ItemDefinition["id"]) {
@@ -61,7 +65,7 @@ export class Campaign {
       itemInstanceId: dangerousGenerateId(),
     };
 
-    this.publishCampaignEvent(actionGain);
+    this.roleplayer.publishCampaignEvent(this, actionGain);
   }
 
   removeCharacterItem(characterId: Actor["id"], characterInventoryItemId: CharacterInventoryItem["id"]) {
@@ -72,7 +76,7 @@ export class Campaign {
       type: "CharacterInventoryItemLoss",
     };
 
-    this.publishCampaignEvent(actionGain);
+    this.roleplayer.publishCampaignEvent(this, actionGain);
   }
 
   addCharacterEquipmentSlot(characterId: Actor["id"], equipmentSlotId: EquipmentSlotDefinition["id"]) {
@@ -83,7 +87,7 @@ export class Campaign {
       type: "CharacterEquipmentSlotGain",
     };
 
-    this.publishCampaignEvent(equipEvent);
+    this.roleplayer.publishCampaignEvent(this, equipEvent);
   }
 
   characterUnEquipItem(
@@ -99,7 +103,7 @@ export class Campaign {
       type: "CharacterInventoryItemUnEquip",
     };
 
-    this.publishCampaignEvent(equipEvent);
+    this.roleplayer.publishCampaignEvent(this, equipEvent);
   }
 
   characterEquipItem(
@@ -115,7 +119,7 @@ export class Campaign {
       id: dangerousGenerateId(),
     };
 
-    this.publishCampaignEvent(equipEvent);
+    this.roleplayer.publishCampaignEvent(this, equipEvent);
   }
 
   addActionToCharacter(characterId: Actor["id"], actionId: ActionDefinition["id"]) {
@@ -126,7 +130,7 @@ export class Campaign {
       id: dangerousGenerateId(),
     };
 
-    this.publishCampaignEvent(actionGain);
+    this.roleplayer.publishCampaignEvent(this, actionGain);
   }
 
   setCharacterStats(characterId: Actor["id"], stats: CharacterStat[]) {
@@ -138,7 +142,7 @@ export class Campaign {
       id: dangerousGenerateId(),
     }));
 
-    this.publishCampaignEvent(...statsEvents);
+    this.roleplayer.publishCampaignEvent(this, ...statsEvents);
   }
 
   setCharacterClasses(characterId: Actor["id"], classes: CharacterClass[]) {
@@ -155,7 +159,7 @@ export class Campaign {
       classId: c.classId,
     }));
 
-    this.publishCampaignEvent(...[classResetEvent, ...classUpdates]);
+    this.roleplayer.publishCampaignEvent(this, ...[classResetEvent, ...classUpdates]);
   }
 
   setCharacterName(characterId: Actor["id"], name: string) {
@@ -166,7 +170,7 @@ export class Campaign {
       name,
     };
 
-    this.publishCampaignEvent(characterUpdate);
+    this.roleplayer.publishCampaignEvent(this, characterUpdate);
   }
 
   // TODO: Move to a D&D specific ruleset
@@ -180,7 +184,7 @@ export class Campaign {
       statId: defenseStatId,
     };
 
-    this.publishCampaignEvent(characterUpdate);
+    this.roleplayer.publishCampaignEvent(this, characterUpdate);
   }
 
   characterGainExperience(characterId: Actor["id"], experience: number) {
@@ -191,7 +195,7 @@ export class Campaign {
       experience,
     };
 
-    this.publishCampaignEvent(characterUpdate);
+    this.roleplayer.publishCampaignEvent(this, characterUpdate);
   }
 
   addCharacterToCurrentBattle(characterId: Actor["id"]) {
@@ -211,7 +215,7 @@ export class Campaign {
       },
     ];
 
-    this.publishCampaignEvent(...characterBattleEnter);
+    this.roleplayer.publishCampaignEvent(this, ...characterBattleEnter);
   }
 
   spawnCharacterFromTemplate(templateId: Actor["id"]) {
@@ -240,7 +244,7 @@ export class Campaign {
 
     const events = [...characterSpawnEvents, ...characterResourceEvents];
 
-    this.publishCampaignEvent(...events);
+    this.roleplayer.publishCampaignEvent(this, ...events);
 
     return characterId;
   }
@@ -319,7 +323,8 @@ export class Campaign {
         id: dangerousGenerateId(),
         roundId: newRoundId,
         battleId,
-        serialNumber: this.nextSerialNumber(),
+        serialNumber: this.roleplayer.nextSerialNumber(),
+        campaignId: this.id,
       },
     ];
 
@@ -336,7 +341,7 @@ export class Campaign {
       },
     ];
 
-    this.publishCampaignEvent(...events);
+    this.roleplayer.publishCampaignEvent(this, ...events);
   }
 
   getRoundEvents(round: Round) {
@@ -353,7 +358,8 @@ export class Campaign {
       id: dangerousGenerateId(),
       battleId,
       roundId: currentRound.id,
-      serialNumber: this.nextSerialNumber(),
+      serialNumber: this.roleplayer.nextSerialNumber(),
+      campaignId: this.id,
     });
 
     return battleId;
@@ -388,11 +394,11 @@ export class Campaign {
       id: dangerousGenerateId(),
     }));
 
-    return this.publishCampaignEvent(...characterResourceLoss, ...targetReceiveAttackEvents);
+    return this.roleplayer.publishCampaignEvent(this, ...characterResourceLoss, ...targetReceiveAttackEvents);
   }
 
   endCharacterTurn(actor: Actor) {
-    this.publishCampaignEvent({
+    this.roleplayer.publishCampaignEvent(this, {
       type: "CharacterEndRound",
       id: dangerousGenerateId(),
       characterId: actor.id,
@@ -404,37 +410,12 @@ export class Campaign {
     const currentRound = currentCampaignState.getCurrentRound();
 
     const eventsWithRoundAndBattle = newEvents.map((e, i) => {
-      const eventSerialNumber = this.nextSerialNumber() + i;
+      const eventSerialNumber = this.roleplayer.nextSerialNumber() + i;
       return {
         ...e,
         roundId: currentRound.id,
         serialNumber: eventSerialNumber,
-      };
-    });
-
-    this.roleplayer.events.push(...eventsWithRoundAndBattle);
-    return newEvents;
-  }
-
-  nextSerialNumber() {
-    const sortedEvents = this.roleplayer.events.toSorted((a, b) => a.serialNumber - b.serialNumber);
-    const lastSerialNumber = sortedEvents[sortedEvents.length - 1]?.serialNumber ?? 0;
-    return lastSerialNumber + 1;
-  }
-
-  publishCampaignEvent(...newEvents: CampaignEvent[]) {
-    const currentCampaignState = this.getCampaignStateFromEvents();
-    const currentBattle = currentCampaignState.getCurrentBattle();
-    const currentRound = currentCampaignState.getCurrentRound();
-
-    const eventsWithRoundAndBattle = newEvents.map((e, i) => {
-      const eventSerialNumber = this.nextSerialNumber() + i;
-
-      return {
-        ...e,
-        battleId: currentBattle?.id,
-        roundId: currentRound.id,
-        serialNumber: eventSerialNumber,
+        campaignId: this.id,
       };
     });
 

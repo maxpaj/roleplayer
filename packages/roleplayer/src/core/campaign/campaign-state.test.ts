@@ -12,10 +12,17 @@ describe("Campaign state", () => {
     const characterId = dangerousGenerateId();
     const world = new World(new DnDRuleset(() => 2), "World", {});
     const healthResource = world.ruleset.getCharacterResourceTypes().find((rt) => rt.name === "Health");
+    const campaign = new Campaign({
+      id: "00000000-0000-0000-0000-000000000000" as const,
+      name: "Campaign",
+      world,
+      roleplayer,
+    });
     const events: CampaignEventWithRound[] = [
       {
         type: "CharacterSpawned",
         characterId,
+        campaignId: campaign.id,
         id: dangerousGenerateId(),
         roundId: dangerousGenerateId(),
         serialNumber: 0,
@@ -23,6 +30,7 @@ describe("Campaign state", () => {
       {
         type: "CharacterNameSet",
         characterId,
+        campaignId: campaign.id,
         id: dangerousGenerateId(),
         name: "Some name",
         roundId: dangerousGenerateId(),
@@ -31,6 +39,7 @@ describe("Campaign state", () => {
       {
         type: "CharacterResourceMaxSet",
         characterId,
+        campaignId: campaign.id,
         id: dangerousGenerateId(),
         roundId: dangerousGenerateId(),
         resourceTypeId: healthResource!.id,
@@ -39,12 +48,6 @@ describe("Campaign state", () => {
       },
     ];
     roleplayer.events = events;
-    const campaign = new Campaign({
-      id: "00000000-0000-0000-0000-000000000000" as const,
-      name: "Campaign",
-      world,
-      roleplayer,
-    });
     const state = campaign.getCampaignStateFromEvents();
 
     expect(state.characters.length).toBe(1);

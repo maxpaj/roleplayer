@@ -10,9 +10,18 @@ const roleplayer = new Roleplayer({ roll: (dice) => 2 });
 describe("Campaign", () => {
   it("calculates correct character level", () => {
     const characterId = dangerousGenerateId();
+    const world = new World(new DnDRuleset(), "World", {});
+    const campaign = new Campaign({
+      id: "00000000-0000-0000-0000-000000000000" as const,
+      name: "Campaign",
+      world,
+      roleplayer,
+    });
+
     const events: CampaignEventWithRound[] = [
       {
         type: "CharacterSpawned",
+        campaignId: campaign.id,
         characterId,
         id: dangerousGenerateId(),
         roundId: dangerousGenerateId(),
@@ -20,6 +29,7 @@ describe("Campaign", () => {
       },
       {
         type: "CharacterExperienceSet",
+        campaignId: campaign.id,
         characterId,
         experience: 100,
         id: dangerousGenerateId(),
@@ -28,14 +38,7 @@ describe("Campaign", () => {
       },
     ];
 
-    const world = new World(new DnDRuleset(), "World", {});
     roleplayer.events = events;
-    const campaign = new Campaign({
-      id: "00000000-0000-0000-0000-000000000000" as const,
-      name: "Campaign",
-      world,
-      roleplayer,
-    });
 
     const state = campaign.getCampaignStateFromEvents();
 

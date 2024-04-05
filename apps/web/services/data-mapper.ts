@@ -10,11 +10,11 @@ import { StatusRecord } from "@/db/schema/statuses";
 import { WorldRecord } from "@/db/schema/worlds";
 import {
   Actor,
-  Campaign,
+  CampaignEventDispatcher,
   CampaignEventWithRound,
   CharacterResource,
   DnDRuleset,
-  EffectApply,
+  EffectEvent,
   EffectParameters,
   ItemDefinition,
   ItemEquipmentType,
@@ -36,7 +36,7 @@ export type WorldAggregated = WorldRecord & {
   campaigns: CampaignRecord[];
   characters: ActorAggregated[];
   statuses: StatusAggregated[];
-  itemDefinitions: ItemAggregated[];
+  itemTemplates: ItemAggregated[];
   classes: ClazzRecord[];
   actions: ActionAggregated[];
   races: RaceRecord[];
@@ -65,13 +65,13 @@ export type ActorAggregated = CharacterRecord & {
 };
 
 export function mapCampaignWorldData(worldData: WorldAggregated, campaignData: CampaignAggregated) {
-  const Ruleset = new DnDRuleset();
+  const Ruleset = new DnDRuleset(() => 2);
   const worldMappedCharacters = worldData.characters.map(mapCharacterRecordToActor);
-  const worldMappedItems = worldData.itemDefinitions.map(mapItemDefinition);
+  const worldMappedItems = worldData.itemTemplates.map(mapItemDefinition);
   const world = new World(Ruleset, worldData.name, {
     ...(worldData as unknown as Partial<World>),
     characters: worldMappedCharacters,
-    itemDefinitions: worldMappedItems,
+    itemTemplates: worldMappedItems,
   });
 
   const roleplayer = new Roleplayer({
@@ -81,7 +81,7 @@ export function mapCampaignWorldData(worldData: WorldAggregated, campaignData: C
     events: campaignData.events.map((e) => e.eventData as CampaignEventWithRound),
   });
 
-  const campaign = new Campaign({
+  const campaign = new CampaignEventDispatcher({
     ...campaignData,
     world,
     roleplayer,
@@ -92,8 +92,8 @@ export function mapCampaignWorldData(worldData: WorldAggregated, campaignData: C
 
 export function mapEffectApply(effect: EffectRecord) {
   return {
-    eventType: effect.type as EffectApply["eventType"],
-    parameters: effect.parameters as EffectParameters<EffectApply["eventType"]>,
+    eventType: effect.type as EffectEvent["eventType"],
+    parameters: effect.parameters as EffectParameters<EffectEvent["eventType"]>,
   };
 }
 
@@ -149,7 +149,7 @@ export function mapWorldFromCampaignData(campaignData: CampaignAggregated) {
     "",
     {
       ...campaignData.world,
-      itemDefinitions: [],
+      itemTemplates: [],
       characters: [],
       actions: [],
       statuses: [],

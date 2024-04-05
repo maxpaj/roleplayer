@@ -1,11 +1,11 @@
 import { ButtonLink } from "@/components/ui/button-link";
 import { H4, Muted } from "@/components/ui/typography";
 import { getCampaign } from "app/campaigns/actions";
+import { AddCharacterForm } from "app/characters/components/add-character-form";
 import { CreateCharacterForm } from "app/characters/components/create-character-form";
-import { CampaignCharacterCard } from "./components/campaign-character-card";
 import { getWorldData } from "app/worlds/[worldId]/actions";
 import { mapCampaignWorldData } from "services/data-mapper";
-import { AddCharacterForm } from "app/characters/components/add-character-form";
+import { CampaignCharacterCard } from "./components/campaign-character-card";
 
 export default async function CampaignCharactersPage({ params }: { params: { campaignId: string } }) {
   const { campaignId: id } = params;
@@ -21,7 +21,7 @@ export default async function CampaignCharactersPage({ params }: { params: { cam
   }
 
   const { campaign } = mapCampaignWorldData(worldData, campaignData);
-  const campaignState = campaign.getCampaignStateFromEvents();
+  const campaignState = roleplayer.getCampaignFromEvents();
 
   return (
     <>

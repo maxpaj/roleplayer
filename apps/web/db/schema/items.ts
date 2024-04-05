@@ -1,7 +1,7 @@
 import { pgEnum, pgTable, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
 import { actionsSchema } from "./actions";
-import { worldsSchema } from "./worlds";
 import { charactersSchema } from "./characters";
+import { worldsSchema } from "./worlds";
 
 export const itemEquipmentTypeEnum = pgEnum("itemEquipmentType", [
   "None",
@@ -15,7 +15,7 @@ export const itemTypeEnum = pgEnum("itemType", ["Consumable", "Equipment"]);
 
 export const rarityEnum = pgEnum("rarity", ["Common", "Uncommon", "Rare", "Epic", "Legendary"]);
 
-export const itemDefinitionsSchema = pgTable("itemDefinitions", {
+export const itemTemplatesSchema = pgTable("itemTemplates", {
   id: uuid("id").defaultRandom().primaryKey(),
   name: varchar("name", { length: 256 }).notNull(),
   description: varchar("description", { length: 8192 }).default("").notNull(),
@@ -28,13 +28,13 @@ export const itemDefinitionsSchema = pgTable("itemDefinitions", {
     .notNull(),
 });
 
-export type ItemDefinitionRecord = typeof itemDefinitionsSchema.$inferSelect;
-export type NewItemDefinitionRecord = typeof itemDefinitionsSchema.$inferInsert;
+export type ItemDefinitionRecord = typeof itemTemplatesSchema.$inferSelect;
+export type NewItemDefinitionRecord = typeof itemTemplatesSchema.$inferInsert;
 
 export const itemsToActionsSchema = pgTable("itemsToActions", {
   itemId: uuid("itemId")
     .notNull()
-    .references(() => itemDefinitionsSchema.id),
+    .references(() => itemTemplatesSchema.id),
 
   actionId: uuid("actionId")
     .notNull()
@@ -45,7 +45,7 @@ export const itemInstancesSchema = pgTable("itemInstances", {
   id: uuid("id").defaultRandom().primaryKey(),
   characterId: uuid("characterId").references(() => charactersSchema.id),
   itemDefinitionId: uuid("itemDefinitionId")
-    .references(() => itemDefinitionsSchema.id)
+    .references(() => itemTemplatesSchema.id)
     .notNull(),
 });
 

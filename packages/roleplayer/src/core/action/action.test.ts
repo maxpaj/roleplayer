@@ -1,5 +1,4 @@
-import { D10, DnDRuleset } from "../..";
-import { Campaign } from "../campaign/campaign";
+import { CampaignState, D10, DnDRuleset } from "../..";
 import { ItemDefinition, ItemEquipmentType, ItemSlot, ItemType } from "../inventory/item";
 import { Roleplayer } from "../roleplayer";
 import { Rarity } from "../world/rarity";
@@ -7,12 +6,13 @@ import { World } from "../world/world";
 import { TargetType } from "./action";
 import { StatusDefinition, StatusDurationType, StatusType } from "./status";
 
-const roleplayer = new Roleplayer({ roll: (dice) => 2 });
+const roleplayer = new Roleplayer({});
+const ruleset = new DnDRuleset(() => 2);
+
 describe("actions", () => {
-  const defaultRuleSet = new DnDRuleset(() => 2);
-  const coldElement = defaultRuleSet.getElementDefinitions().find((ed) => ed.name === "Cold")!;
-  const mainHandEquipmentSlot = defaultRuleSet.getCharacterEquipmentSlots().find((eq) => eq.name === "Main hand")!;
-  const healthResource = defaultRuleSet.getCharacterResourceTypes().find((r) => r.name === "Health")!;
+  const coldElement = ruleset.getElementDefinitions().find((ed) => ed.name === "Cold")!;
+  const mainHandEquipmentSlot = ruleset.getCharacterEquipmentSlots().find((eq) => eq.name === "Main hand")!;
+  const healthResource = ruleset.getCharacterResourceTypes().find((r) => r.name === "Health")!;
 
   const frozenStatus: StatusDefinition = {
     id: "status-chill",
@@ -73,44 +73,43 @@ describe("actions", () => {
     stats: [],
   };
 
-  const world = new World(defaultRuleSet, "Test world", {});
+  const world = new World(ruleset, "Test world", {});
   world.statuses = [frozenStatus];
-  world.itemDefinitions = [frostSword];
+  world.itemTemplates = [frostSword];
 
   it("should apply effects from being hit", () => {
-    const campaign = new Campaign({
+    const campaign = new CampaignState({
       id: "00000000-0000-0000-0000-000000000000" as const,
-      name: "Test campaign",
-      world,
+      ruleset,
       roleplayer,
     });
 
-    campaign.nextRound();
+    roleplayer.nextRound();
 
     const attackerId = "attacker-id";
     const defenderId = "defender-id";
 
     // Setup attacker
-    campaign.createCharacter(attackerId, "Attacker");
-    campaign.addCharacterItem(attackerId, frostSword.id);
+    roleplayer.createCharacter(attackerId, "Attacker");
+    roleplayer.addCharacterItem(attackerId, frostSword.id);
 
-    const afterAddSword = campaign.getCampaignStateFromEvents();
+    const afterAddSword = roleplayer.getCampaignFromEvents();
     const characterWithSword = afterAddSword.characters.find((c) => c.id === attackerId);
-    campaign.characterEquipItem(attackerId, mainHandEquipmentSlot.id, characterWithSword!.inventory[0]!.id);
+    roleplayer.characterEquipItem(attackerId, mainHandEquipmentSlot.id, characterWithSword!.inventory[0]!.id);
 
     // Setup defender
-    campaign.createCharacter(defenderId, "Defender");
-    campaign.nextRound();
+    roleplayer.createCharacter(defenderId, "Defender");
+    roleplayer.nextRound();
 
-    const beforeAttack = campaign.getCampaignStateFromEvents();
+    const beforeAttack = roleplayer.getCampaignFromEvents();
     const attacker = beforeAttack.characters.find((c) => c.id === attackerId);
     const actions = attacker!.getAvailableActions();
     const characterAction = actions.find((a) => a.id === "action-frost-sword-slash");
     const defenderBeforeAttack = beforeAttack.characters.filter((c) => c.id === defenderId);
 
-    campaign.performCharacterAttack(attacker!, characterAction!, defenderBeforeAttack);
+    roleplayer.performCharacterAttack(attacker!, characterAction!, defenderBeforeAttack);
 
-    const afterAttack = campaign.getCampaignStateFromEvents();
+    const afterAttack = roleplayer.getCampaignFromEvents();
     const defenderAfterAttack = afterAttack.characters.find((c) => c.id === defenderId);
     const defenderHealth = defenderAfterAttack!.resources.find((r) => r.resourceTypeId === healthResource.id)?.amount;
     const defenderChillStatus = defenderAfterAttack!.statuses.find((s) => s.name === "Chill");

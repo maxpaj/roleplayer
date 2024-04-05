@@ -1,22 +1,22 @@
 "use client";
 
-import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable";
-import { Input } from "@/components/ui/input";
 import { Divider } from "@/components/ui/divider";
+import { Input } from "@/components/ui/input";
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
 import { H4, H5, Muted } from "@/components/ui/typography";
-import { Actor, Campaign, CharacterInventoryItem, ItemDefinition, World } from "roleplayer";
+import { Actor, CampaignEventDispatcher, CharacterInventoryItem, ItemDefinition, World } from "roleplayer";
+import { ScrollArea } from "../ui/scroll-area";
+import { CharacterLevelEditor } from "./classes/character-level-editor";
 import { CharacterInventoryEditor } from "./inventory/character-inventory-editor";
 import { CharacterStatsEditor } from "./stats/character-stats-editor";
-import { CharacterLevelEditor } from "./classes/character-level-editor";
-import { ScrollArea } from "../ui/scroll-area";
 
 type CharacterEditorProps = {
   onSaveCharacter?: (character: Actor) => void;
-  onSaveCampaign: (campaign: Campaign) => void;
+  onSaveCampaign: (campaign: CampaignEventDispatcher) => void;
 
   world: World;
   character: Actor;
-  campaign: Campaign;
+  campaign: CampaignEventDispatcher;
 };
 
 export function CampaignCharacterEditor({

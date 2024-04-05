@@ -18,7 +18,7 @@ export default async function ItemDetailsPage({
     return <>World not found</>;
   }
 
-  const { itemDefinitions: items } = worldData;
+  const { itemTemplates: items } = worldData;
   const item = items.find((c) => c.id === itemId);
 
   if (!item) {

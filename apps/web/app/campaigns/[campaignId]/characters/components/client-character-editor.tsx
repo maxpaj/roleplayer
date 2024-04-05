@@ -1,16 +1,15 @@
 "use client";
 
 import { CampaignCharacterEditor } from "@/components/character-editor/campaign-character-editor";
-import { Button } from "@/components/ui/button";
 import { H4, Muted } from "@/components/ui/typography";
 import { saveCampaignEvents } from "app/campaigns/actions";
 import { ActorRecord } from "models/actor";
 import { useCallback, useState } from "react";
-import { Campaign } from "roleplayer";
-import { CharacterEventsTable } from "./character-events-table";
+import { CampaignEventDispatcher } from "roleplayer";
+import { CampaignAggregated, WorldAggregated, mapCampaignWorldData } from "services/data-mapper";
 import { CharacterActionCard } from "./character-action-card";
+import { CharacterEventsTable } from "./character-events-table";
 import { CharacterResources } from "./character-resources";
-import { WorldAggregated, CampaignAggregated, mapCampaignWorldData } from "services/data-mapper";
 
 export function ClientCharacterEditor({
   campaignData,
@@ -26,7 +25,7 @@ export function ClientCharacterEditor({
   const [, triggerUpdate] = useState({});
   const forceUpdate = useCallback(() => triggerUpdate({}), []);
 
-  const campaignState = update.getCampaignStateFromEvents();
+  const campaignState = update.getCampaignFromEvents();
   const character = campaignState.characters.find((c) => c.id === characterId);
   if (!character) {
     throw new Error("Character not found in campaign state");
@@ -37,9 +36,9 @@ export function ClientCharacterEditor({
   return (
     <>
       <CampaignCharacterEditor
-        onSaveCampaign={async (campaign: Campaign) => {
+        onSaveCampaign={async (campaign: CampaignEventDispatcher) => {
           setUpdate(campaign);
-          await saveCampaignEvents(campaign.id, campaign.events);
+          await saveCampaignEvents(campaign.id, campaign.roleplayer.events);
           forceUpdate();
         }}
         world={world}

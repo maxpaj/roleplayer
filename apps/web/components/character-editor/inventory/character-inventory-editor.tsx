@@ -1,9 +1,8 @@
-import { Actor, CharacterEquipmentSlot, CharacterInventoryItem, ItemDefinition, World } from "roleplayer";
-import { ItemSelector } from "./item-selector";
-import { ItemCard } from "@/components/item-card";
 import { H5, Muted } from "@/components/ui/typography";
+import { Actor, CharacterEquipmentSlot, CharacterInventoryItem, ItemDefinition, World } from "roleplayer";
 import { CharacterSlotEquipmentSelector } from "./character-equipment-slot-editor";
 import { InventoryItemCard } from "./character-inventory-item-card";
+import { ItemSelector } from "./item-selector";
 
 type CharacterInventoryEditorProps = {
   character: Actor;
@@ -91,7 +90,7 @@ export function CharacterInventoryEditor({
 
       <ItemSelector
         placeholder="Add item to inventory"
-        availableItems={world.itemDefinitions.map((i) => ({ id: i.id, item: i }))}
+        availableItems={world.itemTemplates.map((i) => ({ id: i.id, item: i }))}
         onSelect={(option) => {
           onInventoryAdd && onInventoryAdd(option.item);
         }}

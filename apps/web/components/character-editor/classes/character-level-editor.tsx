@@ -1,11 +1,11 @@
 import { Divider } from "@/components/ui/divider";
+import { Actor, CampaignEventDispatcher, CharacterClass, World } from "roleplayer";
 import { CharacterClassEditor } from "./class-editor";
 import { ClassSelector } from "./class-selector";
-import { Actor, Campaign, CharacterClass, World } from "roleplayer";
 
 type CharacterLevelEditorProps = {
   character: Actor;
-  campaign: Campaign;
+  campaign: CampaignEventDispatcher;
   world: World;
   onAddClass: (clazz: CharacterClass) => void;
   onRemoveClass: (clazz: CharacterClass) => void;

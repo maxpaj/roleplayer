@@ -2,21 +2,14 @@ import { DnDRuleset } from "../../data/rulesets/dnd-5th";
 import { dangerousGenerateId } from "../../lib/generate-id";
 import { CampaignEventWithRound } from "../events/events";
 import { Roleplayer } from "../roleplayer";
-import { World } from "../world/world";
-import { Campaign } from "./campaign";
-
-const roleplayer = new Roleplayer({ roll: (dice) => 2 });
+import { CampaignState } from "./campaign-state";
 
 describe("Campaign", () => {
   it("calculates correct character level", () => {
     const characterId = dangerousGenerateId();
-    const world = new World(new DnDRuleset(), "World", {});
-    const campaign = new Campaign({
-      id: "00000000-0000-0000-0000-000000000000" as const,
-      name: "Campaign",
-      world,
-      roleplayer,
-    });
+    const roleplayer = new Roleplayer();
+    const ruleset = new DnDRuleset(() => 2);
+    const campaign = new CampaignState({ id: dangerousGenerateId(), roleplayer, ruleset });
 
     const events: CampaignEventWithRound[] = [
       {
@@ -40,10 +33,10 @@ describe("Campaign", () => {
 
     roleplayer.events = events;
 
-    const state = campaign.getCampaignStateFromEvents();
+    const state = roleplayer.getCampaignFromEvents(campaign.id);
 
     expect(state.characters.length).toBe(1);
     const character = state.characters[0];
-    expect(campaign.getCharacterLevel(character!)).toBe(3);
+    expect(character!.xp).toBe(100);
   });
 });

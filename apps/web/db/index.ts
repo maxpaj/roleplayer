@@ -6,7 +6,7 @@ import { charactersSchema } from "./schema/characters";
 import { classesSchema } from "./schema/classes";
 import { effectsSchema } from "./schema/effects";
 import { eventsSchema } from "./schema/events";
-import { itemDefinitionsSchema, itemInstancesSchema } from "./schema/items";
+import { itemInstancesSchema, itemTemplatesSchema } from "./schema/items";
 import { rulesSchema } from "./schema/rules";
 import { statusesSchema } from "./schema/statuses";
 import { usersSchema } from "./schema/users";
@@ -20,7 +20,7 @@ export const db = drizzle(sql, {
     classes: classesSchema,
     effects: effectsSchema,
     events: eventsSchema,
-    itemDefinitions: itemDefinitionsSchema,
+    itemTemplates: itemTemplatesSchema,
     itemInstances: itemInstancesSchema,
     statuses: statusesSchema,
     users: usersSchema,

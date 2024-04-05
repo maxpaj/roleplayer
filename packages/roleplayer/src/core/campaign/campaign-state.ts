@@ -1,30 +1,44 @@
+import { Id } from "../../lib/generate-id";
+import { AugmentedRequired } from "../../types/with-required";
+import { ActionDefinition } from "../action/action";
+import { Actor, isCharacterEvent } from "../actor/character";
 import { Battle } from "../battle/battle";
-import { Round } from "./round";
-import { Actor } from "../actor/character";
 import { CampaignEventWithRound } from "../events/events";
-import { CharacterResourceDefinition } from "../ruleset/ruleset";
+import { Roleplayer } from "../roleplayer";
+import { CharacterResourceDefinition, Ruleset } from "../ruleset/ruleset";
+import { Round } from "./round";
 
 /**
  * Represent a campaign current state, after applying all events related to the campaign
  */
 export class CampaignState {
-  battles: Battle[];
-  rounds: Round[];
-  characters: Actor[];
+  id!: Id;
+  battles!: Battle[];
+  rounds!: Round[];
+  characters!: Actor[];
+  ruleset!: Ruleset;
+  roleplayer!: Roleplayer;
 
-  constructor(battles: Battle[] = [], rounds: Round[] = [], characters: Actor[] = []) {
-    this.battles = battles;
-    this.rounds = rounds;
-    this.characters = characters;
+  constructor(c: AugmentedRequired<Partial<CampaignState>, "id" | "roleplayer" | "ruleset">) {
+    Object.assign(this, c);
   }
 
-  getCharacter(characterId: Actor["id"]) {
-    const character = this.characters.find((c) => c.id === characterId);
-    if (!character) {
-      throw new Error(`Could not find character with id ${characterId}`);
-    }
+  getRoundEvents(round: Round) {
+    return this.roleplayer.events.filter((e) => e.roundId === round.id);
+  }
 
-    return character;
+  getCharacterRoundEvents(round: Round, characterId: Actor["id"]) {
+    const roundEvents = this.getRoundEvents(round);
+    return roundEvents.filter((re) => isCharacterEvent(re) && re.characterId === characterId);
+  }
+
+  getCharacterEvents(characterId: Actor["id"]) {
+    return this.roleplayer.events.filter((re) => isCharacterEvent(re) && re.characterId === characterId);
+  }
+
+  getCharacterEligibleTargets(campaignState: CampaignState, actor: Actor, action: ActionDefinition): Actor[] {
+    // TODO: Make sure the target is eligible
+    return campaignState.characters;
   }
 
   getCurrentBattle(): Battle | undefined {
@@ -51,7 +65,41 @@ export class CampaignState {
     }
 
     return this.characters.every((c) =>
-      events.some((e) => e.type === "CharacterEndRound" && e.characterId === c.id && e.roundId === round.id)
+      events.some((e) => e.type === "CharacterEndTurn" && e.characterId === c.id && e.roundId === round.id)
     );
+  }
+
+  applyEvent(event: CampaignEventWithRound) {
+    switch (event.type) {
+      case "BattleStarted": {
+        if (!event.battleId) throw new Error("BattleStarted event missing battleId");
+        this.battles.push(
+          new Battle(this.ruleset, {
+            id: event.battleId,
+            name: "Battle",
+          })
+        );
+
+        break;
+      }
+
+      case "CharacterBattleEnter": {
+        const battle = this.battles.find((b) => b.id === event.battleId);
+
+        if (!battle) {
+          throw new Error("Cannot find battle");
+        }
+
+        const character = this.characters.find((m) => m.id === event.characterId);
+
+        if (!character) {
+          throw new Error("Cannot find character");
+        }
+
+        battle.addBattleActor(character);
+
+        break;
+      }
+    }
   }
 }

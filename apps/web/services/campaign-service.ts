@@ -1,6 +1,8 @@
+import { DEFAULT_USER_ID } from "@/db/data";
+import { actionsSchema } from "@/db/schema/actions";
 import { classesSchema } from "@/db/schema/classes";
 import { eq } from "drizzle-orm";
-import { Actor, Campaign, CampaignEventWithRound, DnDRuleset, World } from "roleplayer";
+import { Actor, CampaignEventWithRound } from "roleplayer";
 import { db } from "../db";
 import { CampaignRecord, NewCampaignRecord, campaignsSchema } from "../db/schema/campaigns";
 import {
@@ -13,10 +15,8 @@ import { EventRecord, eventsSchema } from "../db/schema/events";
 import { NewFriendInviteRecord, friendInvitesSchema } from "../db/schema/friend-invite";
 import { UserRecord } from "../db/schema/users";
 import { WorldRecord, worldsSchema } from "../db/schema/worlds";
-import { WorldService } from "./world-service";
-import { actionsSchema } from "@/db/schema/actions";
-import { DEFAULT_USER_ID } from "@/db/data";
 import { CampaignAggregated, mapCampaignWorldData } from "./data-mapper";
+import { WorldService } from "./world-service";
 
 export class CampaignService {
   async getAll(userId: UserRecord["id"]): Promise<{ campaign: CampaignRecord; events: EventRecord[] }[]> {
@@ -103,7 +103,7 @@ export class CampaignService {
 
     await this.saveCampaignEvents(campaign.id, campaign.events);
 
-    const campaignState = campaign.getCampaignStateFromEvents();
+    const campaignState = roleplayer.getCampaignFromEvents();
     const battle = campaignState.getCurrentBattle();
 
     return { id: battle?.id };
@@ -174,7 +174,7 @@ export class CampaignService {
             characters: [],
             races: [],
             classes: [],
-            itemDefinitions: [],
+            itemTemplates: [],
             statuses: [],
           },
           events: [],

@@ -1,9 +1,9 @@
 import { H4, Muted } from "@/components/ui/typography";
-import { BattleCard } from "./components/battle-card";
-import { StartBattleButton } from "./components/start-battle-button";
 import { getCampaign } from "app/campaigns/actions";
 import { getWorldData } from "app/worlds/[worldId]/actions";
 import { mapCampaignWorldData } from "services/data-mapper";
+import { BattleCard } from "./components/battle-card";
+import { StartBattleButton } from "./components/start-battle-button";
 
 export default async function BattlesPage({ params }: { params: { campaignId: string } }) {
   const { campaignId: id } = params;
@@ -19,7 +19,7 @@ export default async function BattlesPage({ params }: { params: { campaignId: st
   }
 
   const { campaign } = mapCampaignWorldData(worldData, campaignData);
-  const { battles } = campaign.getCampaignStateFromEvents();
+  const { battles } = roleplayer.getCampaignFromEvents();
 
   return (
     <div>

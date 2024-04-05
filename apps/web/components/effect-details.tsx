@@ -1,13 +1,13 @@
 import { EffectRecord } from "@/db/schema/effects";
 import { DnDRuleset } from "roleplayer";
+import { WorldAggregated } from "services/data-mapper";
 import { EffectParameters } from "./effect-parameters";
 import { EffectType } from "./effect-type";
 import { H5 } from "./ui/typography";
-import { WorldAggregated } from "services/data-mapper";
 
 export function EffectDetails({ effect, world }: { effect: EffectRecord; world: WorldAggregated }) {
   const params = effect.parameters as { parameters: Record<string, any> };
-  const ruleset = new DnDRuleset();
+  const ruleset = new DnDRuleset(() => 2);
 
   return (
     <div>

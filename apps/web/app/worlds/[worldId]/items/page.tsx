@@ -1,10 +1,10 @@
+import { ItemCard } from "@/components/item-card";
 import { Divider } from "@/components/ui/divider";
 import { H3, H5, Muted } from "@/components/ui/typography";
-import { getWorldData } from "../actions";
-import { ItemCard } from "@/components/item-card";
-import { ItemDefinition, ItemEquipmentType, ItemType, Rarity } from "roleplayer";
-import { CreateItemForm } from "./components/create-item-form";
 import Link from "next/link";
+import { ItemDefinition, ItemEquipmentType, ItemType, Rarity } from "roleplayer";
+import { getWorldData } from "../actions";
+import { CreateItemForm } from "./components/create-item-form";
 
 export default async function ItemsPage({ params }: { params: { worldId: string } }) {
   const { worldId: id } = params;
@@ -14,7 +14,7 @@ export default async function ItemsPage({ params }: { params: { worldId: string 
     return <>World not found</>;
   }
 
-  const { itemDefinitions: items } = worldData;
+  const { itemTemplates: items } = worldData;
 
   const itemsMapped: ItemDefinition[] = items.map((item) => ({
     id: item.id,

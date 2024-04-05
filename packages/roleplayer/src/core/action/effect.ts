@@ -1,11 +1,4 @@
-import {
-  ActionDefinition,
-  CharacterResourceDefinition,
-  Dice,
-  EffectApply,
-  ElementDefinition,
-  dangerousGenerateId,
-} from "../..";
+import { ActionDefinition, CharacterResourceDefinition, Dice, ElementDefinition, dangerousGenerateId } from "../..";
 import { Actor } from "../actor/character";
 import { CampaignEvent } from "../events/events";
 import { World } from "../world/world";
@@ -24,11 +17,16 @@ export type CharacterStatusGainEffect = {
   statusId: StatusDefinition["id"];
 };
 
-export type EffectEventGenerator = CharacterResourceLossEffect | CharacterStatusGainEffect;
-export type EffectEventGeneratorType = EffectEventGenerator["eventType"];
+export type EffectEventDefinition = CharacterResourceLossEffect | CharacterStatusGainEffect;
+
+// TODO: Can this be typed better?
+export type EffectEvent = {
+  eventType: EffectEventDefinition["eventType"];
+  parameters: Omit<EffectEventDefinition, "eventType">;
+};
 
 export function mapEffect(
-  effect: EffectApply,
+  effect: EffectEvent,
   actionDef: ActionDefinition,
   attacker: Actor,
   target: Actor,
@@ -49,7 +47,7 @@ export function mapEffect(
 
 function instantiateResourceLossEffect(
   action: ActionDefinition,
-  effect: EffectApply,
+  effect: EffectEvent,
   source: Actor,
   target: Actor,
   world: World
@@ -71,7 +69,7 @@ function instantiateResourceLossEffect(
 
 function instantiateStatusGainEffect(
   action: ActionDefinition,
-  effect: EffectApply,
+  effect: EffectEvent,
   source: Actor,
   target: Actor,
   world: World

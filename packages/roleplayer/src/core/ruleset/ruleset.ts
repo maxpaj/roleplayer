@@ -1,8 +1,7 @@
-import type { Battle } from "../..";
+import type { Battle, EffectEvent } from "../..";
 import type { Id } from "../../lib/generate-id";
-import type { ActionDefinition, EffectApply } from "../action/action";
+import type { ActionDefinition } from "../action/action";
 import type { Actor, CharacterResourceGeneration } from "../actor/character";
-import type { Dice } from "../dice/dice";
 import type { EquipmentSlotDefinition } from "../inventory/item";
 
 export enum Alignment {
@@ -69,19 +68,17 @@ export type CharacterStatType = {
  *
  */
 export interface Ruleset {
-  roll(dice: Dice): number;
-
   getLevelProgression(): LevelProgression[];
   getCharacterStatTypes(): CharacterStatType[];
   getCharacterResourceTypes(): CharacterResourceDefinition[];
   getCharacterEquipmentSlots(): EquipmentSlotDefinition[];
   getClassDefinitions(): Clazz[];
   getElementDefinitions(): ElementDefinition[];
-  getCurrentActorTurn(battle: Battle): Actor;
+  getCurrentActorTurn(battle: Battle): Actor | undefined;
 
   characterBattleActionOrder(actor: Actor): number;
   characterHit(attacker: Actor, action: ActionDefinition, defender: Actor): boolean;
-  characterHitDamage(source: Actor, action: ActionDefinition, target: Actor, effect: EffectApply): number;
+  characterHitDamage(source: Actor, action: ActionDefinition, target: Actor, effect: EffectEvent): number;
   characterResistanceMultiplier(actor: Actor, damageType: ElementDefinition): number;
   characterResistanceAbsolute(actor: Actor, damageType: ElementDefinition): number;
   characterResourceGeneration(actor: Actor): CharacterResourceGeneration[];

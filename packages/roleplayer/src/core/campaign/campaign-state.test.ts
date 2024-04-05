@@ -3,21 +3,17 @@ import { dangerousGenerateId } from "../../lib/generate-id";
 import { CampaignEventWithRound } from "../events/events";
 import { Roleplayer } from "../roleplayer";
 import { World } from "../world/world";
-import { Campaign } from "./campaign";
+import { CampaignState } from "./campaign-state";
 
-const roleplayer = new Roleplayer({ roll: (dice) => 2 });
+const roleplayer = new Roleplayer({});
 
 describe("Campaign state", () => {
   it("applies events", () => {
     const characterId = dangerousGenerateId();
-    const world = new World(new DnDRuleset(() => 2), "World", {});
+    const ruleset = new DnDRuleset(() => 2);
+    const world = new World(ruleset, "World", {});
     const healthResource = world.ruleset.getCharacterResourceTypes().find((rt) => rt.name === "Health");
-    const campaign = new Campaign({
-      id: "00000000-0000-0000-0000-000000000000" as const,
-      name: "Campaign",
-      world,
-      roleplayer,
-    });
+    const campaign = new CampaignState({ id: dangerousGenerateId(), ruleset, roleplayer });
     const events: CampaignEventWithRound[] = [
       {
         type: "CharacterSpawned",
@@ -48,7 +44,7 @@ describe("Campaign state", () => {
       },
     ];
     roleplayer.events = events;
-    const state = campaign.getCampaignStateFromEvents();
+    const state = roleplayer.getCampaignFromEvents(campaign.id);
 
     expect(state.characters.length).toBe(1);
 

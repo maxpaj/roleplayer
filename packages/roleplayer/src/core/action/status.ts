@@ -1,6 +1,6 @@
 import { CampaignEvent } from "../..";
 import { Id } from "../../lib/generate-id";
-import { EffectEventGenerator } from "./effect";
+import { EffectEventDefinition } from "./effect";
 
 /**
  * @module core/actions
@@ -10,7 +10,7 @@ export type StatusDefinition = {
   name: string;
   type: StatusType;
   appliesEffects: {
-    effect: EffectEventGenerator;
+    effect: EffectEventDefinition;
     appliesAt: CampaignEvent["type"];
   }[];
   durationType: StatusDurationType;

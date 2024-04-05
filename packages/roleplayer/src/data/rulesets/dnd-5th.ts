@@ -1,13 +1,13 @@
 import {
   D20,
+  Roll,
   defaultRoll,
   type ActionDefinition,
   type Actor,
   type Battle,
   type CharacterResourceDefinition,
   type CharacterResourceGeneration,
-  type Dice,
-  type EffectApply,
+  type EffectEvent,
   type ElementDefinition,
 } from "../..";
 import { ItemEquipmentType, type EquipmentSlotDefinition } from "../../core/inventory/item";
@@ -15,8 +15,10 @@ import type { CharacterStatType, Clazz, LevelProgression, Ruleset } from "../../
 import { dangerousGenerateId } from "../../lib/generate-id";
 
 export class DnDRuleset implements Ruleset {
-  roll(dice: Dice): number {
-    return defaultRoll(dice);
+  roll: Roll;
+
+  constructor(roll: Roll) {
+    this.roll = roll;
   }
 
   getLevelProgression(): LevelProgression[] {
@@ -174,7 +176,7 @@ export class DnDRuleset implements Ruleset {
     ];
   }
 
-  characterHitDamage(source: Actor, action: ActionDefinition, target: Actor, effect: EffectApply) {
+  characterHitDamage(source: Actor, action: ActionDefinition, target: Actor, effect: EffectEvent) {
     const elementTypes = this.getElementDefinitions();
     const elementType = elementTypes.find((e) => e.id === effect.parameters.elementTypeId);
     if (!elementType) {
@@ -230,14 +232,25 @@ export class DnDRuleset implements Ruleset {
   }
 
   characterBattleActionOrder(actor: Actor): number {
-    return this.roll(D20);
+    return this.roll("D20");
   }
 
-  constructor(roll: (dice: Dice) => number = defaultRoll) {
-    this.roll = roll;
-  }
-  getCurrentActorTurn(battle: Battle): Actor {
-    throw new Error("Method not implemented.");
+  getCurrentActorTurn(battle: Battle): Actor | undefined {
+    const initiativeStat = this.getCharacterStatTypes().find((s) => s.name === "Initiative");
+    if (!initiativeStat) {
+      throw new Error("Initiative stat not found");
+    }
+
+    const sorted = battle.actors.sort((a, b) => {
+      const initiativeA = a.stats.find((s) => s.statId === initiativeStat.id);
+      const initiativeB = b.stats.find((s) => s.statId === initiativeStat.id);
+      return initiativeB!.amount - initiativeA!.amount;
+    });
+
+    const currentActorIndex = sorted.findIndex((a) => a.id === battle.actorToAct!.id);
+
+    // If we are at the end of the list, return the first actor
+    return sorted[currentActorIndex + 1] || sorted[0];
   }
 }
 

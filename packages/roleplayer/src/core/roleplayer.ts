@@ -1,38 +1,40 @@
-import { Battle, Campaign, CampaignEvent, CampaignEventWithRound, Roll, World } from "..";
-import { AugmentedRequired } from "../types/with-required";
+import { CampaignEvent, CampaignEventWithRound, CampaignState, Id, RoleplayerEvent, World } from "..";
+import { Logger } from "../lib/logging/logger";
 
 /**
  * The core of this library contains a few systems that are common for most or all roleplaying games.
  * It is designed to be extended and customized to fit the needs of a roleplaying game.
  *
- * - event system
- *   - on level up
- *   - on action
- *   - on new round
- *   - on long rest
- * - action and effects system
- * - level progression system
- * - stats system
- * - inventory system
- * - character system
- * - world building system
- * - resource system
- * - npc system
- *    - action system
- *    - relationship system
- * - dice system
- * - campaign system
+ * - Action and effects system
+ * - Battle system
+ *    - NPC actions
+ *    - Resource generation system
+ *    - Round action tracking
+ * - Character system
+ *    - Resource system
+ *    - Inventory system
+ *    - Stats system
+ *    - Level progression system
+ * - World building system
+ * - NPC system
+ *    - Relationship system
+ * - Dice rolling system
+ * - Campaign system
+ *    - Factions/relationships system
+ *    - Quest system
+ *    - Exploration system
+ *
+ * It is all backed up by a rich event system where subsystems can subscribe and publish events.
+ *
  */
 export class Roleplayer {
-  roll: Roll;
   events: CampaignEventWithRound[] = [];
   worlds: World[] = [];
-  campaigns: Campaign[] = [];
-  battles: Battle[] = [];
+  campaigns: CampaignState[] = [];
+  logger?: Logger;
 
-  constructor({ roll, ...rest }: AugmentedRequired<Partial<Roleplayer>, "roll">) {
-    Object.assign(this, rest);
-    this.roll = roll;
+  constructor(r: Partial<Roleplayer> = {}) {
+    Object.assign(this, r);
   }
 
   createWorld(...args: ConstructorParameters<typeof World>) {
@@ -41,16 +43,10 @@ export class Roleplayer {
     return world;
   }
 
-  createCampaign(...args: ConstructorParameters<typeof Campaign>) {
-    const campaign = new Campaign(...args);
+  createCampaign(...args: ConstructorParameters<typeof CampaignState>) {
+    const campaign = new CampaignState(...args);
     this.campaigns.push(campaign);
-    return new Campaign(...args);
-  }
-
-  createBattle(...args: ConstructorParameters<typeof Battle>) {
-    const battle = new Battle(...args);
-    this.battles.push(battle);
-    return battle;
+    return campaign;
   }
 
   nextSerialNumber() {
@@ -59,10 +55,14 @@ export class Roleplayer {
     return lastSerialNumber + 1;
   }
 
-  publishCampaignEvent(campaign: Campaign, ...newEvents: CampaignEvent[]) {
-    const currentCampaignState = campaign.getCampaignStateFromEvents();
-    const currentBattle = currentCampaignState.getCurrentBattle();
-    const currentRound = currentCampaignState.getCurrentRound();
+  publishEvent(campaignId: CampaignState["id"], ...newEvents: CampaignEvent[]) {
+    const campaign = this.campaigns.find((c) => c.id === campaignId);
+    if (!campaign) {
+      throw new Error("Campaign not found");
+    }
+
+    const currentBattle = campaign.getCurrentBattle();
+    const currentRound = campaign.getCurrentRound();
 
     const eventsWithRoundAndBattle = newEvents.map((e, i) => {
       const eventSerialNumber = this.nextSerialNumber() + i;
@@ -78,5 +78,35 @@ export class Roleplayer {
 
     this.events.push(...eventsWithRoundAndBattle);
     return newEvents;
+  }
+
+  getCampaignFromEvents(campaignId: Id) {
+    const campaign = this.campaigns.find((c) => c.id === campaignId);
+    if (!campaign) {
+      throw new Error("Campaign does not exist");
+    }
+
+    const campaignState = new CampaignState({ id: campaign.id, roleplayer, ruleset });
+    const sorted = this.events.toSorted((a, b) => a.serialNumber - b.serialNumber);
+
+    try {
+      sorted.forEach((e) => {
+        campaignState.applyEvent(e);
+        this.logger?.debug({ event: e, campaignState: campaignState });
+      });
+
+      return campaignState;
+    } catch (e) {
+      this.debugEventProcessing(campaignState, sorted);
+      throw e;
+    }
+  }
+
+  debugEvent(event: RoleplayerEvent) {
+    // this.logger.table(event);
+  }
+
+  debugEventProcessing(campaignState: CampaignState, events: CampaignEventWithRound[]) {
+    // this.logger.log(campaignState.characters);
   }
 }

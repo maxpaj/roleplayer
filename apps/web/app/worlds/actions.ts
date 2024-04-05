@@ -21,7 +21,7 @@ export async function generateItemDescription(worldId: WorldRecord["id"], itemId
     throw new Error("No such world");
   }
 
-  const item = world.itemDefinitions.find((c) => c.id === itemId);
+  const item = world.itemTemplates.find((c) => c.id === itemId);
   if (!item) {
     throw new Error("No such item");
   }

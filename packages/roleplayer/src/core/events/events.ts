@@ -1,8 +1,8 @@
+import { CampaignState } from "../..";
 import { Id } from "../../lib/generate-id";
 import { ActionDefinition } from "../action/action";
 import { Actor, CharacterInventoryItem, Position } from "../actor/character";
 import { Battle } from "../battle/battle";
-import { Campaign } from "../campaign/campaign";
 import { Round } from "../campaign/round";
 import { ItemDefinition } from "../inventory/item";
 import { CharacterResourceDefinition, CharacterStatType, Clazz } from "../ruleset/ruleset";
@@ -10,8 +10,8 @@ import { CharacterResourceDefinition, CharacterStatType, Clazz } from "../rulese
 export type CampaignEventWithRound = CampaignEvent & {
   roundId: Round["id"];
   battleId?: Battle["id"];
+  campaignId: CampaignState["id"];
   serialNumber: number;
-  campaignId: Campaign["id"];
 };
 
 export type CampaignEvent = RoleplayerEvent & {
@@ -37,7 +37,7 @@ export const RoleplayerEventTypes: RoleplayerEvent["type"][] = [
   "CharacterExperienceSet",
   "CharacterDespawn",
   "CharacterMovement",
-  "CharacterEndRound",
+  "CharacterEndTurn",
   "CharacterActionGain",
   "CharacterEquipmentSlotGain",
   "CharacterInventoryItemGain",
@@ -112,7 +112,7 @@ export type CharacterEventType =
       targetPosition: Position;
       sourceId?: Actor["id"];
     }
-  | { type: "CharacterEndRound"; characterId: Actor["id"] }
+  | { type: "CharacterEndTurn"; characterId: Actor["id"] }
   | { type: "CharacterActionGain"; characterId: Actor["id"]; actionId: Id }
   | {
       type: "CharacterEquipmentSlotGain";

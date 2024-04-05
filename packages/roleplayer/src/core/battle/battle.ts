@@ -1,4 +1,4 @@
-import type { ActionDefinition, Ruleset } from "../..";
+import type { ActionDefinition, CampaignEvent, Ruleset } from "../..";
 import type { Id } from "../../lib/generate-id";
 import type { AugmentedRequired } from "../../types/with-required";
 import type { Actor, Position } from "../actor/character";
@@ -7,9 +7,11 @@ export class Battle {
   id!: Id;
   name!: string;
   finished!: boolean;
-
   ruleset: Ruleset;
+
   actors: Actor[] = [];
+  actorToAct: Actor | undefined;
+  actorsThatHaveActed: Actor[] = [];
 
   constructor(ruleset: Ruleset, b: AugmentedRequired<Partial<Battle>, "name" | "id">) {
     Object.assign(this, b);
@@ -37,16 +39,14 @@ export class Battle {
     this.actors.push(actor);
   }
 
-  currentActorTurn() {
-    return this.ruleset.getCurrentActorTurn(this);
-  }
-
   calculateTargetsCone(position: Position, range: number, radius: number, angle: number) {
     return [] as Actor[];
   }
+
   calculateTargetsLine(position: Position, range: number, radius: number, angle: number) {
     return [] as Actor[];
   }
+
   calculateTargetsCircle(position: Position, range: number, radius: number, angle: number) {
     return [] as Actor[];
   }
@@ -56,9 +56,25 @@ export class Battle {
       const didHit = this.ruleset.characterHit(actor, actionDef, target);
       if (!didHit) continue;
       actionDef.appliesEffects;
+      //
     }
     // 1. Check hit
-    // 2. Apply effects
+    // 2. Apply effects -
     return true;
+  }
+
+  applyEvent(event: CampaignEvent) {
+    switch (event.type) {
+      case "CharacterEndTurn": {
+        const characterBattle = this.actors.find((actor) => actor.id === event.characterId);
+        if (!characterBattle) {
+          throw new Error("Cannot find battle character");
+        }
+
+        this.actorsThatHaveActed.push(characterBattle);
+        this.actorToAct = this.ruleset.getCurrentActorTurn(this);
+        break;
+      }
+    }
   }
 }

@@ -47,7 +47,7 @@ export const icons: ClassIcons = {
 export const EventIconMap: {
   [key in RoleplayerEvent["type"]]: { alt: string; icon: any };
 } = {
-  CharacterEndRound: {
+  CharacterEndTurn: {
     alt: "Character end round",
     icon: defaultIcon,
   },

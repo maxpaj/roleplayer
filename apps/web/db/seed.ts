@@ -10,7 +10,7 @@ import {
 import { classesSchema } from "./schema/classes";
 import { eventsSchema } from "./schema/events";
 import { friendInvitesSchema } from "./schema/friend-invite";
-import { itemDefinitionsSchema, itemInstancesSchema } from "./schema/items";
+import { itemInstancesSchema, itemTemplatesSchema } from "./schema/items";
 import { rulesSchema } from "./schema/rules";
 import { statusesSchema } from "./schema/statuses";
 import { usersSchema } from "./schema/users";
@@ -31,7 +31,7 @@ async function seed() {
   await db.delete(eventsSchema);
   await db.delete(friendInvitesSchema);
   await db.delete(itemInstancesSchema);
-  await db.delete(itemDefinitionsSchema);
+  await db.delete(itemTemplatesSchema);
   await db.delete(rulesSchema);
   await db.delete(statusesSchema);
   await db.delete(usersSchema);

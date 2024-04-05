@@ -1,4 +1,9 @@
+import { DEFAULT_USER_ID } from "@/db/data";
+import { EffectRecord, effectsSchema } from "@/db/schema/effects";
+import { resourceTypesSchema } from "@/db/schema/resources";
 import { eq } from "drizzle-orm";
+import { alias } from "drizzle-orm/pg-core";
+import { CharacterResource } from "roleplayer";
 import { db } from "../db";
 import { actionsSchema, actionsToEffectSchema, actionsToResourceRequirementSchema } from "../db/schema/actions";
 import { CampaignRecord, campaignsSchema } from "../db/schema/campaigns";
@@ -13,25 +18,20 @@ import { NewClazzRecord, classesSchema } from "../db/schema/classes";
 import {
   ItemDefinitionRecord,
   NewItemDefinitionRecord,
-  itemDefinitionsSchema,
+  itemTemplatesSchema,
   itemsToActionsSchema,
 } from "../db/schema/items";
 import { statusesSchema, statusesToEffectsSchema } from "../db/schema/statuses";
 import { UserRecord } from "../db/schema/users";
 import { NewWorldRecord, WorldRecord, worldsSchema } from "../db/schema/worlds";
 import { CampaignService } from "./campaign-service";
-import { DEFAULT_USER_ID } from "@/db/data";
-import { alias } from "drizzle-orm/pg-core";
-import { EffectRecord, effectsSchema } from "@/db/schema/effects";
-import { CharacterResource } from "roleplayer";
-import { resourceTypesSchema } from "@/db/schema/resources";
 import {
-  WorldAggregated,
+  ActionAggregated,
   ActorAggregated,
   CharacterClassAggregated,
-  ActionAggregated,
   ItemAggregated,
   StatusAggregated,
+  WorldAggregated,
 } from "./data-mapper";
 
 export class WorldService {
@@ -70,8 +70,8 @@ export class WorldService {
       .leftJoin(statusesEffectsAlias, eq(statusesEffectsAlias.id, statusesToEffectsAlias.effectId))
 
       // Join items
-      .leftJoin(itemDefinitionsSchema, eq(itemDefinitionsSchema.worldId, worldsSchema.id))
-      .leftJoin(itemsToActionsSchema, eq(itemDefinitionsSchema.id, itemsToActionsSchema.itemId))
+      .leftJoin(itemTemplatesSchema, eq(itemTemplatesSchema.worldId, worldsSchema.id))
+      .leftJoin(itemsToActionsSchema, eq(itemTemplatesSchema.id, itemsToActionsSchema.itemId))
       .leftJoin(itemsActionsAlias, eq(itemsActionsAlias.id, itemsToActionsSchema.actionId))
       .leftJoin(itemsActionsToEffectsAlias, eq(itemsActionsToEffectsAlias.actionId, itemsActionsAlias.id))
       .leftJoin(itemsActionsEffectAlias, eq(itemsActionsEffectAlias.id, itemsActionsToEffectsAlias.effectId))
@@ -181,10 +181,10 @@ export class WorldService {
     }
 
     function accumulateItems(row: (typeof rows)[0], acc: Record<string, WorldAggregated>, world: WorldRecord) {
-      if (row.itemDefinitions) {
-        const existingItem = acc[world.id]!.itemDefinitions.filter((c) => c.id === row.itemDefinitions!.id)[0];
+      if (row.itemTemplates) {
+        const existingItem = acc[world.id]!.itemTemplates.filter((c) => c.id === row.itemTemplates!.id)[0];
         const itemToAdd: ItemAggregated = {
-          ...(existingItem || row.itemDefinitions),
+          ...(existingItem || row.itemTemplates),
           actions: existingItem?.actions || [],
         };
 
@@ -225,8 +225,8 @@ export class WorldService {
           itemToAdd.actions = [...itemToAdd.actions.filter((a) => a.id !== row.itemsActionsAlias!.id), actionToAdd];
         }
 
-        acc[world.id]!.itemDefinitions = [
-          ...acc[world.id]!.itemDefinitions.filter((c) => c.id !== row.itemDefinitions!.id),
+        acc[world.id]!.itemTemplates = [
+          ...acc[world.id]!.itemTemplates.filter((c) => c.id !== row.itemTemplates!.id),
           itemToAdd,
         ];
       }
@@ -243,7 +243,7 @@ export class WorldService {
           characters: [],
           classes: [],
           races: [],
-          itemDefinitions: [],
+          itemTemplates: [],
           statuses: [],
         };
       }
@@ -363,7 +363,7 @@ export class WorldService {
   }
 
   async createItem(item: NewItemDefinitionRecord) {
-    return db.insert(itemDefinitionsSchema).values(item).returning({ id: itemDefinitionsSchema.id });
+    return db.insert(itemTemplatesSchema).values(item).returning({ id: itemTemplatesSchema.id });
   }
 
   async createCharacterClass(clazz: NewClazzRecord) {
@@ -380,9 +380,9 @@ export class WorldService {
 
   async saveItem(itemId: ItemDefinitionRecord["id"], update: Partial<ItemDefinitionRecord>) {
     return db
-      .update(itemDefinitionsSchema)
+      .update(itemTemplatesSchema)
       .set({ name: update.name, description: update.description })
-      .where(eq(itemDefinitionsSchema.id, itemId))
-      .returning({ id: itemDefinitionsSchema.id });
+      .where(eq(itemTemplatesSchema.id, itemId))
+      .returning({ id: itemTemplatesSchema.id });
   }
 }

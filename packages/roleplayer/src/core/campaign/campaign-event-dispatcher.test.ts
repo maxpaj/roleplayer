@@ -1,6 +1,6 @@
 import { DnDRuleset } from "../../data/rulesets/dnd-5th";
 import { dangerousGenerateId } from "../../lib/generate-id";
-import { CampaignEventWithRound } from "../events/events";
+import type { RoleplayerEvent } from "../events/events";
 import { Roleplayer } from "../roleplayer";
 import { CampaignState } from "./campaign-state";
 
@@ -11,7 +11,7 @@ describe("Campaign", () => {
     const ruleset = new DnDRuleset(() => 2);
     const campaign = new CampaignState({ id: dangerousGenerateId(), roleplayer, ruleset });
 
-    const events: CampaignEventWithRound[] = [
+    const events: RoleplayerEvent[] = [
       {
         type: "CharacterSpawned",
         campaignId: campaign.id,

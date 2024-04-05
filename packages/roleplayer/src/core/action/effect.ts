@@ -1,8 +1,14 @@
-import { ActionDefinition, CharacterResourceDefinition, Dice, ElementDefinition, dangerousGenerateId } from "../..";
-import { Actor } from "../actor/character";
-import { CampaignEvent } from "../events/events";
-import { World } from "../world/world";
-import { StatusDefinition } from "./status";
+import type {
+  ActionDefinition,
+  CharacterEvent,
+  CharacterResourceDefinition,
+  Dice,
+  ElementDefinition,
+  Ruleset,
+  SystemEvent,
+} from "../..";
+import type { Actor } from "../actor/character";
+import type { StatusDefinition } from "./status";
 
 export type CharacterResourceLossEffect = {
   eventType: "CharacterResourceLoss";
@@ -20,28 +26,31 @@ export type CharacterStatusGainEffect = {
 export type EffectEventDefinition = CharacterResourceLossEffect | CharacterStatusGainEffect;
 
 // TODO: Can this be typed better?
-export type EffectEvent = {
-  eventType: EffectEventDefinition["eventType"];
-  parameters: Omit<EffectEventDefinition, "eventType">;
-};
+export type EffectEvent =
+  | {
+      eventType: CharacterResourceLossEffect["eventType"];
+      parameters: Omit<CharacterResourceLossEffect, "eventType">;
+    }
+  | {
+      eventType: CharacterStatusGainEffect["eventType"];
+      parameters: Omit<CharacterStatusGainEffect, "eventType">;
+    };
 
 export function mapEffect(
   effect: EffectEvent,
   actionDef: ActionDefinition,
   attacker: Actor,
   target: Actor,
-  world: World
-) {
+  ruleset: Ruleset
+): SystemEvent | CharacterEvent {
   switch (effect.eventType) {
     case "CharacterResourceLoss": {
-      return instantiateResourceLossEffect(actionDef, effect, attacker, target, world);
+      return instantiateResourceLossEffect(actionDef, effect, attacker, target, ruleset);
     }
 
     case "CharacterStatusGain": {
-      return instantiateStatusGainEffect(actionDef, effect, attacker, target, world);
+      return instantiateStatusGainEffect(actionDef, effect, attacker, target, ruleset);
     }
-    default:
-      throw new Error("Cannot map applied effect");
   }
 }
 
@@ -50,17 +59,16 @@ function instantiateResourceLossEffect(
   effect: EffectEvent,
   source: Actor,
   target: Actor,
-  world: World
-): CampaignEvent {
+  ruleset: Ruleset
+): SystemEvent | CharacterEvent {
   if (effect.eventType !== "CharacterResourceLoss") {
     throw new Error("Not CharacterResourceLoss effect type");
   }
 
   return {
-    type: "CharacterResourceLoss",
-    amount: world.ruleset.characterHitDamage(source, action, target, effect),
+    type: "CharacterResourceLoss" as const,
+    amount: ruleset.characterHitDamage(source, action, target, effect),
     characterId: target.id,
-    id: dangerousGenerateId(),
     resourceTypeId: effect.parameters.resourceTypeId as CharacterResourceDefinition["id"],
     actionId: action.id,
     sourceId: source.id,
@@ -72,16 +80,15 @@ function instantiateStatusGainEffect(
   effect: EffectEvent,
   source: Actor,
   target: Actor,
-  world: World
-): CampaignEvent {
+  ruleset: Ruleset
+) {
   if (effect.eventType !== "CharacterStatusGain") {
     throw new Error("Not CharacterStatusGain effect type");
   }
 
   return {
-    type: "CharacterStatusGain",
+    type: "CharacterStatusGain" as const,
     characterId: target.id,
-    id: dangerousGenerateId(),
     actionId: action.id,
     sourceId: source.id,
     statusId: effect.parameters.statusId as StatusDefinition["id"],

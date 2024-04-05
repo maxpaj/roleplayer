@@ -1,11 +1,11 @@
 import { CampaignState } from "../..";
 import { DnDRuleset } from "../../data/rulesets/dnd-5th";
 import { dangerousGenerateId } from "../../lib/generate-id";
-import { ActionDefinition, TargetType } from "../action/action";
-import { CampaignEvent } from "../events/events";
-import { ItemDefinition, ItemEquipmentType, ItemSlot, ItemType } from "../inventory/item";
+import { TargetType, type ActionDefinition } from "../action/action";
+import type { RoleplayerEvent } from "../events/events";
+import { ItemEquipmentType, ItemSlot, ItemType, type ItemDefinition } from "../inventory/item";
 import { Roleplayer } from "../roleplayer";
-import { CharacterResourceDefinition } from "../ruleset/ruleset";
+import type { CharacterResourceDefinition } from "../ruleset/ruleset";
 import { Rarity } from "../world/rarity";
 import { World } from "../world/world";
 import { Actor } from "./character";
@@ -50,7 +50,7 @@ describe("Character", () => {
         defaultMax: 20,
       };
 
-      const events: CampaignEvent[] = [
+      const events: RoleplayerEvent[] = [
         {
           type: "CharacterResourceMaxSet",
           max: 12,
@@ -77,7 +77,7 @@ describe("Character", () => {
 
       const movementSpeedResource = ruleset.getCharacterResourceTypes().find((r) => r.name === "Movement speed");
 
-      const events: CampaignEvent[] = [
+      const events: RoleplayerEvent[] = [
         {
           type: "CharacterResourceGain",
           id: dangerousGenerateId(),
@@ -141,7 +141,7 @@ describe("Character", () => {
       roleplayer.nextRound();
       roleplayer.createCharacter(characterId, "Character");
 
-      const events: CampaignEvent[] = [
+      const events: RoleplayerEvent[] = [
         {
           type: "CharacterResourceGain",
           id: dangerousGenerateId(),
@@ -193,7 +193,7 @@ describe("Character", () => {
         defaultMax: 20,
       };
 
-      const events: CampaignEvent[] = [
+      const events: RoleplayerEvent[] = [
         {
           type: "CharacterResourceMaxSet",
           max: 14,
@@ -249,7 +249,7 @@ describe("Character", () => {
       roleplayer.nextRound();
       roleplayer.createCharacter(characterId, "Character");
 
-      const events: CampaignEvent[] = [
+      const events: RoleplayerEvent[] = [
         {
           type: "CharacterSpawned",
           id: dangerousGenerateId(),
@@ -285,7 +285,7 @@ describe("Character", () => {
         defaultMax: 20,
       };
 
-      const events: CampaignEvent[] = [
+      const events: RoleplayerEvent[] = [
         {
           type: "CharacterResourceMaxSet",
           max: 14,
@@ -311,7 +311,7 @@ describe("Character", () => {
         roleplayer,
         ruleset,
       });
-      const events: CampaignEvent[] = [
+      const events: RoleplayerEvent[] = [
         {
           type: "Unknown",
           id: dangerousGenerateId(),

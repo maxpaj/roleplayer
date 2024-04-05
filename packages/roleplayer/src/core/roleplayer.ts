@@ -1,5 +1,14 @@
-import { CampaignEvent, CampaignEventWithRound, CampaignState, Id, RoleplayerEvent, World } from "..";
-import { Logger } from "../lib/logging/logger";
+import {
+  CampaignState,
+  dangerousGenerateId,
+  type CharacterEvent,
+  type Id,
+  type RoleplayerEvent,
+  type Ruleset,
+  type SystemEvent,
+} from "..";
+import type { Logger } from "../lib/logging/logger";
+import type { AugmentedRequired } from "../types/with-required";
 
 /**
  * The core of this library contains a few systems that are common for most or all roleplaying games.
@@ -27,26 +36,19 @@ import { Logger } from "../lib/logging/logger";
  * It is all backed up by a rich event system where subsystems can subscribe and publish events.
  *
  */
+
 export class Roleplayer {
-  events: CampaignEventWithRound[] = [];
-  worlds: World[] = [];
-  campaigns: CampaignState[] = [];
+  ruleset!: Ruleset;
+  events: RoleplayerEvent[] = [];
+  campaign: CampaignState;
   logger?: Logger;
 
-  constructor(r: Partial<Roleplayer> = {}) {
+  constructor(
+    r: AugmentedRequired<Partial<Roleplayer>, "ruleset">,
+    c: Omit<ConstructorParameters<typeof CampaignState>[0], "roleplayer" | "ruleset">
+  ) {
     Object.assign(this, r);
-  }
-
-  createWorld(...args: ConstructorParameters<typeof World>) {
-    const world = new World(...args);
-    this.worlds.push(world);
-    return world;
-  }
-
-  createCampaign(...args: ConstructorParameters<typeof CampaignState>) {
-    const campaign = new CampaignState(...args);
-    this.campaigns.push(campaign);
-    return campaign;
+    this.campaign = new CampaignState({ ...c, roleplayer: this, ruleset: r.ruleset });
   }
 
   nextSerialNumber() {
@@ -55,24 +57,19 @@ export class Roleplayer {
     return lastSerialNumber + 1;
   }
 
-  publishEvent(campaignId: CampaignState["id"], ...newEvents: CampaignEvent[]) {
-    const campaign = this.campaigns.find((c) => c.id === campaignId);
-    if (!campaign) {
-      throw new Error("Campaign not found");
-    }
-
-    const currentBattle = campaign.getCurrentBattle();
-    const currentRound = campaign.getCurrentRound();
+  publishEvent(...newEvents: (SystemEvent | CharacterEvent)[]) {
+    const currentBattle = this.campaign.getCurrentBattle();
+    const currentRound = this.campaign.getCurrentRound();
 
     const eventsWithRoundAndBattle = newEvents.map((e, i) => {
       const eventSerialNumber = this.nextSerialNumber() + i;
 
       return {
         ...e,
+        id: dangerousGenerateId(),
         battleId: currentBattle?.id,
         roundId: currentRound.id,
         serialNumber: eventSerialNumber,
-        campaignId: campaign.id,
       };
     });
 
@@ -81,32 +78,14 @@ export class Roleplayer {
   }
 
   getCampaignFromEvents(campaignId: Id) {
-    const campaign = this.campaigns.find((c) => c.id === campaignId);
-    if (!campaign) {
-      throw new Error("Campaign does not exist");
-    }
-
-    const campaignState = new CampaignState({ id: campaign.id, roleplayer, ruleset });
-    const sorted = this.events.toSorted((a, b) => a.serialNumber - b.serialNumber);
-
-    try {
-      sorted.forEach((e) => {
-        campaignState.applyEvent(e);
-        this.logger?.debug({ event: e, campaignState: campaignState });
-      });
-
-      return campaignState;
-    } catch (e) {
-      this.debugEventProcessing(campaignState, sorted);
-      throw e;
-    }
+    return this.campaign;
   }
 
   debugEvent(event: RoleplayerEvent) {
     // this.logger.table(event);
   }
 
-  debugEventProcessing(campaignState: CampaignState, events: CampaignEventWithRound[]) {
+  debugEventProcessing(campaignState: CampaignState, events: RoleplayerEvent[]) {
     // this.logger.log(campaignState.characters);
   }
 }

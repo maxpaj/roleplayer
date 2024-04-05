@@ -1,6 +1,6 @@
-import { CampaignEvent } from "../..";
-import { Id } from "../../lib/generate-id";
-import { EffectEventDefinition } from "./effect";
+import type { RoleplayerEvent } from "../..";
+import type { Id } from "../../lib/generate-id";
+import type { EffectEventDefinition } from "./effect";
 
 /**
  * @module core/actions
@@ -11,7 +11,7 @@ export type StatusDefinition = {
   type: StatusType;
   appliesEffects: {
     effect: EffectEventDefinition;
-    appliesAt: CampaignEvent["type"];
+    appliesAt: RoleplayerEvent["type"];
   }[];
   durationType: StatusDurationType;
   duration?: number;

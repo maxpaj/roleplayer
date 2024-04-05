@@ -1,9 +1,11 @@
 import { Clazz, Race, Ruleset } from "../..";
 import { Id } from "../../lib/generate-id";
+import { AugmentedRequired } from "../../types/with-required";
 import { ActionDefinition } from "../action/action";
 import { StatusDefinition } from "../action/status";
 import { Actor } from "../actor/character";
 import { ItemDefinition } from "../inventory/item";
+import { Roleplayer } from "../roleplayer";
 
 /**
  * Container for all world related things. Is limited to what is allowed by the ruleset.
@@ -16,8 +18,9 @@ import { ItemDefinition } from "../inventory/item";
 export class World {
   id!: Id;
   name!: string;
+  roleplayer!: Roleplayer;
+  ruleset!: Ruleset;
 
-  ruleset: Ruleset;
   itemTemplates: ItemDefinition[] = [];
   actorTemplates: Actor[] = [];
   races: Race[] = [];
@@ -25,9 +28,7 @@ export class World {
   statuses: StatusDefinition[] = [];
   classes: Clazz[] = [];
 
-  constructor(ruleset: Ruleset, name: string, w: Partial<World>) {
+  constructor(w: AugmentedRequired<Partial<World>, "id" | "name" | "roleplayer" | "ruleset">) {
     Object.assign(this, w);
-    this.ruleset = ruleset;
-    this.name = name;
   }
 }

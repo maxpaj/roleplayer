@@ -1,12 +1,14 @@
-import { Id } from "../../lib/generate-id";
-import { AugmentedRequired } from "../../types/with-required";
-import { ActionDefinition } from "../action/action";
-import { Actor, isCharacterEvent } from "../actor/character";
+import type { Id } from "../../lib/generate-id";
+import type { AugmentedRequired } from "../../types/with-required";
+import type { ActionDefinition } from "../action/action";
+import type { StatusDefinition } from "../action/status";
+import { isCharacterEvent, type Actor } from "../actor/character";
 import { Battle } from "../battle/battle";
-import { CampaignEventWithRound } from "../events/events";
-import { Roleplayer } from "../roleplayer";
-import { CharacterResourceDefinition, Ruleset } from "../ruleset/ruleset";
-import { Round } from "./round";
+import type { RoleplayerEvent } from "../events/events";
+import type { ItemDefinition } from "../inventory/item";
+import type { Roleplayer } from "../roleplayer";
+import type { CharacterResourceDefinition, Clazz, Race, Ruleset } from "../ruleset/ruleset";
+import type { Round } from "./round";
 
 /**
  * Represent a campaign current state, after applying all events related to the campaign
@@ -18,6 +20,13 @@ export class CampaignState {
   characters!: Actor[];
   ruleset!: Ruleset;
   roleplayer!: Roleplayer;
+
+  itemTemplates: ItemDefinition[] = [];
+  actorTemplates: Actor[] = [];
+  races: Race[] = [];
+  actions: ActionDefinition[] = [];
+  statuses: StatusDefinition[] = [];
+  classes: Clazz[] = [];
 
   constructor(c: AugmentedRequired<Partial<CampaignState>, "id" | "roleplayer" | "ruleset">) {
     Object.assign(this, c);
@@ -58,7 +67,7 @@ export class CampaignState {
     return round;
   }
 
-  allCharactersHaveActed(events: CampaignEventWithRound[]) {
+  allCharactersHaveActed(events: RoleplayerEvent[]) {
     const round = this.rounds[this.rounds.length - 1];
     if (!round) {
       throw new Error("Could not get current round");
@@ -69,14 +78,16 @@ export class CampaignState {
     );
   }
 
-  applyEvent(event: CampaignEventWithRound) {
+  applyEvent(event: RoleplayerEvent) {
     switch (event.type) {
       case "BattleStarted": {
         if (!event.battleId) throw new Error("BattleStarted event missing battleId");
         this.battles.push(
-          new Battle(this.ruleset, {
+          new Battle({
             id: event.battleId,
             name: "Battle",
+            ruleset: this.ruleset,
+            roleplayer: this.roleplayer,
           })
         );
 

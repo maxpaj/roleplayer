@@ -1,24 +1,19 @@
-import { CampaignState } from "../..";
-import { Id } from "../../lib/generate-id";
-import { ActionDefinition } from "../action/action";
-import { Actor, CharacterInventoryItem, Position } from "../actor/character";
-import { Battle } from "../battle/battle";
-import { Round } from "../campaign/round";
-import { ItemDefinition } from "../inventory/item";
-import { CharacterResourceDefinition, CharacterStatType, Clazz } from "../ruleset/ruleset";
+import type { Id } from "../../lib/generate-id";
+import type { ActionDefinition } from "../action/action";
+import type { Actor, CharacterInventoryItem, Position } from "../actor/character";
+import type { Battle } from "../battle/battle";
+import type { Round } from "../campaign/round";
+import type { ItemDefinition } from "../inventory/item";
+import type { CharacterResourceDefinition, CharacterStatType, Clazz } from "../ruleset/ruleset";
 
-export type CampaignEventWithRound = CampaignEvent & {
+type AbstractEvent = { id: Id; serialNumber: number };
+type WithRoundId = {
   roundId: Round["id"];
   battleId?: Battle["id"];
-  campaignId: CampaignState["id"];
-  serialNumber: number;
 };
+type WithoutRoundId = { roundId?: never; campaignId?: never; battleId?: never };
 
-export type CampaignEvent = RoleplayerEvent & {
-  id: Id;
-};
-
-export type RoleplayerEvent = SystemEventType | CharacterEventType;
+export type RoleplayerEvent = AbstractEvent & (WithRoundId | WithoutRoundId) & (SystemEvent | CharacterEvent);
 
 export const RoleplayerEventTypes: RoleplayerEvent["type"][] = [
   "Unknown",
@@ -53,7 +48,7 @@ export const RoleplayerEventTypes: RoleplayerEvent["type"][] = [
   "CharacterClassLevelGain",
 ] as const;
 
-export type SystemEventType =
+export type SystemEvent =
   | { type: "Unknown" }
   | { type: "CampaignStarted" }
   | { type: "RoundStarted" }
@@ -64,7 +59,7 @@ export type SystemEventType =
       characterId: Actor["id"];
     };
 
-export type CharacterEventType =
+export type CharacterEvent =
   | { type: "CharacterSpawned"; characterId: Actor["id"]; templateCharacterId?: Actor["id"] }
   | { type: "CharacterNameSet"; characterId: Actor["id"]; name: string }
   | {

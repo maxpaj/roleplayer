@@ -1,12 +1,12 @@
-import { World } from "../..";
-import { Id } from "../../lib/generate-id";
-import { AugmentedRequired } from "../../types/with-required";
-import { ActionDefinition } from "../action/action";
-import { StatusDefinition } from "../action/status";
-import { Party } from "../campaign/party";
-import { CampaignEvent, CampaignEventWithRound, RoleplayerEvent } from "../events/events";
-import { EquipmentSlotDefinition, ItemDefinition, ItemType } from "../inventory/item";
-import {
+import type { World } from "../..";
+import type { Id } from "../../lib/generate-id";
+import type { AugmentedRequired } from "../../types/with-required";
+import type { ActionDefinition } from "../action/action";
+import type { StatusDefinition } from "../action/status";
+import type { Party } from "../campaign/party";
+import type { RoleplayerEvent } from "../events/events";
+import { ItemType, type EquipmentSlotDefinition, type ItemDefinition } from "../inventory/item";
+import type {
   Alignment,
   CharacterResourceDefinition,
   CharacterStatType,
@@ -98,7 +98,9 @@ export type CharacterStat = {
   amount: number;
 };
 
-export function isCharacterEvent(event: CampaignEvent): event is Extract<CampaignEvent, { characterId: Actor["id"] }> {
+export function isCharacterEvent(
+  event: RoleplayerEvent
+): event is Extract<RoleplayerEvent, { characterId: Actor["id"] }> {
   return (event as any).characterId !== undefined;
 }
 
@@ -192,7 +194,7 @@ export class Actor {
     return true;
   }
 
-  applyEvent(event: CampaignEventWithRound) {
+  applyEvent(event: RoleplayerEvent) {
     switch (event.type) {
       case "CharacterExperienceChanged": {
         this.xp += event.experience;

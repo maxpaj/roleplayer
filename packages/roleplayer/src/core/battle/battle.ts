@@ -1,22 +1,28 @@
-import type { ActionDefinition, CampaignEvent, Ruleset } from "../..";
+import {
+  mapEffect,
+  type ActionDefinition,
+  type CharacterEvent,
+  type RoleplayerEvent,
+  type Ruleset,
+  type SystemEvent,
+} from "../..";
 import type { Id } from "../../lib/generate-id";
 import type { AugmentedRequired } from "../../types/with-required";
 import type { Actor, Position } from "../actor/character";
+import type { Roleplayer } from "../roleplayer";
 
 export class Battle {
   id!: Id;
   name!: string;
-  finished!: boolean;
-  ruleset: Ruleset;
+  ruleset!: Ruleset;
+  roleplayer!: Roleplayer;
 
   actors: Actor[] = [];
   actorToAct: Actor | undefined;
   actorsThatHaveActed: Actor[] = [];
 
-  constructor(ruleset: Ruleset, b: AugmentedRequired<Partial<Battle>, "name" | "id">) {
+  constructor(b: AugmentedRequired<Partial<Battle>, "name" | "id" | "ruleset" | "roleplayer">) {
     Object.assign(this, b);
-    this.finished = this.finished || false;
-    this.ruleset = ruleset;
   }
 
   isBattleOver() {
@@ -55,15 +61,20 @@ export class Battle {
     for (const target of targets) {
       const didHit = this.ruleset.characterHit(actor, actionDef, target);
       if (!didHit) continue;
-      actionDef.appliesEffects;
-      //
+
+      const events: Array<SystemEvent | CharacterEvent> = [];
+      for (const effect of actionDef.appliesEffects) {
+        events.push(mapEffect(effect, actionDef, actor, target, this.ruleset));
+      }
+
+      this.roleplayer.publishEvent(...events);
     }
     // 1. Check hit
     // 2. Apply effects -
     return true;
   }
 
-  applyEvent(event: CampaignEvent) {
+  applyEvent(event: RoleplayerEvent) {
     switch (event.type) {
       case "CharacterEndTurn": {
         const characterBattle = this.actors.find((actor) => actor.id === event.characterId);

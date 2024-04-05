@@ -1,6 +1,6 @@
 import { DnDRuleset } from "../../data/rulesets/dnd-5th";
 import { dangerousGenerateId } from "../../lib/generate-id";
-import { CampaignEventWithRound } from "../events/events";
+import type { RoleplayerEvent } from "../events/events";
 import { Roleplayer } from "../roleplayer";
 import { World } from "../world/world";
 import { CampaignState } from "./campaign-state";
@@ -14,7 +14,7 @@ describe("Campaign state", () => {
     const world = new World(ruleset, "World", {});
     const healthResource = world.ruleset.getCharacterResourceTypes().find((rt) => rt.name === "Health");
     const campaign = new CampaignState({ id: dangerousGenerateId(), ruleset, roleplayer });
-    const events: CampaignEventWithRound[] = [
+    const events: RoleplayerEvent[] = [
       {
         type: "CharacterSpawned",
         characterId,

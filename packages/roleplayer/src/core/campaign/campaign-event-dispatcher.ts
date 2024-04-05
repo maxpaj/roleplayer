@@ -3,12 +3,12 @@ import type { Logger } from "../../lib/logging/logger";
 import type { ActionDefinition } from "../action/action";
 import { mapEffect } from "../action/effect";
 import { Actor, type CharacterClass, type CharacterInventoryItem, type CharacterStat } from "../actor/character";
-import { Battle } from "../battle/battle";
-import type { CampaignEvent, CampaignEventWithRound } from "../events/events";
+import type { Battle } from "../battle/battle";
+import type { RoleplayerEvent } from "../events/events";
 import type { EquipmentSlotDefinition, ItemDefinition } from "../inventory/item";
-import { Roleplayer } from "../roleplayer";
+import type { Roleplayer } from "../roleplayer";
 import type { World } from "../world/world";
-import { CampaignState } from "./campaign-state";
+import type { CampaignState } from "./campaign-state";
 
 export class CampaignEventDispatcher {
   world: World;
@@ -27,7 +27,7 @@ export class CampaignEventDispatcher {
     }
 
     const campaignId = dangerousGenerateId();
-    const campaignStartEvents: CampaignEventWithRound[] = [
+    const campaignStartEvents: RoleplayerEvent[] = [
       {
         id: dangerousGenerateId(),
         type: "CampaignStarted",
@@ -48,7 +48,7 @@ export class CampaignEventDispatcher {
   }
 
   addCharacterItem(campaignState: CampaignState, characterId: Actor["id"], itemDefinitionId: ItemDefinition["id"]) {
-    const actionGain: CampaignEvent = {
+    const actionGain: RoleplayerEvent = {
       characterId,
       itemDefinitionId: itemDefinitionId,
       id: dangerousGenerateId(),
@@ -64,7 +64,7 @@ export class CampaignEventDispatcher {
     characterId: Actor["id"],
     characterInventoryItemId: CharacterInventoryItem["id"]
   ) {
-    const actionGain: CampaignEvent = {
+    const actionGain: RoleplayerEvent = {
       characterId,
       characterInventoryItemId,
       id: dangerousGenerateId(),
@@ -79,7 +79,7 @@ export class CampaignEventDispatcher {
     characterId: Actor["id"],
     equipmentSlotId: EquipmentSlotDefinition["id"]
   ) {
-    const equipEvent: CampaignEvent = {
+    const equipEvent: RoleplayerEvent = {
       characterId,
       equipmentSlotId,
       id: dangerousGenerateId(),
@@ -95,7 +95,7 @@ export class CampaignEventDispatcher {
     equipmentSlotId: EquipmentSlotDefinition["id"],
     itemId?: ItemDefinition["id"]
   ) {
-    const equipEvent: CampaignEvent = {
+    const equipEvent: RoleplayerEvent = {
       characterId,
       equipmentSlotId,
       itemId,
@@ -112,7 +112,7 @@ export class CampaignEventDispatcher {
     equipmentSlotId: EquipmentSlotDefinition["id"],
     itemId: ItemDefinition["id"]
   ) {
-    const equipEvent: CampaignEvent = {
+    const equipEvent: RoleplayerEvent = {
       type: "CharacterInventoryItemEquip",
       characterId,
       itemId,
@@ -124,7 +124,7 @@ export class CampaignEventDispatcher {
   }
 
   addActionToCharacter(campaignState: CampaignState, characterId: Actor["id"], actionId: ActionDefinition["id"]) {
-    const actionGain: CampaignEvent = {
+    const actionGain: RoleplayerEvent = {
       type: "CharacterActionGain",
       characterId,
       actionId,
@@ -135,7 +135,7 @@ export class CampaignEventDispatcher {
   }
 
   setCharacterStats(campaignState: CampaignState, characterId: Actor["id"], stats: CharacterStat[]) {
-    const statsEvents: CampaignEvent[] = stats.map((st) => ({
+    const statsEvents: RoleplayerEvent[] = stats.map((st) => ({
       type: "CharacterStatChange",
       amount: st.amount,
       characterId,
@@ -147,13 +147,13 @@ export class CampaignEventDispatcher {
   }
 
   setCharacterClasses(campaignState: CampaignState, characterId: Actor["id"], classes: CharacterClass[]) {
-    const classResetEvent: CampaignEvent = {
+    const classResetEvent: RoleplayerEvent = {
       type: "CharacterClassReset",
       characterId,
       id: dangerousGenerateId(),
     };
 
-    const classUpdates: CampaignEvent[] = classes.map((c) => ({
+    const classUpdates: RoleplayerEvent[] = classes.map((c) => ({
       type: "CharacterClassLevelGain",
       characterId,
       id: dangerousGenerateId(),
@@ -164,7 +164,7 @@ export class CampaignEventDispatcher {
   }
 
   setCharacterName(campaignState: CampaignState, characterId: Actor["id"], name: string) {
-    const characterUpdate: CampaignEvent = {
+    const characterUpdate: RoleplayerEvent = {
       type: "CharacterNameSet",
       characterId,
       id: dangerousGenerateId(),
@@ -175,7 +175,7 @@ export class CampaignEventDispatcher {
   }
 
   characterGainExperience(campaignState: CampaignState, characterId: Actor["id"], experience: number) {
-    const characterUpdate: CampaignEvent = {
+    const characterUpdate: RoleplayerEvent = {
       type: "CharacterExperienceChanged",
       characterId,
       id: dangerousGenerateId(),
@@ -193,7 +193,7 @@ export class CampaignEventDispatcher {
     }
 
     const order = this.world.ruleset.characterBattleActionOrder(actor);
-    const characterBattleEnter: CampaignEvent[] = [
+    const characterBattleEnter: RoleplayerEvent[] = [
       {
         type: "CharacterBattleEnter",
         characterId,
@@ -211,7 +211,7 @@ export class CampaignEventDispatcher {
     }
 
     const characterId = dangerousGenerateId();
-    const characterSpawnEvents: CampaignEvent[] = [
+    const characterSpawnEvents: RoleplayerEvent[] = [
       {
         type: "CharacterSpawned",
         characterId,
@@ -220,7 +220,7 @@ export class CampaignEventDispatcher {
       },
     ];
 
-    const characterResourceEvents: CampaignEvent[] = template.resources.map((r) => ({
+    const characterResourceEvents: RoleplayerEvent[] = template.resources.map((r) => ({
       type: "CharacterResourceGain",
       characterId,
       amount: r.max,
@@ -236,7 +236,7 @@ export class CampaignEventDispatcher {
   }
 
   createCharacter(campaignState: CampaignState, characterId: Actor["id"], name: string) {
-    const defaultResourcesEvents: CampaignEvent[] = this.world!.ruleset.getCharacterResourceTypes().map((cr) => ({
+    const defaultResourcesEvents: RoleplayerEvent[] = this.world!.ruleset.getCharacterResourceTypes().map((cr) => ({
       type: "CharacterResourceMaxSet",
       max: cr.defaultMax || 0,
       characterId,
@@ -244,7 +244,7 @@ export class CampaignEventDispatcher {
       id: dangerousGenerateId(),
     }));
 
-    const resourcesGainEvents: CampaignEvent[] = this.world!.ruleset.getCharacterResourceTypes().map((cr) => ({
+    const resourcesGainEvents: RoleplayerEvent[] = this.world!.ruleset.getCharacterResourceTypes().map((cr) => ({
       type: "CharacterResourceGain",
       amount: cr.defaultMax || 0,
       characterId,
@@ -252,7 +252,7 @@ export class CampaignEventDispatcher {
       id: dangerousGenerateId(),
     }));
 
-    const defaultStatsEvents: CampaignEvent[] = this.world!.ruleset.getCharacterStatTypes().map((st) => ({
+    const defaultStatsEvents: RoleplayerEvent[] = this.world!.ruleset.getCharacterStatTypes().map((st) => ({
       type: "CharacterStatChange",
       amount: 0,
       characterId,
@@ -260,14 +260,16 @@ export class CampaignEventDispatcher {
       id: dangerousGenerateId(),
     }));
 
-    const defaultEquipmentSlotEvents: CampaignEvent[] = this.world!.ruleset.getCharacterEquipmentSlots().map((es) => ({
-      type: "CharacterEquipmentSlotGain",
-      characterId,
-      equipmentSlotId: es.id,
-      id: dangerousGenerateId(),
-    }));
+    const defaultEquipmentSlotEvents: RoleplayerEvent[] = this.world!.ruleset.getCharacterEquipmentSlots().map(
+      (es) => ({
+        type: "CharacterEquipmentSlotGain",
+        characterId,
+        equipmentSlotId: es.id,
+        id: dangerousGenerateId(),
+      })
+    );
 
-    const characterSpawnEvents: CampaignEvent[] = [
+    const characterSpawnEvents: RoleplayerEvent[] = [
       {
         type: "CharacterSpawned",
         characterId,
@@ -303,7 +305,7 @@ export class CampaignEventDispatcher {
 
   nextRound(campaignState: CampaignState, battleId?: Battle["id"]) {
     const newRoundId = dangerousGenerateId();
-    const events: CampaignEventWithRound[] = [
+    const events: RoleplayerEvent[] = [
       {
         type: "RoundStarted",
         id: dangerousGenerateId(),
@@ -320,7 +322,7 @@ export class CampaignEventDispatcher {
   }
 
   endRound(campaignState: CampaignState) {
-    const events: CampaignEvent[] = [
+    const events: RoleplayerEvent[] = [
       {
         type: "RoundEnded",
         id: dangerousGenerateId(),
@@ -367,7 +369,7 @@ export class CampaignEventDispatcher {
       return [];
     });
 
-    const characterResourceLoss: CampaignEvent[] = actionDef.requiresResources.map((rr) => ({
+    const characterResourceLoss: RoleplayerEvent[] = actionDef.requiresResources.map((rr) => ({
       type: "CharacterResourceLoss",
       characterId: attacker.id,
       resourceTypeId: rr.resourceTypeId,
@@ -386,7 +388,7 @@ export class CampaignEventDispatcher {
     });
   }
 
-  publishRoundEvent(campaignState: CampaignState, ...newEvents: CampaignEvent[]) {
+  publishRoundEvent(campaignState: CampaignState, ...newEvents: RoleplayerEvent[]) {
     const currentRound = campaignState.getCurrentRound();
 
     const eventsWithRoundAndBattle = newEvents.map((e, i) => {
@@ -403,7 +405,7 @@ export class CampaignEventDispatcher {
     return newEvents;
   }
 
-  applyEvent(campaignState: CampaignState, event: CampaignEventWithRound) {
+  applyEvent(campaignState: CampaignState, event: RoleplayerEvent) {
     switch (event.type) {
       case "CampaignStarted": {
         break;

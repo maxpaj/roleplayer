@@ -57,14 +57,14 @@ export type CharacterStatType = {
 /**
  * A ruleset should implement rules from a table top game system.
  *
- * - level progression definition (how much xp per level, what is unlocked at each level)
- * - stat types (str, dex, con, int, wis, cha -- what does what?)
- * - professions (classes)
- * - character resources (health, mana, movement, etc)
- * - equipment / inventory slots (main hand, off hand, head, chest, etc)
- * - effects (what happens when a character gets hit, what happens when a character hits)
- * - elements (fire, water, earth, air, etc)
- * - battle rules, who acts first, what determines a hit or a dodge on attack
+ * - Level progression definition (how much xp per level, what is unlocked at each level)
+ * - Stat types (str, dex, con, int, wis, cha -- what does what?)
+ * - Professions (classes)
+ * - Character resources (health, mana, movement, etc)
+ * - Equipment / inventory slots (main hand, off hand, head, chest, etc)
+ * - Effects (what happens when a character gets hit, what happens when a character hits)
+ * - Elements (fire, water, earth, air, psychic, physical, etc)
+ * - Battle rules, who acts first, what determines a hit or a dodge on attack
  *
  */
 export interface Ruleset {

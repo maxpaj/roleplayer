@@ -6,7 +6,12 @@ export const D10: Dice = 10;
 export const D20: Dice = 20;
 
 export type Dice = number;
+
+/**
+ * We recommend using RPG Dice Roller for dice rolling, since it has a rich API and is well maintained.
+ */
 export type DiceRoll = `${number | ""}D${number}+${number}`;
+
 export type Roll = (dice: DiceRoll) => number;
 
 export const defaultRoll: Roll = (dice: DiceRoll) => {

@@ -6,14 +6,20 @@ import type { Round } from "../campaign/round";
 import type { ItemDefinition } from "../inventory/item";
 import type { CharacterResourceDefinition, CharacterStatType, Clazz } from "../ruleset/ruleset";
 
-type AbstractEvent = { id: Id; serialNumber: number };
+type EventIdentifier = { id: Id; serialNumber: number };
+
 type WithRoundId = {
   roundId: Round["id"];
   battleId?: Battle["id"];
 };
+
 type WithoutRoundId = { roundId?: never; campaignId?: never; battleId?: never };
 
-export type RoleplayerEvent = AbstractEvent & (WithRoundId | WithoutRoundId) & (SystemEvent | CharacterEvent);
+type RoundEvent = WithRoundId | WithoutRoundId;
+
+export type CampaignEvent = SystemEvent | CharacterEvent;
+
+export type RoleplayerEvent = EventIdentifier & RoundEvent & CampaignEvent;
 
 export const RoleplayerEventTypes: RoleplayerEvent["type"][] = [
   "Unknown",
@@ -51,7 +57,7 @@ export const RoleplayerEventTypes: RoleplayerEvent["type"][] = [
 export type SystemEvent =
   | { type: "Unknown" }
   | { type: "CampaignStarted" }
-  | { type: "RoundStarted" }
+  | { type: "RoundStarted"; roundId: Round["id"] }
   | { type: "RoundEnded" }
   | { type: "BattleStarted" }
   | {

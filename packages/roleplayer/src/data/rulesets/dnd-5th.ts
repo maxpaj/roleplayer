@@ -12,7 +12,7 @@ import {
 } from "../..";
 import { ItemEquipmentType, type EquipmentSlotDefinition } from "../../core/inventory/item";
 import type { CharacterStatType, Clazz, LevelProgression, Ruleset } from "../../core/ruleset/ruleset";
-import { dangerousGenerateId } from "../../lib/generate-id";
+import { generateId } from "../../lib/generate-id";
 
 export class DnDRuleset implements Ruleset {
   roll: Roll;
@@ -23,11 +23,11 @@ export class DnDRuleset implements Ruleset {
 
   getLevelProgression(): LevelProgression[] {
     return [
-      { requiredXp: 0, id: dangerousGenerateId(), unlocksLevel: 1 },
-      { requiredXp: 50, id: dangerousGenerateId(), unlocksLevel: 2 },
-      { requiredXp: 100, id: dangerousGenerateId(), unlocksLevel: 3 },
-      { requiredXp: 200, id: dangerousGenerateId(), unlocksLevel: 4 },
-      { requiredXp: 400, id: dangerousGenerateId(), unlocksLevel: 5 },
+      { requiredXp: 0, id: generateId(), unlocksLevel: 1 },
+      { requiredXp: 50, id: generateId(), unlocksLevel: 2 },
+      { requiredXp: 100, id: generateId(), unlocksLevel: 3 },
+      { requiredXp: 200, id: generateId(), unlocksLevel: 4 },
+      { requiredXp: 400, id: generateId(), unlocksLevel: 5 },
     ];
   }
 

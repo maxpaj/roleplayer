@@ -1,4 +1,4 @@
-import type { World } from "../..";
+import type { CampaignState } from "../..";
 import type { Id } from "../../lib/generate-id";
 import type { AugmentedRequired } from "../../types/with-required";
 import type { ActionDefinition } from "../action/action";
@@ -134,9 +134,9 @@ export class Actor {
   reactionsRemaining: ReactionResource[] = [];
   reactions: Reaction[] = [];
 
-  world!: World;
+  campaign!: CampaignState;
 
-  constructor(a: AugmentedRequired<Partial<Actor>, "world">) {
+  constructor(a: AugmentedRequired<Partial<Actor>, "campaign">) {
     Object.assign(this, a);
   }
 
@@ -312,7 +312,7 @@ export class Actor {
           throw new Error("Cannot add class levels to character, character level not high enough");
         }
 
-        const clazz = this.world!.classes.find((c) => c.id === event.classId);
+        const clazz = this.campaign!.classes.find((c) => c.id === event.classId);
         if (!clazz) {
           throw new Error("Class not found");
         }
@@ -329,7 +329,7 @@ export class Actor {
       }
 
       case "CharacterStatusGain": {
-        const status = this.world!.statuses.find((s) => s.id === event.statusId);
+        const status = this.campaign!.statuses.find((s) => s.id === event.statusId);
         if (!status) {
           throw new Error(`Could not find status with id ${event.statusId} for CharacterStatusGain`);
         }
@@ -356,7 +356,7 @@ export class Actor {
       }
 
       case "CharacterInventoryItemGain": {
-        const item = this.world!.itemTemplates.find((eq) => eq.id === event.itemDefinitionId);
+        const item = this.campaign!.itemTemplates.find((eq) => eq.id === event.itemDefinitionId);
         if (!item) {
           throw new Error(`Could not find item with id ${event.itemDefinitionId} for CharacterGainItem`);
         }
@@ -366,7 +366,7 @@ export class Actor {
       }
 
       case "CharacterEquipmentSlotGain": {
-        const characterSlot = this.world!.ruleset.getCharacterEquipmentSlots().find(
+        const characterSlot = this.campaign!.ruleset.getCharacterEquipmentSlots().find(
           (slot) => slot.id === event.equipmentSlotId
         );
 
@@ -417,7 +417,9 @@ export class Actor {
       }
 
       case "CharacterMovement": {
-        const resourceType = this.world!.ruleset.getCharacterResourceTypes().find((r) => r.name === "Movement speed");
+        const resourceType = this.campaign!.ruleset.getCharacterResourceTypes().find(
+          (r) => r.name === "Movement speed"
+        );
 
         if (!resourceType) {
           throw new Error("Movement resource not defined in world");
@@ -448,7 +450,7 @@ export class Actor {
       }
 
       case "CharacterActionGain": {
-        const action = this.world!.actions.find((a) => a.id === event.actionId);
+        const action = this.campaign!.actions.find((a) => a.id === event.actionId);
         if (!action) {
           throw new Error(`Unknown action ${event.actionId}`);
         }

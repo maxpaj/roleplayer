@@ -1,12 +1,4 @@
-import type {
-  ActionDefinition,
-  CharacterEvent,
-  CharacterResourceDefinition,
-  Dice,
-  ElementDefinition,
-  Ruleset,
-  SystemEvent,
-} from "../..";
+import type { ActionDefinition, CharacterResourceDefinition, Dice, ElementDefinition, Ruleset } from "../..";
 import type { Actor } from "../actor/character";
 import type { StatusDefinition } from "./status";
 
@@ -42,7 +34,7 @@ export function mapEffect(
   attacker: Actor,
   target: Actor,
   ruleset: Ruleset
-): SystemEvent | CharacterEvent {
+): CampaignEvent {
   switch (effect.eventType) {
     case "CharacterResourceLoss": {
       return instantiateResourceLossEffect(actionDef, effect, attacker, target, ruleset);
@@ -60,7 +52,7 @@ function instantiateResourceLossEffect(
   source: Actor,
   target: Actor,
   ruleset: Ruleset
-): SystemEvent | CharacterEvent {
+): CampaignEvent {
   if (effect.eventType !== "CharacterResourceLoss") {
     throw new Error("Not CharacterResourceLoss effect type");
   }

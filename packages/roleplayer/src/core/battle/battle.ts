@@ -1,11 +1,4 @@
-import {
-  mapEffect,
-  type ActionDefinition,
-  type CharacterEvent,
-  type RoleplayerEvent,
-  type Ruleset,
-  type SystemEvent,
-} from "../..";
+import { mapEffect, type ActionDefinition, type RoleplayerEvent, type Ruleset } from "../..";
 import type { Id } from "../../lib/generate-id";
 import type { AugmentedRequired } from "../../types/with-required";
 import type { Actor, Position } from "../actor/character";
@@ -62,7 +55,7 @@ export class Battle {
       const didHit = this.ruleset.characterHit(actor, actionDef, target);
       if (!didHit) continue;
 
-      const events: Array<SystemEvent | CharacterEvent> = [];
+      const events: Array<CampaignEvent> = [];
       for (const effect of actionDef.appliesEffects) {
         events.push(mapEffect(effect, actionDef, actor, target, this.ruleset));
       }

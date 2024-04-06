@@ -1,13 +1,12 @@
-import { CampaignState, D10, DnDRuleset } from "../..";
+import { CampaignState, D10, DnDRuleset, generateId } from "../..";
 import { ItemDefinition, ItemEquipmentType, ItemSlot, ItemType } from "../inventory/item";
 import { Roleplayer } from "../roleplayer";
 import { Rarity } from "../world/rarity";
-import { World } from "../world/world";
 import { TargetType } from "./action";
 import { StatusDefinition, StatusDurationType, StatusType } from "./status";
 
-const roleplayer = new Roleplayer({});
 const ruleset = new DnDRuleset(() => 2);
+const roleplayer = new Roleplayer({ ruleset }, { id: generateId() });
 
 describe("actions", () => {
   const coldElement = ruleset.getElementDefinitions().find((ed) => ed.name === "Cold")!;
@@ -73,10 +72,6 @@ describe("actions", () => {
     stats: [],
   };
 
-  const world = new World(ruleset, "Test world", {});
-  world.statuses = [frozenStatus];
-  world.itemTemplates = [frostSword];
-
   it("should apply effects from being hit", () => {
     const campaign = new CampaignState({
       id: "00000000-0000-0000-0000-000000000000" as const,
@@ -93,7 +88,7 @@ describe("actions", () => {
     roleplayer.createCharacter(attackerId, "Attacker");
     roleplayer.addCharacterItem(attackerId, frostSword.id);
 
-    const afterAddSword = roleplayer.getCampaignFromEvents();
+    const afterAddSword = roleplayer.campaign;
     const characterWithSword = afterAddSword.characters.find((c) => c.id === attackerId);
     roleplayer.characterEquipItem(attackerId, mainHandEquipmentSlot.id, characterWithSword!.inventory[0]!.id);
 
@@ -101,7 +96,7 @@ describe("actions", () => {
     roleplayer.createCharacter(defenderId, "Defender");
     roleplayer.nextRound();
 
-    const beforeAttack = roleplayer.getCampaignFromEvents();
+    const beforeAttack = roleplayer.campaign;
     const attacker = beforeAttack.characters.find((c) => c.id === attackerId);
     const actions = attacker!.getAvailableActions();
     const characterAction = actions.find((a) => a.id === "action-frost-sword-slash");
@@ -109,7 +104,7 @@ describe("actions", () => {
 
     roleplayer.performCharacterAttack(attacker!, characterAction!, defenderBeforeAttack);
 
-    const afterAttack = roleplayer.getCampaignFromEvents();
+    const afterAttack = roleplayer.campaign;
     const defenderAfterAttack = afterAttack.characters.find((c) => c.id === defenderId);
     const defenderHealth = defenderAfterAttack!.resources.find((r) => r.resourceTypeId === healthResource.id)?.amount;
     const defenderChillStatus = defenderAfterAttack!.statuses.find((s) => s.name === "Chill");

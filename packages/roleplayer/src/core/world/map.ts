@@ -1,6 +1,6 @@
 import { Id } from "../..";
 
-export type WorldMap = {
+export type CampaignMap = {
   id: Id;
   name: string;
 };

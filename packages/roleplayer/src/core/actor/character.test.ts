@@ -1,93 +1,94 @@
-import { CampaignState } from "../..";
+import { Rarity } from "../..";
 import { DnDRuleset } from "../../data/rulesets/dnd-5th";
-import { dangerousGenerateId } from "../../lib/generate-id";
+import { generateId } from "../../lib/generate-id";
 import { TargetType, type ActionDefinition } from "../action/action";
-import type { RoleplayerEvent } from "../events/events";
+import type { CampaignEvent } from "../events/events";
 import { ItemEquipmentType, ItemSlot, ItemType, type ItemDefinition } from "../inventory/item";
 import { Roleplayer } from "../roleplayer";
 import type { CharacterResourceDefinition } from "../ruleset/ruleset";
-import { Rarity } from "../world/rarity";
-import { World } from "../world/world";
 import { Actor } from "./character";
 
-const roleplayer = new Roleplayer({});
+const ruleset = new DnDRuleset(() => 2);
 
 describe("Character", () => {
-  const ruleset = new DnDRuleset(() => 2);
-
-  beforeEach(() => {
-    roleplayer.events = [];
-  });
-
   describe("Create character events", () => {
     it("should handle create character events", () => {
-      const characterA = dangerousGenerateId();
-      const characterB = dangerousGenerateId();
+      const characterA = generateId();
+      const characterB = generateId();
 
-      const world = new World(ruleset, "World", {});
-      const campaign = new CampaignState({ id: dangerousGenerateId(), ruleset, roleplayer });
+      const roleplayer = new Roleplayer(
+        {
+          ruleset,
+        },
+        { id: generateId() }
+      );
 
       roleplayer.nextRound();
       roleplayer.createCharacter(characterA, "Character A");
       roleplayer.createCharacter(characterB, "Character B");
 
-      const data = roleplayer.getCampaignFromEvents(campaign.id);
+      const data = roleplayer.campaign;
       expect(data.characters.length).toBe(2);
     });
 
     it("should apply maximum health change events", () => {
-      const characterId = dangerousGenerateId();
+      const characterId = generateId();
 
-      const world = new World(ruleset, "World", {});
-      const campaign = new CampaignState({ id: dangerousGenerateId(), roleplayer });
+      const roleplayer = new Roleplayer(
+        {
+          ruleset,
+        },
+        { id: generateId() }
+      );
 
       roleplayer.nextRound();
       roleplayer.createCharacter(characterId, "Character");
 
       const resourceType: CharacterResourceDefinition = {
-        id: dangerousGenerateId(),
+        id: generateId(),
         name: "Health",
         defaultMax: 20,
       };
 
-      const events: RoleplayerEvent[] = [
+      const events: CampaignEvent[] = [
         {
           type: "CharacterResourceMaxSet",
           max: 12,
-          id: dangerousGenerateId(),
           characterId: characterId,
           resourceTypeId: resourceType.id,
         },
       ];
 
-      roleplayer.publishEvent(campaign.id, ...events);
+      roleplayer.publishEvent(...events);
 
-      const data = roleplayer.getCampaignFromEvents(campaign.id);
+      const data = roleplayer.campaign;
       const characterFromEvents = data.characters.find((c) => c.id === characterId);
       expect(characterFromEvents!.resources.find((r) => r.resourceTypeId === resourceType.id)?.max).toBe(12);
     });
 
     it("should apply movement events", () => {
-      const characterId = dangerousGenerateId();
-      const world = new World(ruleset, "World", {});
-      const campaign = new CampaignState({ id: dangerousGenerateId(), roleplayer, ruleset });
+      const characterId = generateId();
+      const roleplayer = new Roleplayer(
+        {
+          ruleset,
+        },
+        { id: generateId() }
+      );
 
       roleplayer.nextRound();
       roleplayer.createCharacter(characterId, "Character");
 
       const movementSpeedResource = ruleset.getCharacterResourceTypes().find((r) => r.name === "Movement speed");
 
-      const events: RoleplayerEvent[] = [
+      const events: CampaignEvent[] = [
         {
           type: "CharacterResourceGain",
-          id: dangerousGenerateId(),
           resourceTypeId: movementSpeedResource!.id,
           amount: 35,
           characterId: characterId,
         },
         {
           type: "CharacterPositionSet",
-          id: dangerousGenerateId(),
           targetPosition: {
             x: 10,
             y: 0,
@@ -102,14 +103,13 @@ describe("Character", () => {
             y: 20,
             z: 0,
           },
-          id: dangerousGenerateId(),
           characterId: characterId,
         },
       ];
 
-      roleplayer.publishEvent(campaign.id, ...events);
+      roleplayer.publishEvent(...events);
 
-      const data = roleplayer.getCampaignFromEvents(campaign.id);
+      const data = roleplayer.campaign;
       const characterFromEvents = data.characters.find((c) => c.id === characterId);
       expect(characterFromEvents!.position.x).toBe(10);
       expect(characterFromEvents!.position.y).toBe(20);
@@ -117,16 +117,20 @@ describe("Character", () => {
 
     it("should reject movement event when movement exceeds remaining movement", () => {
       const movementResource: CharacterResourceDefinition = {
-        id: dangerousGenerateId(),
+        id: generateId(),
         name: "Movement speed",
       };
 
-      const world = new World(ruleset, "World", {});
-      const campaign = new CampaignState({ id: dangerousGenerateId(), ruleset, roleplayer });
+      const roleplayer = new Roleplayer(
+        {
+          ruleset,
+        },
+        { id: generateId() }
+      );
 
-      const characterId = dangerousGenerateId();
+      const characterId = generateId();
       const character = new Actor({
-        world,
+        campaign: roleplayer.campaign,
         resources: [
           {
             amount: 35,
@@ -141,17 +145,15 @@ describe("Character", () => {
       roleplayer.nextRound();
       roleplayer.createCharacter(characterId, "Character");
 
-      const events: RoleplayerEvent[] = [
+      const events: CampaignEvent[] = [
         {
           type: "CharacterResourceGain",
-          id: dangerousGenerateId(),
           amount: 35,
           characterId: characterId,
           resourceTypeId: movementResource.id,
         },
         {
           type: "CharacterPositionSet",
-          id: dangerousGenerateId(),
           targetPosition: {
             x: 10,
             y: 0,
@@ -161,7 +163,7 @@ describe("Character", () => {
         },
         {
           type: "RoundStarted",
-          id: dangerousGenerateId(),
+          roundId: generateId(),
         },
         {
           type: "CharacterMovement",
@@ -170,158 +172,166 @@ describe("Character", () => {
             y: 50,
             z: 0,
           },
-          id: dangerousGenerateId(),
           characterId: characterId,
         },
       ];
 
-      roleplayer.publishEvent(campaign.id, ...events);
+      roleplayer.publishEvent(...events);
 
-      expect(roleplayer.getCampaignFromEvents(campaign.id)).toThrow();
+      expect(roleplayer.campaign).toThrow();
     });
 
     it("should apply temporary resource change events", () => {
-      const characterId = dangerousGenerateId();
-      const world = new World(ruleset, "World", {});
-      const campaign = new CampaignState({ id: dangerousGenerateId(), ruleset, roleplayer });
+      const characterId = generateId();
+
+      const roleplayer = new Roleplayer(
+        {
+          ruleset,
+        },
+        { id: generateId() }
+      );
       roleplayer.nextRound();
       roleplayer.createCharacter(characterId, "Character");
 
       const testResourceType: CharacterResourceDefinition = {
-        id: dangerousGenerateId(),
+        id: generateId(),
         name: "Resource",
         defaultMax: 20,
       };
 
-      const events: RoleplayerEvent[] = [
+      const events: CampaignEvent[] = [
         {
           type: "CharacterResourceMaxSet",
           max: 14,
-          id: dangerousGenerateId(),
           characterId: characterId,
           resourceTypeId: testResourceType.id,
         },
         {
           type: "CharacterResourceGain",
           amount: 12,
-          id: dangerousGenerateId(),
           characterId: characterId,
           resourceTypeId: testResourceType.id,
         },
         {
           type: "CharacterResourceLoss",
           amount: 8,
-          id: dangerousGenerateId(),
           characterId: characterId,
           resourceTypeId: testResourceType.id,
         },
       ];
 
-      roleplayer.publishEvent(campaign.id, ...events);
+      roleplayer.publishEvent(...events);
 
-      const data = roleplayer.getCampaignFromEvents(campaign.id);
+      const data = roleplayer.campaign;
       const characterFromEvents = data.characters.find((c) => c.id === characterId);
       expect(characterFromEvents!.resources.find((r) => r.resourceTypeId === testResourceType.id)?.max).toBe(14);
       expect(characterFromEvents!.resources.find((r) => r.resourceTypeId === testResourceType.id)?.amount).toBe(4);
     });
 
     it("should apply item gain events", () => {
-      const characterId = dangerousGenerateId();
-      const itemId = dangerousGenerateId();
-      const world = new World(ruleset, "World", {
-        itemTemplates: [
-          {
-            id: itemId,
-            rarity: Rarity.Common,
-            weightUnits: 1,
-            actions: [],
-            name: "Item",
-            stats: [],
-            occupiesSlots: [ItemSlot.Inventory],
-            type: ItemType.Equipment,
-            description: "",
-            equipmentType: ItemEquipmentType.OneHandWeapon,
-          },
-        ],
-      });
-      const campaign = new CampaignState({ id: dangerousGenerateId(), ruleset, roleplayer });
+      const characterId = generateId();
+      const itemId = generateId();
+
+      const roleplayer = new Roleplayer(
+        {
+          ruleset,
+        },
+        {
+          id: generateId(),
+          itemTemplates: [
+            {
+              id: itemId,
+              rarity: Rarity.Common,
+              weightUnits: 1,
+              actions: [],
+              name: "Item",
+              stats: [],
+              occupiesSlots: [ItemSlot.Inventory],
+              type: ItemType.Equipment,
+              description: "",
+              equipmentType: ItemEquipmentType.OneHandWeapon,
+            },
+          ],
+        }
+      );
 
       roleplayer.nextRound();
       roleplayer.createCharacter(characterId, "Character");
 
-      const events: RoleplayerEvent[] = [
+      const events: CampaignEvent[] = [
         {
           type: "CharacterSpawned",
-          id: dangerousGenerateId(),
           characterId: characterId,
         },
         {
           type: "CharacterInventoryItemGain",
-          id: dangerousGenerateId(),
-          itemInstanceId: dangerousGenerateId(),
+          itemInstanceId: generateId(),
           characterId: characterId,
           itemDefinitionId: itemId,
         },
       ];
 
-      roleplayer.publishEvent(campaign.id, ...events);
+      roleplayer.publishEvent(...events);
 
-      const data = roleplayer.getCampaignFromEvents(campaign.id);
+      const data = roleplayer.campaign;
       const characterFromEvents = data.characters.find((c) => c.id === characterId);
       expect(characterFromEvents!.inventory.length).toBe(1);
     });
 
     it("should apply reject character events if character doesn't exist", () => {
-      const characterId = dangerousGenerateId();
+      const characterId = generateId();
 
-      const world = new World(ruleset, "World", {});
-      const campaign = new CampaignState({ id: dangerousGenerateId(), ruleset, roleplayer });
+      const roleplayer = new Roleplayer(
+        {
+          ruleset,
+        },
+        { id: generateId() }
+      );
 
       roleplayer.nextRound();
 
       const resourceType: CharacterResourceDefinition = {
-        id: dangerousGenerateId(),
+        id: generateId(),
         name: "Resource",
         defaultMax: 20,
       };
 
-      const events: RoleplayerEvent[] = [
+      const events: CampaignEvent[] = [
         {
           type: "CharacterResourceMaxSet",
           max: 14,
-          id: dangerousGenerateId(),
           characterId: characterId,
           resourceTypeId: resourceType.id,
         },
       ];
 
-      roleplayer.publishEvent(campaign.id, ...events);
+      roleplayer.publishEvent(...events);
 
       try {
-        roleplayer.getCampaignFromEvents(campaign.id);
+        roleplayer.campaign;
       } catch (e) {
         // Success
       }
     });
 
     it("should handle unknown events gracefully", () => {
-      const world = new World(ruleset, "World", {});
-      const campaign = new CampaignState({
-        id: dangerousGenerateId(),
-        roleplayer,
-        ruleset,
-      });
-      const events: RoleplayerEvent[] = [
+      const roleplayer = new Roleplayer(
+        {
+          ruleset,
+        },
+        { id: generateId() }
+      );
+
+      const events: CampaignEvent[] = [
         {
           type: "Unknown",
-          id: dangerousGenerateId(),
         },
       ];
 
       roleplayer.nextRound();
-      roleplayer.publishEvent(campaign.id, ...events);
+      roleplayer.publishEvent(...events);
 
-      const data = roleplayer.getCampaignFromEvents(campaign.id);
+      const data = roleplayer.campaign;
 
       expect(data).toBeDefined();
     });
@@ -329,9 +339,8 @@ describe("Character", () => {
 
   describe("Character actions", () => {
     it("should return a list of possible actions based on the character class abilities, spells and inventory", () => {
-      const world = new World(ruleset, "World", {});
       const sword: ItemDefinition = {
-        id: dangerousGenerateId(),
+        id: generateId(),
         rarity: Rarity.Common,
         weightUnits: 1,
         stats: [],
@@ -339,7 +348,7 @@ describe("Character", () => {
         equipmentType: ItemEquipmentType.OneHandWeapon,
         actions: [
           {
-            id: dangerousGenerateId(),
+            id: generateId(),
             appliesEffects: [],
             eligibleTargets: [TargetType.Hostile],
             name: "Slash",
@@ -354,7 +363,7 @@ describe("Character", () => {
       };
 
       const healingWord: ActionDefinition = {
-        id: dangerousGenerateId(),
+        id: generateId(),
         name: "Healing Word (Level 1)",
         appliesEffects: [],
         eligibleTargets: [TargetType.Friendly],
@@ -364,25 +373,32 @@ describe("Character", () => {
       };
 
       const firebolt: ActionDefinition = {
-        id: dangerousGenerateId(),
+        id: generateId(),
         appliesEffects: [],
         eligibleTargets: [TargetType.Hostile],
         name: "Firebolt",
         rangeDistanceUnits: 35,
         requiresResources: [
           {
-            resourceTypeId: dangerousGenerateId(),
+            resourceTypeId: generateId(),
             amount: 1,
           },
         ],
         description: "",
       };
 
-      const char = new Actor({ world });
+      const roleplayer = new Roleplayer(
+        {
+          ruleset,
+        },
+        { id: generateId(), actions: [healingWord, firebolt], itemTemplates: [sword] }
+      );
+
+      const char = new Actor({ campaign: roleplayer.campaign });
       char.equipment = [
         {
-          slotId: dangerousGenerateId(),
-          item: { id: dangerousGenerateId(), definition: sword },
+          slotId: generateId(),
+          item: { id: generateId(), definition: sword },
         },
       ];
 

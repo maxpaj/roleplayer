@@ -7,15 +7,16 @@ import type { Roleplayer } from "../roleplayer";
 export class Battle {
   id!: Id;
   name!: string;
-  ruleset!: Ruleset;
   roleplayer!: Roleplayer;
 
+  ruleset: Ruleset;
   actors: Actor[] = [];
   actorToAct: Actor | undefined;
   actorsThatHaveActed: Actor[] = [];
 
-  constructor(b: AugmentedRequired<Partial<Battle>, "name" | "id" | "ruleset" | "roleplayer">) {
+  constructor(b: AugmentedRequired<Partial<Omit<Battle, "ruleset">>, "name" | "id" | "roleplayer">) {
     Object.assign(this, b);
+    this.ruleset = b.roleplayer.ruleset;
   }
 
   isBattleOver() {

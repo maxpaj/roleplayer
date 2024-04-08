@@ -1,21 +1,23 @@
 import {
-  ActionDefinition,
   Actor,
-  Battle,
   CampaignState,
-  CharacterClass,
-  CharacterInventoryItem,
-  CharacterStat,
-  EquipmentSlotDefinition,
-  ItemDefinition,
-  RoleplayerEvent,
   generateId,
   mapEffect,
+  type ActionDefinition,
+  type Battle,
+  type CampaignEvent,
+  type CharacterClass,
+  type CharacterInventoryItem,
+  type CharacterStat,
+  type EquipmentSlotDefinition,
   type Id,
+  type ItemDefinition,
+  type RoleplayerEvent,
   type Ruleset,
 } from "..";
 import type { Logger } from "../lib/logging/logger";
 import type { AugmentedRequired } from "../types/with-required";
+import Observable from "./observable";
 
 type RoleplayerCampaignParameters = Omit<ConstructorParameters<typeof CampaignState>[0], "roleplayer" | "ruleset">;
 
@@ -45,18 +47,28 @@ type RoleplayerCampaignParameters = Omit<ConstructorParameters<typeof CampaignSt
  * It is all backed up by a rich event system where subsystems can subscribe and publish events.
  *
  */
-export class Roleplayer {
+export class Roleplayer extends Observable<RoleplayerEvent> {
   ruleset!: Ruleset;
-  events: RoleplayerEvent[] = [];
+  _eventsTarget: RoleplayerEvent[] = [];
+
+  events: RoleplayerEvent[];
   campaign: CampaignState;
   logger?: Logger;
 
   constructor(
-    config: AugmentedRequired<Partial<Omit<Roleplayer, "campaigns">>, "ruleset">,
+    config: AugmentedRequired<Partial<Roleplayer>, "ruleset">,
     initialCampaignConfig: RoleplayerCampaignParameters
   ) {
+    super();
     Object.assign(this, config);
 
+    this.subscribe(this.applyEvent.bind(this));
+    this.events = new Proxy<RoleplayerEvent[]>(this._eventsTarget, {
+      set: (target, property, value, receiver) => {
+        if (typeof property === "string" && !Number.isNaN(+property)) this.notify(value);
+        return Reflect.set(target, property, value, receiver);
+      },
+    });
     this.campaign = new CampaignState({
       ...initialCampaignConfig,
       roleplayer: this,
@@ -74,7 +86,7 @@ export class Roleplayer {
     const currentBattle = this.campaign.getCurrentBattle();
     const currentRound = this.campaign.getCurrentRound();
 
-    const eventsWithRoundAndBattle = newEvents.map((e, i) => {
+    const eventsWithRoundAndBattle = newEvents.map((e, i): RoleplayerEvent => {
       const eventSerialNumber = this.nextSerialNumber() + i;
 
       return {

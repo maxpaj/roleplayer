@@ -15,12 +15,12 @@ import type { Round } from "./round";
  */
 export class CampaignState {
   id!: Id;
-  battles!: Battle[];
-  rounds!: Round[];
-  characters!: Actor[];
   ruleset!: Ruleset;
   roleplayer!: Roleplayer;
 
+  battles: Battle[] = [];
+  rounds: Round[] = [];
+  characters: Actor[] = [];
   itemTemplates: ItemDefinition[] = [];
   actorTemplates: Actor[] = [];
   races: Race[] = [];
@@ -86,7 +86,6 @@ export class CampaignState {
           new Battle({
             id: event.battleId,
             name: "Battle",
-            ruleset: this.ruleset,
             roleplayer: this.roleplayer,
           })
         );

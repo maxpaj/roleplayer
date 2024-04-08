@@ -1,4 +1,4 @@
-import { mapEffect, type ActionDefinition, type RoleplayerEvent, type Ruleset } from "../..";
+import { mapEffect, type ActionDefinition, type CampaignEvent, type RoleplayerEvent, type Ruleset } from "../..";
 import type { Id } from "../../lib/generate-id";
 import type { AugmentedRequired } from "../../types/with-required";
 import type { Actor, Position } from "../actor/character";
@@ -52,17 +52,28 @@ export class Battle {
   }
 
   performAction(actor: Actor, actionDef: ActionDefinition, targets: Actor[]) {
+    const events: Array<CampaignEvent> = [];
     for (const target of targets) {
       const didHit = this.ruleset.characterHit(actor, actionDef, target);
       if (!didHit) continue;
-
-      const events: Array<CampaignEvent> = [];
       for (const effect of actionDef.appliesEffects) {
         events.push(mapEffect(effect, actionDef, actor, target, this.ruleset));
       }
-
-      this.roleplayer.publishEvent(...events);
     }
+
+    for (const resource of actionDef.requiresResources) {
+      events.push({
+        type: "CharacterResourceLoss" as const,
+        amount: resource.amount,
+        characterId: actor.id, // Target
+        resourceTypeId: resource.resourceTypeId,
+        actionId: actionDef.id,
+        sourceId: actor.id, // Actor
+      });
+    }
+
+    this.roleplayer.publishEvent(...events);
+
     // 1. Check hit
     // 2. Apply effects -
     return true;

@@ -8,7 +8,10 @@ import { Roleplayer } from "../roleplayer";
 import type { CharacterResourceDefinition } from "../ruleset/ruleset";
 import { Actor } from "./character";
 
-const ruleset = new DnDRuleset(() => 2);
+const ruleset = new DnDRuleset((str) => {
+  const [, staticValue = "0"] = str.split("+");
+  return 2 + +staticValue;
+});
 
 describe("Character", () => {
   describe("Create character events", () => {
@@ -23,7 +26,7 @@ describe("Character", () => {
         { id: generateId() }
       );
 
-      roleplayer.nextRound();
+      roleplayer.startCampaign();
       roleplayer.createCharacter(characterA, "Character A");
       roleplayer.createCharacter(characterB, "Character B");
 
@@ -116,11 +119,6 @@ describe("Character", () => {
     });
 
     it("should reject movement event when movement exceeds remaining movement", () => {
-      const movementResource: CharacterResourceDefinition = {
-        id: generateId(),
-        name: "Movement speed",
-      };
-
       const roleplayer = new Roleplayer(
         {
           ruleset,
@@ -129,20 +127,7 @@ describe("Character", () => {
       );
 
       const characterId = generateId();
-      const character = new Actor({
-        campaign: roleplayer.campaign,
-        resources: [
-          {
-            amount: 35,
-            max: 35,
-            min: 0,
-            resourceTypeId: movementResource.id,
-          },
-        ],
-      });
-      character.id = characterId;
-
-      roleplayer.nextRound();
+      roleplayer.startCampaign();
       roleplayer.createCharacter(characterId, "Character");
 
       const events: CampaignEvent[] = [
@@ -150,7 +135,7 @@ describe("Character", () => {
           type: "CharacterResourceGain",
           amount: 35,
           characterId: characterId,
-          resourceTypeId: movementResource.id,
+          resourceTypeId: "00000000-0000-0000-0000-000000001000",
         },
         {
           type: "CharacterPositionSet",
@@ -176,9 +161,7 @@ describe("Character", () => {
         },
       ];
 
-      roleplayer.publishEvent(...events);
-
-      expect(roleplayer.campaign).toThrow();
+      expect(() => roleplayer.publishEvent(...events)).toThrow();
     });
 
     it("should apply temporary resource change events", () => {

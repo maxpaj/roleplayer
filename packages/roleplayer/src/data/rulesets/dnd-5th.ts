@@ -218,7 +218,7 @@ export class DnDRuleset implements Ruleset {
       },
       {
         amount: 35,
-        resourceTypeId: "00000000-0000-0000-0000-000000001003" as const,
+        resourceTypeId: "00000000-0000-0000-0000-000000001000" as const,
       },
     ];
   }

@@ -17,6 +17,7 @@ export class Battle {
   constructor(b: AugmentedRequired<Partial<Omit<Battle, "ruleset">>, "name" | "id" | "roleplayer">) {
     Object.assign(this, b);
     this.ruleset = b.roleplayer.ruleset;
+    b.roleplayer.subscribe(this.applyEvent.bind(this));
   }
 
   isBattleOver() {
@@ -80,6 +81,7 @@ export class Battle {
   }
 
   applyEvent(event: RoleplayerEvent) {
+    if (!("battleId" in event) || event.battleId !== this.id) return;
     switch (event.type) {
       case "CharacterEndTurn": {
         const characterBattle = this.actors.find((actor) => actor.id === event.characterId);

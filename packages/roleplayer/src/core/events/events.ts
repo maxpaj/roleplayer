@@ -13,7 +13,7 @@ type WithRoundId = {
   battleId?: Battle["id"];
 };
 
-type WithoutRoundId = { roundId?: never; campaignId?: never; battleId?: never };
+type WithoutRoundId = { roundId?: never; battleId?: never };
 
 type RoundEvent = WithRoundId | WithoutRoundId;
 

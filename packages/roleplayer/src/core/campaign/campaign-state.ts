@@ -30,6 +30,7 @@ export class CampaignState {
 
   constructor(c: AugmentedRequired<Partial<CampaignState>, "id" | "roleplayer" | "ruleset">) {
     Object.assign(this, c);
+    c.roleplayer.subscribe(this.applyEvent.bind(this));
   }
 
   getRoundEvents(round: Round) {
@@ -79,6 +80,7 @@ export class CampaignState {
   }
 
   applyEvent(event: RoleplayerEvent) {
+    if (!("battleId" in event) || event.battleId !== this.id) return;
     switch (event.type) {
       case "BattleStarted": {
         if (!event.battleId) throw new Error("BattleStarted event missing battleId");

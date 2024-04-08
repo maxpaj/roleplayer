@@ -10,7 +10,6 @@ import {
   type CharacterInventoryItem,
   type CharacterStat,
   type EquipmentSlotDefinition,
-  type Id,
   type ItemDefinition,
   type RoleplayerEvent,
   type Ruleset,
@@ -83,26 +82,33 @@ export class Roleplayer extends Observable<RoleplayerEvent> {
   }
 
   publishEvent(...newEvents: CampaignEvent[]) {
-    const currentBattle = this.campaign.getCurrentBattle();
-    const currentRound = this.campaign.getCurrentRound();
-
-    const eventsWithRoundAndBattle = newEvents.map((e, i): RoleplayerEvent => {
-      const eventSerialNumber = this.nextSerialNumber() + i;
-
-      return {
-        ...e,
-        id: generateId(),
-        battleId: currentBattle?.id,
-        roundId: currentRound.id,
-        serialNumber: eventSerialNumber,
-      };
-    });
-
-    this.events.push(...eventsWithRoundAndBattle);
+    for (const event of newEvents) {
+      const eventSerialNumber = this.nextSerialNumber();
+      let rpEvent: RoleplayerEvent;
+      try {
+        const currentRoundId = event.type === "RoundStarted" ? event.roundId : this.campaign.getCurrentRound().id;
+        const currentBattleId = this.campaign.getCurrentBattle()?.id;
+        rpEvent = {
+          ...event,
+          id: generateId(),
+          battleId: currentBattleId,
+          roundId: currentRoundId,
+          serialNumber: eventSerialNumber,
+        };
+      } catch (e) {
+        console.warn(e);
+        rpEvent = {
+          ...event,
+          id: generateId(),
+          serialNumber: eventSerialNumber,
+        };
+      }
+      this.events.push(rpEvent);
+    }
     return newEvents;
   }
 
-  getCampaignFromEvents(campaignId: Id) {
+  getCampaignFromEvents() {
     return this.campaign;
   }
 
@@ -110,19 +116,14 @@ export class Roleplayer extends Observable<RoleplayerEvent> {
     if (this.campaign.rounds.length > 0) {
       throw new Error("Campaign already started");
     }
-
-    const campaignStartEvents: RoleplayerEvent[] = [
+    const roundId = generateId();
+    const campaignStartEvents: CampaignEvent[] = [
       {
-        id: generateId(),
         type: "CampaignStarted",
-        roundId: "00000000-0000-0000-0000-000000000000",
-        serialNumber: 0,
       },
       {
-        id: generateId(),
         type: "RoundStarted",
-        roundId: generateId(),
-        serialNumber: 1,
+        roundId,
       },
     ];
 
@@ -378,8 +379,8 @@ export class Roleplayer extends Observable<RoleplayerEvent> {
   }
 
   startBattle() {
-    const battleId = generateId();
     const currentRound = this.campaign.getCurrentRound();
+    const battleId = generateId();
 
     this.events.push({
       id: generateId(),
@@ -433,14 +434,13 @@ export class Roleplayer extends Observable<RoleplayerEvent> {
   publishRoundEvent(...newEvents: CampaignEvent[]) {
     const currentRound = this.campaign.getCurrentRound();
 
-    const eventsWithRoundAndBattle = newEvents.map((e, i) => {
-      const eventSerialNumber = this.nextSerialNumber() + i;
+    const eventsWithRoundAndBattle = newEvents.map((e): RoleplayerEvent => {
+      const eventSerialNumber = this.nextSerialNumber();
       return {
         ...e,
         id: generateId(),
         roundId: currentRound.id,
         serialNumber: eventSerialNumber,
-        campaignId: this.campaign.id,
       };
     });
 

@@ -1,16 +1,17 @@
 import { DnDRuleset } from "../../data/rulesets/dnd-5th";
 import { generateId } from "../../lib/generate-id";
-import type { RoleplayerEvent } from "../events/events";
+import type { CampaignEvent, RoleplayerEvent } from "../events/events";
 import { Roleplayer } from "../roleplayer";
-import { CampaignState } from "./campaign-state";
 
-const ruleset = new DnDRuleset(() => 2);
+const ruleset = new DnDRuleset((str) => {
+  const [, staticValue = "0"] = str.split("+");
+  return 2 + +staticValue;
+});
 const roleplayer = new Roleplayer({ ruleset }, { id: generateId() });
 
 describe("Campaign state", () => {
   it("calculates correct character level", () => {
     const characterId = generateId();
-    const campaign = new CampaignState({ id: generateId(), roleplayer, ruleset });
 
     const events: RoleplayerEvent[] = [
       {
@@ -28,47 +29,43 @@ describe("Campaign state", () => {
       },
     ];
 
-    roleplayer.events = events;
-
-    const state = roleplayer.getCampaignFromEvents(campaign.id);
+    roleplayer.startCampaign();
+    roleplayer.publishEvent(...events);
+    const state = roleplayer.getCampaignFromEvents();
 
     expect(state.characters.length).toBe(1);
     const character = state.characters[0];
-    expect(character!.xp).toBe(100);
+    expect(character?.xp).toBe(100);
   });
 
   it("applies events", () => {
-    const characterId = generateId();
-    const ruleset = new DnDRuleset(() => 2);
-    const healthResource = ruleset.getCharacterResourceTypes().find((rt) => rt.name === "Health");
-    const campaign = new CampaignState({ id: generateId(), ruleset, roleplayer });
+    const roleplayer = new Roleplayer({ ruleset }, { id: generateId() });
 
-    roleplayer.events = [
+    const characterId = generateId();
+
+    const healthResource = ruleset.getCharacterResourceTypes().find((rt) => rt.name === "Health");
+
+    const events = [
       {
-        id: generateId(),
         type: "CharacterSpawned",
         characterId,
-        serialNumber: 0,
       },
       {
-        id: generateId(),
         type: "CharacterNameSet",
         characterId,
         name: "Some name",
-        serialNumber: 0,
       },
       {
-        id: generateId(),
         type: "CharacterResourceMaxSet",
         characterId,
         resourceTypeId: healthResource!.id,
         max: 10,
-        serialNumber: 0,
       },
-    ];
+    ] satisfies CampaignEvent[];
 
-    const state = roleplayer.getCampaignFromEvents(campaign.id);
+    roleplayer.publishEvent(...events);
 
+    const state = roleplayer.getCampaignFromEvents();
     expect(state.characters.length).toBe(1);
 
     const character = state.characters[0];

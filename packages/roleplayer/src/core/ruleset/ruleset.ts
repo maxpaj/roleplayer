@@ -1,4 +1,4 @@
-import type { Battle, EffectEvent } from "../..";
+import type { Battle, CharacterResourceLossEffect } from "../..";
 import type { Id } from "../../lib/generate-id";
 import type { ActionDefinition } from "../action/action";
 import type { Actor, CharacterResourceGeneration } from "../actor/character";
@@ -78,7 +78,12 @@ export interface Ruleset {
 
   characterBattleActionOrder(actor: Actor): number;
   characterHit(attacker: Actor, action: ActionDefinition, defender: Actor): boolean;
-  characterHitDamage(source: Actor, action: ActionDefinition, target: Actor, effect: EffectEvent): number;
+  characterHitDamage(
+    source: Actor,
+    action: ActionDefinition,
+    target: Actor,
+    effect: CharacterResourceLossEffect
+  ): number;
   characterResistanceMultiplier(actor: Actor, damageType: ElementDefinition): number;
   characterResistanceAbsolute(actor: Actor, damageType: ElementDefinition): number;
   characterResourceGeneration(actor: Actor): CharacterResourceGeneration[];

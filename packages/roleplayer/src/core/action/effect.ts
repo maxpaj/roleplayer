@@ -1,4 +1,11 @@
-import type { ActionDefinition, CharacterResourceDefinition, Dice, ElementDefinition, Ruleset } from "../..";
+import type {
+  ActionDefinition,
+  CampaignEvent,
+  CharacterResourceDefinition,
+  Dice,
+  ElementDefinition,
+  Ruleset,
+} from "../..";
 import type { Actor } from "../actor/character";
 import type { StatusDefinition } from "./status";
 
@@ -18,18 +25,18 @@ export type CharacterStatusGainEffect = {
 export type EffectEventDefinition = CharacterResourceLossEffect | CharacterStatusGainEffect;
 
 // TODO: Can this be typed better?
-export type EffectEvent =
-  | {
-      eventType: CharacterResourceLossEffect["eventType"];
-      parameters: Omit<CharacterResourceLossEffect, "eventType">;
-    }
-  | {
-      eventType: CharacterStatusGainEffect["eventType"];
-      parameters: Omit<CharacterStatusGainEffect, "eventType">;
-    };
+// export type EffectEvent =
+//   | {
+//       eventType: CharacterResourceLossEffect["eventType"];
+//       parameters: Omit<CharacterResourceLossEffect, "eventType">;
+//     }
+//   | {
+//       eventType: CharacterStatusGainEffect["eventType"];
+//       parameters: Omit<CharacterStatusGainEffect, "eventType">;
+//     };
 
 export function mapEffect(
-  effect: EffectEvent,
+  effect: EffectEventDefinition,
   actionDef: ActionDefinition,
   attacker: Actor,
   target: Actor,
@@ -48,7 +55,7 @@ export function mapEffect(
 
 function instantiateResourceLossEffect(
   action: ActionDefinition,
-  effect: EffectEvent,
+  effect: EffectEventDefinition,
   source: Actor,
   target: Actor,
   ruleset: Ruleset
@@ -61,7 +68,7 @@ function instantiateResourceLossEffect(
     type: "CharacterResourceLoss" as const,
     amount: ruleset.characterHitDamage(source, action, target, effect),
     characterId: target.id,
-    resourceTypeId: effect.parameters.resourceTypeId as CharacterResourceDefinition["id"],
+    resourceTypeId: effect.resourceTypeId,
     actionId: action.id,
     sourceId: source.id,
   };
@@ -69,7 +76,7 @@ function instantiateResourceLossEffect(
 
 function instantiateStatusGainEffect(
   action: ActionDefinition,
-  effect: EffectEvent,
+  effect: EffectEventDefinition,
   source: Actor,
   target: Actor,
   ruleset: Ruleset
@@ -83,6 +90,6 @@ function instantiateStatusGainEffect(
     characterId: target.id,
     actionId: action.id,
     sourceId: source.id,
-    statusId: effect.parameters.statusId as StatusDefinition["id"],
+    statusId: effect.statusId,
   };
 }

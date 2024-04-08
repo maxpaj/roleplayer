@@ -3,7 +3,7 @@ import {
   Actor,
   Battle,
   CharacterResourceGeneration,
-  EffectEvent,
+  EffectEventDefinition,
   EquipmentSlotDefinition,
 } from "../..";
 import {
@@ -60,7 +60,7 @@ export class LeagueOfDungeoneersRuleset implements Ruleset {
     throw new Error("Method not implemented.");
   }
 
-  characterHitDamage(source: Actor, action: ActionDefinition, target: Actor, effect: EffectEvent): number {
+  characterHitDamage(source: Actor, action: ActionDefinition, target: Actor, effect: EffectEventDefinition): number {
     throw new Error("Method not implemented.");
   }
 

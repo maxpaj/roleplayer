@@ -1,5 +1,6 @@
-import type { Id } from "../../lib/generate-id";
-import type { AugmentedRequired } from "../../types/with-required";
+import { generateId, type Id } from "../../lib/generate-id";
+import { RemoveFunctions } from "../../types/remove-functions";
+import type { WithRequired } from "../../types/with-required";
 import type { ActionDefinition } from "../action/action";
 import type { StatusDefinition } from "../action/status";
 import { isCharacterEvent, type Actor } from "../actor/character";
@@ -22,13 +23,13 @@ export class CampaignState {
   rounds: Round[] = [];
   characters: Actor[] = [];
   itemTemplates: ItemDefinition[] = [];
-  actorTemplates: Actor[] = [];
+  actorTemplates: RemoveFunctions<Required<Omit<ConstructorParameters<typeof Actor>[0], "campaign">>>[] = [];
   races: Race[] = [];
   actions: ActionDefinition[] = [];
   statuses: StatusDefinition[] = [];
   classes: Clazz[] = [];
 
-  constructor(c: AugmentedRequired<Partial<CampaignState>, "id" | "roleplayer" | "ruleset">) {
+  constructor(c: WithRequired<Partial<CampaignState>, "id" | "roleplayer" | "ruleset">) {
     Object.assign(this, c);
     c.roleplayer.subscribe(this.applyEvent.bind(this));
   }
@@ -60,11 +61,15 @@ export class CampaignState {
   }
 
   getCurrentRound(): Round {
-    const round = this.rounds.toSorted((a, b) => a.serialNumber - b.serialNumber)[this.rounds.length - 1];
+    const round = this.rounds.toSorted((a, b) => a.roundNumber - b.roundNumber)[this.rounds.length - 1];
     if (!round) {
-      throw new Error("No current round");
+      const newRound = {
+        id: generateId(),
+        roundNumber: 0,
+      };
+      this.rounds.push(newRound);
+      return newRound;
     }
-
     return round;
   }
 
@@ -80,10 +85,8 @@ export class CampaignState {
   }
 
   applyEvent(event: RoleplayerEvent) {
-    if (!("battleId" in event) || event.battleId !== this.id) return;
     switch (event.type) {
-      case "BattleStarted": {
-        if (!event.battleId) throw new Error("BattleStarted event missing battleId");
+      case "BattleStarted":
         this.battles.push(
           new Battle({
             id: event.battleId,
@@ -93,25 +96,6 @@ export class CampaignState {
         );
 
         break;
-      }
-
-      case "CharacterBattleEnter": {
-        const battle = this.battles.find((b) => b.id === event.battleId);
-
-        if (!battle) {
-          throw new Error("Cannot find battle");
-        }
-
-        const character = this.characters.find((m) => m.id === event.characterId);
-
-        if (!character) {
-          throw new Error("Cannot find character");
-        }
-
-        battle.addBattleActor(character);
-
-        break;
-      }
     }
   }
 }

@@ -1,6 +1,6 @@
 import { mapEffect, type ActionDefinition, type CampaignEvent, type RoleplayerEvent, type Ruleset } from "../..";
 import type { Id } from "../../lib/generate-id";
-import type { AugmentedRequired } from "../../types/with-required";
+import type { WithRequired } from "../../types/with-required";
 import type { Actor, Position } from "../actor/character";
 import type { Roleplayer } from "../roleplayer";
 
@@ -14,7 +14,7 @@ export class Battle {
   actorToAct: Actor | undefined;
   actorsThatHaveActed: Actor[] = [];
 
-  constructor(b: AugmentedRequired<Partial<Omit<Battle, "ruleset">>, "name" | "id" | "roleplayer">) {
+  constructor(b: WithRequired<Partial<Omit<Battle, "ruleset">>, "name" | "id" | "roleplayer">) {
     Object.assign(this, b);
     this.ruleset = b.roleplayer.ruleset;
     b.roleplayer.subscribe(this.applyEvent.bind(this));
@@ -62,12 +62,14 @@ export class Battle {
       }
     }
 
-    for (const resource of actionDef.requiresResources) {
+    for (const requiredResource of actionDef.requiresResources) {
+      const availableResource = actor.resources.find((r) => r.resourceTypeId === requiredResource.resourceTypeId);
+      if (requiredResource.amount > availableResource!.amount) throw new Error("Not enough resources");
       events.push({
         type: "CharacterResourceLoss" as const,
-        amount: resource.amount,
+        amount: requiredResource.amount,
         characterId: actor.id, // Target
-        resourceTypeId: resource.resourceTypeId,
+        resourceTypeId: requiredResource.resourceTypeId,
         actionId: actionDef.id,
         sourceId: actor.id, // Actor
       });
@@ -83,6 +85,12 @@ export class Battle {
   applyEvent(event: RoleplayerEvent) {
     if (!("battleId" in event) || event.battleId !== this.id) return;
     switch (event.type) {
+      case "CharacterBattleEnter": {
+        const character = this.roleplayer.campaign.characters.find((c) => c.id === event.characterId);
+        if (!character) throw new Error(`Cannot find character with id: ${event.characterId}`);
+        this.addBattleActor(character);
+        break;
+      }
       case "CharacterEndTurn": {
         const characterBattle = this.actors.find((actor) => actor.id === event.characterId);
         if (!characterBattle) {

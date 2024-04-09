@@ -16,16 +16,18 @@ describe("Campaign state", () => {
     const events: RoleplayerEvent[] = [
       {
         id: generateId(),
-        type: "CharacterSpawned",
+        type: "CharacterSpawned" as const,
         characterId,
         serialNumber: 0,
+        roundId: "0",
       },
       {
         id: generateId(),
-        type: "CharacterExperienceSet",
+        type: "CharacterExperienceSet" as const,
         characterId,
         experience: 100,
         serialNumber: 0,
+        roundId: "0",
       },
     ];
 

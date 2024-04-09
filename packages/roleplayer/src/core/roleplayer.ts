@@ -2,6 +2,7 @@ import {
   Actor,
   CampaignState,
   generateId,
+  isBattleEvent,
   mapEffect,
   type ActionDefinition,
   type Battle,
@@ -15,7 +16,7 @@ import {
   type Ruleset,
 } from "..";
 import type { Logger } from "../lib/logging/logger";
-import type { AugmentedRequired } from "../types/with-required";
+import type { WithRequired } from "../types/with-required";
 import Observable from "./observable";
 
 type RoleplayerCampaignParameters = Omit<ConstructorParameters<typeof CampaignState>[0], "roleplayer" | "ruleset">;
@@ -55,7 +56,7 @@ export class Roleplayer extends Observable<RoleplayerEvent> {
   logger?: Logger;
 
   constructor(
-    config: AugmentedRequired<Partial<Roleplayer>, "ruleset">,
+    config: WithRequired<Partial<Roleplayer>, "ruleset">,
     initialCampaignConfig: RoleplayerCampaignParameters
   ) {
     super();
@@ -84,26 +85,30 @@ export class Roleplayer extends Observable<RoleplayerEvent> {
   publishEvent(...newEvents: CampaignEvent[]) {
     for (const event of newEvents) {
       const eventSerialNumber = this.nextSerialNumber();
-      let rpEvent: RoleplayerEvent;
-      try {
-        const currentRoundId = event.type === "RoundStarted" ? event.roundId : this.campaign.getCurrentRound().id;
-        const currentBattleId = this.campaign.getCurrentBattle()?.id;
-        rpEvent = {
+      const currentRoundId = this.campaign.getCurrentRound().id;
+
+      if (isBattleEvent(event)) {
+        const roleplayerEvent = {
           ...event,
           id: generateId(),
-          battleId: currentBattleId,
+          battleId: event.battleId,
           roundId: currentRoundId,
           serialNumber: eventSerialNumber,
         };
-      } catch (e) {
-        console.warn(e);
-        rpEvent = {
-          ...event,
-          id: generateId(),
-          serialNumber: eventSerialNumber,
-        };
+        this.events.push(roleplayerEvent);
+        return;
       }
-      this.events.push(rpEvent);
+
+      const currentBattleId = this.campaign.getCurrentBattle()?.id;
+      const roleplayerEvent = {
+        ...event,
+        id: generateId(),
+        battleId: currentBattleId,
+        roundId: currentRoundId,
+        serialNumber: eventSerialNumber,
+      };
+
+      this.events.push(roleplayerEvent);
     }
     return newEvents;
   }
@@ -116,14 +121,12 @@ export class Roleplayer extends Observable<RoleplayerEvent> {
     if (this.campaign.rounds.length > 0) {
       throw new Error("Campaign already started");
     }
-    const roundId = generateId();
     const campaignStartEvents: CampaignEvent[] = [
       {
         type: "CampaignStarted",
       },
       {
         type: "RoundStarted",
-        roundId,
       },
     ];
 
@@ -249,15 +252,20 @@ export class Roleplayer extends Observable<RoleplayerEvent> {
 
   addCharacterToCurrentBattle(characterId: Actor["id"]) {
     const actor = this.campaign.characters.find((c) => c.id === characterId);
-
     if (!actor) {
       throw new Error("Actor not found");
+    }
+
+    const currentBattle = this.campaign.getCurrentBattle();
+    if (!currentBattle) {
+      throw new Error("No current battle");
     }
 
     const characterBattleEnter: CampaignEvent[] = [
       {
         type: "CharacterBattleEnter",
         characterId,
+        battleId: currentBattle.id,
       },
     ];
 
@@ -291,6 +299,20 @@ export class Roleplayer extends Observable<RoleplayerEvent> {
     this.publishEvent(...events);
 
     return characterId;
+  }
+
+  dispatchAddBattleActorEvent(actorId: Actor["id"]) {
+    const currentBattle = this.campaign.getCurrentBattle();
+    if (!currentBattle) {
+      throw new Error("No current battle");
+    }
+    const characterBattleEnter: CampaignEvent = {
+      type: "CharacterBattleEnter" as const,
+      characterId: actorId,
+      battleId: currentBattle.id,
+    };
+
+    this.publishEvent(characterBattleEnter);
   }
 
   createCharacter(characterId: Actor["id"], name: string) {
@@ -336,12 +358,6 @@ export class Roleplayer extends Observable<RoleplayerEvent> {
         experience: 0,
         characterId,
       },
-      {
-        type: "CharacterStatChange",
-        amount: 10,
-        characterId,
-        statId: this.ruleset.getCharacterStatTypes().find((st) => st.name === "Defense")!.id,
-      },
       ...defaultEquipmentSlotEvents,
       ...defaultResourcesEvents,
       ...defaultStatsEvents,
@@ -379,18 +395,10 @@ export class Roleplayer extends Observable<RoleplayerEvent> {
   }
 
   startBattle() {
-    const currentRound = this.campaign.getCurrentRound();
-    const battleId = generateId();
-
-    this.events.push({
-      id: generateId(),
+    this.publishEvent({
       type: "BattleStarted",
-      battleId,
-      roundId: currentRound.id,
-      serialNumber: this.nextSerialNumber(),
+      battleId: generateId(),
     });
-
-    return battleId;
   }
 
   performCharacterAttack(attacker: Actor, actionDef: ActionDefinition, targets: Actor[]) {
@@ -425,9 +433,14 @@ export class Roleplayer extends Observable<RoleplayerEvent> {
   }
 
   endCharacterTurn(actor: Actor) {
+    const currentBattle = this.campaign.getCurrentBattle();
+    if (!currentBattle) {
+      throw new Error("No current battle");
+    }
     this.publishEvent({
       type: "CharacterEndTurn",
       characterId: actor.id,
+      battleId: currentBattle.id,
     });
   }
 
@@ -457,13 +470,14 @@ export class Roleplayer extends Observable<RoleplayerEvent> {
       case "RoundStarted": {
         this.campaign.rounds.push({
           id: event.roundId,
-          serialNumber: event.serialNumber,
+          roundNumber: event.serialNumber,
         });
 
-        this.campaign.characters.forEach((c) => {
-          const characterResourceGeneration = this.ruleset.characterResourceGeneration(c);
-          c.resetResources(characterResourceGeneration);
-        });
+        for (const character of this.campaign.characters) {
+          const characterResourceGeneration = this.ruleset.characterResourceGeneration(character);
+          character.resetResources(characterResourceGeneration);
+        }
+
         break;
       }
 
@@ -479,6 +493,7 @@ export class Roleplayer extends Observable<RoleplayerEvent> {
           this.campaign.characters.push(
             new Actor({
               ...structuredClone(templateCharacter),
+              campaign: this.campaign,
               id: event.characterId,
               templateCharacterId: event.templateCharacterId,
               name: `${templateCharacter.name} #${alreadySpawnedTemplateCharacters.length}`,

@@ -24,17 +24,6 @@ export type CharacterStatusGainEffect = {
 
 export type EffectEventDefinition = CharacterResourceLossEffect | CharacterStatusGainEffect;
 
-// TODO: Can this be typed better?
-// export type EffectEvent =
-//   | {
-//       eventType: CharacterResourceLossEffect["eventType"];
-//       parameters: Omit<CharacterResourceLossEffect, "eventType">;
-//     }
-//   | {
-//       eventType: CharacterStatusGainEffect["eventType"];
-//       parameters: Omit<CharacterStatusGainEffect, "eventType">;
-//     };
-
 export function mapEffect(
   effect: EffectEventDefinition,
   actionDef: ActionDefinition,

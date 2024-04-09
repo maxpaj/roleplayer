@@ -1,6 +1,6 @@
 import type { CampaignState } from "../..";
 import type { Id } from "../../lib/generate-id";
-import type { AugmentedRequired } from "../../types/with-required";
+import type { WithRequired } from "../../types/with-required";
 import type { ActionDefinition } from "../action/action";
 import type { StatusDefinition } from "../action/status";
 import type { Party } from "../campaign/party";
@@ -136,20 +136,21 @@ export class Actor {
 
   campaign!: CampaignState;
 
-  constructor(a: AugmentedRequired<Partial<Actor>, "campaign">) {
+  constructor(a: WithRequired<Partial<Actor>, "campaign">) {
     Object.assign(this, a);
     a.campaign.roleplayer.subscribe(this.applyEvent.bind(this));
   }
 
   resetResources(generation: CharacterResourceGeneration[]) {
-    this.resources = this.resources.map((r) => {
-      const resourceGeneration = generation.find((g) => g.resourceTypeId === r.resourceTypeId);
+    this.resources = this.resources.map((resource) => {
+      const resourceGeneration = generation.find((g) => g.resourceTypeId === resource.resourceTypeId);
       if (!resourceGeneration) {
-        return r;
+        return resource;
       }
+
       return {
-        ...r,
-        amount: Math.min(r.max, r.amount + resourceGeneration.amount),
+        ...resource,
+        amount: Math.min(resource.max, resource.amount + resourceGeneration.amount),
       };
     });
   }

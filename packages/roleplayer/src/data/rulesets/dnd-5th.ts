@@ -1,13 +1,13 @@
 import {
-  CharacterResourceLossEffect,
-  Roll,
   defaultRoll,
   type ActionDefinition,
   type Actor,
   type Battle,
   type CharacterResourceDefinition,
   type CharacterResourceGeneration,
+  type CharacterResourceLossEffect,
   type ElementDefinition,
+  type Roll,
 } from "../..";
 import { ItemEquipmentType, type EquipmentSlotDefinition } from "../../core/inventory/item";
 import type { CharacterStatType, Clazz, LevelProgression, Ruleset } from "../../core/ruleset/ruleset";

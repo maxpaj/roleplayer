@@ -1,14 +1,16 @@
-import { CampaignState, D10, DnDRuleset, generateId } from "../..";
+import { D10, DnDRuleset, generateId } from "../..";
 import { ItemDefinition, ItemEquipmentType, ItemSlot, ItemType } from "../inventory/item";
 import { Roleplayer } from "../roleplayer";
 import { Rarity } from "../world/rarity";
 import { TargetType } from "./action";
 import { StatusDefinition, StatusDurationType, StatusType } from "./status";
 
-const ruleset = new DnDRuleset(() => 2);
-const roleplayer = new Roleplayer({ ruleset }, { id: generateId() });
-
 describe("actions", () => {
+  const ruleset = new DnDRuleset((str) => {
+    const [, staticValue = "0"] = str.split("+");
+    return 2 + +staticValue;
+  });
+
   const coldElement = ruleset.getElementDefinitions().find((ed) => ed.name === "Cold")!;
   const mainHandEquipmentSlot = ruleset.getCharacterEquipmentSlots().find((eq) => eq.name === "Main hand")!;
   const healthResource = ruleset.getCharacterResourceTypes().find((r) => r.name === "Health")!;
@@ -46,18 +48,14 @@ describe("actions", () => {
         appliesEffects: [
           {
             eventType: "CharacterResourceLoss",
-            parameters: {
-              variableValue: D10,
-              staticValue: 2,
-              resourceTypeId: healthResource.id,
-              elementTypeId: coldElement.id,
-            },
+            variableValue: D10,
+            staticValue: 2,
+            resourceTypeId: healthResource.id,
+            elementTypeId: coldElement.id,
           },
           {
             eventType: "CharacterStatusGain",
-            parameters: {
-              statusId: frozenStatus.id,
-            },
+            statusId: frozenStatus.id,
           },
         ],
         eligibleTargets: [TargetType.Hostile],
@@ -72,14 +70,13 @@ describe("actions", () => {
     stats: [],
   };
 
-  it("should apply effects from being hit", () => {
-    const campaign = new CampaignState({
-      id: "00000000-0000-0000-0000-000000000000" as const,
-      ruleset,
-      roleplayer,
-    });
+  const roleplayer = new Roleplayer(
+    { ruleset },
+    { id: generateId(), itemTemplates: [frostSword], statuses: [frozenStatus] }
+  );
 
-    roleplayer.nextRound();
+  it("should apply effects from being hit", () => {
+    roleplayer.startCampaign();
 
     const attackerId = "attacker-id";
     const defenderId = "defender-id";

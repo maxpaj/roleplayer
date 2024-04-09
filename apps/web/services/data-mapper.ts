@@ -65,7 +65,10 @@ export type ActorAggregated = CharacterRecord & {
 };
 
 export function mapCampaignWorldData(worldData: WorldAggregated, campaignData: CampaignAggregated) {
-  const Ruleset = new DnDRuleset(() => 2);
+  const Ruleset = new DnDRuleset((str) => {
+    const [, staticValue = "0"] = str.split("+");
+    return 2 + +staticValue;
+  });
   const worldMappedCharacters = worldData.characters.map(mapCharacterRecordToActor);
   const worldMappedItems = worldData.itemTemplates.map(mapItemDefinition);
   const world = new World(Ruleset, worldData.name, {

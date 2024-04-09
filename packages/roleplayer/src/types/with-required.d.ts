@@ -14,4 +14,4 @@
  *    // Expect: { name?: string; age: number; visible: boolean; }
  *    type Props = Required<Props, 'age' | 'visible'>;
  */
-export type AugmentedRequired<T extends object, K extends keyof T = keyof T> = Omit<T, K> & Required<Pick<T, K>>;
+export type WithRequired<T extends object, K extends keyof T = keyof T> = Omit<T, K> & Required<Pick<T, K>>;

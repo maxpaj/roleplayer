@@ -7,7 +7,10 @@ import { H5 } from "./ui/typography";
 
 export function EffectDetails({ effect, world }: { effect: EffectRecord; world: WorldAggregated }) {
   const params = effect.parameters as { parameters: Record<string, any> };
-  const ruleset = new DnDRuleset(() => 2);
+  const ruleset = new DnDRuleset((str) => {
+    const [, staticValue = "0"] = str.split("+");
+    return 2 + +staticValue;
+  });
 
   return (
     <div>

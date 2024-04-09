@@ -1,14 +1,13 @@
 import {
-  D20,
-  Roll,
   defaultRoll,
   type ActionDefinition,
   type Actor,
   type Battle,
   type CharacterResourceDefinition,
   type CharacterResourceGeneration,
-  type EffectEvent,
+  type CharacterResourceLossEffect,
   type ElementDefinition,
+  type Roll,
 } from "../..";
 import { ItemEquipmentType, type EquipmentSlotDefinition } from "../../core/inventory/item";
 import type { CharacterStatType, Clazz, LevelProgression, Ruleset } from "../../core/ruleset/ruleset";
@@ -176,15 +175,14 @@ export class DnDRuleset implements Ruleset {
     ];
   }
 
-  characterHitDamage(source: Actor, action: ActionDefinition, target: Actor, effect: EffectEvent) {
+  characterHitDamage(source: Actor, action: ActionDefinition, target: Actor, effect: CharacterResourceLossEffect) {
     const elementTypes = this.getElementDefinitions();
-    const elementType = elementTypes.find((e) => e.id === effect.parameters.elementTypeId);
+    const elementType = elementTypes.find((e) => e.id === effect.elementTypeId);
     if (!elementType) {
       throw new Error("Element type not found");
     }
 
-    const sourceDamageRoll =
-      this.roll(effect.parameters.variableValue as number) + (effect.parameters.staticValue as number);
+    const sourceDamageRoll = this.roll(`D${effect.variableValue}+${effect.staticValue}`);
     const sourceDamage = sourceDamageRoll * source.getDamageAmplify(elementType);
     const targetDamageReduction = target.getResistance(elementType, sourceDamage);
     const totalDamage = sourceDamage - targetDamageReduction;
@@ -197,7 +195,7 @@ export class DnDRuleset implements Ruleset {
 
     const defenderArmorClass = defender.stats.find((s) => s.statId === "character-armor-class");
     if (!defenderArmorClass) throw new Error("Character hit not found");
-    return defaultRoll(D20) + attackerHit.amount > defenderArmorClass.amount;
+    return defaultRoll("D20+0") + attackerHit.amount > defenderArmorClass.amount;
   }
 
   characterElementDamageMultiplier(actor: Actor, damageType: ElementDefinition): number {
@@ -220,7 +218,7 @@ export class DnDRuleset implements Ruleset {
       },
       {
         amount: 35,
-        resourceTypeId: "00000000-0000-0000-0000-000000001003" as const,
+        resourceTypeId: "00000000-0000-0000-0000-000000001000" as const,
       },
     ];
   }
@@ -232,7 +230,7 @@ export class DnDRuleset implements Ruleset {
   }
 
   characterBattleActionOrder(actor: Actor): number {
-    return this.roll("D20");
+    return this.roll("D20+0");
   }
 
   getCurrentActorTurn(battle: Battle): Actor | undefined {

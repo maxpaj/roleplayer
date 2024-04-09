@@ -8,14 +8,12 @@ import type { CharacterResourceDefinition, CharacterStatType, Clazz } from "../r
 
 type EventIdentifier = { id: Id; serialNumber: number };
 
-type WithRoundId = {
+type RoundEvent = {
   roundId: Round["id"];
   battleId?: Battle["id"];
 };
 
-type WithoutRoundId = { roundId?: never; campaignId?: never; battleId?: never };
-
-type RoundEvent = WithRoundId | WithoutRoundId;
+export type BattleCampaignEvent = CampaignEvent & { battleId: Battle["id"] };
 
 export type CampaignEvent = SystemEvent | CharacterEvent;
 
@@ -57,12 +55,13 @@ export const RoleplayerEventTypes: RoleplayerEvent["type"][] = [
 export type SystemEvent =
   | { type: "Unknown" }
   | { type: "CampaignStarted" }
-  | { type: "RoundStarted"; roundId: Round["id"] }
+  | { type: "RoundStarted" }
   | { type: "RoundEnded" }
-  | { type: "BattleStarted" }
+  | { type: "BattleStarted"; battleId: Battle["id"] }
   | {
       type: "CharacterBattleEnter";
       characterId: Actor["id"];
+      battleId: Battle["id"];
     };
 
 export type CharacterEvent =
@@ -113,7 +112,7 @@ export type CharacterEvent =
       targetPosition: Position;
       sourceId?: Actor["id"];
     }
-  | { type: "CharacterEndTurn"; characterId: Actor["id"] }
+  | { type: "CharacterEndTurn"; characterId: Actor["id"]; battleId: Battle["id"] }
   | { type: "CharacterActionGain"; characterId: Actor["id"]; actionId: Id }
   | {
       type: "CharacterEquipmentSlotGain";
@@ -179,3 +178,7 @@ export type CharacterEvent =
       characterId: Actor["id"];
       classId: Clazz["id"];
     };
+
+export function isBattleEvent(event: CampaignEvent): event is BattleCampaignEvent {
+  return "battleId" in event && event.battleId != null;
+}

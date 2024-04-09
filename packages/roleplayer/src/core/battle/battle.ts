@@ -1,21 +1,23 @@
-import { mapEffect, type ActionDefinition, type RoleplayerEvent, type Ruleset } from "../..";
+import { mapEffect, type ActionDefinition, type CampaignEvent, type RoleplayerEvent, type Ruleset } from "../..";
 import type { Id } from "../../lib/generate-id";
-import type { AugmentedRequired } from "../../types/with-required";
+import type { WithRequired } from "../../types/with-required";
 import type { Actor, Position } from "../actor/character";
 import type { Roleplayer } from "../roleplayer";
 
 export class Battle {
   id!: Id;
   name!: string;
-  ruleset!: Ruleset;
   roleplayer!: Roleplayer;
 
+  ruleset: Ruleset;
   actors: Actor[] = [];
   actorToAct: Actor | undefined;
   actorsThatHaveActed: Actor[] = [];
 
-  constructor(b: AugmentedRequired<Partial<Battle>, "name" | "id" | "ruleset" | "roleplayer">) {
+  constructor(b: WithRequired<Partial<Omit<Battle, "ruleset">>, "name" | "id" | "roleplayer">) {
     Object.assign(this, b);
+    this.ruleset = b.roleplayer.ruleset;
+    b.roleplayer.subscribe(this.applyEvent.bind(this));
   }
 
   isBattleOver() {
@@ -51,24 +53,44 @@ export class Battle {
   }
 
   performAction(actor: Actor, actionDef: ActionDefinition, targets: Actor[]) {
+    const events: Array<CampaignEvent> = [];
     for (const target of targets) {
       const didHit = this.ruleset.characterHit(actor, actionDef, target);
       if (!didHit) continue;
-
-      const events: Array<CampaignEvent> = [];
       for (const effect of actionDef.appliesEffects) {
         events.push(mapEffect(effect, actionDef, actor, target, this.ruleset));
       }
-
-      this.roleplayer.publishEvent(...events);
     }
+
+    for (const requiredResource of actionDef.requiresResources) {
+      const availableResource = actor.resources.find((r) => r.resourceTypeId === requiredResource.resourceTypeId);
+      if (requiredResource.amount > availableResource!.amount) throw new Error("Not enough resources");
+      events.push({
+        type: "CharacterResourceLoss" as const,
+        amount: requiredResource.amount,
+        characterId: actor.id, // Target
+        resourceTypeId: requiredResource.resourceTypeId,
+        actionId: actionDef.id,
+        sourceId: actor.id, // Actor
+      });
+    }
+
+    this.roleplayer.publishEvent(...events);
+
     // 1. Check hit
     // 2. Apply effects -
     return true;
   }
 
   applyEvent(event: RoleplayerEvent) {
+    if (!("battleId" in event) || event.battleId !== this.id) return;
     switch (event.type) {
+      case "CharacterBattleEnter": {
+        const character = this.roleplayer.campaign.characters.find((c) => c.id === event.characterId);
+        if (!character) throw new Error(`Cannot find character with id: ${event.characterId}`);
+        this.addBattleActor(character);
+        break;
+      }
       case "CharacterEndTurn": {
         const characterBattle = this.actors.find((actor) => actor.id === event.characterId);
         if (!characterBattle) {

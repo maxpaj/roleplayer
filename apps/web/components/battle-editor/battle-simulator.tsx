@@ -9,16 +9,16 @@ import { saveCampaignEvents } from "app/campaigns/actions";
 import Image from "next/image";
 import { useCallback, useState } from "react";
 import {
-  ActionDefinition,
-  Actor,
-  Battle,
-  CampaignEvent,
-  CampaignEventDispatcher,
-  RoleplayerEvent,
-  Round,
   isCharacterEvent,
+  type ActionDefinition,
+  type Actor,
+  type Battle,
+  type CampaignEvent,
+  type CampaignEventDispatcher,
+  type RoleplayerEvent,
+  type Round,
 } from "roleplayer";
-import { CampaignAggregated, WorldAggregated, mapCampaignWorldData } from "services/data-mapper";
+import { mapCampaignWorldData, type CampaignAggregated, type WorldAggregated } from "services/data-mapper";
 import { EventIconMap } from "../../app/theme";
 import { CharacterSelector } from "../character-selector";
 import { AddBattleCharacterButton } from "./add-battle-character-button";
@@ -92,7 +92,9 @@ export function BattleSimulator({ campaignData, battleId, worldData }: BattleSim
     return (
       <div
         key={battleCharacter.id}
-        className={`relative flex w-full flex-col justify-between overflow-hidden border border-slate-700 ${characterDeadStateClasses} ${currentCharacterActionClasses || ""}`}
+        className={`relative flex w-full flex-col justify-between overflow-hidden border border-slate-700 ${characterDeadStateClasses} ${
+          currentCharacterActionClasses || ""
+        }`}
       >
         <div className={`${isCharacterTurnToAct ? "" : "opacity-50"} w-full p-2`}>
           <div className="flex justify-between gap-2">

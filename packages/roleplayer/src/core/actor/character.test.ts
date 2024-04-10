@@ -362,8 +362,9 @@ describe("Character", () => {
       roleplayer.startCampaign(); // Creates the current round
       roleplayer.startBattle();
       const characterId = roleplayer.spawnCharacterFromTemplate("small-monster");
-      roleplayer.dispatchAddBattleActorEvent(characterId);
       const currentBattle = roleplayer.campaign.getCurrentBattle();
+      if (!currentBattle) throw new Error("No current battle");
+      roleplayer.dispatchCharacterBattleEnterEvent(characterId, currentBattle?.id);
       const character = currentBattle?.actors.find((actor) => actor.id === characterId);
       const resource = character?.resources.find((resource) => resource.resourceTypeId === "actionPoints");
       expect(resource?.amount).toBe(2);

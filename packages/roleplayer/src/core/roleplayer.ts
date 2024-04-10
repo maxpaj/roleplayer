@@ -297,15 +297,11 @@ export class Roleplayer extends Observable<RoleplayerEvent> {
     return characterId;
   }
 
-  dispatchAddBattleActorEvent(actorId: Actor["id"]) {
-    const currentBattle = this.campaign.getCurrentBattle();
-    if (!currentBattle) {
-      throw new Error("No current battle");
-    }
+  dispatchCharacterBattleEnterEvent(actorId: Actor["id"], battleId: Battle["id"]) {
     const characterBattleEnter: CampaignEvent = {
       type: "CharacterBattleEnter" as const,
       characterId: actorId,
-      battleId: currentBattle.id,
+      battleId,
     };
 
     this.publishEvent(characterBattleEnter);

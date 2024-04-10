@@ -97,6 +97,7 @@ export class Roleplayer extends Observable<RoleplayerEvent> {
           roundId: currentRoundId,
           serialNumber: eventSerialNumber,
         };
+
         this.events.push(roleplayerEvent);
         return;
       }
@@ -366,7 +367,7 @@ export class Roleplayer extends Observable<RoleplayerEvent> {
       ...resourcesGainEvents,
     ];
 
-    this.publishRoundEvent(...characterSpawnEvents);
+    this.publishEvent(...characterSpawnEvents);
   }
 
   nextRound(battleId?: Battle["id"]) {
@@ -381,7 +382,7 @@ export class Roleplayer extends Observable<RoleplayerEvent> {
       },
     ];
 
-    this.events.push(...events);
+    this.publishEvent(...events);
 
     return newRoundId;
   }
@@ -444,23 +445,6 @@ export class Roleplayer extends Observable<RoleplayerEvent> {
       characterId: actor.id,
       battleId: currentBattle.id,
     });
-  }
-
-  publishRoundEvent(...newEvents: CampaignEvent[]) {
-    const currentRound = this.campaign.getCurrentRound();
-
-    const eventsWithRoundAndBattle = newEvents.map((e): RoleplayerEvent => {
-      const eventSerialNumber = this.nextSerialNumber();
-      return {
-        ...e,
-        id: generateId(),
-        roundId: currentRound.id,
-        serialNumber: eventSerialNumber,
-      };
-    });
-
-    this.events.push(...eventsWithRoundAndBattle);
-    return newEvents;
   }
 
   applyEvent(event: RoleplayerEvent) {

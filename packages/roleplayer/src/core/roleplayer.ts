@@ -49,7 +49,6 @@ type RoleplayerCampaignParameters = Omit<ConstructorParameters<typeof CampaignSt
  */
 export class Roleplayer extends Observable<RoleplayerEvent> {
   ruleset!: Ruleset;
-  _eventsTarget: RoleplayerEvent[] = [];
 
   events: RoleplayerEvent[];
   campaign: CampaignState;
@@ -63,17 +62,21 @@ export class Roleplayer extends Observable<RoleplayerEvent> {
     Object.assign(this, config);
 
     this.subscribe(this.applyEvent.bind(this));
-    this.events = new Proxy<RoleplayerEvent[]>(this._eventsTarget, {
+    this.events = this.createEventsProxy(config.events ?? []);
+    this.campaign = new CampaignState({
+      ...initialCampaignConfig,
+      roleplayer: this,
+      ruleset: config.ruleset,
+    });
+  }
+
+  createEventsProxy(events: RoleplayerEvent[]) {
+    return new Proxy(events, {
       set: (target, property, value, receiver) => {
         const index = Number(property);
         if (!Number.isNaN(index)) this.notify(value);
         return Reflect.set(target, property, value, receiver);
       },
-    });
-    this.campaign = new CampaignState({
-      ...initialCampaignConfig,
-      roleplayer: this,
-      ruleset: config.ruleset,
     });
   }
 

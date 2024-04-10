@@ -292,16 +292,7 @@ export class Roleplayer extends Observable<RoleplayerEvent> {
       },
     ];
 
-    const characterResourceEvents: CampaignEvent[] = template.resources.map((r) => ({
-      type: "CharacterResourceGain",
-      characterId,
-      amount: r.max,
-      resourceTypeId: r.resourceTypeId,
-    }));
-
-    const events = [...characterSpawnEvents, ...characterResourceEvents];
-
-    this.publishEvent(...events);
+    this.publishEvent(...characterSpawnEvents);
 
     return characterId;
   }

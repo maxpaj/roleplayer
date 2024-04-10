@@ -307,6 +307,16 @@ export class Roleplayer extends Observable<RoleplayerEvent> {
     this.publishEvent(characterBattleEnter);
   }
 
+  dispatchCharacterBattleLeaveEvent(actorId: Actor["id"], battleId: Battle["id"]) {
+    const characterBattleLeave: CampaignEvent = {
+      type: "CharacterBattleLeave" as const,
+      characterId: actorId,
+      battleId,
+    };
+
+    this.publishEvent(characterBattleLeave);
+  }
+
   createCharacter(characterId: Actor["id"], name: string) {
     const defaultResourcesEvents: CampaignEvent[] = this.ruleset.getCharacterResourceTypes().map((cr) => ({
       type: "CharacterResourceMaxSet",

@@ -7,10 +7,14 @@ export const D20: Dice = 20;
 
 export type Dice = number;
 
+type DiceRollStatic = `+${number}` | "";
+type DiceSize = `D${number}`;
+type NumberOfDice = `${number | ""}`;
+
 /**
  * We recommend using RPG Dice Roller for dice rolling, since it has a rich API and is well maintained.
  */
-export type DiceRoll = `${number | ""}D${number}+${number}`;
+export type DiceRoll = `${NumberOfDice}${DiceSize}${DiceRollStatic}`;
 
 export type Roll = (dice: DiceRoll) => number;
 

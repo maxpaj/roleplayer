@@ -297,22 +297,31 @@ export class Roleplayer extends Observable<RoleplayerEvent> {
     return characterId;
   }
 
+  dispatchCharacterDespawnEvent(actorId: Actor["id"]) {
+    const characterDespawnEvent = {
+      type: "CharacterDespawn" as const,
+      characterId: actorId,
+    } satisfies CampaignEvent;
+
+    this.publishEvent(characterDespawnEvent);
+  }
+
   dispatchCharacterBattleEnterEvent(actorId: Actor["id"], battleId: Battle["id"]) {
-    const characterBattleEnter: CampaignEvent = {
+    const characterBattleEnter = {
       type: "CharacterBattleEnter" as const,
       characterId: actorId,
       battleId,
-    };
+    } satisfies CampaignEvent;
 
     this.publishEvent(characterBattleEnter);
   }
 
   dispatchCharacterBattleLeaveEvent(actorId: Actor["id"], battleId: Battle["id"]) {
-    const characterBattleLeave: CampaignEvent = {
+    const characterBattleLeave = {
       type: "CharacterBattleLeave" as const,
       characterId: actorId,
       battleId,
-    };
+    } satisfies CampaignEvent;
 
     this.publishEvent(characterBattleLeave);
   }
@@ -484,6 +493,14 @@ export class Roleplayer extends Observable<RoleplayerEvent> {
               name: `${templateCharacter.name} #${alreadySpawnedTemplateCharacters.length}`,
             })
           );
+        }
+        break;
+      }
+
+      case "CharacterDespawn": {
+        this.campaign.characters = this.campaign.characters.filter((character) => character.id !== event.characterId);
+        for (const battle of this.campaign.battles) {
+          battle.actors = battle.actors.filter((actor) => actor.id !== event.characterId);
         }
         break;
       }

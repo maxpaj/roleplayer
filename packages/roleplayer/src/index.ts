@@ -8,6 +8,7 @@ export * from "./core/campaign/round";
 export * from "./core/dice/dice";
 export * from "./core/events/events";
 export * from "./core/inventory/item";
+export * from "./core/roleplayer";
 export * from "./core/ruleset/ruleset";
 export * from "./core/world/map";
 export * from "./core/world/rarity";

@@ -1,6 +1,6 @@
 {
-  "name": "Next.js",
-  "description": "Minimal Turborepo example for learning the fundamentals.",
+  "name": "Roleplayer",
+  "description": "Turborepo for Roleplayer project",
   "template": "https://vercel.com/templates/next.js/turborepo-next-basic",
   "featured": true,
   "boost": true

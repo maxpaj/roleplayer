@@ -3,10 +3,6 @@
   "globalDependencies": [
     "**/.env.*local"
   ],
-  "globalEnv": [
-    "POSTGRES_URL",
-    "OPENAI_API_KEY"
-  ],
   "pipeline": {
     "build": {
       "dependsOn": [

@@ -292,32 +292,38 @@ export class Roleplayer extends Observable<RoleplayerEvent> {
       },
     ];
 
-    const characterResourceEvents: CampaignEvent[] = template.resources.map((r) => ({
-      type: "CharacterResourceGain",
-      characterId,
-      amount: r.max,
-      resourceTypeId: r.resourceTypeId,
-    }));
-
-    const events = [...characterSpawnEvents, ...characterResourceEvents];
-
-    this.publishEvent(...events);
+    this.publishEvent(...characterSpawnEvents);
 
     return characterId;
   }
 
-  dispatchAddBattleActorEvent(actorId: Actor["id"]) {
-    const currentBattle = this.campaign.getCurrentBattle();
-    if (!currentBattle) {
-      throw new Error("No current battle");
-    }
-    const characterBattleEnter: CampaignEvent = {
+  dispatchCharacterDespawnEvent(actorId: Actor["id"]) {
+    const characterDespawnEvent = {
+      type: "CharacterDespawn" as const,
+      characterId: actorId,
+    } satisfies CampaignEvent;
+
+    this.publishEvent(characterDespawnEvent);
+  }
+
+  dispatchCharacterBattleEnterEvent(actorId: Actor["id"], battleId: Battle["id"]) {
+    const characterBattleEnter = {
       type: "CharacterBattleEnter" as const,
       characterId: actorId,
-      battleId: currentBattle.id,
-    };
+      battleId,
+    } satisfies CampaignEvent;
 
     this.publishEvent(characterBattleEnter);
+  }
+
+  dispatchCharacterBattleLeaveEvent(actorId: Actor["id"], battleId: Battle["id"]) {
+    const characterBattleLeave = {
+      type: "CharacterBattleLeave" as const,
+      characterId: actorId,
+      battleId,
+    } satisfies CampaignEvent;
+
+    this.publishEvent(characterBattleLeave);
   }
 
   createCharacter(characterId: Actor["id"], name: string) {
@@ -487,6 +493,14 @@ export class Roleplayer extends Observable<RoleplayerEvent> {
               name: `${templateCharacter.name} #${alreadySpawnedTemplateCharacters.length}`,
             })
           );
+        }
+        break;
+      }
+
+      case "CharacterDespawn": {
+        this.campaign.characters = this.campaign.characters.filter((character) => character.id !== event.characterId);
+        for (const battle of this.campaign.battles) {
+          battle.actors = battle.actors.filter((actor) => actor.id !== event.characterId);
         }
         break;
       }

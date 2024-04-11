@@ -40,6 +40,10 @@ export class Battle {
     this.actors.push(actor);
   }
 
+  removeBattleActor(actor: Actor) {
+    this.actors = this.actors.filter((a) => a.id !== actor.id);
+  }
+
   calculateTargetsCone(position: Position, range: number, radius: number, angle: number) {
     return [] as Actor[];
   }
@@ -89,6 +93,12 @@ export class Battle {
         const character = this.roleplayer.campaign.characters.find((c) => c.id === event.characterId);
         if (!character) throw new Error(`Cannot find character with id: ${event.characterId}`);
         this.addBattleActor(character);
+        break;
+      }
+      case "CharacterBattleLeave": {
+        const character = this.roleplayer.campaign.characters.find((c) => c.id === event.characterId);
+        if (!character) throw new Error(`Cannot find character with id: ${event.characterId}`);
+        this.removeBattleActor(character);
         break;
       }
       case "CharacterEndTurn": {

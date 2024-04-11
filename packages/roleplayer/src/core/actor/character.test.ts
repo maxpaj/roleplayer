@@ -1,4 +1,4 @@
-import { Rarity } from "../..";
+import { Alignment, Rarity } from "../..";
 import { DnDRuleset } from "../../data/rulesets/dnd-5th";
 import { generateId } from "../../lib/generate-id";
 import { TargetType, type ActionDefinition } from "../action/action";
@@ -316,6 +316,58 @@ describe("Character", () => {
       const data = roleplayer.campaign;
 
       expect(data).toBeDefined();
+    });
+
+    it("should set correct resource types from template", () => {
+      const roleplayer = new Roleplayer(
+        {
+          ruleset,
+        },
+        { id: generateId() }
+      );
+      roleplayer.campaign.actorTemplates.push({
+        id: "small-monster",
+        actions: [],
+        characterType: "Monster",
+        resources: [
+          {
+            resourceTypeId: "actionPoints",
+            amount: 2,
+            max: 2,
+            min: 0,
+          },
+        ],
+        statuses: [],
+        classes: [],
+        party: "",
+        exists: false,
+        templateCharacterId: "",
+        xp: 0,
+        name: "",
+        race: "",
+        description: "",
+        alignment: Alignment.ChaoticEvil,
+        inventory: [],
+        equipment: [],
+        stats: [],
+        position: {
+          x: 0,
+          y: 0,
+          z: 0,
+        },
+        reactionsRemaining: [],
+        reactions: [],
+      });
+
+      roleplayer.startCampaign(); // Creates the current round
+      roleplayer.startBattle();
+      const characterId = roleplayer.spawnCharacterFromTemplate("small-monster");
+      const currentBattle = roleplayer.campaign.getCurrentBattle();
+      if (!currentBattle) throw new Error("No current battle");
+      roleplayer.dispatchCharacterBattleEnterEvent(characterId, currentBattle?.id);
+      const character = currentBattle?.actors.find((actor) => actor.id === characterId);
+      const resource = character?.resources.find((resource) => resource.resourceTypeId === "actionPoints");
+      expect(resource?.amount).toBe(2);
     });
   });
 

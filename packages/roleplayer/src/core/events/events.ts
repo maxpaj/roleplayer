@@ -62,6 +62,11 @@ export type SystemEvent =
       type: "CharacterBattleEnter";
       characterId: Actor["id"];
       battleId: Battle["id"];
+    }
+  | {
+      type: "CharacterBattleLeave";
+      characterId: Actor["id"];
+      battleId: Battle["id"];
     };
 
 export type CharacterEvent =

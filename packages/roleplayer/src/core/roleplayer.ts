@@ -73,10 +73,11 @@ export class Roleplayer extends Observable<RoleplayerEvent> {
   createEventsProxy(events: RoleplayerEvent[]) {
     return new Proxy(events, {
       set: (target, property, value, receiver) => {
-        const index = Number(property);
         const didSet = Reflect.set(target, property, value, receiver);
+        if (!didSet) return false;
+        const index = Number(property);
         if (!Number.isNaN(index)) this.notify(value);
-        return didSet;
+        return true;
       },
     });
   }

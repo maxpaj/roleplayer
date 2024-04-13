@@ -76,9 +76,11 @@ export class Roleplayer extends Observable<RoleplayerEvent> {
     // eslint-disable-next-line no-undef
     return new Proxy(events, {
       set: (target, property, value, receiver) => {
+        const didSet = Reflect.set(target, property, value, receiver);
+        if (!didSet) return false;
         const index = Number(property);
         if (!Number.isNaN(index)) this.notify(value);
-        return Reflect.set(target, property, value, receiver);
+        return true;
       },
     });
   }

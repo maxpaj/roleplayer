@@ -1,5 +1,11 @@
 # roleplayer
 
+## 0.0.9
+
+### Patch Changes
+
+- 361d86f: 0.0.9
+
 ## 0.0.8
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "roleplayer",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "private": false,
   "description": "A library for building table top role playing game worlds, and managing campaigns in those worlds",
   "keywords": [

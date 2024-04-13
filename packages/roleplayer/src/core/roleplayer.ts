@@ -71,6 +71,9 @@ export class Roleplayer extends Observable<RoleplayerEvent> {
   }
 
   createEventsProxy(events: RoleplayerEvent[]) {
+    
+    // TODO: Can we fix this in a nicer way?
+    // eslint-disable-next-line no-undef
     return new Proxy(events, {
       set: (target, property, value, receiver) => {
         const index = Number(property);

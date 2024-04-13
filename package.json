@@ -14,7 +14,7 @@
     "@repo/typescript-config": "*",
     "prettier": "^3.2.5",
     "turbo": "^1.13.2",
-    "typescript": "^5.4.2"
+    "typescript": "^5.4.0"
   },
   "engines": {
     "node": ">=18"

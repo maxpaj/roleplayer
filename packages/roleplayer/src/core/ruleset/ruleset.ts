@@ -1,7 +1,8 @@
-import type { Battle, CharacterResourceLossEffect } from "../..";
 import type { Id } from "../../lib/generate-id";
 import type { ActionDefinition } from "../action/action";
+import { CharacterResourceLossEffect } from "../action/effect";
 import type { Actor, CharacterResourceGeneration } from "../actor/character";
+import { Battle } from "../battle/battle";
 import type { EquipmentSlotDefinition } from "../inventory/item";
 
 export enum Alignment {

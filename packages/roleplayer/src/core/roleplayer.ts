@@ -5,7 +5,6 @@ import {
   isBattleEvent,
   mapEffect,
   type ActionDefinition,
-  type Battle,
   type CampaignEvent,
   type CharacterClass,
   type CharacterInventoryItem,
@@ -17,6 +16,7 @@ import {
 } from "..";
 import type { Logger } from "../lib/logging/logger";
 import type { WithRequired } from "../types/with-required";
+import { Battle } from "./battle/battle";
 import Observable from "./observable";
 
 type RoleplayerCampaignParameters = Omit<ConstructorParameters<typeof CampaignState>[0], "roleplayer" | "ruleset">;

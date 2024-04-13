@@ -1,16 +1,11 @@
-import {
-  defaultRoll,
-  type ActionDefinition,
-  type Actor,
-  type Battle,
-  type CharacterResourceDefinition,
-  type CharacterResourceGeneration,
-  type CharacterResourceLossEffect,
-  type ElementDefinition,
-  type Roll,
-} from "../..";
+
+import { ActionDefinition } from "../../core/action/action";
+import { CharacterResourceLossEffect } from "../../core/action/effect";
+import { Actor, CharacterResourceGeneration } from "../../core/actor/character";
+import { Battle } from "../../core/battle/battle";
+import { Roll, defaultRoll } from "../../core/dice/dice";
 import { ItemEquipmentType, type EquipmentSlotDefinition } from "../../core/inventory/item";
-import type { CharacterStatType, Clazz, LevelProgression, Ruleset } from "../../core/ruleset/ruleset";
+import type { CharacterResourceDefinition, CharacterStatType, Clazz, ElementDefinition, LevelProgression, Ruleset } from "../../core/ruleset/ruleset";
 import { generateId } from "../../lib/generate-id";
 
 export class DnDRuleset implements Ruleset {

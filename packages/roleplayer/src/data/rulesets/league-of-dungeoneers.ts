@@ -1,11 +1,11 @@
 import {
   ActionDefinition,
   Actor,
-  Battle,
   CharacterResourceGeneration,
   EffectEventDefinition,
   EquipmentSlotDefinition,
 } from "../..";
+import { Battle } from "../../core/battle/battle";
 import {
   CharacterResourceDefinition,
   CharacterStatType,

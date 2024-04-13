@@ -177,7 +177,7 @@ export class DnDRuleset implements Ruleset {
       throw new Error("Element type not found");
     }
 
-    const sourceDamageRoll = this.roll(`D${effect.variableValue}+${effect.staticValue}`);
+    const sourceDamageRoll = this.roll(effect.roll);
     const sourceDamage = sourceDamageRoll * source.getDamageAmplify(elementType);
     const targetDamageReduction = target.getResistance(elementType, sourceDamage);
     const totalDamage = sourceDamage - targetDamageReduction;

@@ -12,7 +12,7 @@ export * from "./core/roleplayer";
 export * from "./core/ruleset/ruleset";
 export * from "./core/world/map";
 export * from "./core/world/rarity";
-export * from "./data";
+export * from "./data/index";
 export * from "./lib/generate-id";
 
 // TODO: Should be injected at build/runtime time

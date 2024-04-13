@@ -1,4 +1,4 @@
-import { D10, DnDRuleset, generateId } from "../..";
+import { DnDRuleset, generateId } from "../..";
 import { ItemDefinition, ItemEquipmentType, ItemSlot, ItemType } from "../inventory/item";
 import { Roleplayer } from "../roleplayer";
 import { Rarity } from "../world/rarity";
@@ -27,8 +27,7 @@ describe("actions", () => {
           eventType: "CharacterResourceLoss",
           elementTypeId: coldElement.id,
           resourceTypeId: healthResource.id,
-          staticValue: 2,
-          variableValue: D10,
+          roll: "D10+2"
         },
         appliesAt: "RoundStarted",
       },
@@ -48,8 +47,7 @@ describe("actions", () => {
         appliesEffects: [
           {
             eventType: "CharacterResourceLoss",
-            variableValue: D10,
-            staticValue: 2,
+            roll: "D10+2",
             resourceTypeId: healthResource.id,
             elementTypeId: coldElement.id,
           },

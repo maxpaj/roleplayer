@@ -2,17 +2,16 @@ import type {
   ActionDefinition,
   CampaignEvent,
   CharacterResourceDefinition,
-  Dice,
+  DiceRoll,
   ElementDefinition,
-  Ruleset,
+  Ruleset
 } from "../..";
 import type { Actor } from "../actor/character";
 import type { StatusDefinition } from "./status";
 
 export type CharacterResourceLossEffect = {
   eventType: "CharacterResourceLoss";
-  variableValue: Dice;
-  staticValue: number;
+  roll: DiceRoll;
   resourceTypeId: CharacterResourceDefinition["id"];
   elementTypeId: ElementDefinition["id"];
 };

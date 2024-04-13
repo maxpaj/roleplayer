@@ -395,7 +395,7 @@ export class Roleplayer extends Observable<RoleplayerEvent> {
       },
     ];
 
-    this.publishEvent(...events);
+    this.events.push(...events);
 
     return newRoundId;
   }

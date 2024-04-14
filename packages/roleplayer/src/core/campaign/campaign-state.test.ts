@@ -8,10 +8,10 @@ const ruleset = new DnDRuleset((str) => {
   const [, staticValue = "0"] = str.split("+");
   return 2 + +staticValue;
 });
-const roleplayer = new Roleplayer({ ruleset }, { id: generateId() });
 
 describe("Campaign state", () => {
   it("calculates correct character level", () => {
+    const roleplayer = new Roleplayer({ ruleset }, { id: generateId() });
     const characterId = generateId();
 
     const events: RoleplayerEvent[] = [
@@ -31,9 +31,8 @@ describe("Campaign state", () => {
         roundId: "0",
       },
     ];
-
-    const action = startCampaign();
-    action(roleplayer.dispatchEvents.bind(roleplayer), () => roleplayer);
+    roleplayer.dispatchEvents(...events);
+    roleplayer.dispatchAction(startCampaign());
 
     const state = roleplayer.campaign;
     expect(state.characters.length).toBe(1);

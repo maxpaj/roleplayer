@@ -95,7 +95,7 @@ export class Roleplayer extends Observable<RoleplayerEvent> {
 
   dispatch(event: CampaignEvent) {
     const eventSerialNumber = this.nextSerialNumber();
-    const currentRoundId = this.campaign.getCurrentRound().id;
+    const currentRoundId = event.type === "RoundStarted" ? event.roundId : this.campaign.getCurrentRound().id;
 
     // TODO: Extract this to some middleware?
     if (isBattleEvent(event)) {

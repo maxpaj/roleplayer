@@ -3,7 +3,7 @@ import { ActionDefinition } from "./action/action";
 import { mapEffect } from "./action/effect";
 import { Actor, CharacterClass, CharacterInventoryItem, CharacterStat } from "./actor/character";
 import { Battle } from "./battle/battle";
-import { CampaignEvent, RoleplayerEvent } from "./events/events";
+import { CampaignEvent } from "./events/events";
 import { EquipmentSlotDefinition, ItemDefinition } from "./inventory/item";
 import { Roleplayer } from "./roleplayer";
 
@@ -25,6 +25,7 @@ export function startCampaign() {
       },
       {
         type: "RoundStarted",
+        roundId: generateId(),
       },
     ];
 
@@ -317,13 +318,11 @@ export function createCharacter(characterId: Actor["id"], name: string) {
 export function nextRound(battleId?: Battle["id"]) {
   return (dispatch: Dispatcher, getState: StateGetter) => {
     const newRoundId = generateId();
-    const events: RoleplayerEvent[] = [
+    const events: CampaignEvent[] = [
       {
-        id: generateId(),
         type: "RoundStarted",
         roundId: newRoundId,
         battleId,
-        serialNumber: getState().nextSerialNumber(),
       },
     ];
 

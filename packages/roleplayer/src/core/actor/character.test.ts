@@ -156,6 +156,7 @@ describe("Character", () => {
         },
         {
           type: "RoundStarted",
+          roundId: generateId(),
         },
         {
           type: "CharacterMovement",

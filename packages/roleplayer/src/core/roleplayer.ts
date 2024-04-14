@@ -84,7 +84,7 @@ export class Roleplayer extends Observable<RoleplayerEvent> {
   }
 
   dispatchAction<T>(action: ActionDispatch<T>) {
-    return action(this.dispatch.bind(this), () => this);
+    return action(this.dispatchEvents.bind(this), () => this);
   }
 
   dispatchEvents(...events: CampaignEvent[]) {

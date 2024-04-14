@@ -15,7 +15,8 @@ export type ActionDispatch<T = void> = (dispatch: Dispatcher, getState: StateGet
 export function startCampaign() {
   return (dispatch: Dispatcher, getState: StateGetter) => {
     if (getState().campaign.rounds.length > 0) {
-      throw new Error("Campaign already started");
+      console.warn("Campaign already started");
+      return;
     }
 
     const campaignStartEvents: CampaignEvent[] = [

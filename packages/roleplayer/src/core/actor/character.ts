@@ -138,7 +138,7 @@ export class Actor {
 
   constructor(a: WithRequired<Partial<Actor>, "campaign">) {
     Object.assign(this, a);
-    a.campaign.roleplayer.subscribe(this.applyEvent.bind(this));
+    a.campaign.roleplayer.subscribe(this.reduce.bind(this));
   }
 
   resetResources(generation: CharacterResourceGeneration[]) {
@@ -195,7 +195,7 @@ export class Actor {
     return true;
   }
 
-  applyEvent(event: RoleplayerEvent) {
+  reduce(event: RoleplayerEvent) {
     if (!("characterId" in event) || event.characterId !== this.id) return;
 
     switch (event.type) {

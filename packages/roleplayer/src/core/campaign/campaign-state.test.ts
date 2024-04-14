@@ -1,5 +1,6 @@
 import { DnDRuleset } from "../../data/rulesets/dnd-5th";
 import { generateId } from "../../lib/generate-id";
+import { startCampaign } from "../actions";
 import type { CampaignEvent, RoleplayerEvent } from "../events/events";
 import { Roleplayer } from "../roleplayer";
 
@@ -31,10 +32,10 @@ describe("Campaign state", () => {
       },
     ];
 
-    roleplayer.startCampaign();
-    roleplayer.publishEvent(...events);
-    const state = roleplayer.getCampaignFromEvents();
+    const action = startCampaign();
+    action(roleplayer.dispatchEvents.bind(roleplayer), () => roleplayer);
 
+    const state = roleplayer.campaign;
     expect(state.characters.length).toBe(1);
     const character = state.characters[0];
     expect(character?.xp).toBe(100);
@@ -65,9 +66,9 @@ describe("Campaign state", () => {
       },
     ] satisfies CampaignEvent[];
 
-    roleplayer.publishEvent(...events);
+    roleplayer.dispatchEvents(...events);
 
-    const state = roleplayer.getCampaignFromEvents();
+    const state = roleplayer.campaign;
     expect(state.characters.length).toBe(1);
 
     const character = state.characters[0];

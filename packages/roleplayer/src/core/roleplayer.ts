@@ -3,21 +3,14 @@ import {
   CampaignState,
   generateId,
   isBattleEvent,
-  mapEffect,
-  type ActionDefinition,
   type CampaignEvent,
-  type CharacterClass,
-  type CharacterInventoryItem,
-  type CharacterStat,
-  type EquipmentSlotDefinition,
-  type ItemDefinition,
   type RoleplayerEvent,
   type Ruleset,
 } from "..";
+import Observable from "../lib/events/observable";
 import type { Logger } from "../lib/logging/logger";
 import type { WithRequired } from "../types/with-required";
-import { Battle } from "./battle/battle";
-import Observable from "./observable";
+import { ActionDispatch } from "./actions";
 
 type RoleplayerCampaignParameters = Omit<ConstructorParameters<typeof CampaignState>[0], "roleplayer" | "ruleset">;
 
@@ -61,7 +54,7 @@ export class Roleplayer extends Observable<RoleplayerEvent> {
     super();
     Object.assign(this, config);
 
-    this.subscribe(this.applyEvent.bind(this));
+    this.subscribe(this.reduce.bind(this));
     this.events = this.createEventsProxy(config.events ?? []);
     this.campaign = new CampaignState({
       ...initialCampaignConfig,
@@ -71,7 +64,6 @@ export class Roleplayer extends Observable<RoleplayerEvent> {
   }
 
   createEventsProxy(events: RoleplayerEvent[]) {
-    
     // TODO: Can we fix this in a nicer way?
     // eslint-disable-next-line no-undef
     return new Proxy(events, {
@@ -91,376 +83,48 @@ export class Roleplayer extends Observable<RoleplayerEvent> {
     return lastSerialNumber + 1;
   }
 
-  publishEvent(...newEvents: CampaignEvent[]) {
-    for (const event of newEvents) {
-      const eventSerialNumber = this.nextSerialNumber();
-      const currentRoundId = this.campaign.getCurrentRound().id;
+  dispatchAction<T>(action: ActionDispatch<T>) {
+    return action(this.dispatchEvents.bind(this), () => this);
+  }
 
-      if (isBattleEvent(event)) {
-        const roleplayerEvent = {
-          ...event,
-          id: generateId(),
-          battleId: event.battleId,
-          roundId: currentRoundId,
-          serialNumber: eventSerialNumber,
-        };
+  dispatchEvents(...events: CampaignEvent[]) {
+    for (const event of events) {
+      this.dispatch(event);
+    }
+  }
 
-        this.events.push(roleplayerEvent);
-        return;
-      }
+  dispatch(event: CampaignEvent) {
+    const eventSerialNumber = this.nextSerialNumber();
+    const currentRoundId = event.type === "RoundStarted" ? event.roundId : this.campaign.getCurrentRound().id;
 
-      const currentBattleId = this.campaign.getCurrentBattle()?.id;
+    // TODO: Extract this to some middleware?
+    if (isBattleEvent(event)) {
       const roleplayerEvent = {
         ...event,
         id: generateId(),
-        battleId: currentBattleId,
+        battleId: event.battleId,
         roundId: currentRoundId,
         serialNumber: eventSerialNumber,
       };
 
       this.events.push(roleplayerEvent);
-    }
-    return newEvents;
-  }
-
-  getCampaignFromEvents() {
-    return this.campaign;
-  }
-
-  startCampaign() {
-    if (this.campaign.rounds.length > 0) {
-      throw new Error("Campaign already started");
-    }
-    const campaignStartEvents: CampaignEvent[] = [
-      {
-        type: "CampaignStarted",
-      },
-      {
-        type: "RoundStarted",
-      },
-    ];
-
-    this.publishEvent(...campaignStartEvents);
-  }
-
-  addCharacterItem(characterId: Actor["id"], itemDefinitionId: ItemDefinition["id"]) {
-    const actionGain: CampaignEvent = {
-      characterId,
-      itemDefinitionId: itemDefinitionId,
-      type: "CharacterInventoryItemGain",
-      itemInstanceId: generateId(),
-    };
-
-    this.publishEvent(actionGain);
-  }
-
-  removeCharacterItem(characterId: Actor["id"], characterInventoryItemId: CharacterInventoryItem["id"]) {
-    const actionGain: CampaignEvent = {
-      characterId,
-      characterInventoryItemId,
-      type: "CharacterInventoryItemLoss",
-    };
-
-    this.publishEvent(actionGain);
-  }
-
-  addCharacterEquipmentSlot(characterId: Actor["id"], equipmentSlotId: EquipmentSlotDefinition["id"]) {
-    const equipEvent: CampaignEvent = {
-      characterId,
-      equipmentSlotId,
-      type: "CharacterEquipmentSlotGain",
-    };
-
-    this.publishEvent(equipEvent);
-  }
-
-  characterUnEquipItem(
-    characterId: Actor["id"],
-    equipmentSlotId: EquipmentSlotDefinition["id"],
-    itemId?: ItemDefinition["id"]
-  ) {
-    const equipEvent: CampaignEvent = {
-      characterId,
-      equipmentSlotId,
-      itemId,
-      type: "CharacterInventoryItemUnEquip",
-    };
-
-    this.publishEvent(equipEvent);
-  }
-
-  characterEquipItem(
-    characterId: Actor["id"],
-    equipmentSlotId: EquipmentSlotDefinition["id"],
-    itemId: ItemDefinition["id"]
-  ) {
-    const equipEvent: CampaignEvent = {
-      type: "CharacterInventoryItemEquip",
-      characterId,
-      itemId,
-      equipmentSlotId,
-    };
-
-    this.publishEvent(equipEvent);
-  }
-
-  addActionToCharacter(characterId: Actor["id"], actionId: ActionDefinition["id"]) {
-    const actionGain: CampaignEvent = {
-      type: "CharacterActionGain",
-      characterId,
-      actionId,
-    };
-
-    this.publishEvent(actionGain);
-  }
-
-  setCharacterStats(characterId: Actor["id"], stats: CharacterStat[]) {
-    const statsEvents: CampaignEvent[] = stats.map((st) => ({
-      type: "CharacterStatChange",
-      amount: st.amount,
-      characterId,
-      statId: st.statId,
-    }));
-
-    this.publishEvent(...statsEvents);
-  }
-
-  setCharacterClasses(characterId: Actor["id"], classes: CharacterClass[]) {
-    const classResetEvent: CampaignEvent = {
-      type: "CharacterClassReset",
-      characterId,
-    };
-
-    const classUpdates: CampaignEvent[] = classes.map((c) => ({
-      type: "CharacterClassLevelGain",
-      characterId,
-      classId: c.classId,
-    }));
-
-    this.publishEvent(...[classResetEvent, ...classUpdates]);
-  }
-
-  setCharacterName(characterId: Actor["id"], name: string) {
-    const characterUpdate: CampaignEvent = {
-      type: "CharacterNameSet",
-      characterId,
-      name,
-    };
-
-    this.publishEvent(characterUpdate);
-  }
-
-  characterGainExperience(characterId: Actor["id"], experience: number) {
-    const characterUpdate: CampaignEvent = {
-      type: "CharacterExperienceChanged",
-      characterId,
-      experience,
-    };
-
-    this.publishEvent(characterUpdate);
-  }
-
-  addCharacterToCurrentBattle(characterId: Actor["id"]) {
-    const actor = this.campaign.characters.find((c) => c.id === characterId);
-    if (!actor) {
-      throw new Error("Actor not found");
+      return;
     }
 
-    const currentBattle = this.campaign.getCurrentBattle();
-    if (!currentBattle) {
-      throw new Error("No current battle");
-    }
+    const currentBattleId = this.campaign.getCurrentBattle()?.id;
+    const roleplayerEvent = {
+      ...event,
+      id: generateId(),
+      battleId: currentBattleId,
+      roundId: currentRoundId,
+      serialNumber: eventSerialNumber,
+    };
 
-    const characterBattleEnter: CampaignEvent[] = [
-      {
-        type: "CharacterBattleEnter",
-        characterId,
-        battleId: currentBattle.id,
-      },
-    ];
-
-    this.publishEvent(...characterBattleEnter);
+    this.events.push(roleplayerEvent);
+    return event;
   }
 
-  spawnCharacterFromTemplate(templateId: Actor["id"]) {
-    const template = this.campaign.actorTemplates.find((c) => c.id === templateId);
-    if (!template) {
-      throw new Error("Template character not found");
-    }
-
-    const characterId = generateId();
-    const characterSpawnEvents: CampaignEvent[] = [
-      {
-        type: "CharacterSpawned",
-        characterId,
-        templateCharacterId: templateId,
-      },
-    ];
-
-    this.publishEvent(...characterSpawnEvents);
-
-    return characterId;
-  }
-
-  dispatchCharacterDespawnEvent(actorId: Actor["id"]) {
-    const characterDespawnEvent = {
-      type: "CharacterDespawn" as const,
-      characterId: actorId,
-    } satisfies CampaignEvent;
-
-    this.publishEvent(characterDespawnEvent);
-  }
-
-  dispatchCharacterBattleEnterEvent(actorId: Actor["id"], battleId: Battle["id"]) {
-    const characterBattleEnter = {
-      type: "CharacterBattleEnter" as const,
-      characterId: actorId,
-      battleId,
-    } satisfies CampaignEvent;
-
-    this.publishEvent(characterBattleEnter);
-  }
-
-  dispatchCharacterBattleLeaveEvent(actorId: Actor["id"], battleId: Battle["id"]) {
-    const characterBattleLeave = {
-      type: "CharacterBattleLeave" as const,
-      characterId: actorId,
-      battleId,
-    } satisfies CampaignEvent;
-
-    this.publishEvent(characterBattleLeave);
-  }
-
-  createCharacter(characterId: Actor["id"], name: string) {
-    const defaultResourcesEvents: CampaignEvent[] = this.ruleset.getCharacterResourceTypes().map((cr) => ({
-      type: "CharacterResourceMaxSet",
-      max: cr.defaultMax || 0,
-      characterId,
-      resourceTypeId: cr.id,
-    }));
-
-    const resourcesGainEvents: CampaignEvent[] = this.ruleset.getCharacterResourceTypes().map((cr) => ({
-      type: "CharacterResourceGain",
-      amount: cr.defaultMax || 0,
-      characterId,
-      resourceTypeId: cr.id,
-    }));
-
-    const defaultStatsEvents: CampaignEvent[] = this.ruleset.getCharacterStatTypes().map((st) => ({
-      type: "CharacterStatChange",
-      amount: 0,
-      characterId,
-      statId: st.id,
-    }));
-
-    const defaultEquipmentSlotEvents: CampaignEvent[] = this.ruleset.getCharacterEquipmentSlots().map((es) => ({
-      type: "CharacterEquipmentSlotGain",
-      characterId,
-      equipmentSlotId: es.id,
-    }));
-
-    const characterSpawnEvents: CampaignEvent[] = [
-      {
-        type: "CharacterSpawned",
-        characterId,
-      },
-      {
-        type: "CharacterNameSet",
-        name: name,
-        characterId,
-      },
-      {
-        type: "CharacterExperienceSet",
-        experience: 0,
-        characterId,
-      },
-      ...defaultEquipmentSlotEvents,
-      ...defaultResourcesEvents,
-      ...defaultStatsEvents,
-      ...resourcesGainEvents,
-    ];
-
-    this.publishEvent(...characterSpawnEvents);
-  }
-
-  nextRound(battleId?: Battle["id"]) {
-    const newRoundId = generateId();
-    const events: RoleplayerEvent[] = [
-      {
-        id: generateId(),
-        type: "RoundStarted",
-        roundId: newRoundId,
-        battleId,
-        serialNumber: this.nextSerialNumber(),
-      },
-    ];
-
-    this.events.push(...events);
-
-    return newRoundId;
-  }
-
-  endRound() {
-    const events: CampaignEvent[] = [
-      {
-        type: "RoundEnded",
-      },
-    ];
-
-    this.publishEvent(...events);
-  }
-
-  startBattle() {
-    this.publishEvent({
-      type: "BattleStarted",
-      battleId: generateId(),
-    });
-  }
-
-  performCharacterAttack(attacker: Actor, actionDef: ActionDefinition, targets: Actor[]) {
-    const characterAction = attacker.action(actionDef);
-
-    const characterActionHitRoll = characterAction.rolls.find((r) => r.name === "Hit");
-    if (!characterActionHitRoll) {
-      throw new Error("Hit roll not defined for character action");
-    }
-
-    const healthResource = this.ruleset.getCharacterResourceTypes().find((rt) => rt.name === "Health");
-    if (!healthResource) {
-      throw new Error("Health resource not defined in world, cannot perform attack");
-    }
-
-    const targetReceiveAttackEvents = targets.flatMap((target) => {
-      if (attacker.tryHit(target)) {
-        return actionDef.appliesEffects.map((effect) => mapEffect(effect, actionDef, attacker, target, this.ruleset));
-      }
-
-      return [];
-    });
-
-    const characterResourceLoss: CampaignEvent[] = actionDef.requiresResources.map((rr) => ({
-      type: "CharacterResourceLoss",
-      characterId: attacker.id,
-      resourceTypeId: rr.resourceTypeId,
-      amount: rr.amount,
-    }));
-
-    return this.publishEvent(...characterResourceLoss, ...targetReceiveAttackEvents);
-  }
-
-  endCharacterTurn(actor: Actor) {
-    const currentBattle = this.campaign.getCurrentBattle();
-    if (!currentBattle) {
-      throw new Error("No current battle");
-    }
-    this.publishEvent({
-      type: "CharacterEndTurn",
-      characterId: actor.id,
-      battleId: currentBattle.id,
-    });
-  }
-
-  applyEvent(event: RoleplayerEvent) {
+  reduce(event: RoleplayerEvent) {
     switch (event.type) {
       case "CampaignStarted": {
         break;

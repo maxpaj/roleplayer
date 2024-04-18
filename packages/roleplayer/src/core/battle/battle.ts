@@ -17,7 +17,7 @@ export class Battle {
   constructor(b: WithRequired<Partial<Omit<Battle, "ruleset">>, "name" | "id" | "roleplayer">) {
     Object.assign(this, b);
     this.ruleset = b.roleplayer.ruleset;
-    b.roleplayer.subscribe(this.applyEvent.bind(this));
+    b.roleplayer.subscribe(this.reduce.bind(this));
   }
 
   isBattleOver() {
@@ -79,14 +79,14 @@ export class Battle {
       });
     }
 
-    this.roleplayer.publishEvent(...events);
+    this.roleplayer.dispatchEvents(...events);
 
     // 1. Check hit
     // 2. Apply effects -
     return true;
   }
 
-  applyEvent(event: RoleplayerEvent) {
+  reduce(event: RoleplayerEvent) {
     if (!("battleId" in event) || event.battleId !== this.id) return;
     switch (event.type) {
       case "CharacterBattleEnter": {

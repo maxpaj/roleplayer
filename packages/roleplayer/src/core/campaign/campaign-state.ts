@@ -31,7 +31,7 @@ export class CampaignState {
 
   constructor(c: WithRequired<Partial<CampaignState>, "id" | "roleplayer" | "ruleset">) {
     Object.assign(this, c);
-    c.roleplayer.subscribe(this.applyEvent.bind(this));
+    c.roleplayer.subscribe(this.reduce.bind(this));
   }
 
   getRoundEvents(round: Round) {
@@ -84,7 +84,7 @@ export class CampaignState {
     );
   }
 
-  applyEvent(event: RoleplayerEvent) {
+  reduce(event: RoleplayerEvent) {
     switch (event.type) {
       case "BattleStarted":
         this.battles.push(

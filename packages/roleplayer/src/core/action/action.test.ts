@@ -1,4 +1,12 @@
 import { DnDRuleset, generateId } from "../..";
+import {
+  addCharacterItem,
+  characterEquipItem,
+  createCharacter,
+  nextRound,
+  performCharacterAttack,
+  startCampaign,
+} from "../actions";
 import { ItemDefinition, ItemEquipmentType, ItemSlot, ItemType } from "../inventory/item";
 import { Roleplayer } from "../roleplayer";
 import { Rarity } from "../world/rarity";
@@ -27,7 +35,7 @@ describe("actions", () => {
           eventType: "CharacterResourceLoss",
           elementTypeId: coldElement.id,
           resourceTypeId: healthResource.id,
-          roll: "D10+2"
+          roll: "D10+2",
         },
         appliesAt: "RoundStarted",
       },
@@ -74,22 +82,24 @@ describe("actions", () => {
   );
 
   it("should apply effects from being hit", () => {
-    roleplayer.startCampaign();
+    roleplayer.dispatchAction(startCampaign());
 
     const attackerId = "attacker-id";
     const defenderId = "defender-id";
 
     // Setup attacker
-    roleplayer.createCharacter(attackerId, "Attacker");
-    roleplayer.addCharacterItem(attackerId, frostSword.id);
+    roleplayer.dispatchAction(createCharacter(attackerId, "Attacker"));
+    roleplayer.dispatchAction(addCharacterItem(attackerId, frostSword.id));
 
     const afterAddSword = roleplayer.campaign;
     const characterWithSword = afterAddSword.characters.find((c) => c.id === attackerId);
-    roleplayer.characterEquipItem(attackerId, mainHandEquipmentSlot.id, characterWithSword!.inventory[0]!.id);
+    roleplayer.dispatchAction(
+      characterEquipItem(attackerId, mainHandEquipmentSlot.id, characterWithSword!.inventory[0]!.id)
+    );
 
     // Setup defender
-    roleplayer.createCharacter(defenderId, "Defender");
-    roleplayer.nextRound();
+    roleplayer.dispatchAction(createCharacter(defenderId, "Defender"));
+    roleplayer.dispatchAction(nextRound());
 
     const beforeAttack = roleplayer.campaign;
     const attacker = beforeAttack.characters.find((c) => c.id === attackerId);
@@ -97,7 +107,7 @@ describe("actions", () => {
     const characterAction = actions.find((a) => a.id === "action-frost-sword-slash");
     const defenderBeforeAttack = beforeAttack.characters.filter((c) => c.id === defenderId);
 
-    roleplayer.performCharacterAttack(attacker!, characterAction!, defenderBeforeAttack);
+    roleplayer.dispatchAction(performCharacterAttack(attacker!, characterAction!, defenderBeforeAttack));
 
     const afterAttack = roleplayer.campaign;
     const defenderAfterAttack = afterAttack.characters.find((c) => c.id === defenderId);

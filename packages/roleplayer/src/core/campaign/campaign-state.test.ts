@@ -1,5 +1,6 @@
 import { DnDRuleset } from "../../data/rulesets/dnd-5th";
 import { generateId } from "../../lib/generate-id";
+import { startCampaign } from "../actions";
 import type { CampaignEvent, RoleplayerEvent } from "../events/events";
 import { Roleplayer } from "../roleplayer";
 
@@ -7,10 +8,10 @@ const ruleset = new DnDRuleset((str) => {
   const [, staticValue = "0"] = str.split("+");
   return 2 + +staticValue;
 });
-const roleplayer = new Roleplayer({ ruleset }, { id: generateId() });
 
 describe("Campaign state", () => {
   it("calculates correct character level", () => {
+    const roleplayer = new Roleplayer({ ruleset }, { id: generateId() });
     const characterId = generateId();
 
     const events: RoleplayerEvent[] = [
@@ -30,11 +31,10 @@ describe("Campaign state", () => {
         roundId: "0",
       },
     ];
+    roleplayer.dispatchEvents(...events);
+    roleplayer.dispatchAction(startCampaign());
 
-    roleplayer.startCampaign();
-    roleplayer.publishEvent(...events);
-    const state = roleplayer.getCampaignFromEvents();
-
+    const state = roleplayer.campaign;
     expect(state.characters.length).toBe(1);
     const character = state.characters[0];
     expect(character?.xp).toBe(100);
@@ -65,9 +65,9 @@ describe("Campaign state", () => {
       },
     ] satisfies CampaignEvent[];
 
-    roleplayer.publishEvent(...events);
+    roleplayer.dispatchEvents(...events);
 
-    const state = roleplayer.getCampaignFromEvents();
+    const state = roleplayer.campaign;
     expect(state.characters.length).toBe(1);
 
     const character = state.characters[0];

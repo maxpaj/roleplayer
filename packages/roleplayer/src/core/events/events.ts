@@ -55,7 +55,7 @@ export const RoleplayerEventTypes: RoleplayerEvent["type"][] = [
 export type SystemEvent =
   | { type: "Unknown" }
   | { type: "CampaignStarted" }
-  | { type: "RoundStarted" }
+  | { type: "RoundStarted"; roundId: Round["id"]; battleId?: Battle["id"] }
   | { type: "RoundEnded" }
   | { type: "BattleStarted"; battleId: Battle["id"] }
   | {

@@ -1,5 +1,6 @@
 export * from "./core/action/action";
 export * from "./core/action/effect";
+export * from "./core/actions";
 export * from "./core/actor/character";
 export * from "./core/battle/battle";
 export * from "./core/campaign/campaign-state";

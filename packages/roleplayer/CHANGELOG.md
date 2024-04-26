@@ -1,5 +1,11 @@
 # roleplayer
 
+## 0.0.10
+
+### Patch Changes
+
+- 8fad452: 0.0.10
+
 ## 0.0.9
 
 ### Patch Changes

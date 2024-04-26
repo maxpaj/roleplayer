@@ -18,7 +18,3 @@ export * from "./lib/generate-id";
 
 // TODO: Should be injected at build/runtime time
 export const Version = "0.0.0";
-
-// Test commit
-
-const something = new Roleplayer();

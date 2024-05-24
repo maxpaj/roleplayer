@@ -4,7 +4,7 @@ import type {
   CharacterResourceDefinition,
   DiceRoll,
   ElementDefinition,
-  Ruleset
+  Ruleset,
 } from "../..";
 import type { Actor } from "../actor/character";
 import type { StatusDefinition } from "./status";
@@ -21,7 +21,11 @@ export type CharacterStatusGainEffect = {
   statusId: StatusDefinition["id"];
 };
 
-export type EffectEventDefinition = CharacterResourceLossEffect | CharacterStatusGainEffect;
+export type UnkownEvent = {
+  eventType: string;
+};
+
+export type EffectEventDefinition = CharacterResourceLossEffect | CharacterStatusGainEffect | UnkownEvent;
 
 export function mapEffect(
   effect: EffectEventDefinition,
@@ -38,7 +42,14 @@ export function mapEffect(
     case "CharacterStatusGain": {
       return instantiateStatusGainEffect(actionDef, effect, attacker, target, ruleset);
     }
+
+    default:
+      throw new Error("Could not map effect event type");
   }
+}
+
+function isCharacterResourceLossEffect(effect: EffectEventDefinition): effect is CharacterResourceLossEffect {
+  return effect.eventType === "CharacterResourceLoss";
 }
 
 function instantiateResourceLossEffect(
@@ -48,7 +59,7 @@ function instantiateResourceLossEffect(
   target: Actor,
   ruleset: Ruleset
 ): CampaignEvent {
-  if (effect.eventType !== "CharacterResourceLoss") {
+  if (!isCharacterResourceLossEffect(effect)) {
     throw new Error("Not CharacterResourceLoss effect type");
   }
 
@@ -62,6 +73,10 @@ function instantiateResourceLossEffect(
   };
 }
 
+function isCharacterStatusGain(effect: EffectEventDefinition): effect is CharacterStatusGainEffect {
+  return effect.eventType === "CharacterStatusGain";
+}
+
 function instantiateStatusGainEffect(
   action: ActionDefinition,
   effect: EffectEventDefinition,
@@ -69,7 +84,7 @@ function instantiateStatusGainEffect(
   target: Actor,
   ruleset: Ruleset
 ) {
-  if (effect.eventType !== "CharacterStatusGain") {
+  if (!isCharacterStatusGain(effect)) {
     throw new Error("Not CharacterStatusGain effect type");
   }
 

@@ -9,6 +9,8 @@ import type {
 import type { Actor } from "../actor/character";
 import type { StatusDefinition } from "./status";
 
+type EffectParameters = unknown;
+
 export type CharacterResourceLossEffect = {
   eventType: "CharacterResourceLoss";
   roll: DiceRoll;
@@ -21,11 +23,12 @@ export type CharacterStatusGainEffect = {
   statusId: StatusDefinition["id"];
 };
 
-export type UnkownEvent = {
+export type UnkownEffect = {
   eventType: string;
+  parameters: EffectParameters;
 };
 
-export type EffectEventDefinition = CharacterResourceLossEffect | CharacterStatusGainEffect | UnkownEvent;
+export type EffectEventDefinition = CharacterResourceLossEffect | CharacterStatusGainEffect | UnkownEffect;
 
 export function mapEffect(
   effect: EffectEventDefinition,

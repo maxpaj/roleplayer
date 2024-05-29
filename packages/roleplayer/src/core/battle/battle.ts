@@ -14,10 +14,12 @@ export class Battle {
   actorToAct: Actor | undefined;
   actorsThatHaveActed: Actor[] = [];
 
+  unsubscribe: (() => void) | undefined;
+
   constructor(b: WithRequired<Partial<Omit<Battle, "ruleset">>, "name" | "id" | "roleplayer">) {
     Object.assign(this, b);
     this.ruleset = b.roleplayer.ruleset;
-    b.roleplayer.subscribe(this.reduce.bind(this));
+    this.unsubscribe = b.roleplayer.subscribe(this.reduce.bind(this));
   }
 
   isBattleOver() {
@@ -112,5 +114,9 @@ export class Battle {
         break;
       }
     }
+  }
+
+  dispose() {
+    this.unsubscribe?.();
   }
 }

@@ -25,6 +25,7 @@ export const RoleplayerEventTypes: RoleplayerEvent["type"][] = [
   "RoundStarted",
   "RoundEnded",
   "BattleStarted",
+  "BattleEnded",
   "CharacterBattleEnter",
   "CharacterSpawned",
   "CharacterNameSet",
@@ -58,6 +59,7 @@ export type SystemEvent =
   | { type: "RoundStarted"; roundId: Round["id"]; battleId?: Battle["id"] }
   | { type: "RoundEnded" }
   | { type: "BattleStarted"; battleId: Battle["id"] }
+  | { type: "BattleEnded"; battleId: Battle["id"] }
   | {
       type: "CharacterBattleEnter";
       characterId: Actor["id"];

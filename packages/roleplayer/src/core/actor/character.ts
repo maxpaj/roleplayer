@@ -136,9 +136,11 @@ export class Actor {
 
   campaign!: CampaignState;
 
+  unsubscribe: (() => void) | undefined;
+
   constructor(a: WithRequired<Partial<Actor>, "campaign">) {
     Object.assign(this, a);
-    a.campaign.roleplayer.subscribe(this.reduce.bind(this));
+    this.unsubscribe = a.campaign.roleplayer.subscribe(this.reduce.bind(this));
   }
 
   resetResources(generation: CharacterResourceGeneration[]) {
@@ -459,5 +461,9 @@ export class Actor {
         return;
       }
     }
+  }
+
+  dispose() {
+    this.unsubscribe?.();
   }
 }

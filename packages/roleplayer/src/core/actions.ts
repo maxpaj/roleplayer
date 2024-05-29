@@ -1,11 +1,11 @@
 import { generateId } from "../lib/generate-id";
-import { ActionDefinition } from "./action/action";
+import type { ActionDefinition } from "./action/action";
 import { mapEffect } from "./action/effect";
-import { Actor, CharacterClass, CharacterInventoryItem, CharacterStat } from "./actor/character";
-import { Battle } from "./battle/battle";
-import { CampaignEvent } from "./events/events";
-import { EquipmentSlotDefinition, ItemDefinition } from "./inventory/item";
-import { Roleplayer } from "./roleplayer";
+import type { Actor, CharacterClass, CharacterInventoryItem, CharacterStat } from "./actor/character";
+import type { Battle } from "./battle/battle";
+import type { CampaignEvent } from "./events/events";
+import type { EquipmentSlotDefinition, ItemDefinition } from "./inventory/item";
+import type { Roleplayer } from "./roleplayer";
 
 type Dispatcher = (...events: CampaignEvent[]) => void;
 type StateGetter = () => Roleplayer;
@@ -349,6 +349,15 @@ export function startBattle() {
     dispatch({
       type: "BattleStarted",
       battleId: generateId(),
+    });
+  };
+}
+
+export function endBattle(battleId: string) {
+  return (dispatch: Dispatcher, getState: StateGetter) => {
+    dispatch({
+      type: "BattleEnded",
+      battleId,
     });
   };
 }

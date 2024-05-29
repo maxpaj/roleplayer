@@ -1,5 +1,5 @@
 import { generateId, type Id } from "../../lib/generate-id";
-import { RemoveFunctions } from "../../types/remove-functions";
+import type { RemoveFunctions } from "../../types/remove-functions";
 import type { WithRequired } from "../../types/with-required";
 import type { ActionDefinition } from "../action/action";
 import type { StatusDefinition } from "../action/status";
@@ -86,7 +86,7 @@ export class CampaignState {
 
   reduce(event: RoleplayerEvent) {
     switch (event.type) {
-      case "BattleStarted":
+      case "BattleStarted": {
         this.battles.push(
           new Battle({
             id: event.battleId,
@@ -94,8 +94,15 @@ export class CampaignState {
             roleplayer: this.roleplayer,
           })
         );
-
         break;
+      }
+      case "BattleEnded": {
+        const battleIndex = this.battles.findIndex((b) => b.id === event.battleId);
+        if (battleIndex === -1) throw new Error(`Could not find battle with id: ${event.battleId}`);
+        const [removedBattle] = this.battles.splice(battleIndex, 1);
+        removedBattle?.dispose();
+        break;
+      }
     }
   }
 }

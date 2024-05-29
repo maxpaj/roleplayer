@@ -10,7 +10,7 @@ import {
 import Observable from "../lib/events/observable";
 import type { Logger } from "../lib/logging/logger";
 import type { WithRequired } from "../types/with-required";
-import { ActionDispatch } from "./actions";
+import type { ActionDispatch } from "./actions";
 
 type RoleplayerCampaignParameters = Omit<ConstructorParameters<typeof CampaignState>[0], "roleplayer" | "ruleset">;
 
@@ -42,8 +42,7 @@ type RoleplayerCampaignParameters = Omit<ConstructorParameters<typeof CampaignSt
  */
 export class Roleplayer extends Observable<RoleplayerEvent> {
   ruleset!: Ruleset;
-
-  events: RoleplayerEvent[];
+  events: RoleplayerEvent[] = [];
   campaign: CampaignState;
   logger?: Logger;
 
@@ -53,27 +52,12 @@ export class Roleplayer extends Observable<RoleplayerEvent> {
   ) {
     super();
     Object.assign(this, config);
-
     this.subscribe(this.reduce.bind(this));
-    this.events = this.createEventsProxy(config.events ?? []);
+
     this.campaign = new CampaignState({
       ...initialCampaignConfig,
       roleplayer: this,
       ruleset: config.ruleset,
-    });
-  }
-
-  createEventsProxy(events: RoleplayerEvent[]) {
-    // TODO: Can we fix this in a nicer way?
-    // eslint-disable-next-line no-undef
-    return new Proxy(events, {
-      set: (target, property, value, receiver) => {
-        const didSet = Reflect.set(target, property, value, receiver);
-        if (!didSet) return false;
-        const index = Number(property);
-        if (!Number.isNaN(index)) this.notify(value);
-        return true;
-      },
     });
   }
 
@@ -96,32 +80,28 @@ export class Roleplayer extends Observable<RoleplayerEvent> {
   dispatch(event: CampaignEvent) {
     const eventSerialNumber = this.nextSerialNumber();
     const currentRoundId = event.type === "RoundStarted" ? event.roundId : this.campaign.getCurrentRound().id;
-
+    let roleplayerEvent: RoleplayerEvent;
     // TODO: Extract this to some middleware?
     if (isBattleEvent(event)) {
-      const roleplayerEvent = {
+      roleplayerEvent = {
         ...event,
         id: generateId(),
         battleId: event.battleId,
         roundId: currentRoundId,
         serialNumber: eventSerialNumber,
       };
-
-      this.events.push(roleplayerEvent);
-      return;
+    } else {
+      const currentBattleId = this.campaign.getCurrentBattle()?.id;
+      roleplayerEvent = {
+        ...event,
+        id: generateId(),
+        battleId: currentBattleId,
+        roundId: currentRoundId,
+        serialNumber: eventSerialNumber,
+      };
     }
-
-    const currentBattleId = this.campaign.getCurrentBattle()?.id;
-    const roleplayerEvent = {
-      ...event,
-      id: generateId(),
-      battleId: currentBattleId,
-      roundId: currentRoundId,
-      serialNumber: eventSerialNumber,
-    };
-
     this.events.push(roleplayerEvent);
-    return event;
+    this.notify(roleplayerEvent);
   }
 
   reduce(event: RoleplayerEvent) {
@@ -167,10 +147,13 @@ export class Roleplayer extends Observable<RoleplayerEvent> {
       }
 
       case "CharacterDespawn": {
-        this.campaign.characters = this.campaign.characters.filter((character) => character.id !== event.characterId);
+        const characterIndex = this.campaign.characters.findIndex((c) => c.id === event.characterId);
+        if (characterIndex === -1) throw new Error(`Could not find character with id: ${event.characterId}`);
+        const [removedCharacter] = this.campaign.characters.splice(characterIndex, 1);
         for (const battle of this.campaign.battles) {
           battle.actors = battle.actors.filter((actor) => actor.id !== event.characterId);
         }
+        removedCharacter?.dispose();
         break;
       }
 

@@ -1,6 +1,6 @@
 import { Console } from "console";
 
-export class FileLogger {
+export class ConsoleLogger {
   console: Console;
 
   constructor() {

@@ -1,13 +1,11 @@
-import { WriteStream } from "fs";
-import { createWriteStream } from "node:fs";
 import { Logger } from "./logger";
 
 export class FileLogger implements Logger {
-  stream: WriteStream;
+  stream: WritableStream;
   buffer: { level: "INFO" | "DEBUG" | "WARN" | "ERROR"; log: any }[];
 
-  constructor(fileName: string = "debug-log.json") {
-    this.stream = createWriteStream(fileName, { start: 0 });
+  constructor(fileStream: WritableStream) {
+    this.stream = fileStream;
     this.buffer = [];
   }
 
@@ -34,11 +32,11 @@ export class FileLogger implements Logger {
     });
 
     this.buffer.push(...logs);
-    this.stream.write(JSON.stringify(logs));
+    this.stream.getWriter().write(JSON.stringify(logs));
   }
 
   writeToFile() {
-    this.stream.write(JSON.stringify(this.buffer));
+    this.stream.getWriter().write(JSON.stringify(this.buffer));
     this.stream.close();
     this.buffer = [];
   }

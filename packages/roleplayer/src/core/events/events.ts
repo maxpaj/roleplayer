@@ -19,69 +19,77 @@ export type CampaignEvent = SystemEvent | CharacterEvent;
 
 export type RoleplayerEvent = EventIdentifier & RoundEvent & CampaignEvent;
 
-export const RoleplayerEventTypes: RoleplayerEvent["type"][] = [
-  "Unknown",
-  "CampaignStarted",
-  "RoundStarted",
-  "RoundEnded",
-  "BattleStarted",
-  "BattleEnded",
-  "CharacterBattleEnter",
-  "CharacterSpawned",
-  "CharacterNameSet",
-  "CharacterResourceMaxSet",
-  "CharacterResourceGain",
-  "CharacterResourceLoss",
-  "CharacterStatChange",
-  "CharacterExperienceChanged",
-  "CharacterExperienceSet",
-  "CharacterDespawn",
-  "CharacterMovement",
-  "CharacterEndTurn",
-  "CharacterActionGain",
-  "CharacterEquipmentSlotGain",
-  "CharacterInventoryItemGain",
-  "CharacterInventoryItemEquip",
-  "CharacterPositionSet",
-  "CharacterStatusGain",
-  "CharacterAttackAttackerHit",
-  "CharacterAttackAttackerMiss",
-  "CharacterAttackDefenderHit",
-  "CharacterAttackDefenderDodge",
-  "CharacterAttackDefenderParry",
-  "CharacterClassReset",
-  "CharacterClassLevelGain",
-] as const;
+export enum CharacterEventTypes {
+  CharacterSpawned = "CharacterSpawned",
+  CharacterNameSet = "CharacterNameSet",
+  CharacterResourceMaxSet = "CharacterResourceMaxSet",
+  CharacterResourceGain = "CharacterResourceGain",
+  CharacterResourceLoss = "CharacterResourceLoss",
+  CharacterStatChange = "CharacterStatChange",
+  CharacterExperienceChanged = "CharacterExperienceChanged",
+  CharacterExperienceSet = "CharacterExperienceSet",
+  CharacterDespawn = "CharacterDespawn",
+  CharacterMovement = "CharacterMovement",
+  CharacterEndTurn = "CharacterEndTurn",
+  CharacterActionGain = "CharacterActionGain",
+  CharacterEquipmentSlotGain = "CharacterEquipmentSlotGain",
+  CharacterInventoryItemGain = "CharacterInventoryItemGain",
+  CharacterInventoryItemLoss = "CharacterInventoryItemLoss",
+  CharacterInventoryItemEquip = "CharacterInventoryItemEquip",
+  CharacterInventoryItemUnEquip = "CharacterInventoryItemUnEquip",
+  CharacterPositionSet = "CharacterPositionSet",
+  CharacterStatusGain = "CharacterStatusGain",
+  CharacterAttackAttackerHit = "CharacterAttackAttackerHit",
+  CharacterAttackAttackerMiss = "CharacterAttackAttackerMiss",
+  CharacterAttackDefenderHit = "CharacterAttackDefenderHit",
+  CharacterAttackDefenderDodge = "CharacterAttackDefenderDodge",
+  CharacterAttackDefenderParry = "CharacterAttackDefenderParry",
+  CharacterClassReset = "CharacterClassReset",
+  CharacterClassLevelGain = "CharacterClassLevelGain",
+}
+
+export enum SystemEventType {
+  Unknown = "Unknown",
+  CampaignStarted = "CampaignStarted",
+  RoundStarted = "RoundStarted",
+  RoundEnded = "RoundEnded",
+  BattleStarted = "BattleStarted",
+  BattleEnded = "BattleEnded",
+  CharacterBattleEnter = "CharacterBattleEnter",
+  CharacterBattleLeave = "CharacterBattleLeave",
+}
+
+export type RoleplayerEventTypes = typeof CharacterEventTypes & typeof SystemEventType;
 
 export type SystemEvent =
-  | { type: "Unknown" }
-  | { type: "CampaignStarted" }
-  | { type: "RoundStarted"; roundId: Round["id"]; battleId?: Battle["id"] }
-  | { type: "RoundEnded" }
-  | { type: "BattleStarted"; battleId: Battle["id"] }
-  | { type: "BattleEnded"; battleId: Battle["id"] }
+  | { type: SystemEventType.Unknown }
+  | { type: SystemEventType.CampaignStarted }
+  | { type: SystemEventType.RoundStarted; roundId: Round["id"]; battleId?: Battle["id"] }
+  | { type: SystemEventType.RoundEnded }
+  | { type: SystemEventType.BattleStarted; battleId: Battle["id"] }
+  | { type: SystemEventType.BattleEnded; battleId: Battle["id"] }
   | {
-      type: "CharacterBattleEnter";
+      type: SystemEventType.CharacterBattleEnter;
       characterId: Actor["id"];
       battleId: Battle["id"];
     }
   | {
-      type: "CharacterBattleLeave";
+      type: SystemEventType.CharacterBattleLeave;
       characterId: Actor["id"];
       battleId: Battle["id"];
     };
 
 export type CharacterEvent =
-  | { type: "CharacterSpawned"; characterId: Actor["id"]; templateCharacterId?: Actor["id"] }
-  | { type: "CharacterNameSet"; characterId: Actor["id"]; name: string }
+  | { type: CharacterEventTypes.CharacterSpawned; characterId: Actor["id"]; templateCharacterId?: Actor["id"] }
+  | { type: CharacterEventTypes.CharacterNameSet; characterId: Actor["id"]; name: string }
   | {
-      type: "CharacterResourceMaxSet";
+      type: CharacterEventTypes.CharacterResourceMaxSet;
       characterId: Actor["id"];
       resourceTypeId: CharacterResourceDefinition["id"];
       max: number;
     }
   | {
-      type: "CharacterResourceGain";
+      type: CharacterEventTypes.CharacterResourceGain;
       characterId: Actor["id"];
       amount: number;
       resourceTypeId: CharacterResourceDefinition["id"];
@@ -89,7 +97,7 @@ export type CharacterEvent =
       sourceId?: Actor["id"];
     }
   | {
-      type: "CharacterResourceLoss";
+      type: CharacterEventTypes.CharacterResourceLoss;
       characterId: Actor["id"];
       amount: number;
       resourceTypeId: CharacterResourceDefinition["id"];
@@ -97,91 +105,91 @@ export type CharacterEvent =
       sourceId?: Actor["id"];
     }
   | {
-      type: "CharacterStatChange";
+      type: CharacterEventTypes.CharacterStatChange;
       characterId: Actor["id"];
       amount: number;
       statId: CharacterStatType["id"];
     }
   | {
-      type: "CharacterExperienceChanged";
+      type: CharacterEventTypes.CharacterExperienceChanged;
       characterId: Actor["id"];
       experience: number;
     }
   | {
-      type: "CharacterExperienceSet";
+      type: CharacterEventTypes.CharacterExperienceSet;
       characterId: Actor["id"];
       experience: number;
     }
-  | { type: "CharacterDespawn"; characterId: Actor["id"] }
+  | { type: CharacterEventTypes.CharacterDespawn; characterId: Actor["id"] }
   | {
-      type: "CharacterMovement";
+      type: CharacterEventTypes.CharacterMovement;
       characterId: Actor["id"];
       targetPosition: Position;
       sourceId?: Actor["id"];
     }
-  | { type: "CharacterEndTurn"; characterId: Actor["id"]; battleId: Battle["id"] }
-  | { type: "CharacterActionGain"; characterId: Actor["id"]; actionId: Id }
+  | { type: CharacterEventTypes.CharacterEndTurn; characterId: Actor["id"]; battleId: Battle["id"] }
+  | { type: CharacterEventTypes.CharacterActionGain; characterId: Actor["id"]; actionId: Id }
   | {
-      type: "CharacterEquipmentSlotGain";
+      type: CharacterEventTypes.CharacterEquipmentSlotGain;
       characterId: Actor["id"];
       equipmentSlotId: Id;
     }
   | {
-      type: "CharacterInventoryItemGain";
+      type: CharacterEventTypes.CharacterInventoryItemGain;
       characterId: Actor["id"];
       itemDefinitionId: ItemDefinition["id"];
       itemInstanceId: CharacterInventoryItem["id"];
     }
   | {
-      type: "CharacterInventoryItemLoss";
+      type: CharacterEventTypes.CharacterInventoryItemLoss;
       characterId: Actor["id"];
       characterInventoryItemId: ItemDefinition["id"];
     }
   | {
-      type: "CharacterInventoryItemEquip";
+      type: CharacterEventTypes.CharacterInventoryItemEquip;
       characterId: Actor["id"];
       itemId: ItemDefinition["id"];
       equipmentSlotId: Id;
     }
   | {
-      type: "CharacterInventoryItemUnEquip";
+      type: CharacterEventTypes.CharacterInventoryItemUnEquip;
       characterId: Actor["id"];
       itemId?: ItemDefinition["id"];
       equipmentSlotId: Id;
     }
   | {
-      type: "CharacterPositionSet";
+      type: CharacterEventTypes.CharacterPositionSet;
       characterId: Actor["id"];
       targetPosition: Position;
     }
   | {
-      type: "CharacterStatusGain";
+      type: CharacterEventTypes.CharacterStatusGain;
       characterId: Actor["id"];
       actionId: ActionDefinition["id"];
       sourceId?: Actor["id"];
       statusId: Id;
     }
-  | { type: "CharacterAttackAttackerHit"; characterId: Actor["id"] }
-  | { type: "CharacterAttackAttackerMiss"; characterId: Actor["id"] }
+  | { type: CharacterEventTypes.CharacterAttackAttackerHit; characterId: Actor["id"] }
+  | { type: CharacterEventTypes.CharacterAttackAttackerMiss; characterId: Actor["id"] }
   | {
-      type: "CharacterAttackDefenderHit";
+      type: CharacterEventTypes.CharacterAttackDefenderHit;
       attackerId: Actor["id"];
       characterId: Actor["id"];
       actionDefinitionId: ActionDefinition["id"];
     }
   | {
-      type: "CharacterAttackDefenderDodge";
+      type: CharacterEventTypes.CharacterAttackDefenderDodge;
       characterId: Actor["id"];
       actionId: ActionDefinition["id"];
       attackerId: Actor["id"];
     }
-  | { type: "CharacterAttackDefenderParry"; characterId: Actor["id"] }
+  | { type: CharacterEventTypes.CharacterAttackDefenderParry; characterId: Actor["id"] }
   | {
-      type: "CharacterClassReset";
+      type: CharacterEventTypes.CharacterClassReset;
       characterId: Actor["id"];
     }
   | {
-      type: "CharacterClassLevelGain";
+      type: CharacterEventTypes.CharacterClassLevelGain;
       characterId: Actor["id"];
       classId: Clazz["id"];
     };

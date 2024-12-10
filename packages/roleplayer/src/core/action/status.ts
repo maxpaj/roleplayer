@@ -31,7 +31,7 @@ export enum StatusType {
  * @module core/actions
  */
 export enum StatusDurationType {
-  Forever = "Forever",
+  Permanent = "Permanent",
   UntilLongRest = "UntilLongRest",
   UntilShortRest = "UntilShortRest",
   NumberOfRounds = "NumberOfRounds",

@@ -1,17 +1,17 @@
-import {
+import type {
   ActionDefinition,
   Actor,
-  CharacterResourceGeneration,
   EffectEventDefinition,
   EquipmentSlotDefinition,
+  ResourceGeneration,
 } from "../..";
-import { Battle } from "../../core/battle/battle";
-import {
-  CharacterResourceDefinition,
+import type { Battle } from "../../core/battle/battle";
+import type {
   CharacterStatType,
   Clazz,
   ElementDefinition,
   LevelProgression,
+  ResourceDefinition,
   Ruleset,
 } from "../../core/ruleset/ruleset";
 
@@ -40,7 +40,7 @@ export class LeagueOfDungeoneersRuleset implements Ruleset {
     throw new Error("Method not implemented.");
   }
 
-  getCharacterResourceTypes(): CharacterResourceDefinition[] {
+  getCharacterResourceTypes(): ResourceDefinition[] {
     throw new Error("Method not implemented.");
   }
 
@@ -72,7 +72,7 @@ export class LeagueOfDungeoneersRuleset implements Ruleset {
     throw new Error("Method not implemented.");
   }
 
-  characterResourceGeneration(actor: Actor): CharacterResourceGeneration[] {
+  characterResourceGeneration(actor: Actor): ResourceGeneration[] {
     throw new Error("Method not implemented.");
   }
 

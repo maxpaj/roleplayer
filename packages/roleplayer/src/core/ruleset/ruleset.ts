@@ -1,8 +1,8 @@
 import type { Id } from "../../lib/generate-id";
 import type { ActionDefinition } from "../action/action";
-import { CharacterResourceLossEffect } from "../action/effect";
-import type { Actor, CharacterResourceGeneration } from "../actor/character";
-import { Battle } from "../battle/battle";
+import type { CharacterResourceLossEffect } from "../action/effect";
+import type { Actor, ResourceGeneration } from "../actor/character";
+import type { Battle } from "../battle/battle";
 import type { EquipmentSlotDefinition } from "../inventory/item";
 
 export enum Alignment {
@@ -44,7 +44,7 @@ export type Clazz = {
   levelProgression: ClassLevelProgression[];
 };
 
-export type CharacterResourceDefinition = {
+export type ResourceDefinition = {
   id: Id;
   name: string;
   defaultMax?: number;
@@ -71,7 +71,7 @@ export type CharacterStatType = {
 export interface Ruleset {
   getLevelProgression(): LevelProgression[];
   getCharacterStatTypes(): CharacterStatType[];
-  getCharacterResourceTypes(): CharacterResourceDefinition[];
+  getCharacterResourceTypes(): ResourceDefinition[];
   getCharacterEquipmentSlots(): EquipmentSlotDefinition[];
   getClassDefinitions(): Clazz[];
   getElementDefinitions(): ElementDefinition[];
@@ -87,7 +87,7 @@ export interface Ruleset {
   ): number;
   characterResistanceMultiplier(actor: Actor, damageType: ElementDefinition): number;
   characterResistanceAbsolute(actor: Actor, damageType: ElementDefinition): number;
-  characterResourceGeneration(actor: Actor): CharacterResourceGeneration[];
+  characterResourceGeneration(actor: Actor): ResourceGeneration[];
   characterElementDamageMultiplier(actor: Actor, damageType: ElementDefinition): number;
   characterIsDead(actor: Actor): boolean;
 }

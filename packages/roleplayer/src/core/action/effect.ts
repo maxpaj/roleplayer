@@ -1,9 +1,9 @@
 import type {
   ActionDefinition,
   CampaignEvent,
-  CharacterResourceDefinition,
   DiceRoll,
   ElementDefinition,
+  ResourceDefinition,
   Ruleset,
 } from "../..";
 import type { Actor } from "../actor/character";
@@ -14,7 +14,7 @@ type EffectParameters = unknown;
 export type CharacterResourceLossEffect = {
   eventType: "CharacterResourceLoss";
   roll: DiceRoll;
-  resourceTypeId: CharacterResourceDefinition["id"];
+  resourceTypeId: ResourceDefinition["id"];
   elementTypeId: ElementDefinition["id"];
 };
 

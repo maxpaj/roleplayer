@@ -8,7 +8,7 @@ import { Battle } from "../battle/battle";
 import type { RoleplayerEvent } from "../events/events";
 import type { ItemDefinition } from "../inventory/item";
 import type { Roleplayer } from "../roleplayer";
-import type { CharacterResourceDefinition, Clazz, Race, Ruleset } from "../ruleset/ruleset";
+import type { Clazz, Race, ResourceDefinition, Ruleset } from "../ruleset/ruleset";
 import type { Round } from "./round";
 
 /**
@@ -56,7 +56,7 @@ export class CampaignState {
     return this.battles[this.battles.length - 1];
   }
 
-  characterHasResource(actor: Actor, resourceType: CharacterResourceDefinition["id"]) {
+  characterHasResource(actor: Actor, resourceType: ResourceDefinition["id"]) {
     return actor.resources.some((r) => r.resourceTypeId === resourceType && r.amount > 0);
   }
 

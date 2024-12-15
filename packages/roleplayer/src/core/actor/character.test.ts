@@ -13,7 +13,7 @@ import {
 import type { CampaignEvent } from "../events/events";
 import { ItemEquipmentType, ItemSlot, ItemType, type ItemDefinition } from "../inventory/item";
 import { Roleplayer } from "../roleplayer";
-import type { CharacterResourceDefinition } from "../ruleset/ruleset";
+import type { ResourceDefinition } from "../ruleset/ruleset";
 import { Actor } from "./character";
 
 const ruleset = new DnDRuleset((str) => {
@@ -55,7 +55,7 @@ describe("Character", () => {
       roleplayer.dispatchAction(nextRound());
       roleplayer.dispatchAction(createCharacter(characterId, "Character"));
 
-      const resourceType: CharacterResourceDefinition = {
+      const resourceType: ResourceDefinition = {
         id: generateId(),
         name: "Health",
         defaultMax: 20,
@@ -184,7 +184,7 @@ describe("Character", () => {
       roleplayer.dispatchAction(nextRound());
       roleplayer.dispatchAction(createCharacter(characterId, "Character"));
 
-      const testResourceType: CharacterResourceDefinition = {
+      const testResourceType: ResourceDefinition = {
         id: generateId(),
         name: "Resource",
         defaultMax: 20,
@@ -281,7 +281,7 @@ describe("Character", () => {
 
       roleplayer.dispatchAction(nextRound());
 
-      const resourceType: CharacterResourceDefinition = {
+      const resourceType: ResourceDefinition = {
         id: generateId(),
         name: "Resource",
         defaultMax: 20,

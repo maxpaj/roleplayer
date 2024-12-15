@@ -1,6 +1,6 @@
-import { Id } from "../../lib/generate-id";
-import { CharacterResourceDefinition } from "../ruleset/ruleset";
-import { EffectEventDefinition } from "./effect";
+import type { Id } from "../../lib/generate-id";
+import type { ResourceDefinition } from "../ruleset/ruleset";
+import type { EffectEventDefinition } from "./effect";
 
 export enum TargetType {
   Self = "Self",
@@ -23,7 +23,7 @@ export type ActionDefinition = {
   eligibleTargets: TargetType[];
   rangeDistanceUnits: number;
   requiresResources: {
-    resourceTypeId: CharacterResourceDefinition["id"];
+    resourceTypeId: ResourceDefinition["id"];
     amount: number;
   }[];
 };

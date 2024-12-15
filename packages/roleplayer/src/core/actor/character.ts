@@ -8,11 +8,11 @@ import type { RoleplayerEvent } from "../events/events";
 import { ItemType, type EquipmentSlotDefinition, type ItemDefinition } from "../inventory/item";
 import type {
   Alignment,
-  CharacterResourceDefinition,
   CharacterStatType,
   Clazz,
   ElementDefinition,
   Race,
+  ResourceDefinition,
 } from "../ruleset/ruleset";
 
 /**
@@ -27,8 +27,8 @@ export type Position = {
 /**
  * @module core/actor
  */
-export type CharacterResource = {
-  resourceTypeId: CharacterResourceDefinition["id"];
+export type Resource = {
+  resourceTypeId: ResourceDefinition["id"];
   amount: number;
   max: number;
   min: number;
@@ -37,8 +37,8 @@ export type CharacterResource = {
 /**
  * @module core/actor
  */
-export type CharacterResourceGeneration = {
-  resourceTypeId: CharacterResourceDefinition["id"];
+export type ResourceGeneration = {
+  resourceTypeId: ResourceDefinition["id"];
   amount: number;
 };
 
@@ -130,7 +130,7 @@ export class Actor {
   statuses: StatusDefinition[] = [];
   position!: Position;
 
-  resources: CharacterResource[] = [];
+  resources: Resource[] = [];
   reactionsRemaining: ReactionResource[] = [];
   reactions: Reaction[] = [];
 
@@ -143,7 +143,7 @@ export class Actor {
     this.unsubscribe = a.campaign.roleplayer.subscribe(this.reduce.bind(this));
   }
 
-  resetResources(generation: CharacterResourceGeneration[]) {
+  resetResources(generation: ResourceGeneration[]) {
     this.resources = this.resources.map((resource) => {
       const resourceGeneration = generation.find((g) => g.resourceTypeId === resource.resourceTypeId);
       if (!resourceGeneration) {

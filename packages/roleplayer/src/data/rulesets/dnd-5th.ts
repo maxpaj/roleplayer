@@ -1,15 +1,15 @@
-import { ActionDefinition } from "../../core/action/action";
-import { CharacterResourceLossEffect } from "../../core/action/effect";
-import { Actor, CharacterResourceGeneration } from "../../core/actor/character";
-import { Battle } from "../../core/battle/battle";
-import { Roll, defaultRoll } from "../../core/dice/dice";
+import type { ActionDefinition } from "../../core/action/action";
+import type { CharacterResourceLossEffect } from "../../core/action/effect";
+import type { Actor, ResourceGeneration } from "../../core/actor/character";
+import type { Battle } from "../../core/battle/battle";
+import { defaultRoll, type Roll } from "../../core/dice/dice";
 import { ItemEquipmentType, type EquipmentSlotDefinition } from "../../core/inventory/item";
 import type {
-  CharacterResourceDefinition,
   CharacterStatType,
   Clazz,
   ElementDefinition,
   LevelProgression,
+  ResourceDefinition,
   Ruleset,
 } from "../../core/ruleset/ruleset";
 import { generateId } from "../../lib/generate-id";
@@ -68,7 +68,7 @@ export class DnDRuleset implements Ruleset {
     ];
   }
 
-  getCharacterResourceTypes(): CharacterResourceDefinition[] {
+  getCharacterResourceTypes(): ResourceDefinition[] {
     return [
       {
         id: "00000000-0000-0000-0000-000000001000" as const,
@@ -211,7 +211,7 @@ export class DnDRuleset implements Ruleset {
     return 1;
   }
 
-  characterResourceGeneration(actor: Actor): CharacterResourceGeneration[] {
+  characterResourceGeneration(actor: Actor): ResourceGeneration[] {
     return [
       {
         amount: 1,

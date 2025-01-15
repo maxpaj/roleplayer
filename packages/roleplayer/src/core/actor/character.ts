@@ -1,4 +1,4 @@
-import type { CampaignState } from "../..";
+import type { CampaignState, Resource, ResourceGeneration } from "../..";
 import type { Id } from "../../lib/generate-id";
 import type { WithRequired } from "../../types/with-required";
 import type { ActionDefinition } from "../action/action";
@@ -11,8 +11,7 @@ import type {
   CharacterStatType,
   Clazz,
   ElementDefinition,
-  Race,
-  ResourceDefinition,
+  Race
 } from "../ruleset/ruleset";
 
 /**
@@ -22,24 +21,6 @@ export type Position = {
   x: number;
   y: number;
   z: number;
-};
-
-/**
- * @module core/actor
- */
-export type Resource = {
-  resourceTypeId: ResourceDefinition["id"];
-  amount: number;
-  max: number;
-  min: number;
-};
-
-/**
- * @module core/actor
- */
-export type ResourceGeneration = {
-  resourceTypeId: ResourceDefinition["id"];
-  amount: number;
 };
 
 /**

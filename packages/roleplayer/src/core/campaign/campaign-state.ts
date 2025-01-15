@@ -8,7 +8,8 @@ import { Battle } from "../battle/battle";
 import type { RoleplayerEvent } from "../events/events";
 import type { ItemDefinition } from "../inventory/item";
 import type { Roleplayer } from "../roleplayer";
-import type { Clazz, Race, ResourceDefinition, Ruleset } from "../ruleset/ruleset";
+import type { Clazz, Race, Ruleset } from "../ruleset/ruleset";
+import { ResourceDefinition } from "../world/resource";
 import type { Round } from "./round";
 
 /**

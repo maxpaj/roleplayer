@@ -1,7 +1,7 @@
 import { DnDRuleset } from "../../data/rulesets/dnd-5th";
 import { generateId } from "../../lib/generate-id";
 import { startCampaign } from "../actions";
-import type { CampaignEvent, RoleplayerEvent } from "../events/events";
+import { CharacterEventTypes, type CampaignEvent, type RoleplayerEvent } from "../events/events";
 import { Roleplayer } from "../roleplayer";
 
 const ruleset = new DnDRuleset((str) => {
@@ -17,14 +17,14 @@ describe("Campaign state", () => {
     const events: RoleplayerEvent[] = [
       {
         id: generateId(),
-        type: "CharacterSpawned" as const,
+        type: CharacterEventTypes.CharacterSpawned,
         characterId,
         serialNumber: 0,
         roundId: "0",
       },
       {
         id: generateId(),
-        type: "CharacterExperienceSet" as const,
+        type: CharacterEventTypes.CharacterExperienceSet,
         characterId,
         experience: 100,
         serialNumber: 0,
@@ -49,16 +49,16 @@ describe("Campaign state", () => {
 
     const events = [
       {
-        type: "CharacterSpawned",
+        type: CharacterEventTypes.CharacterSpawned,
         characterId,
       },
       {
-        type: "CharacterNameSet",
+        type: CharacterEventTypes.CharacterNameSet,
         characterId,
         name: "Some name",
       },
       {
-        type: "CharacterResourceMaxSet",
+        type: CharacterEventTypes.CharacterResourceMaxSet,
         characterId,
         resourceTypeId: healthResource!.id,
         max: 10,

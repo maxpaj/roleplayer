@@ -3,6 +3,7 @@ import type {
   Actor,
   EffectEventDefinition,
   EquipmentSlotDefinition,
+  ResourceDefinition,
   ResourceGeneration,
 } from "../..";
 import type { Battle } from "../../core/battle/battle";
@@ -11,7 +12,6 @@ import type {
   Clazz,
   ElementDefinition,
   LevelProgression,
-  ResourceDefinition,
   Ruleset,
 } from "../../core/ruleset/ruleset";
 

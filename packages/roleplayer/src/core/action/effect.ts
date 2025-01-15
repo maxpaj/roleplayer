@@ -1,10 +1,11 @@
-import type {
-  ActionDefinition,
-  CampaignEvent,
-  DiceRoll,
-  ElementDefinition,
-  ResourceDefinition,
-  Ruleset,
+import {
+  CharacterEventTypes,
+  type ActionDefinition,
+  type CampaignEvent,
+  type DiceRoll,
+  type ElementDefinition,
+  type ResourceDefinition,
+  type Ruleset
 } from "../..";
 import type { Actor } from "../actor/character";
 import type { StatusDefinition } from "./status";
@@ -67,7 +68,7 @@ function instantiateResourceLossEffect(
   }
 
   return {
-    type: "CharacterResourceLoss" as const,
+    type: CharacterEventTypes.CharacterResourceLoss,
     amount: ruleset.characterHitDamage(source, action, target, effect),
     characterId: target.id,
     resourceTypeId: effect.resourceTypeId,
@@ -86,13 +87,13 @@ function instantiateStatusGainEffect(
   source: Actor,
   target: Actor,
   ruleset: Ruleset
-) {
+): CampaignEvent {
   if (!isCharacterStatusGain(effect)) {
     throw new Error("Not CharacterStatusGain effect type");
   }
 
   return {
-    type: "CharacterStatusGain" as const,
+    type: CharacterEventTypes.CharacterStatusGain,
     characterId: target.id,
     actionId: action.id,
     sourceId: source.id,

@@ -3,7 +3,7 @@ import type { ActionDefinition } from "./action/action";
 import { mapEffect } from "./action/effect";
 import type { Actor, CharacterClass, CharacterInventoryItem, CharacterStat } from "./actor/character";
 import type { Battle } from "./battle/battle";
-import type { CampaignEvent } from "./events/events";
+import { CharacterEventTypes, SystemEventType, type CampaignEvent } from "./events/events";
 import type { EquipmentSlotDefinition, ItemDefinition } from "./inventory/item";
 import type { Roleplayer } from "./roleplayer";
 
@@ -21,10 +21,10 @@ export function startCampaign() {
 
     const campaignStartEvents: CampaignEvent[] = [
       {
-        type: "CampaignStarted",
+        type: SystemEventType.CampaignStarted,
       },
       {
-        type: "RoundStarted",
+        type: SystemEventType.RoundStarted,
         roundId: generateId(),
       },
     ];
@@ -38,7 +38,7 @@ export function addCharacterItem(characterId: Actor["id"], itemDefinitionId: Ite
     const actionGain: CampaignEvent = {
       characterId,
       itemDefinitionId: itemDefinitionId,
-      type: "CharacterInventoryItemGain",
+      type: CharacterEventTypes.CharacterInventoryItemGain,
       itemInstanceId: generateId(),
     };
 
@@ -51,7 +51,7 @@ export function removeCharacterItem(characterId: Actor["id"], characterInventory
     const actionGain: CampaignEvent = {
       characterId,
       characterInventoryItemId,
-      type: "CharacterInventoryItemLoss",
+      type: CharacterEventTypes.CharacterInventoryItemLoss,
     };
 
     dispatch(actionGain);
@@ -63,7 +63,7 @@ export function addCharacterEquipmentSlot(characterId: Actor["id"], equipmentSlo
     const equipEvent: CampaignEvent = {
       characterId,
       equipmentSlotId,
-      type: "CharacterEquipmentSlotGain",
+      type: CharacterEventTypes.CharacterEquipmentSlotGain,
     };
 
     dispatch(equipEvent);
@@ -80,7 +80,7 @@ export function characterUnEquipItem(
       characterId,
       equipmentSlotId,
       itemId,
-      type: "CharacterInventoryItemUnEquip",
+      type: CharacterEventTypes.CharacterInventoryItemUnEquip,
     };
 
     dispatch(equipEvent);
@@ -94,7 +94,7 @@ export function characterEquipItem(
 ) {
   return (dispatch: Dispatcher, getState: StateGetter) => {
     const equipEvent: CampaignEvent = {
-      type: "CharacterInventoryItemEquip",
+      type: CharacterEventTypes.CharacterInventoryItemEquip,
       characterId,
       itemId,
       equipmentSlotId,
@@ -107,7 +107,7 @@ export function characterEquipItem(
 export function addActionToCharacter(characterId: Actor["id"], actionId: ActionDefinition["id"]) {
   return (dispatch: Dispatcher, getState: StateGetter) => {
     const actionGain: CampaignEvent = {
-      type: "CharacterActionGain",
+      type: CharacterEventTypes.CharacterActionGain,
       characterId,
       actionId,
     };
@@ -119,7 +119,7 @@ export function addActionToCharacter(characterId: Actor["id"], actionId: ActionD
 export function setCharacterStats(characterId: Actor["id"], stats: CharacterStat[]) {
   return (dispatch: Dispatcher, getState: StateGetter) => {
     const statsEvents: CampaignEvent[] = stats.map((st) => ({
-      type: "CharacterStatChange",
+      type: CharacterEventTypes.CharacterStatChange,
       amount: st.amount,
       characterId,
       statId: st.statId,
@@ -132,12 +132,12 @@ export function setCharacterStats(characterId: Actor["id"], stats: CharacterStat
 export function setCharacterClasses(characterId: Actor["id"], classes: CharacterClass[]) {
   return (dispatch: Dispatcher, getState: StateGetter) => {
     const classResetEvent: CampaignEvent = {
-      type: "CharacterClassReset",
+      type: CharacterEventTypes.CharacterClassReset,
       characterId,
     };
 
     const classUpdates: CampaignEvent[] = classes.map((c) => ({
-      type: "CharacterClassLevelGain",
+      type: CharacterEventTypes.CharacterClassLevelGain,
       characterId,
       classId: c.classId,
     }));
@@ -149,7 +149,7 @@ export function setCharacterClasses(characterId: Actor["id"], classes: Character
 export function setCharacterName(characterId: Actor["id"], name: string) {
   return (dispatch: Dispatcher, getState: StateGetter) => {
     const characterUpdate: CampaignEvent = {
-      type: "CharacterNameSet",
+      type: CharacterEventTypes.CharacterNameSet,
       characterId,
       name,
     };
@@ -161,7 +161,7 @@ export function setCharacterName(characterId: Actor["id"], name: string) {
 export function characterGainExperience(characterId: Actor["id"], experience: number) {
   return (dispatch: Dispatcher, getState: StateGetter) => {
     const characterUpdate: CampaignEvent = {
-      type: "CharacterExperienceChanged",
+      type: CharacterEventTypes.CharacterExperienceChanged,
       characterId,
       experience,
     };
@@ -184,7 +184,7 @@ export function addCharacterToCurrentBattle(characterId: Actor["id"]) {
 
     const characterBattleEnter: CampaignEvent[] = [
       {
-        type: "CharacterBattleEnter",
+        type: SystemEventType.CharacterBattleEnter,
         characterId,
         battleId: currentBattle.id,
       },
@@ -204,7 +204,7 @@ export function spawnCharacterFromTemplate(templateId: Actor["id"]) {
     const characterId = generateId();
     const characterSpawnEvents: CampaignEvent[] = [
       {
-        type: "CharacterSpawned",
+        type: CharacterEventTypes.CharacterSpawned,
         characterId,
         templateCharacterId: templateId,
       },
@@ -221,7 +221,7 @@ export function spawnCharacterFromTemplate(templateId: Actor["id"]) {
 export function dispatchCharacterDespawnEvent(actorId: Actor["id"]) {
   return (dispatch: Dispatcher, getState: StateGetter) => {
     const characterDespawnEvent = {
-      type: "CharacterDespawn" as const,
+      type: CharacterEventTypes.CharacterDespawn,
       characterId: actorId,
     } satisfies CampaignEvent;
 
@@ -232,7 +232,7 @@ export function dispatchCharacterDespawnEvent(actorId: Actor["id"]) {
 export function dispatchCharacterBattleEnterEvent(actorId: Actor["id"], battleId: Battle["id"]) {
   return (dispatch: Dispatcher, getState: StateGetter) => {
     const characterBattleEnter = {
-      type: "CharacterBattleEnter" as const,
+      type: SystemEventType.CharacterBattleEnter,
       characterId: actorId,
       battleId,
     } satisfies CampaignEvent;
@@ -244,7 +244,7 @@ export function dispatchCharacterBattleEnterEvent(actorId: Actor["id"], battleId
 export function dispatchCharacterBattleLeaveEvent(actorId: Actor["id"], battleId: Battle["id"]) {
   return (dispatch: Dispatcher, getState: StateGetter) => {
     const characterBattleLeave = {
-      type: "CharacterBattleLeave" as const,
+      type: SystemEventType.CharacterBattleLeave,
       characterId: actorId,
       battleId,
     } satisfies CampaignEvent;
@@ -258,7 +258,7 @@ export function createCharacter(characterId: Actor["id"], name: string) {
     const defaultResourcesEvents: CampaignEvent[] = getState()
       .ruleset.getCharacterResourceTypes()
       .map((cr) => ({
-        type: "CharacterResourceMaxSet",
+        type: CharacterEventTypes.CharacterResourceMaxSet,
         max: cr.defaultMax || 0,
         characterId,
         resourceTypeId: cr.id,
@@ -267,7 +267,7 @@ export function createCharacter(characterId: Actor["id"], name: string) {
     const resourcesGainEvents: CampaignEvent[] = getState()
       .ruleset.getCharacterResourceTypes()
       .map((cr) => ({
-        type: "CharacterResourceGain",
+        type: CharacterEventTypes.CharacterResourceGain,
         amount: cr.defaultMax || 0,
         characterId,
         resourceTypeId: cr.id,
@@ -276,7 +276,7 @@ export function createCharacter(characterId: Actor["id"], name: string) {
     const defaultStatsEvents: CampaignEvent[] = getState()
       .ruleset.getCharacterStatTypes()
       .map((st) => ({
-        type: "CharacterStatChange",
+        type: CharacterEventTypes.CharacterStatChange,
         amount: 0,
         characterId,
         statId: st.id,
@@ -285,23 +285,23 @@ export function createCharacter(characterId: Actor["id"], name: string) {
     const defaultEquipmentSlotEvents: CampaignEvent[] = getState()
       .ruleset.getCharacterEquipmentSlots()
       .map((es) => ({
-        type: "CharacterEquipmentSlotGain",
+        type: CharacterEventTypes.CharacterEquipmentSlotGain,
         characterId,
         equipmentSlotId: es.id,
       }));
 
     const characterSpawnEvents: CampaignEvent[] = [
       {
-        type: "CharacterSpawned",
+        type: CharacterEventTypes.CharacterSpawned,
         characterId,
       },
       {
-        type: "CharacterNameSet",
+        type: CharacterEventTypes.CharacterNameSet,
         name: name,
         characterId,
       },
       {
-        type: "CharacterExperienceSet",
+        type: CharacterEventTypes.CharacterExperienceSet,
         experience: 0,
         characterId,
       },
@@ -320,7 +320,7 @@ export function nextRound(battleId?: Battle["id"]) {
     const newRoundId = generateId();
     const events: CampaignEvent[] = [
       {
-        type: "RoundStarted",
+        type: SystemEventType.RoundStarted,
         roundId: newRoundId,
         battleId,
       },
@@ -336,7 +336,7 @@ export function endRound() {
   return (dispatch: Dispatcher, getState: StateGetter) => {
     const events: CampaignEvent[] = [
       {
-        type: "RoundEnded",
+        type: SystemEventType.RoundEnded,
       },
     ];
 
@@ -347,7 +347,7 @@ export function endRound() {
 export function startBattle() {
   return (dispatch: Dispatcher, getState: StateGetter) => {
     dispatch({
-      type: "BattleStarted",
+      type: SystemEventType.BattleStarted,
       battleId: generateId(),
     });
   };
@@ -356,7 +356,7 @@ export function startBattle() {
 export function endBattle(battleId: string) {
   return (dispatch: Dispatcher, getState: StateGetter) => {
     dispatch({
-      type: "BattleEnded",
+      type: SystemEventType.BattleEnded,
       battleId,
     });
   };
@@ -389,7 +389,7 @@ export function performCharacterAttack(attacker: Actor, actionDef: ActionDefinit
     });
 
     const characterResourceLoss: CampaignEvent[] = actionDef.requiresResources.map((rr) => ({
-      type: "CharacterResourceLoss",
+      type: CharacterEventTypes.CharacterResourceLoss,
       characterId: attacker.id,
       resourceTypeId: rr.resourceTypeId,
       amount: rr.amount,
@@ -406,7 +406,7 @@ export function endCharacterTurn(actor: Actor) {
       throw new Error("No current battle");
     }
     dispatch({
-      type: "CharacterEndTurn",
+      type: CharacterEventTypes.CharacterEndTurn,
       characterId: actor.id,
       battleId: currentBattle.id,
     });

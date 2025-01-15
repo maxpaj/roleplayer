@@ -1,5 +1,5 @@
 import type { Id } from "../../lib/generate-id";
-import type { ResourceDefinition } from "../ruleset/ruleset";
+import type { ResourceDefinition } from "../world/resource";
 import type { EffectEventDefinition } from "./effect";
 
 export enum TargetType {

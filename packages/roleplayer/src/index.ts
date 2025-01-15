@@ -14,6 +14,7 @@ export * from "./core/roleplayer";
 export * from "./core/ruleset/ruleset";
 export * from "./core/world/map";
 export * from "./core/world/rarity";
+export * from "./core/world/resource";
 export * from "./data/index";
 export * from "./lib/generate-id";
 

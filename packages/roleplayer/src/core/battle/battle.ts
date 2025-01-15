@@ -1,4 +1,4 @@
-import { mapEffect, type ActionDefinition, type CampaignEvent, type RoleplayerEvent, type Ruleset } from "../..";
+import { CharacterEventTypes, mapEffect, type ActionDefinition, type CampaignEvent, type RoleplayerEvent, type Ruleset } from "../..";
 import type { Id } from "../../lib/generate-id";
 import type { WithRequired } from "../../types/with-required";
 import type { Actor, Position } from "../actor/character";
@@ -72,7 +72,7 @@ export class Battle {
       const availableResource = actor.resources.find((r) => r.resourceTypeId === requiredResource.resourceTypeId);
       if (requiredResource.amount > availableResource!.amount) throw new Error("Not enough resources");
       events.push({
-        type: "CharacterResourceLoss" as const,
+        type: CharacterEventTypes.CharacterResourceLoss,
         amount: requiredResource.amount,
         characterId: actor.id, // Target
         resourceTypeId: requiredResource.resourceTypeId,

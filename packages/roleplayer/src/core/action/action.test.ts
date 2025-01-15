@@ -1,4 +1,4 @@
-import { DnDRuleset, generateId } from "../..";
+import { DnDRuleset, SystemEventType, generateId } from "../..";
 import {
   addCharacterItem,
   characterEquipItem,
@@ -7,11 +7,11 @@ import {
   performCharacterAttack,
   startCampaign,
 } from "../actions";
-import { ItemDefinition, ItemEquipmentType, ItemSlot, ItemType } from "../inventory/item";
+import { ItemEquipmentType, ItemSlot, ItemType, type ItemDefinition } from "../inventory/item";
 import { Roleplayer } from "../roleplayer";
 import { Rarity } from "../world/rarity";
 import { TargetType } from "./action";
-import { StatusDefinition, StatusDurationType, StatusType } from "./status";
+import { StatusDurationType, StatusType, type StatusDefinition } from "./status";
 
 describe("actions", () => {
   const ruleset = new DnDRuleset((str) => {
@@ -37,7 +37,7 @@ describe("actions", () => {
           resourceTypeId: healthResource.id,
           roll: "D10+2",
         },
-        appliesAt: "RoundStarted",
+        appliesAt: SystemEventType.RoundStarted,
       },
     ],
   };

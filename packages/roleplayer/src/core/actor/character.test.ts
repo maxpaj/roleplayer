@@ -1,4 +1,4 @@
-import { Alignment, Rarity } from "../..";
+import { Alignment, CharacterEventTypes, Rarity, SystemEventType, type ResourceDefinition } from "../..";
 import { DnDRuleset } from "../../data/rulesets/dnd-5th";
 import { generateId } from "../../lib/generate-id";
 import { TargetType, type ActionDefinition } from "../action/action";
@@ -13,7 +13,6 @@ import {
 import type { CampaignEvent } from "../events/events";
 import { ItemEquipmentType, ItemSlot, ItemType, type ItemDefinition } from "../inventory/item";
 import { Roleplayer } from "../roleplayer";
-import type { ResourceDefinition } from "../ruleset/ruleset";
 import { Actor } from "./character";
 
 const ruleset = new DnDRuleset((str) => {
@@ -63,7 +62,7 @@ describe("Character", () => {
 
       const events: CampaignEvent[] = [
         {
-          type: "CharacterResourceMaxSet",
+          type: CharacterEventTypes.CharacterResourceMaxSet,
           max: 12,
           characterId: characterId,
           resourceTypeId: resourceType.id,
@@ -93,13 +92,13 @@ describe("Character", () => {
 
       const events: CampaignEvent[] = [
         {
-          type: "CharacterResourceGain",
+          type: CharacterEventTypes.CharacterResourceGain,
           resourceTypeId: movementSpeedResource!.id,
           amount: 35,
           characterId: characterId,
         },
         {
-          type: "CharacterPositionSet",
+          type: CharacterEventTypes.CharacterPositionSet,
           targetPosition: {
             x: 10,
             y: 0,
@@ -108,7 +107,7 @@ describe("Character", () => {
           characterId: characterId,
         },
         {
-          type: "CharacterMovement",
+          type: CharacterEventTypes.CharacterMovement,
           targetPosition: {
             x: 10,
             y: 20,
@@ -140,13 +139,13 @@ describe("Character", () => {
 
       const events: CampaignEvent[] = [
         {
-          type: "CharacterResourceGain",
+          type: CharacterEventTypes.CharacterResourceGain,
           amount: 35,
           characterId: characterId,
           resourceTypeId: "00000000-0000-0000-0000-000000001000",
         },
         {
-          type: "CharacterPositionSet",
+          type: CharacterEventTypes.CharacterPositionSet,
           targetPosition: {
             x: 10,
             y: 0,
@@ -155,11 +154,11 @@ describe("Character", () => {
           characterId: characterId,
         },
         {
-          type: "RoundStarted",
+          type: SystemEventType.RoundStarted,
           roundId: generateId(),
         },
         {
-          type: "CharacterMovement",
+          type: CharacterEventTypes.CharacterMovement,
           targetPosition: {
             x: 10,
             y: 50,
@@ -192,19 +191,19 @@ describe("Character", () => {
 
       const events: CampaignEvent[] = [
         {
-          type: "CharacterResourceMaxSet",
+          type: CharacterEventTypes.CharacterResourceMaxSet,
           max: 14,
           characterId: characterId,
           resourceTypeId: testResourceType.id,
         },
         {
-          type: "CharacterResourceGain",
+          type: CharacterEventTypes.CharacterResourceGain,
           amount: 12,
           characterId: characterId,
           resourceTypeId: testResourceType.id,
         },
         {
-          type: "CharacterResourceLoss",
+          type: CharacterEventTypes.CharacterResourceLoss,
           amount: 8,
           characterId: characterId,
           resourceTypeId: testResourceType.id,
@@ -251,11 +250,11 @@ describe("Character", () => {
 
       const events: CampaignEvent[] = [
         {
-          type: "CharacterSpawned",
+          type: CharacterEventTypes.CharacterSpawned,
           characterId: characterId,
         },
         {
-          type: "CharacterInventoryItemGain",
+          type: CharacterEventTypes.CharacterInventoryItemGain,
           itemInstanceId: generateId(),
           characterId: characterId,
           itemDefinitionId: itemId,
@@ -289,7 +288,7 @@ describe("Character", () => {
 
       const events: CampaignEvent[] = [
         {
-          type: "CharacterResourceMaxSet",
+          type: CharacterEventTypes.CharacterResourceMaxSet,
           max: 14,
           characterId: characterId,
           resourceTypeId: resourceType.id,
@@ -315,7 +314,7 @@ describe("Character", () => {
 
       const events: CampaignEvent[] = [
         {
-          type: "Unknown",
+          type: SystemEventType.Unknown,
         },
       ];
 

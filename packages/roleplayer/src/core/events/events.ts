@@ -4,7 +4,8 @@ import type { Actor, CharacterInventoryItem, Position } from "../actor/character
 import type { Battle } from "../battle/battle";
 import type { Round } from "../campaign/round";
 import type { ItemDefinition } from "../inventory/item";
-import type { CharacterStatType, Clazz, ResourceDefinition } from "../ruleset/ruleset";
+import type { CharacterStatType, Clazz } from "../ruleset/ruleset";
+import { ResourceDefinition } from "../world/resource";
 
 type EventIdentifier = { id: Id; serialNumber: number };
 

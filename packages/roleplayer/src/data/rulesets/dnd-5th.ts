@@ -1,6 +1,7 @@
+import type { ResourceDefinition, ResourceGeneration } from "../..";
 import type { ActionDefinition } from "../../core/action/action";
 import type { CharacterResourceLossEffect } from "../../core/action/effect";
-import type { Actor, ResourceGeneration } from "../../core/actor/character";
+import type { Actor } from "../../core/actor/character";
 import type { Battle } from "../../core/battle/battle";
 import { defaultRoll, type Roll } from "../../core/dice/dice";
 import { ItemEquipmentType, type EquipmentSlotDefinition } from "../../core/inventory/item";
@@ -9,7 +10,6 @@ import type {
   Clazz,
   ElementDefinition,
   LevelProgression,
-  ResourceDefinition,
   Ruleset,
 } from "../../core/ruleset/ruleset";
 import { generateId } from "../../lib/generate-id";

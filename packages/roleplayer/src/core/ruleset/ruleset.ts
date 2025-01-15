@@ -1,9 +1,10 @@
 import type { Id } from "../../lib/generate-id";
 import type { ActionDefinition } from "../action/action";
 import type { CharacterResourceLossEffect } from "../action/effect";
-import type { Actor, ResourceGeneration } from "../actor/character";
+import type { Actor } from "../actor/character";
 import type { Battle } from "../battle/battle";
 import type { EquipmentSlotDefinition } from "../inventory/item";
+import { ResourceDefinition, ResourceGeneration } from "../world/resource";
 
 export enum Alignment {
   NeutralEvil = "NeutralEvil",
@@ -42,12 +43,6 @@ export type Clazz = {
   id: Id;
   name: string;
   levelProgression: ClassLevelProgression[];
-};
-
-export type ResourceDefinition = {
-  id: Id;
-  name: string;
-  defaultMax?: number;
 };
 
 export type CharacterStatType = {

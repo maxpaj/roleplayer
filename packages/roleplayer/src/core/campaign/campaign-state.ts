@@ -48,9 +48,9 @@ export class CampaignState {
     return this.roleplayer.events.filter((re) => isCharacterEvent(re) && re.characterId === characterId);
   }
 
-  getCharacterEligibleTargets(campaignState: CampaignState, actor: Actor, action: ActionDefinition): Actor[] {
+  getCharacterEligibleTargets(actor: Actor, action: ActionDefinition): Actor[] {
     // TODO: Make sure the target is eligible
-    return campaignState.characters;
+    return this.characters;
   }
 
   getCurrentBattle(): Battle | undefined {

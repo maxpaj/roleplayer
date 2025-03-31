@@ -1,4 +1,11 @@
-import { CharacterEventTypes, mapEffect, type ActionDefinition, type CampaignEvent, type RoleplayerEvent, type Ruleset } from "../..";
+import {
+  CharacterEventTypes,
+  mapEffect,
+  type ActionDefinition,
+  type CampaignEvent,
+  type RoleplayerEvent,
+  type Ruleset,
+} from "../..";
 import type { Id } from "../../lib/generate-id";
 import type { WithRequired } from "../../types/with-required";
 import type { Actor, Position } from "../actor/character";
@@ -40,6 +47,10 @@ export class Battle {
 
   addBattleActor(actor: Actor) {
     this.actors.push(actor);
+  }
+
+  getActingOrder(battleCharacter: Actor): number {
+    return 0;
   }
 
   removeBattleActor(actor: Actor) {

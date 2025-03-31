@@ -5,7 +5,7 @@ import {
   type DiceRoll,
   type ElementDefinition,
   type ResourceDefinition,
-  type Ruleset
+  type Ruleset,
 } from "../..";
 import type { Actor } from "../actor/character";
 import type { StatusDefinition } from "./status";

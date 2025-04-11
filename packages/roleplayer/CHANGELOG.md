@@ -1,5 +1,11 @@
 # roleplayer
 
+## 0.0.11
+
+### Patch Changes
+
+- fb109fd: minor changes
+
 ## 0.0.10
 
 ### Patch Changes

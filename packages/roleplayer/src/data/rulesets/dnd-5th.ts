@@ -84,6 +84,11 @@ export class DnDRuleset implements Ruleset {
       { id: "00000000-0000-0000-0000-000000001003" as const, name: "Secondary action", defaultMax: 1 },
       { id: "00000000-0000-0000-0000-000000001004" as const, name: "Spell slot 1", defaultMax: 0 },
       { id: "00000000-0000-0000-0000-000000001005" as const, name: "Spell slot 2", defaultMax: 0 },
+      {
+        id: "00000000-0000-0000-0000-000000001006" as const,
+        name: "Initiative",
+        defaultMax: 20,
+      },
     ];
   }
 

@@ -267,9 +267,9 @@ export class DnDRuleset implements Ruleset {
   }
 
   getCurrentActorTurn(battle: Battle): Actor | undefined {
-    const initiativeStat = this.getCharacterStatTypes().find((s) => s.name === InitiativeResourceTypeName);
+    const initiativeStat = this.getCharacterStatTypes().find((s) => s.name === InitiativeResource.name);
     if (!initiativeStat) {
-      throw new Error("Initiative stat not found");
+      throw new Error("Initiative stat not found, it is necessary for battle");
     }
 
     const sorted = battle.actors.sort((a, b) => {

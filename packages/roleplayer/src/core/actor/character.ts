@@ -208,7 +208,7 @@ export class Actor {
         const resource = this.resources.find((r) => r.resourceTypeId === event.resourceTypeId);
 
         if (!resource) {
-          throw new Error(`Cannot find resource ${event.resourceTypeId}`);
+          throw new Error(`Cannot find character resource type ${event.resourceTypeId}`);
         }
 
         resource.amount += event.amount;
@@ -219,7 +219,7 @@ export class Actor {
         const resource = this.resources.find((r) => r.resourceTypeId === event.resourceTypeId);
 
         if (!resource) {
-          throw new Error(`Cannot find resource ${event.resourceTypeId}`);
+          throw new Error(`Cannot find character resource type ${event.resourceTypeId}`);
         }
 
         resource.amount -= event.amount;

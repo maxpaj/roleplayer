@@ -12,7 +12,7 @@ type DiceSize = `D${number}`;
 type NumberOfDice = `${number | ""}`;
 
 /**
- * We recommend using RPG Dice Roller for dice rolling, since it has a rich API and is well maintained.
+ * We recommend using RPG Dice Roller for dice rolling, since it has a rich API and is well maintained, see https://github.com/dice-roller/rpg-dice-roller
  */
 export type DiceRoll = `${NumberOfDice}${DiceSize}${DiceRollStatic}`;
 

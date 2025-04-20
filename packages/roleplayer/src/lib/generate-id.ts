@@ -1,6 +1,6 @@
-import { v4 as uuidv4 } from "uuid";
-export type Id = ReturnType<typeof uuidv4>;
+import { v7 as uuidv7 } from "uuid";
+export type Id = string;
 
 export function generateId(): Id {
-  return uuidv4();
+  return uuidv7();
 }

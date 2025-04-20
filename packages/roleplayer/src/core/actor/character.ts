@@ -4,7 +4,7 @@ import type { WithRequired } from "../../types/with-required";
 import type { ActionDefinition } from "../action/action";
 import type { StatusDefinition } from "../action/status";
 import type { Party } from "../campaign/party";
-import type { RoleplayerEvent } from "../events/events";
+import { CharacterEventTypes, type RoleplayerEvent } from "../events/events";
 import { ItemType, type EquipmentSlotDefinition, type ItemDefinition } from "../inventory/item";
 import type { Alignment, CharacterStatType, Clazz, ElementDefinition, Race } from "../ruleset/ruleset";
 import { MovementSpeedResourceTypeName } from "../world/resource";
@@ -177,17 +177,17 @@ export class Actor {
     if (!("characterId" in event) || event.characterId !== this.id) return;
 
     switch (event.type) {
-      case "CharacterExperienceChanged": {
+      case CharacterEventTypes.CharacterExperienceChanged: {
         this.xp += event.experience;
         break;
       }
 
-      case "CharacterExperienceSet": {
+      case CharacterEventTypes.CharacterExperienceSet: {
         this.xp = event.experience;
         break;
       }
 
-      case "CharacterResourceMaxSet": {
+      case CharacterEventTypes.CharacterResourceMaxSet: {
         const resource = this.resources.find((r) => r.resourceTypeId === event.resourceTypeId);
 
         if (!resource) {
@@ -204,7 +204,7 @@ export class Actor {
         break;
       }
 
-      case "CharacterResourceGain": {
+      case CharacterEventTypes.CharacterResourceGain: {
         const resource = this.resources.find((r) => r.resourceTypeId === event.resourceTypeId);
 
         if (!resource) {
@@ -215,7 +215,7 @@ export class Actor {
         break;
       }
 
-      case "CharacterResourceLoss": {
+      case CharacterEventTypes.CharacterResourceLoss: {
         const resource = this.resources.find((r) => r.resourceTypeId === event.resourceTypeId);
 
         if (!resource) {
@@ -226,12 +226,12 @@ export class Actor {
         break;
       }
 
-      case "CharacterNameSet": {
+      case CharacterEventTypes.CharacterNameSet: {
         this.name = event.name;
         break;
       }
 
-      case "CharacterStatChange": {
+      case CharacterEventTypes.CharacterStatChange: {
         const stat = this.stats.find((s) => s.statId === event.statId);
 
         if (!stat) {
@@ -243,7 +243,7 @@ export class Actor {
         break;
       }
 
-      case "CharacterPositionSet": {
+      case CharacterEventTypes.CharacterPositionSet: {
         if (!event.targetPosition) {
           throw new Error("Target position not defined for CharacterPositionSet");
         }
@@ -252,19 +252,19 @@ export class Actor {
         break;
       }
 
-      case "CharacterAttackAttackerHit": {
+      case CharacterEventTypes.CharacterAttackAttackerHit: {
         break;
       }
 
-      case "CharacterAttackAttackerMiss": {
+      case CharacterEventTypes.CharacterAttackAttackerMiss: {
         break;
       }
 
-      case "CharacterAttackDefenderHit": {
+      case CharacterEventTypes.CharacterAttackDefenderHit: {
         break;
       }
 
-      case "CharacterAttackDefenderDodge": {
+      case CharacterEventTypes.CharacterAttackDefenderDodge: {
         const availableReactions = this.reactions.filter((r) => r.eventType === "CharacterAttackDefenderDodge");
 
         const reactionResources = availableReactions.map((r) => ({
@@ -276,16 +276,16 @@ export class Actor {
         break;
       }
 
-      case "CharacterAttackDefenderParry": {
+      case CharacterEventTypes.CharacterAttackDefenderParry: {
         break;
       }
 
-      case "CharacterClassReset": {
+      case CharacterEventTypes.CharacterClassReset: {
         this.classes = [];
         break;
       }
 
-      case "CharacterClassLevelGain": {
+      case CharacterEventTypes.CharacterClassLevelGain: {
         const characterClassLevels = this.classes.length;
         const characterLevel = 0; // TODO: Fix this, should be calculated from experience
 
@@ -309,7 +309,7 @@ export class Actor {
         break;
       }
 
-      case "CharacterStatusGain": {
+      case CharacterEventTypes.CharacterStatusGain: {
         const status = this.campaign.statuses.find((s) => s.id === event.statusId);
         if (!status) {
           throw new Error(`Could not find status with id ${event.statusId} for CharacterStatusGain`);
@@ -319,7 +319,7 @@ export class Actor {
         break;
       }
 
-      case "CharacterInventoryItemLoss": {
+      case CharacterEventTypes.CharacterInventoryItemLoss: {
         // Remove equipped item if it was equipped
         this.equipment = this.equipment.map((eq) => {
           const equipped = eq.item!.id === event.characterInventoryItemId;
@@ -336,7 +336,7 @@ export class Actor {
         break;
       }
 
-      case "CharacterInventoryItemGain": {
+      case CharacterEventTypes.CharacterInventoryItemGain: {
         const item = this.campaign.itemTemplates.find((eq) => eq.id === event.itemDefinitionId);
         if (!item) {
           throw new Error(`Could not find item with id ${event.itemDefinitionId} for CharacterGainItem`);
@@ -346,7 +346,7 @@ export class Actor {
         break;
       }
 
-      case "CharacterEquipmentSlotGain": {
+      case CharacterEventTypes.CharacterEquipmentSlotGain: {
         const characterSlot = this.campaign.ruleset
           .getCharacterEquipmentSlots()
           .find((slot) => slot.id === event.equipmentSlotId);
@@ -366,7 +366,7 @@ export class Actor {
         break;
       }
 
-      case "CharacterInventoryItemEquip": {
+      case CharacterEventTypes.CharacterInventoryItemEquip: {
         const characterHasItem = this.inventory.find((eq) => eq.id === event.itemId);
         if (!characterHasItem) {
           throw new Error(`Could not find item on character`);
@@ -386,7 +386,7 @@ export class Actor {
         break;
       }
 
-      case "CharacterInventoryItemUnEquip": {
+      case CharacterEventTypes.CharacterInventoryItemUnEquip: {
         const slot = this.equipment.find((e) => e.slotId === event.equipmentSlotId);
         if (!slot) {
           throw new Error(`Could not find slot on event`);
@@ -397,7 +397,7 @@ export class Actor {
         break;
       }
 
-      case "CharacterMovement": {
+      case CharacterEventTypes.CharacterMovement: {
         const resourceType = this.campaign.ruleset
           .getCharacterResourceTypes()
           .find((r) => r.name === MovementSpeedResourceTypeName);
@@ -430,7 +430,7 @@ export class Actor {
         break;
       }
 
-      case "CharacterActionGain": {
+      case CharacterEventTypes.CharacterActionGain: {
         const action = this.campaign.actions.find((a) => a.id === event.actionId);
         if (!action) {
           throw new Error(`Unknown action ${event.actionId}`);

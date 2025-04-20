@@ -1,8 +1,10 @@
 import {
   Actor,
   CampaignState,
+  CharacterEventTypes,
   generateId,
   isBattleEvent,
+  SystemEventType,
   type CampaignEvent,
   type RoleplayerEvent,
   type Ruleset,
@@ -79,7 +81,8 @@ export class Roleplayer extends Observable<RoleplayerEvent> {
 
   dispatch(event: CampaignEvent) {
     const eventSerialNumber = this.nextSerialNumber();
-    const currentRoundId = event.type === "RoundStarted" ? event.roundId : this.campaign.getCurrentRound().id;
+    const currentRoundId =
+      event.type === SystemEventType.RoundStarted ? event.roundId : this.campaign.getCurrentRound().id;
     let roleplayerEvent: RoleplayerEvent;
     // TODO: Extract this to some middleware?
     if (isBattleEvent(event)) {
@@ -106,11 +109,11 @@ export class Roleplayer extends Observable<RoleplayerEvent> {
 
   reduce(event: RoleplayerEvent) {
     switch (event.type) {
-      case "CampaignStarted": {
+      case SystemEventType.CampaignStarted: {
         break;
       }
 
-      case "RoundStarted": {
+      case SystemEventType.RoundStarted: {
         this.campaign.rounds.push({
           id: event.roundId,
           roundNumber: event.serialNumber,
@@ -124,7 +127,7 @@ export class Roleplayer extends Observable<RoleplayerEvent> {
         break;
       }
 
-      case "CharacterSpawned": {
+      case CharacterEventTypes.CharacterSpawned: {
         const templateCharacter = this.campaign.actorTemplates.find((c) => c.id === event.templateCharacterId);
         const alreadySpawnedTemplateCharacters = this.campaign.characters.filter(
           (c) => c.templateCharacterId === event.templateCharacterId
@@ -146,7 +149,7 @@ export class Roleplayer extends Observable<RoleplayerEvent> {
         break;
       }
 
-      case "CharacterDespawn": {
+      case CharacterEventTypes.CharacterDespawn: {
         const characterIndex = this.campaign.characters.findIndex((c) => c.id === event.characterId);
         if (characterIndex === -1) throw new Error(`Could not find character with id: ${event.characterId}`);
         const [removedCharacter] = this.campaign.characters.splice(characterIndex, 1);

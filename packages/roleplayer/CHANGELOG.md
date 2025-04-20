@@ -1,5 +1,11 @@
 # roleplayer
 
+## 0.0.15
+
+### Patch Changes
+
+- f5e70d4: chore(release): release 0.0.15
+
 ## 0.0.14
 
 ### Patch Changes

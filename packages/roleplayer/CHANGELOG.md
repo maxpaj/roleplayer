@@ -1,5 +1,11 @@
 # roleplayer
 
+## 0.0.14
+
+### Patch Changes
+
+- 481fbf5: fix: initiative stat type
+
 ## 0.0.13
 
 ### Patch Changes

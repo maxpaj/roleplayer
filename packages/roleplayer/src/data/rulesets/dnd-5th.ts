@@ -1,6 +1,5 @@
 import {
   HealthResourceTypeName,
-  InitiativeResourceTypeName,
   MovementSpeedResourceTypeName,
   PrimaryActionResourceTypeName,
   SecondaryActionResourceTypeName,
@@ -33,23 +32,79 @@ const HealthResource = {
   name: HealthResourceTypeName,
   defaultMax: 10,
 };
+
 const PrimaryActionResource = {
   id: "00000000-0000-0000-0000-000000001002" as const,
   name: PrimaryActionResourceTypeName,
   defaultMax: 1,
 };
+
 const SecondaryActionResource = {
   id: "00000000-0000-0000-0000-000000001003" as const,
   name: SecondaryActionResourceTypeName,
   defaultMax: 1,
 };
+
 const SpellSlot1Resource = { id: "00000000-0000-0000-0000-000000001004" as const, name: "Spell slot 1", defaultMax: 0 };
+
 const SpellSlot2Resource = { id: "00000000-0000-0000-0000-000000001005" as const, name: "Spell slot 2", defaultMax: 0 };
-const InitiativeResource = {
-  id: "00000000-0000-0000-0000-000000001006" as const,
-  name: InitiativeResourceTypeName,
-  defaultMax: 20,
+
+const StrengthStat = {
+  id: "00000000-0000-0000-0000-000000002000" as const,
+  name: "Strength",
 };
+
+const IntelligenceStat = {
+  id: "00000000-0000-0000-0000-000000002001" as const,
+  name: "Intelligence",
+};
+
+const WisdomStat = {
+  id: "00000000-0000-0000-0000-000000002002" as const,
+  name: "Wisdom",
+};
+
+const CharismaStat = {
+  id: "00000000-0000-0000-0000-000000002003" as const,
+  name: "Charisma",
+};
+
+const DexterityStat = {
+  id: "00000000-0000-0000-0000-000000002004" as const,
+  name: "Dexterity",
+};
+
+const ConstitutionStat = {
+  id: "00000000-0000-0000-0000-000000002005" as const,
+  name: "Constitution",
+};
+
+const DefenseStat = {
+  id: "00000000-0000-0000-0000-000000002006" as const,
+  name: "Defense",
+};
+
+const ArmorClassStat = {
+  id: "00000000-0000-0000-0000-000000001001" as const,
+  name: "Armor class",
+};
+
+const InitiativeStat = {
+  id: "00000000-0000-0000-0000-000000001006" as const,
+  name: "Initiative",
+};
+
+const StatTypes: CharacterStatType[] = [
+  StrengthStat,
+  IntelligenceStat,
+  WisdomStat,
+  CharismaStat,
+  DexterityStat,
+  ConstitutionStat,
+  DefenseStat,
+  ArmorClassStat,
+  InitiativeStat,
+];
 
 const ResourceTypes: ResourceDefinition[] = [
   MovementSpeedResource,
@@ -58,7 +113,6 @@ const ResourceTypes: ResourceDefinition[] = [
   SecondaryActionResource,
   SpellSlot1Resource,
   SpellSlot2Resource,
-  InitiativeResource,
 ];
 
 export class DnDRuleset implements Ruleset {
@@ -79,40 +133,7 @@ export class DnDRuleset implements Ruleset {
   }
 
   getCharacterStatTypes(): CharacterStatType[] {
-    return [
-      {
-        id: "00000000-0000-0000-0000-000000002000" as const,
-        name: "Strength",
-      },
-      {
-        id: "00000000-0000-0000-0000-000000002001" as const,
-        name: "Intelligence",
-      },
-      {
-        id: "00000000-0000-0000-0000-000000002002" as const,
-        name: "Wisdom",
-      },
-      {
-        id: "00000000-0000-0000-0000-000000002003" as const,
-        name: "Charisma",
-      },
-      {
-        id: "00000000-0000-0000-0000-000000002004" as const,
-        name: "Dexterity",
-      },
-      {
-        id: "00000000-0000-0000-0000-000000002005" as const,
-        name: "Constitution",
-      },
-      {
-        id: "00000000-0000-0000-0000-000000002006" as const,
-        name: "Defense",
-      },
-      {
-        id: "00000000-0000-0000-0000-000000001001" as const,
-        name: "Armor class",
-      },
-    ];
+    return StatTypes;
   }
 
   getCharacterResourceTypes(): ResourceDefinition[] {
@@ -267,7 +288,7 @@ export class DnDRuleset implements Ruleset {
   }
 
   getCurrentActorTurn(battle: Battle): Actor | undefined {
-    const initiativeStat = this.getCharacterStatTypes().find((s) => s.name === InitiativeResource.name);
+    const initiativeStat = this.getCharacterStatTypes().find((s) => s.name === InitiativeStat.name);
     if (!initiativeStat) {
       throw new Error("Initiative stat not found, it is necessary for battle");
     }

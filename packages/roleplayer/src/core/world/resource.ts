@@ -26,6 +26,5 @@ export type ResourceGeneration = {
 
 export const MovementSpeedResourceTypeName = "Movement speed";
 export const HealthResourceTypeName = "Health";
-export const InitiativeResourceTypeName = "Initiative";
 export const PrimaryActionResourceTypeName = "Primary action";
 export const SecondaryActionResourceTypeName = "Secondary action";

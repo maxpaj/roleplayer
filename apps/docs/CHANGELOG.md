@@ -1,5 +1,12 @@
 # roleplayer-docs
 
+## 1.0.8
+
+### Patch Changes
+
+- Updated dependencies [f5e70d4]
+  - roleplayer@0.0.15
+
 ## 1.0.7
 
 ### Patch Changes

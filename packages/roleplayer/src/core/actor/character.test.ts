@@ -1,10 +1,17 @@
-import { Alignment, CharacterEventTypes, Rarity, SystemEventType, type ResourceDefinition } from "../..";
+import {
+  Alignment,
+  CharacterEventTypes,
+  HealthResourceTypeName,
+  Rarity,
+  SystemEventType,
+  type ResourceDefinition,
+} from "../..";
 import { DnDRuleset } from "../../data/rulesets/dnd-5th";
 import { generateId } from "../../lib/generate-id";
 import { TargetType, type ActionDefinition } from "../action/action";
 import {
-  createCharacter,
-  dispatchCharacterBattleEnterEvent,
+  characterBattleEnter,
+  createCharacterWithDefaults,
   nextRound,
   spawnCharacterFromTemplate,
   startBattle,
@@ -34,8 +41,8 @@ describe("Character", () => {
       );
 
       roleplayer.dispatchAction(startCampaign());
-      roleplayer.dispatchAction(createCharacter(characterA, "Character A"));
-      roleplayer.dispatchAction(createCharacter(characterB, "Character B"));
+      roleplayer.dispatchAction(createCharacterWithDefaults(characterA, "Character A"));
+      roleplayer.dispatchAction(createCharacterWithDefaults(characterB, "Character B"));
 
       const data = roleplayer.campaign;
       expect(data.characters.length).toBe(2);
@@ -52,11 +59,11 @@ describe("Character", () => {
       );
 
       roleplayer.dispatchAction(nextRound());
-      roleplayer.dispatchAction(createCharacter(characterId, "Character"));
+      roleplayer.dispatchAction(createCharacterWithDefaults(characterId, "Character"));
 
       const resourceType: ResourceDefinition = {
         id: generateId(),
-        name: "Health",
+        name: HealthResourceTypeName,
         defaultMax: 20,
       };
 
@@ -86,7 +93,7 @@ describe("Character", () => {
       );
 
       roleplayer.dispatchAction(nextRound());
-      roleplayer.dispatchAction(createCharacter(characterId, "Character"));
+      roleplayer.dispatchAction(createCharacterWithDefaults(characterId, "Character"));
 
       const movementSpeedResource = ruleset.getCharacterResourceTypes().find((r) => r.name === "Movement speed");
 
@@ -135,7 +142,7 @@ describe("Character", () => {
 
       const characterId = generateId();
       roleplayer.dispatchAction(startCampaign());
-      roleplayer.dispatchAction(createCharacter(characterId, "Character"));
+      roleplayer.dispatchAction(createCharacterWithDefaults(characterId, "Character"));
 
       const events: CampaignEvent[] = [
         {
@@ -181,7 +188,7 @@ describe("Character", () => {
         { id: generateId() }
       );
       roleplayer.dispatchAction(nextRound());
-      roleplayer.dispatchAction(createCharacter(characterId, "Character"));
+      roleplayer.dispatchAction(createCharacterWithDefaults(characterId, "Character"));
 
       const testResourceType: ResourceDefinition = {
         id: generateId(),
@@ -246,7 +253,7 @@ describe("Character", () => {
       );
 
       roleplayer.dispatchAction(nextRound());
-      roleplayer.dispatchAction(createCharacter(characterId, "Character"));
+      roleplayer.dispatchAction(createCharacterWithDefaults(characterId, "Character"));
 
       const events: CampaignEvent[] = [
         {
@@ -374,7 +381,7 @@ describe("Character", () => {
       const currentBattle = roleplayer.campaign.getCurrentBattle();
       if (!currentBattle) throw new Error("No current battle");
 
-      roleplayer.dispatchAction(dispatchCharacterBattleEnterEvent(characterId, currentBattle?.id));
+      roleplayer.dispatchAction(characterBattleEnter(characterId, currentBattle?.id));
 
       const character = currentBattle?.actors.find((actor) => actor.id === characterId);
       const resource = character?.resources.find((resource) => resource.resourceTypeId === "actionPoints");

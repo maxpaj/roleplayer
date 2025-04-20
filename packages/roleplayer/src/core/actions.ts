@@ -6,6 +6,7 @@ import type { Battle } from "./battle/battle";
 import { CharacterEventTypes, SystemEventType, type CampaignEvent } from "./events/events";
 import type { EquipmentSlotDefinition, ItemDefinition } from "./inventory/item";
 import type { Roleplayer } from "./roleplayer";
+import { HealthResourceTypeName } from "./world/resource";
 
 type Dispatcher = (...events: CampaignEvent[]) => void;
 type StateGetter = () => Roleplayer;
@@ -218,7 +219,7 @@ export function spawnCharacterFromTemplate(templateId: Actor["id"]) {
   return action;
 }
 
-export function dispatchCharacterDespawnEvent(actorId: Actor["id"]) {
+export function characterDespawn(actorId: Actor["id"]) {
   return (dispatch: Dispatcher, getState: StateGetter) => {
     const characterDespawnEvent = {
       type: CharacterEventTypes.CharacterDespawn,
@@ -229,7 +230,7 @@ export function dispatchCharacterDespawnEvent(actorId: Actor["id"]) {
   };
 }
 
-export function dispatchCharacterBattleEnterEvent(actorId: Actor["id"], battleId: Battle["id"]) {
+export function characterBattleEnter(actorId: Actor["id"], battleId: Battle["id"]) {
   return (dispatch: Dispatcher, getState: StateGetter) => {
     const characterBattleEnter = {
       type: SystemEventType.CharacterBattleEnter,
@@ -241,7 +242,7 @@ export function dispatchCharacterBattleEnterEvent(actorId: Actor["id"], battleId
   };
 }
 
-export function dispatchCharacterBattleLeaveEvent(actorId: Actor["id"], battleId: Battle["id"]) {
+export function characterBattleLeave(actorId: Actor["id"], battleId: Battle["id"]) {
   return (dispatch: Dispatcher, getState: StateGetter) => {
     const characterBattleLeave = {
       type: SystemEventType.CharacterBattleLeave,
@@ -253,7 +254,7 @@ export function dispatchCharacterBattleLeaveEvent(actorId: Actor["id"], battleId
   };
 }
 
-export function createCharacter(characterId: Actor["id"], name: string) {
+export function createCharacterWithDefaults(characterId: Actor["id"], name: string) {
   return (dispatch: Dispatcher, getState: StateGetter) => {
     const defaultResourcesEvents: CampaignEvent[] = getState()
       .ruleset.getCharacterResourceTypes()
@@ -373,7 +374,7 @@ export function performCharacterAttack(attacker: Actor, actionDef: ActionDefinit
 
     const healthResource = getState()
       .ruleset.getCharacterResourceTypes()
-      .find((rt) => rt.name === "Health");
+      .find((rt) => rt.name === HealthResourceTypeName);
     if (!healthResource) {
       throw new Error("Health resource not defined in world, cannot perform attack");
     }
@@ -405,6 +406,7 @@ export function endCharacterTurn(actor: Actor) {
     if (!currentBattle) {
       throw new Error("No current battle");
     }
+
     dispatch({
       type: CharacterEventTypes.CharacterEndTurn,
       characterId: actor.id,

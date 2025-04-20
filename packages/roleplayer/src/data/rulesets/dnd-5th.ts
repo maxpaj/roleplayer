@@ -1,4 +1,12 @@
-import type { ResourceDefinition, ResourceGeneration } from "../..";
+import {
+  HealthResourceTypeName,
+  InitiativeResourceTypeName,
+  MovementSpeedResourceTypeName,
+  PrimaryActionResourceTypeName,
+  SecondaryActionResourceTypeName,
+  type ResourceDefinition,
+  type ResourceGeneration,
+} from "../..";
 import type { ActionDefinition } from "../../core/action/action";
 import type { CharacterResourceLossEffect } from "../../core/action/effect";
 import type { Actor } from "../../core/actor/character";
@@ -13,6 +21,45 @@ import type {
   Ruleset,
 } from "../../core/ruleset/ruleset";
 import { generateId } from "../../lib/generate-id";
+
+const MovementSpeedResource = {
+  id: "00000000-0000-0000-0000-000000001000" as const,
+  name: MovementSpeedResourceTypeName,
+  defaultMax: 35,
+};
+
+const HealthResource = {
+  id: "00000000-0000-0000-0000-000000001001" as const,
+  name: HealthResourceTypeName,
+  defaultMax: 10,
+};
+const PrimaryActionResource = {
+  id: "00000000-0000-0000-0000-000000001002" as const,
+  name: PrimaryActionResourceTypeName,
+  defaultMax: 1,
+};
+const SecondaryActionResource = {
+  id: "00000000-0000-0000-0000-000000001003" as const,
+  name: SecondaryActionResourceTypeName,
+  defaultMax: 1,
+};
+const SpellSlot1Resource = { id: "00000000-0000-0000-0000-000000001004" as const, name: "Spell slot 1", defaultMax: 0 };
+const SpellSlot2Resource = { id: "00000000-0000-0000-0000-000000001005" as const, name: "Spell slot 2", defaultMax: 0 };
+const InitiativeResource = {
+  id: "00000000-0000-0000-0000-000000001006" as const,
+  name: InitiativeResourceTypeName,
+  defaultMax: 20,
+};
+
+const ResourceTypes: ResourceDefinition[] = [
+  MovementSpeedResource,
+  HealthResource,
+  PrimaryActionResource,
+  SecondaryActionResource,
+  SpellSlot1Resource,
+  SpellSlot2Resource,
+  InitiativeResource,
+];
 
 export class DnDRuleset implements Ruleset {
   roll: Roll;
@@ -69,27 +116,7 @@ export class DnDRuleset implements Ruleset {
   }
 
   getCharacterResourceTypes(): ResourceDefinition[] {
-    return [
-      {
-        id: "00000000-0000-0000-0000-000000001000" as const,
-        name: "Movement speed",
-        defaultMax: 35,
-      },
-      {
-        id: "00000000-0000-0000-0000-000000001001" as const,
-        name: "Health",
-        defaultMax: 10,
-      },
-      { id: "00000000-0000-0000-0000-000000001002" as const, name: "Primary action", defaultMax: 1 },
-      { id: "00000000-0000-0000-0000-000000001003" as const, name: "Secondary action", defaultMax: 1 },
-      { id: "00000000-0000-0000-0000-000000001004" as const, name: "Spell slot 1", defaultMax: 0 },
-      { id: "00000000-0000-0000-0000-000000001005" as const, name: "Spell slot 2", defaultMax: 0 },
-      {
-        id: "00000000-0000-0000-0000-000000001006" as const,
-        name: "Initiative",
-        defaultMax: 20,
-      },
-    ];
+    return ResourceTypes;
   }
 
   getCharacterEquipmentSlots(): EquipmentSlotDefinition[] {
@@ -220,17 +247,17 @@ export class DnDRuleset implements Ruleset {
     return [
       {
         amount: 1,
-        resourceTypeId: "00000000-0000-0000-0000-000000001002" as const,
+        resourceTypeId: PrimaryActionResource.id,
       },
       {
         amount: 35,
-        resourceTypeId: "00000000-0000-0000-0000-000000001000" as const,
+        resourceTypeId: MovementSpeedResource.id,
       },
     ];
   }
 
   characterIsDead(actor: Actor): boolean {
-    const healthResource = this.getCharacterResourceTypes().find((r) => r.name === "Health")!;
+    const healthResource = this.getCharacterResourceTypes().find((r) => r.name === HealthResourceTypeName)!;
     const characterHealthResource = actor.resources.find((r) => r.resourceTypeId === healthResource.id);
     return characterHealthResource!.amount <= 0;
   }
@@ -240,7 +267,7 @@ export class DnDRuleset implements Ruleset {
   }
 
   getCurrentActorTurn(battle: Battle): Actor | undefined {
-    const initiativeStat = this.getCharacterStatTypes().find((s) => s.name === "Initiative");
+    const initiativeStat = this.getCharacterStatTypes().find((s) => s.name === InitiativeResourceTypeName);
     if (!initiativeStat) {
       throw new Error("Initiative stat not found");
     }

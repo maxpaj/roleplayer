@@ -3,6 +3,7 @@ import { generateId } from "../../lib/generate-id";
 import { startCampaign } from "../actions";
 import { CharacterEventTypes, type CampaignEvent, type RoleplayerEvent } from "../events/events";
 import { Roleplayer } from "../roleplayer";
+import { HealthResourceTypeName } from "../world/resource";
 
 const ruleset = new DnDRuleset((str) => {
   const [, staticValue = "0"] = str.split("+");
@@ -45,7 +46,7 @@ describe("Campaign state", () => {
 
     const characterId = generateId();
 
-    const healthResource = ruleset.getCharacterResourceTypes().find((rt) => rt.name === "Health");
+    const healthResource = ruleset.getCharacterResourceTypes().find((rt) => rt.name === HealthResourceTypeName);
 
     const events = [
       {

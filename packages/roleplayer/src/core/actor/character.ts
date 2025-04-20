@@ -6,13 +6,8 @@ import type { StatusDefinition } from "../action/status";
 import type { Party } from "../campaign/party";
 import type { RoleplayerEvent } from "../events/events";
 import { ItemType, type EquipmentSlotDefinition, type ItemDefinition } from "../inventory/item";
-import type {
-  Alignment,
-  CharacterStatType,
-  Clazz,
-  ElementDefinition,
-  Race
-} from "../ruleset/ruleset";
+import type { Alignment, CharacterStatType, Clazz, ElementDefinition, Race } from "../ruleset/ruleset";
+import { MovementSpeedResourceTypeName } from "../world/resource";
 
 /**
  * @module core/actor
@@ -403,7 +398,9 @@ export class Actor {
       }
 
       case "CharacterMovement": {
-        const resourceType = this.campaign.ruleset.getCharacterResourceTypes().find((r) => r.name === "Movement speed");
+        const resourceType = this.campaign.ruleset
+          .getCharacterResourceTypes()
+          .find((r) => r.name === MovementSpeedResourceTypeName);
 
         if (!resourceType) {
           throw new Error("Movement resource not defined in world");

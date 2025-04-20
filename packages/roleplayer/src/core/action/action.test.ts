@@ -1,8 +1,8 @@
-import { DnDRuleset, SystemEventType, generateId } from "../..";
+import { DnDRuleset, HealthResourceTypeName, SystemEventType, generateId } from "../..";
 import {
   addCharacterItem,
   characterEquipItem,
-  createCharacter,
+  createCharacterWithDefaults,
   nextRound,
   performCharacterAttack,
   startCampaign,
@@ -21,7 +21,7 @@ describe("actions", () => {
 
   const coldElement = ruleset.getElementDefinitions().find((ed) => ed.name === "Cold")!;
   const mainHandEquipmentSlot = ruleset.getCharacterEquipmentSlots().find((eq) => eq.name === "Main hand")!;
-  const healthResource = ruleset.getCharacterResourceTypes().find((r) => r.name === "Health")!;
+  const healthResource = ruleset.getCharacterResourceTypes().find((r) => r.name === HealthResourceTypeName)!;
 
   const frozenStatus: StatusDefinition = {
     id: "status-chill",
@@ -88,7 +88,7 @@ describe("actions", () => {
     const defenderId = "defender-id";
 
     // Setup attacker
-    roleplayer.dispatchAction(createCharacter(attackerId, "Attacker"));
+    roleplayer.dispatchAction(createCharacterWithDefaults(attackerId, "Attacker"));
     roleplayer.dispatchAction(addCharacterItem(attackerId, frostSword.id));
 
     const afterAddSword = roleplayer.campaign;
@@ -98,7 +98,7 @@ describe("actions", () => {
     );
 
     // Setup defender
-    roleplayer.dispatchAction(createCharacter(defenderId, "Defender"));
+    roleplayer.dispatchAction(createCharacterWithDefaults(defenderId, "Defender"));
     roleplayer.dispatchAction(nextRound());
 
     const beforeAttack = roleplayer.campaign;

@@ -23,3 +23,9 @@ export type ResourceGeneration = {
   resourceTypeId: ResourceDefinition["id"];
   amount: number;
 };
+
+export const MovementSpeedResourceTypeName = "Movement speed";
+export const HealthResourceTypeName = "Health";
+export const InitiativeResourceTypeName = "Initiative";
+export const PrimaryActionResourceTypeName = "Primary action";
+export const SecondaryActionResourceTypeName = "Secondary action";

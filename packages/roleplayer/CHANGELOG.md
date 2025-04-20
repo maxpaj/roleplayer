@@ -1,5 +1,11 @@
 # roleplayer
 
+## 0.0.12
+
+### Patch Changes
+
+- 0b99bfe: added initiative in dnd 5th
+
 ## 0.0.11
 
 ### Patch Changes

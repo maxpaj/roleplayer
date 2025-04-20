@@ -6,7 +6,8 @@
     "dev": "turbo dev",
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "publish-packages": "turbo run build lint test --filter roleplayer && changeset version && changeset publish"
+    "publish-packages": "turbo run build lint test --filter roleplayer && changeset version && changeset publish",
+    "publish-snapshot": "turbo run build lint test --filter roleplayer && changeset && changeset version --snapshot pre && changeset publish --no-git-tag"
   },
   "devDependencies": {
     "@changesets/cli": "^2.29.2",

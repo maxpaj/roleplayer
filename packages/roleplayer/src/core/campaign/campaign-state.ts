@@ -1,9 +1,8 @@
 import { generateId, type Id } from "../../lib/generate-id";
-import type { RemoveFunctions } from "../../types/remove-functions";
 import type { WithRequired } from "../../types/with-required";
 import type { ActionDefinition } from "../action/action";
 import type { StatusDefinition } from "../action/status";
-import { isCharacterEvent, type Actor } from "../actor/character";
+import { ActorTemplate, isCharacterEvent, type Actor } from "../actor/character";
 import { Battle } from "../battle/battle";
 import type { RoleplayerEvent } from "../events/events";
 import type { ItemDefinition } from "../inventory/item";
@@ -24,7 +23,7 @@ export class CampaignState {
   rounds: Round[] = [];
   characters: Actor[] = [];
   itemTemplates: ItemDefinition[] = [];
-  actorTemplates: RemoveFunctions<Required<Omit<ConstructorParameters<typeof Actor>[0], "campaign">>>[] = [];
+  actorTemplates: ActorTemplate[] = [];
   races: Race[] = [];
   actions: ActionDefinition[] = [];
   statuses: StatusDefinition[] = [];

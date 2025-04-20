@@ -5,4 +5,4 @@ type NonFunctionKeyNames<T> = Exclude<
   undefined
 >;
 
-export type RemoveFunctions<T> = Pick<T, NonFunctionKeyNames<T>>;
+export type OmitFunctions<T> = Pick<T, NonFunctionKeyNames<T>>;

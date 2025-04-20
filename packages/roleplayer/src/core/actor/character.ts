@@ -1,5 +1,6 @@
 import type { CampaignState, Resource, ResourceGeneration } from "../..";
 import type { Id } from "../../lib/generate-id";
+import { OmitFunctions } from "../../types/remove-functions";
 import type { WithRequired } from "../../types/with-required";
 import type { ActionDefinition } from "../action/action";
 import type { StatusDefinition } from "../action/status";
@@ -79,6 +80,11 @@ export function isCharacterEvent(
 ): event is Extract<RoleplayerEvent, { characterId: Actor["id"] }> {
   return (event as any).characterId !== undefined;
 }
+
+/**
+ * Actor template type, inherited from Actor, with campaign being a required property and all methods stripped.
+ */
+export type ActorTemplate = OmitFunctions<Required<Omit<ConstructorParameters<typeof Actor>[0], "campaign">>>;
 
 /**
  * @module core/actor

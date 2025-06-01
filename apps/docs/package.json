@@ -1,6 +1,6 @@
 {
   "name": "roleplayer-docs",
-  "version": "1.0.8",
+  "version": "0.0.0-pre-20250421160144",
   "private": true,
   "scripts": {
     "docusaurus": "docusaurus",
@@ -25,7 +25,7 @@
     "prism-react-renderer": "^2.4.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "roleplayer": "^0.0.15"
+    "roleplayer": "0.0.0-pre-20250421160144"
   },
   "devDependencies": {
     "@docusaurus/module-type-aliases": "^3.7.0",

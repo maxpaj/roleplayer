@@ -1,5 +1,33 @@
 # roleplayer-docs
 
+## 0.0.0-pre-20250421160144
+
+### Patch Changes
+
+- Updated dependencies
+  - roleplayer@0.0.0-pre-20250421160144
+
+## 0.0.0-pre-20250421155841
+
+### Patch Changes
+
+- Updated dependencies
+  - roleplayer@0.0.0-pre-20250421155841
+
+## 0.0.0-pre-20250421153746
+
+### Patch Changes
+
+- Updated dependencies
+  - roleplayer@0.0.0-pre-20250421153746
+
+## 0.0.0-pre-20250420135251
+
+### Patch Changes
+
+- Updated dependencies
+  - roleplayer@0.0.0-pre-20250420135251
+
 ## 1.0.8
 
 ### Patch Changes

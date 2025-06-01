@@ -1,6 +1,6 @@
 {
   "name": "roleplayer",
-  "version": "0.0.15",
+  "version": "0.0.0-pre-20250421160144",
   "private": false,
   "description": "A library for building table top role playing game worlds, and managing campaigns in those worlds",
   "keywords": [
@@ -20,11 +20,8 @@
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
-  "exports": {
-    ".": "./src/index.ts"
-  },
   "scripts": {
-    "dev": "npm run build -- --watch",
+    "dev": "tsup src/index.ts --format cjs,esm --dts --watch",
     "test": "jest",
     "test-watch": "jest --watch",
     "build": "tsup src/index.ts --format cjs,esm --dts",

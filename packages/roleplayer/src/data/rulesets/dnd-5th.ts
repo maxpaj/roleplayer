@@ -280,7 +280,7 @@ export class DnDRuleset implements Ruleset {
   characterIsDead(actor: Actor): boolean {
     const healthResource = this.getCharacterResourceTypes().find((r) => r.name === HealthResourceTypeName)!;
     const characterHealthResource = actor.resources.find((r) => r.resourceTypeId === healthResource.id);
-    return characterHealthResource!.amount <= 0;
+    return characterHealthResource !== undefined && characterHealthResource!.amount <= 0;
   }
 
   characterBattleActionOrder(actor: Actor): number {
@@ -293,16 +293,23 @@ export class DnDRuleset implements Ruleset {
       throw new Error("Initiative stat not found, it is necessary for battle");
     }
 
-    const sorted = battle.actors.sort((a, b) => {
+    const actorsByInitiative = battle.actors.sort((a, b) => {
       const initiativeA = a.stats.find((s) => s.statId === initiativeStat.id);
       const initiativeB = b.stats.find((s) => s.statId === initiativeStat.id);
       return initiativeB!.amount - initiativeA!.amount;
     });
 
-    const currentActorIndex = sorted.findIndex((a) => a.id === battle.actorToAct!.id);
+    const noCurrentActor = !battle.actorToAct;
+    if (noCurrentActor) {
+      return actorsByInitiative[0];
+    }
+
+    const currentActorIndex = actorsByInitiative.findIndex((a) => {
+      return a.id === battle.actorToAct!.id;
+    });
 
     // If we are at the end of the list, return the first actor
-    return sorted[currentActorIndex + 1] || sorted[0];
+    return actorsByInitiative[currentActorIndex + 1] || actorsByInitiative[0];
   }
 }
 

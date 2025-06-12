@@ -1,5 +1,11 @@
 # roleplayer
 
+## 0.0.16
+
+### Patch Changes
+
+- 5ea5ec5: Added DnD 5th initiative support
+
 ## 0.0.15
 
 ### Patch Changes

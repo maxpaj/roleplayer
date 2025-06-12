@@ -1,6 +1,7 @@
 import {
   CharacterEventTypes,
   mapEffect,
+  SystemEventType,
   type ActionDefinition,
   type CampaignEvent,
   type RoleplayerEvent,
@@ -102,19 +103,19 @@ export class Battle {
   reduce(event: RoleplayerEvent) {
     if (!("battleId" in event) || event.battleId !== this.id) return;
     switch (event.type) {
-      case "CharacterBattleEnter": {
+      case SystemEventType.CharacterBattleEnter: {
         const character = this.roleplayer.campaign.characters.find((c) => c.id === event.characterId);
         if (!character) throw new Error(`Cannot find character with id: ${event.characterId}`);
         this.addBattleActor(character);
         break;
       }
-      case "CharacterBattleLeave": {
+      case SystemEventType.CharacterBattleLeave: {
         const character = this.roleplayer.campaign.characters.find((c) => c.id === event.characterId);
         if (!character) throw new Error(`Cannot find character with id: ${event.characterId}`);
         this.removeBattleActor(character);
         break;
       }
-      case "CharacterEndTurn": {
+      case CharacterEventTypes.CharacterEndTurn: {
         const characterBattle = this.actors.find((actor) => actor.id === event.characterId);
         if (!characterBattle) {
           throw new Error("Cannot find battle character");

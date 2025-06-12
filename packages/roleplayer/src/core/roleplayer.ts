@@ -110,6 +110,11 @@ export class Roleplayer extends Observable<RoleplayerEvent> {
   reduce(event: RoleplayerEvent) {
     switch (event.type) {
       case SystemEventType.CampaignStarted: {
+        if (this.campaign.started) {
+          throw new Error("Campaign already started");
+        }
+
+        this.campaign.started = true;
         break;
       }
 

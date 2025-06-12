@@ -340,8 +340,10 @@ describe("Character", () => {
         },
         { id: generateId() }
       );
+
       roleplayer.campaign.actorTemplates.push({
         id: "small-monster",
+        name: "Small monster",
         actions: [],
         characterType: "Monster",
         resources: [
@@ -358,7 +360,6 @@ describe("Character", () => {
         exists: false,
         templateCharacterId: "",
         xp: 0,
-        name: "",
         race: "",
         description: "",
         alignment: Alignment.ChaoticEvil,
@@ -386,6 +387,7 @@ describe("Character", () => {
       const character = currentBattle?.actors.find((actor) => actor.id === characterId);
       const resource = character?.resources.find((resource) => resource.resourceTypeId === "actionPoints");
       expect(resource?.amount).toBe(2);
+      expect(character?.name).toBe("Small monster #0");
     });
   });
 

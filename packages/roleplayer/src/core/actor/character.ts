@@ -69,8 +69,12 @@ export type ReactionResource = {
 
 /**
  * @module core/actor
+ *
+ * Character attributes represents numerically measurable qualities of a character are persistent over time, for example between battles. Stuff like strength, agility, etc.
+ *
+ * For expendable/regenerative attributes, see character resources.
  */
-export type CharacterStat = {
+export type CharacterAttribute = {
   statId: CharacterStatType["id"];
   amount: number;
 };
@@ -107,7 +111,7 @@ export class Actor {
   inventory: CharacterInventoryItem[] = [];
   equipment: CharacterEquipmentSlot[] = [];
 
-  stats: CharacterStat[] = [];
+  stats: CharacterAttribute[] = [];
   actions: ActionDefinition[] = [];
   statuses: StatusDefinition[] = [];
   position!: Position;

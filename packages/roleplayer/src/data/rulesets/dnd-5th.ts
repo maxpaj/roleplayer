@@ -1,4 +1,5 @@
 import {
+  Battle,
   HealthResourceTypeName,
   MovementSpeedResourceTypeName,
   PrimaryActionResourceTypeName,
@@ -9,11 +10,10 @@ import {
 import type { ActionDefinition } from "../../core/action/action";
 import type { CharacterResourceLossEffect } from "../../core/action/effect";
 import type { Actor } from "../../core/actor/character";
-import type { Battle } from "../../core/battle/battle";
 import { defaultRoll, type Roll } from "../../core/dice/dice";
 import { ItemEquipmentType, type EquipmentSlotDefinition } from "../../core/inventory/item";
 import type {
-  CharacterStatType,
+  CharacterStatType as CharacterAttributeType,
   Clazz,
   ElementDefinition,
   LevelProgression,
@@ -43,6 +43,11 @@ const SecondaryActionResource = {
   id: "00000000-0000-0000-0000-000000001003" as const,
   name: SecondaryActionResourceTypeName,
   defaultMax: 1,
+};
+
+const InitiativeResource = {
+  id: "00000000-0000-0000-0000-000000001006" as const,
+  name: "Initiative",
 };
 
 const SpellSlot1Resource = { id: "00000000-0000-0000-0000-000000001004" as const, name: "Spell slot 1", defaultMax: 0 };
@@ -89,12 +94,7 @@ const ArmorClassStat = {
   name: "Armor class",
 };
 
-const InitiativeStat = {
-  id: "00000000-0000-0000-0000-000000001006" as const,
-  name: "Initiative",
-};
-
-const StatTypes: CharacterStatType[] = [
+const StatTypes: CharacterAttributeType[] = [
   StrengthStat,
   IntelligenceStat,
   WisdomStat,
@@ -103,7 +103,6 @@ const StatTypes: CharacterStatType[] = [
   ConstitutionStat,
   DefenseStat,
   ArmorClassStat,
-  InitiativeStat,
 ];
 
 const ResourceTypes: ResourceDefinition[] = [
@@ -113,6 +112,7 @@ const ResourceTypes: ResourceDefinition[] = [
   SecondaryActionResource,
   SpellSlot1Resource,
   SpellSlot2Resource,
+  InitiativeResource,
 ];
 
 export class DnDRuleset implements Ruleset {
@@ -120,6 +120,39 @@ export class DnDRuleset implements Ruleset {
 
   constructor(roll: Roll = defaultRoll) {
     this.roll = roll;
+  }
+
+  getActingOrder(actors: Actor[]): Actor[] {
+    return actors.toSorted((a, b) => {
+      const initiativeA = a.resources.find((s) => s.resourceTypeId === InitiativeResource.id);
+      const initiativeB = b.resources.find((s) => s.resourceTypeId === InitiativeResource.id);
+
+      if (!initiativeA) {
+        throw new Error(`Character ${a.name} is missing initiative resource`);
+      }
+
+      if (!initiativeB) {
+        throw new Error(`Character ${b.name} is missing initiative resource`);
+      }
+
+      return initiativeB.amount - initiativeA.amount;
+    });
+  }
+
+  getCurrentActorTurn(battle: Battle): Actor | undefined {
+    const actorOrder = this.getActingOrder(battle.actors);
+
+    const noCurrentActor = !battle.actorToAct;
+    if (noCurrentActor) {
+      return actorOrder[0];
+    }
+
+    const currentActorIndex = actorOrder.findIndex((a) => {
+      return a.id === battle.actorToAct!.id;
+    });
+
+    // If we are at the end of the list, return the first actor
+    return actorOrder[currentActorIndex + 1] || actorOrder[0];
   }
 
   getLevelProgression(): LevelProgression[] {
@@ -132,7 +165,7 @@ export class DnDRuleset implements Ruleset {
     ];
   }
 
-  getCharacterStatTypes(): CharacterStatType[] {
+  getCharacterStatTypes(): CharacterAttributeType[] {
     return StatTypes;
   }
 
@@ -285,31 +318,6 @@ export class DnDRuleset implements Ruleset {
 
   characterBattleActionOrder(actor: Actor): number {
     return this.roll("D20+0");
-  }
-
-  getCurrentActorTurn(battle: Battle): Actor | undefined {
-    const initiativeStat = this.getCharacterStatTypes().find((s) => s.name === InitiativeStat.name);
-    if (!initiativeStat) {
-      throw new Error("Initiative stat not found, it is necessary for battle");
-    }
-
-    const actorsByInitiative = battle.actors.sort((a, b) => {
-      const initiativeA = a.stats.find((s) => s.statId === initiativeStat.id);
-      const initiativeB = b.stats.find((s) => s.statId === initiativeStat.id);
-      return initiativeB!.amount - initiativeA!.amount;
-    });
-
-    const noCurrentActor = !battle.actorToAct;
-    if (noCurrentActor) {
-      return actorsByInitiative[0];
-    }
-
-    const currentActorIndex = actorsByInitiative.findIndex((a) => {
-      return a.id === battle.actorToAct!.id;
-    });
-
-    // If we are at the end of the list, return the first actor
-    return actorsByInitiative[currentActorIndex + 1] || actorsByInitiative[0];
   }
 }
 

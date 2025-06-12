@@ -6,7 +6,7 @@ import type { Battle } from "./battle/battle";
 import { CharacterEventTypes, SystemEventType, type CampaignEvent } from "./events/events";
 import type { EquipmentSlotDefinition, ItemDefinition } from "./inventory/item";
 import type { Roleplayer } from "./roleplayer";
-import { HealthResourceTypeName } from "./world/resource";
+import { HealthResourceTypeName, ResourceDefinition } from "./world/resource";
 
 type Dispatcher = (...events: CampaignEvent[]) => void;
 type StateGetter = () => Roleplayer;
@@ -127,6 +127,23 @@ export function setCharacterStats(characterId: Actor["id"], stats: CharacterAttr
     }));
 
     dispatch(...statsEvents);
+  };
+}
+
+export function characterResourceGain(
+  characterId: Actor["id"],
+  resourceTypeId: ResourceDefinition["id"],
+  amount: number
+) {
+  return (dispatch: Dispatcher, getState: StateGetter) => {
+    const event: CampaignEvent = {
+      type: CharacterEventTypes.CharacterResourceGain,
+      amount,
+      characterId,
+      resourceTypeId,
+    };
+
+    dispatch(event);
   };
 }
 

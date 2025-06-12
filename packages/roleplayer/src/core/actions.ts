@@ -1,7 +1,7 @@
 import { generateId } from "../lib/generate-id";
 import type { ActionDefinition } from "./action/action";
 import { mapEffect } from "./action/effect";
-import type { Actor, CharacterClass, CharacterInventoryItem, CharacterStat } from "./actor/character";
+import type { Actor, CharacterAttribute, CharacterClass, CharacterInventoryItem } from "./actor/character";
 import type { Battle } from "./battle/battle";
 import { CharacterEventTypes, SystemEventType, type CampaignEvent } from "./events/events";
 import type { EquipmentSlotDefinition, ItemDefinition } from "./inventory/item";
@@ -117,7 +117,7 @@ export function addActionToCharacter(characterId: Actor["id"], actionId: ActionD
   };
 }
 
-export function setCharacterStats(characterId: Actor["id"], stats: CharacterStat[]) {
+export function setCharacterStats(characterId: Actor["id"], stats: CharacterAttribute[]) {
   return (dispatch: Dispatcher, getState: StateGetter) => {
     const statsEvents: CampaignEvent[] = stats.map((st) => ({
       type: CharacterEventTypes.CharacterStatChange,

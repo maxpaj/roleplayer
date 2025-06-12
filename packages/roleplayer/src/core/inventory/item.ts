@@ -1,4 +1,4 @@
-import { CharacterStat } from "../..";
+import { CharacterAttribute } from "../..";
 import { Id } from "../../lib/generate-id";
 import { ActionDefinition } from "../action/action";
 import { Rarity } from "../world/rarity";
@@ -37,7 +37,7 @@ export type ItemDefinition = {
   type: ItemType;
   rarity: Rarity;
   description: string;
-  stats: CharacterStat[];
+  stats: CharacterAttribute[];
   equipmentType: ItemEquipmentType;
   weightUnits: number;
 

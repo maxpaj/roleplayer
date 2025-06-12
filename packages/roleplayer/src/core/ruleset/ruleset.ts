@@ -71,8 +71,8 @@ export interface Ruleset {
   getClassDefinitions(): Clazz[];
   getElementDefinitions(): ElementDefinition[];
   getCurrentActorTurn(battle: Battle): Actor | undefined;
+  getActingOrder(actors: Actor[]): Actor[];
 
-  characterBattleActionOrder(actor: Actor): number;
   characterHit(attacker: Actor, action: ActionDefinition, defender: Actor): boolean;
   characterHitDamage(
     source: Actor,

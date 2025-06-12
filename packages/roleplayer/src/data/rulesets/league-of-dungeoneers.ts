@@ -16,6 +16,10 @@ import type {
 } from "../../core/ruleset/ruleset";
 
 export class LeagueOfDungeoneersRuleset implements Ruleset {
+  getActingOrder(actors: Actor[]): Actor[] {
+    throw new Error("Method not implemented.");
+  }
+
   getCurrentActorTurn(battle: Battle): Actor {
     throw new Error("Method not implemented.");
   }

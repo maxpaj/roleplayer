@@ -1,12 +1,16 @@
-import { Logger } from "./logger";
+import { Logger, LogLevel } from "./logger";
 
 export class FileLogger implements Logger {
   stream: WritableStream;
-  buffer: { level: "INFO" | "DEBUG" | "WARN" | "ERROR"; log: any }[];
+  buffer: { level: LogLevel; log: any }[];
 
   constructor(fileStream: WritableStream) {
     this.stream = fileStream;
     this.buffer = [];
+  }
+
+  error(...args: any[]): void {
+    this.writeToBuffer(args, "ERROR");
   }
 
   info(...args: any[]) {
@@ -21,7 +25,7 @@ export class FileLogger implements Logger {
     this.writeToBuffer(args, "WARN");
   }
 
-  writeToBuffer(args: any[], level: "INFO" | "DEBUG" | "WARN") {
+  writeToBuffer(args: any[], level: LogLevel) {
     const logs = args.map((log) => {
       const row = {
         level,

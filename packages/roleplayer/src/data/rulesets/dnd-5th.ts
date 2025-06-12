@@ -21,6 +21,8 @@ import type {
 } from "../../core/ruleset/ruleset";
 import { generateId } from "../../lib/generate-id";
 
+const ArmorClassBase = 10;
+
 const MovementSpeedResource = {
   id: "00000000-0000-0000-0000-000000001000" as const,
   name: MovementSpeedResourceTypeName,
@@ -260,6 +262,19 @@ export class DnDRuleset implements Ruleset {
         name: "Thunder",
       },
     ];
+  }
+
+  characterAttributeTotal(character: Actor, attribute: CharacterAttributeType) {
+    switch (attribute.id) {
+      case ArmorClassStat.id: {
+        const dexterityStat = character.stats.find((s) => s.statId == DexterityStat.id);
+        if (!dexterityStat) {
+          throw new Error("Character does not have a dexterity stat");
+        }
+
+        return ArmorClassBase + getAbilityModifier(dexterityStat.amount);
+      }
+    }
   }
 
   characterHitDamage(source: Actor, action: ActionDefinition, target: Actor, effect: CharacterResourceLossEffect) {

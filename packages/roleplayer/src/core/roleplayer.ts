@@ -63,6 +63,10 @@ export class Roleplayer extends Observable<RoleplayerEvent> {
     });
   }
 
+  setLogger(logger: Logger) {
+    this.logger = logger;
+  }
+
   nextSerialNumber() {
     const sortedEvents = this.events.toSorted((a, b) => a.serialNumber - b.serialNumber);
     const lastSerialNumber = sortedEvents[sortedEvents.length - 1]?.serialNumber ?? 0;

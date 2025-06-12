@@ -20,11 +20,8 @@
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
-  "exports": {
-    ".": "./src/index.ts"
-  },
   "scripts": {
-    "dev": "npm run build -- --watch",
+    "dev": "tsup src/index.ts --format cjs,esm --dts --watch",
     "test": "jest",
     "test-watch": "jest --watch",
     "build": "tsup src/index.ts --format cjs,esm --dts",

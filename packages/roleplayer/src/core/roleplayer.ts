@@ -63,6 +63,10 @@ export class Roleplayer extends Observable<RoleplayerEvent> {
     });
   }
 
+  setLogger(logger: Logger) {
+    this.logger = logger;
+  }
+
   nextSerialNumber() {
     const sortedEvents = this.events.toSorted((a, b) => a.serialNumber - b.serialNumber);
     const lastSerialNumber = sortedEvents[sortedEvents.length - 1]?.serialNumber ?? 0;
@@ -110,6 +114,11 @@ export class Roleplayer extends Observable<RoleplayerEvent> {
   reduce(event: RoleplayerEvent) {
     switch (event.type) {
       case SystemEventType.CampaignStarted: {
+        if (this.campaign.started) {
+          throw new Error("Campaign already started");
+        }
+
+        this.campaign.started = true;
         break;
       }
 

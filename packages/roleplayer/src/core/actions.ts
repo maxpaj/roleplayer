@@ -1,12 +1,12 @@
 import { generateId } from "../lib/generate-id";
 import type { ActionDefinition } from "./action/action";
 import { mapEffect } from "./action/effect";
-import type { Actor, CharacterClass, CharacterInventoryItem, CharacterStat } from "./actor/character";
+import type { Actor, CharacterAttribute, CharacterClass, CharacterInventoryItem } from "./actor/character";
 import type { Battle } from "./battle/battle";
 import { CharacterEventTypes, SystemEventType, type CampaignEvent } from "./events/events";
 import type { EquipmentSlotDefinition, ItemDefinition } from "./inventory/item";
 import type { Roleplayer } from "./roleplayer";
-import { HealthResourceTypeName } from "./world/resource";
+import { HealthResourceTypeName, ResourceDefinition } from "./world/resource";
 
 type Dispatcher = (...events: CampaignEvent[]) => void;
 type StateGetter = () => Roleplayer;
@@ -117,7 +117,7 @@ export function addActionToCharacter(characterId: Actor["id"], actionId: ActionD
   };
 }
 
-export function setCharacterStats(characterId: Actor["id"], stats: CharacterStat[]) {
+export function setCharacterStats(characterId: Actor["id"], stats: CharacterAttribute[]) {
   return (dispatch: Dispatcher, getState: StateGetter) => {
     const statsEvents: CampaignEvent[] = stats.map((st) => ({
       type: CharacterEventTypes.CharacterStatChange,
@@ -127,6 +127,23 @@ export function setCharacterStats(characterId: Actor["id"], stats: CharacterStat
     }));
 
     dispatch(...statsEvents);
+  };
+}
+
+export function characterResourceGain(
+  characterId: Actor["id"],
+  resourceTypeId: ResourceDefinition["id"],
+  amount: number
+) {
+  return (dispatch: Dispatcher, getState: StateGetter) => {
+    const event: CampaignEvent = {
+      type: CharacterEventTypes.CharacterResourceGain,
+      amount,
+      characterId,
+      resourceTypeId,
+    };
+
+    dispatch(event);
   };
 }
 

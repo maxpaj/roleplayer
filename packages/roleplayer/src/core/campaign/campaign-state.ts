@@ -18,6 +18,7 @@ export class CampaignState {
   id!: Id;
   ruleset!: Ruleset;
   roleplayer!: Roleplayer;
+  started: boolean = false;
 
   battles: Battle[] = [];
   rounds: Round[] = [];

@@ -15,6 +15,8 @@ describe("Campaign state", () => {
     const roleplayer = new Roleplayer({ ruleset }, { id: generateId() });
     const characterId = generateId();
 
+    roleplayer.dispatchAction(startCampaign());
+
     const events: RoleplayerEvent[] = [
       {
         id: generateId(),
@@ -33,7 +35,6 @@ describe("Campaign state", () => {
       },
     ];
     roleplayer.dispatchEvents(...events);
-    roleplayer.dispatchAction(startCampaign());
 
     const state = roleplayer.campaign;
     expect(state.characters.length).toBe(1);

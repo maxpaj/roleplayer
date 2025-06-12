@@ -1,4 +1,5 @@
 import {
+  Battle,
   HealthResourceTypeName,
   MovementSpeedResourceTypeName,
   PrimaryActionResourceTypeName,
@@ -9,17 +10,18 @@ import {
 import type { ActionDefinition } from "../../core/action/action";
 import type { CharacterResourceLossEffect } from "../../core/action/effect";
 import type { Actor } from "../../core/actor/character";
-import type { Battle } from "../../core/battle/battle";
 import { defaultRoll, type Roll } from "../../core/dice/dice";
 import { ItemEquipmentType, type EquipmentSlotDefinition } from "../../core/inventory/item";
 import type {
-  CharacterStatType,
+  CharacterStatType as CharacterAttributeType,
   Clazz,
   ElementDefinition,
   LevelProgression,
   Ruleset,
 } from "../../core/ruleset/ruleset";
 import { generateId } from "../../lib/generate-id";
+
+const ArmorClassBase = 10;
 
 const MovementSpeedResource = {
   id: "00000000-0000-0000-0000-000000001000" as const,
@@ -43,6 +45,11 @@ const SecondaryActionResource = {
   id: "00000000-0000-0000-0000-000000001003" as const,
   name: SecondaryActionResourceTypeName,
   defaultMax: 1,
+};
+
+const InitiativeResource = {
+  id: "00000000-0000-0000-0000-000000001006" as const,
+  name: "Initiative",
 };
 
 const SpellSlot1Resource = { id: "00000000-0000-0000-0000-000000001004" as const, name: "Spell slot 1", defaultMax: 0 };
@@ -89,12 +96,7 @@ const ArmorClassStat = {
   name: "Armor class",
 };
 
-const InitiativeStat = {
-  id: "00000000-0000-0000-0000-000000001006" as const,
-  name: "Initiative",
-};
-
-const StatTypes: CharacterStatType[] = [
+const StatTypes: CharacterAttributeType[] = [
   StrengthStat,
   IntelligenceStat,
   WisdomStat,
@@ -103,7 +105,6 @@ const StatTypes: CharacterStatType[] = [
   ConstitutionStat,
   DefenseStat,
   ArmorClassStat,
-  InitiativeStat,
 ];
 
 const ResourceTypes: ResourceDefinition[] = [
@@ -113,6 +114,7 @@ const ResourceTypes: ResourceDefinition[] = [
   SecondaryActionResource,
   SpellSlot1Resource,
   SpellSlot2Resource,
+  InitiativeResource,
 ];
 
 export class DnDRuleset implements Ruleset {
@@ -120,6 +122,39 @@ export class DnDRuleset implements Ruleset {
 
   constructor(roll: Roll = defaultRoll) {
     this.roll = roll;
+  }
+
+  getActingOrder(actors: Actor[]): Actor[] {
+    return actors.toSorted((a, b) => {
+      const initiativeA = a.resources.find((s) => s.resourceTypeId === InitiativeResource.id);
+      const initiativeB = b.resources.find((s) => s.resourceTypeId === InitiativeResource.id);
+
+      if (!initiativeA) {
+        throw new Error(`Character ${a.name} is missing initiative resource`);
+      }
+
+      if (!initiativeB) {
+        throw new Error(`Character ${b.name} is missing initiative resource`);
+      }
+
+      return initiativeB.amount - initiativeA.amount;
+    });
+  }
+
+  getCurrentActorTurn(battle: Battle): Actor | undefined {
+    const actorOrder = this.getActingOrder(battle.actors);
+
+    const noCurrentActor = !battle.actorToAct;
+    if (noCurrentActor) {
+      return actorOrder[0];
+    }
+
+    const currentActorIndex = actorOrder.findIndex((a) => {
+      return a.id === battle.actorToAct!.id;
+    });
+
+    // If we are at the end of the list, return the first actor
+    return actorOrder[currentActorIndex + 1] || actorOrder[0];
   }
 
   getLevelProgression(): LevelProgression[] {
@@ -132,7 +167,7 @@ export class DnDRuleset implements Ruleset {
     ];
   }
 
-  getCharacterStatTypes(): CharacterStatType[] {
+  getCharacterStatTypes(): CharacterAttributeType[] {
     return StatTypes;
   }
 
@@ -229,6 +264,19 @@ export class DnDRuleset implements Ruleset {
     ];
   }
 
+  characterAttributeTotal(character: Actor, attribute: CharacterAttributeType) {
+    switch (attribute.id) {
+      case ArmorClassStat.id: {
+        const dexterityStat = character.stats.find((s) => s.statId == DexterityStat.id);
+        if (!dexterityStat) {
+          throw new Error("Character does not have a dexterity stat");
+        }
+
+        return ArmorClassBase + getAbilityModifier(dexterityStat.amount);
+      }
+    }
+  }
+
   characterHitDamage(source: Actor, action: ActionDefinition, target: Actor, effect: CharacterResourceLossEffect) {
     const elementTypes = this.getElementDefinitions();
     const elementType = elementTypes.find((e) => e.id === effect.elementTypeId);
@@ -280,29 +328,11 @@ export class DnDRuleset implements Ruleset {
   characterIsDead(actor: Actor): boolean {
     const healthResource = this.getCharacterResourceTypes().find((r) => r.name === HealthResourceTypeName)!;
     const characterHealthResource = actor.resources.find((r) => r.resourceTypeId === healthResource.id);
-    return characterHealthResource!.amount <= 0;
+    return characterHealthResource !== undefined && characterHealthResource!.amount <= 0;
   }
 
   characterBattleActionOrder(actor: Actor): number {
     return this.roll("D20+0");
-  }
-
-  getCurrentActorTurn(battle: Battle): Actor | undefined {
-    const initiativeStat = this.getCharacterStatTypes().find((s) => s.name === InitiativeStat.name);
-    if (!initiativeStat) {
-      throw new Error("Initiative stat not found, it is necessary for battle");
-    }
-
-    const sorted = battle.actors.sort((a, b) => {
-      const initiativeA = a.stats.find((s) => s.statId === initiativeStat.id);
-      const initiativeB = b.stats.find((s) => s.statId === initiativeStat.id);
-      return initiativeB!.amount - initiativeA!.amount;
-    });
-
-    const currentActorIndex = sorted.findIndex((a) => a.id === battle.actorToAct!.id);
-
-    // If we are at the end of the list, return the first actor
-    return sorted[currentActorIndex + 1] || sorted[0];
   }
 }
 

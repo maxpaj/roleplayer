@@ -50,8 +50,8 @@ export class Battle {
     this.actors.push(actor);
   }
 
-  getActingOrder(battleCharacter: Actor): number {
-    return 0;
+  getActingOrder(): Actor[] {
+    return this.ruleset.getActingOrder(this.actors);
   }
 
   removeBattleActor(actor: Actor) {
